@@ -6,10 +6,11 @@ void Configs::SaveConfig()
 {
 	if (!gggg)
 	{
-		auto stream = SystemIO::File::Open("C:\\test.txt", SystemIO::FileMode::Open);
+		auto stream = SystemIO::File::Open("C:\\test.txt", SystemIO::Open);
 
-		auto test = SystemIO::File::OpenText("C:\\test.txt")->ReadLine();
-		LOG("[DEBUG] test - %p", test);
+
+
+	//	LOG("[DEBUG] test - %ls", stream->c_str());
 		gggg = true;
 	}
 }

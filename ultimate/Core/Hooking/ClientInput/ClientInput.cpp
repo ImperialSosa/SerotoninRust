@@ -12,6 +12,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (!IsAddressValid(Features().Instance()->LocalPlayer))
 		Features().Instance()->LocalPlayer = a1;
 
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
+
 	if (!IsAddressValid(ToAddress(Hooks::ProjectileShootHookhk.get_original<void*>()))
 		|| !IsAddressValid(ToAddress(Hooks::PPA_WriteToStreamhk.get_original<void*>())))
 	{
