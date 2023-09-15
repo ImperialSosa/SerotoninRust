@@ -158,7 +158,7 @@ void MenuDraw::RenderMenu()
 				Menu().BeginChild(XS(L"Visuals"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Username"), m_settings::nameEsp);
-					Menu().CheckBox(XS(L"Distance"), m_settings::DrawDistance);
+					//Menu().CheckBox(XS(L"Distance"), m_settings::DrawDistance);
 					Menu().CheckBox(XS(L"Box"), m_settings::BoxEsp);
 					if (m_settings::BoxEsp)
 						m_settings::CornerBox = false;

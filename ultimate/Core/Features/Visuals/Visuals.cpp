@@ -195,7 +195,7 @@ void Visuals::DrawPlayers()
 			auto Target_Color = Color{ m_settings::Target_Color[0], m_settings::Target_Color[1], m_settings::Target_Color[2], m_settings::Target_Color[3] };
 
 			bool isFriend = false;
-			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget();
+			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(BasePlayer->get_positionz(), 500);
 
 			Color BoxColor;
 
