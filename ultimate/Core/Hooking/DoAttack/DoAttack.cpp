@@ -108,7 +108,6 @@ void Hooks::DoAttack(AssemblyCSharp::BaseProjectile* _This)
 	if (!m_settings::BulletTP)
 		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
 
-
 	CalledLaunchFromHook = true;
 
 	Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
@@ -116,7 +115,6 @@ void Hooks::DoAttack(AssemblyCSharp::BaseProjectile* _This)
 	auto camera = UnityEngine::Camera::get_main();
 	if (!IsAddressValid(camera))
 		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
-
 
 	auto m_target = AssemblyCSharp::BasePlayer().GetAimbotTarget(camera->get_positionz());
 	if (m_settings::BulletTP && IsAddressValid(m_target.m_player))

@@ -383,10 +383,108 @@ void drawMisc()
 
 	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
 
+	if (m_settings::Crosshair)
+	{
+		auto Crosshair_Color = Color{ m_settings::Crosshair_Color[0], m_settings::Crosshair_Color[1], m_settings::Crosshair_Color[2], 255 };
+
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x + 8, screen_center.y), Color::Red());
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x - 7, screen_center.y), Color::Red());
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y + 8), Color::Red());
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y - 7), Color::Red());
+	}
+
+	if (m_settings::Aimline)
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+			if (m_target.m_player)
+			{
+				auto targetPos = m_target.m_position;
+				if (!targetPos.IsZero())
+				{
+					Vector2 w2sPos;
+					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
+					{
+						UnityEngine::GL::Line(Vector2(UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f), w2sPos, Color::Red());
+					}
+				}
+			}
+		}
+	}
+
+	if (m_settings::AimMarker)
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+			if (m_target.m_player)
+			{
+				auto targetPos = m_target.m_position;
+
+				if (!targetPos.IsZero())
+				{
+					Vector2 w2sPos;
+
+					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
+					{
+						UnityEngine::GL().TextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize);
+					}
+				}
+			}
+		}
+	}
+
+	if (m_settings::SavePos)
+	{
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		if (IsAddressValid(LocalPlayer)) {
+			auto CurrentPos = LocalPlayer->get_bone_transform(47)->get_position();
+			static Vector3 SavedWorldPos;
+			static Vector2 SavedPos;
+
+			if (UnityEngine::Input::GetKey(m_settings::SavePosKey))
+			{
+				SavedWorldPos = CurrentPos;
+			}
+
+			if (UnityEngine::WorldToScreen(SavedWorldPos, SavedPos))
+			{
+				auto distance = CurrentPos.Distance(SavedWorldPos);
+
+				std::string player_name = "SavedPos";
+				char str[128];
+				sprintf(str, XS("[%dm]"), (int)distance);
+				player_name = player_name + " " + str;
+
+				UnityEngine::GL().TextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize);
+			}
+		}
+	}
+
+	if (m_settings::DrawFov)
+	{
+		Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
+		UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+	}
+
 	if (m_settings::BulletTPFlags && m_settings::Thickbullet_Indicator && m_settings::BulletTP)
 	{
 		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Bullet TP"), Color::Red(), Color::Black(), m_settings::fontsize);
 		yPos += 10;
+	}
+
+	if (m_settings::InstantBullet)
+	{
+		auto desynctime = UnityEngine::Time::get_realtimeSinceStartup() - AssemblyCSharp::LocalPlayer::get_Entity()->lastSentTickTime();
+		auto desyncpercentage = (((desynctime / 0.85f) * 100.0f) + 1.f) / 100;
+
+
+		if (desyncpercentage >= 0.85f)
+		{
+			UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Instant Hit"), Color::Red(), Color::Black(), m_settings::fontsize);
+			yPos += 10;
+		}
 	}
 
 	if (m_settings::Manipulation && m_settings::BulletTP && m_settings::BulletTPFlags && m_settings::ManipFlags && m_settings::Manipulation_Indicator)
@@ -440,6 +538,49 @@ void drawMisc()
 			yoffset += 10;
 		}
 	}
+
+	if (m_settings::Flyhack_Indicator)
+	{
+		float YPos = (UnityEngine::screen_size.y / 8);
+		int YOffset = 40;
+
+		float bar_width = 200.f;
+		float x = screen_center.x;
+		float y = screen_center.y;
+		float w = 300.f;
+		float h = 10.f;
+
+		auto FlyhackColorY = Color(0.f, 255.f, 0.f, 255.f);
+		auto FlyhackColorX = Color(0.f, 255.f, 0.f, 255.f);
+
+		const auto horizontal_percentage = minm(m_settings::HorisontalFlyhack / m_settings::MaxHorisontalFlyhack, 1.f);
+		const auto vertical_percentage = minm(m_settings::VerticalFlyhack / m_settings::MaxVerticalFlyhack, 1.f);
+
+		if (vertical_percentage > 0.5 && vertical_percentage < 0.8)
+			FlyhackColorY = Color(255.f, 137.f, 0.f, 255.f);
+		else if (vertical_percentage > 0.8)
+			FlyhackColorY = Color(255.f, 0.f, 0.f, 255.f);
+		else
+			FlyhackColorY = Color(0.f, 255.f, 0.f, 255.f);
+
+		if (horizontal_percentage > 0.5 && horizontal_percentage < 0.8)
+			FlyhackColorX = Color(255.f, 137.f, 0.f, 255.f);
+		else if (horizontal_percentage > 0.8)
+			FlyhackColorX = Color(255.f, 0.f, 0.f, 255.f);
+		else
+			FlyhackColorX = Color(0.f, 255.f, 0.f, 255.f);
+
+		auto xpostop = x - w / 2;
+		auto ypostop = YPos - YOffset;
+		UnityEngine::GL::RectangleFilled({ xpostop, ypostop }, { xpostop + w, ypostop + h }, Color(34.f, 34.f, 34.f, 255.f).GetUnityColor());
+		UnityEngine::GL::RectangleFilled({ xpostop, ypostop }, { xpostop + w * horizontal_percentage, ypostop + h }, FlyhackColorX.GetUnityColor());
+
+		UnityEngine::GL::RectangleFilled({ xpostop, ypostop - 10 }, { xpostop + w, ypostop + h - 10 }, Color(34.f, 34.f, 34.f, 255.f).GetUnityColor());
+		UnityEngine::GL::RectangleFilled({ xpostop, ypostop - 10 }, { xpostop + w * vertical_percentage, ypostop + h - 10 }, FlyhackColorY.GetUnityColor());
+
+		UnityEngine::GL::Rectangle({ xpostop, ypostop }, { xpostop + w, ypostop + h }, Color(0.f, 0.f, 0.f, 120.f).GetUnityColor());
+		UnityEngine::GL::Rectangle({ xpostop, ypostop - 10 }, { xpostop + w, ypostop + h - 10 }, Color(0.f, 0.f, 0.f, 120.f).GetUnityColor());
+	}
 }
 
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
@@ -466,7 +607,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		SetupStyles();
 
 		MenuDraw().RenderMenu();
-
 
 		//Configs().SaveConfig();
 
@@ -497,11 +637,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				{
 					drawMisc();
 
-					if (m_settings::DrawFov)
-					{
-						Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
-						UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
-					}
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 				}

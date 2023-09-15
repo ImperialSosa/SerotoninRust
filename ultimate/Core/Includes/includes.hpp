@@ -110,7 +110,7 @@ inline uint32_t xCheatsRecievedSteamID;
 inline char buffer[512];
 
 inline const char* LOG(const char* fmt, ...) {
-#ifdef DEBUG_MODE
+//#ifdef DEBUG_MODE
 	va_list args;
 	va_start(args, fmt);
 	LI_FN(vsnprintf)(buffer, 512, fmt, args);
@@ -119,9 +119,9 @@ inline const char* LOG(const char* fmt, ...) {
 	LI_FN(OutputDebugStringA)(buffer);
 
 	return buffer;
-#else
-	return XS("");
-#endif
+//#else
+//	return XS("");
+//#endif
 }
 
 inline uintptr_t m_game_assembly;
