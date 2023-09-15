@@ -1,7 +1,7 @@
 #include "Visuals.hpp"
 #include "../../Hooking/Hooks.hpp"
 #include "../../ConnectionManager/ConnectionManager.hpp"
-
+#include "../Features/Features.hpp"
 #include <array>
 #include <algorithm>
 inline std::array<int, 20> valid_bones = {
@@ -9,6 +9,16 @@ inline std::array<int, 20> valid_bones = {
 };
 
 box_bounds Visuals::get_bounds(AssemblyCSharp::BasePlayer* player, float expand) {
+	if (!player)
+		return box_bounds::null();
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return box_bounds::null();
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return box_bounds::null();
+
+
 	box_bounds ret = { FLT_MAX, FLT_MIN, FLT_MAX, FLT_MIN };
 
 
@@ -91,6 +101,12 @@ inline void DrawCornerBox(float x, float y, float x2, float y2, Color col)
 void Visuals::DrawPlayers()
 {
 	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return;
 
 	auto camera = UnityEngine::Camera::get_main();
@@ -616,6 +632,12 @@ void Visuals::DrawPlayers()
 void Visuals::CachePlayers()
 {
 	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return;
 
 	if (!this->VisiblePlayerList)
