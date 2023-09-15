@@ -148,10 +148,10 @@ inline void BulletTPAnglesHarvey1(std::vector<Vector3>& re, float radius = 2.4f)
 	}
 }
 
-inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, float step = 0.4)
+inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 100)
 {
 	float radius = 2.4; // Radius of the sphere
-	int numPoints = 100; // Number of points to generate
+	//int numPoints = 100; // Number of points to generate
 
 	for (int i = 0; i < numPoints; ++i) {
 		float theta = 2.0 * M_PI * i / numPoints;
@@ -500,9 +500,9 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	else if (m_settings::BulletTPIntensity == 1)
 		BulletTPAnglesHarvey1(arrz, maxDist);
 	else if (m_settings::BulletTPIntensity == 2)
-		BulletTPAnglesModeIntense(arrz, 0.4);
+		BulletTPAnglesModeIntense(arrz, 100);
 	else if (m_settings::BulletTPIntensity == 3)
-		BulletTPAnglesModeIntense(arrz, 0.2);
+		BulletTPAnglesModeIntense(arrz, 250);
 
 	for (const auto& s : arrz)
 	{
