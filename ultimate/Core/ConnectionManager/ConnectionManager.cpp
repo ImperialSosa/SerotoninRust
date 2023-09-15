@@ -39,7 +39,6 @@ bool ConnectionManager::IsConnected()
 		return false;
 	}
 
-
 	const auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 
 	if (!IsAddressValid(LocalPlayer) || !IsAddressValid(LocalPlayer->net()))

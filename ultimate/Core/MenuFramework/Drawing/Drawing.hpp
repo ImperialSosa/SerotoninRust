@@ -109,6 +109,7 @@ inline bool list_clicked = false;
 inline int table = 0;
 inline int activetab = 0;
 inline int activesubtab = 0;
+inline int activesubtabv = 0;
 inline static bool IsInteractingWidthObject = false;
 inline unsigned long long iCurrentOpenedCombo = 0;
 inline Vector2 vecLastCringePosition = { 0, 0 };

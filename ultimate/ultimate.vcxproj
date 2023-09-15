@@ -61,7 +61,7 @@
     <GenerateManifest>false</GenerateManifest>
     <IncludePath>F:\Files\DirectX SDK 2010\Include;$(IncludePath)</IncludePath>
     <LibraryPath>F:\Files\DirectX SDK 2010\Lib\x86;$(LibraryPath)</LibraryPath>
-    <TargetName>RustDll</TargetName>
+    <TargetName>cheat</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="LLVM" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClangClExecutable>C:\Program Files\LLVM\bin\clang-cl.exe</ClangClExecutable>
@@ -195,6 +195,7 @@
     <ClInclude Include="Core\CRT\mutex\smutex.hpp" />
     <ClInclude Include="Core\Features\EyeHack\EyeHack.hpp" />
     <ClInclude Include="Core\Features\Features\Features.hpp" />
+    <ClInclude Include="Core\Features\Notifications\Notifications.hpp" />
     <ClInclude Include="Core\Features\Visuals\Visuals.hpp" />
     <ClInclude Include="Core\Hooking\Hooker.hpp" />
     <ClInclude Include="Core\Hooking\Hooks.hpp" />

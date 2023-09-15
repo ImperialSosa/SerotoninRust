@@ -15,8 +15,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Hooks::ProjectileShootHookhk.VirtualFunctionHook(XS("ProjectileShoot"), HASH("WriteToStream"), &Hooks::ProjectileShootHook, XS("ProtoBuf"), 1);
 	}
 
-
-
 	float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().Instance()->LocalPlayer->lastSentTickTime());
 	float last_tick_time = maxx(0.f, minm(timeSinceLastTick, 1.f));
 	m_settings::last_tick_time = last_tick_time;
@@ -28,13 +26,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	float num3 = eye_serverframes * Max3(UnityEngine::Time::get_deltaTime(), UnityEngine::Time::get_smoothDeltaTime(), UnityEngine::Time::get_fixedDeltaTime());
 	float num4 = (last_tick_time + num2 + num3) * num;
 
-
 	float num5 = Features().Instance()->LocalPlayer->MaxEyeVelocity() + Features().Instance()->LocalPlayer->GetParentVelocity().Magnitude();
 	float num6 = Features().Instance()->LocalPlayer->BoundsPadding() + num4 * num5;
 
 	m_settings::max_spoofed_eye_distance = num6;
 
-	if (UnityEngine::Input::GetKey(RustStructs::F))
+	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
 		Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
 	}
@@ -43,7 +40,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
-	if (UnityEngine::Input::GetKey(RustStructs::F))
+	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
 		Features().Instance()->FindManipulationAngles(num6);
 	}
@@ -56,7 +53,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 
-	if (UnityEngine::Input::GetKey(RustStructs::C))
+	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
 		Features().Instance()->FindBulletTPAngles(num6);
 	}

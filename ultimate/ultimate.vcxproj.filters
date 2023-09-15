@@ -111,5 +111,6 @@
     <ClInclude Include="Core\Hooking\WriteToStream\Prediction.hpp" />
     <ClInclude Include="Core\MenuFramework\Drawing\Drawing.hpp" />
     <ClInclude Include="Core\MenuFramework\Menu\Menu.hpp" />
+    <ClInclude Include="Core\Features\Notifications\Notifications.hpp" />
   </ItemGroup>
 </Project>

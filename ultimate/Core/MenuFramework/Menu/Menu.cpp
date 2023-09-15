@@ -1,6 +1,7 @@
 #include "Menu.hpp"
 #include "../../Includes/settings.hpp"
 inline bool aim_type_opened;
+inline bool chams_type_opened;
 
 void MenuDraw::RenderMenu()
 {
@@ -180,7 +181,129 @@ void MenuDraw::RenderMenu()
 		}
 			break;
 		case 1:
-			//VisualTab().DrawVisualTab();
+			Menu().SubTab(XS(L"Player"), 0, Vector2(117, 35)); //468
+			Menu().SubTab(XS(L"Resources"), 1, Vector2(117, 35));
+			Menu().SubTab(XS(L"Lootables"), 2, Vector2(117, 35));
+			Menu().SubTab(XS(L"Other"), 3, Vector2(117, 35));
+
+			switch (activesubtabv)
+			{
+			case 0:
+				Menu().BeginChild(XS(L"Visuals"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Username"), m_settings::nameEsp);
+					Menu().CheckBox(XS(L"Box"), m_settings::BoxEsp);
+					if (m_settings::BoxEsp)
+						m_settings::CornerBox = false;
+					Menu().CheckBox(XS(L"CornerBox"), m_settings::CornerBox);
+					if (m_settings::CornerBox)
+						m_settings::BoxEsp = false;
+					Menu().CheckBox(XS(L"Skeleton"), m_settings::Skeleton);
+					Menu().CheckBox(XS(L"Healthbar"), m_settings::healthBar);
+					Menu().CheckBox(XS(L"Helditem"), m_settings::helditem);
+					Menu().CheckBox(XS(L"isOutside"), m_settings::BaseCheck);
+					Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
+					Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
+					Menu().CheckBox(XS(L"PlayerChams"), m_settings::PlayerChams);
+					Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
+					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
+					//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
+					Menu().CheckBoxKeyBind(XS(L"Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
+					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy") }, m_settings::SelectedChams, chams_type_opened);
+
+				}
+
+				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Vischeck"), m_settings::EspVisCheck);
+					Menu().CheckBox(XS(L"Tags Vischeck"), m_settings::TagsVisCheck);
+					Menu().CheckBox(XS(L"Show Target"), m_settings::DrawTarget);
+					Menu().CheckBox(XS(L"Wounded"), m_settings::DrawWounded);
+					Menu().CheckBox(XS(L"Safezone"), m_settings::DrawSafezone);
+					Menu().CheckBox(XS(L"Npc's"), m_settings::DrawNPC);
+					Menu().CheckBox(XS(L"Sleepers"), m_settings::DrawSleepers);
+					//Menu().CheckBox(XS(L"Disconnected"), m_settings::DrawAis);
+					Menu().CheckBox(XS(L"ShowCheatsUsers"), m_settings::ShowUsers);
+
+					Menu().Slider(XS(L"PlayerDistance"), m_settings::PlayerESPDistance, 0, 500);
+					Menu().Slider(XS(L"NPC Distance"), m_settings::NPCDistance, 0, 500);
+					Menu().Slider(XS(L"Drops Distance"), m_settings::MaxPlayerDropsDistance, 0, 500);
+
+					Menu().CheckBox(XS(L"LoadLightning"), m_settings::LoadLightning);
+					Menu().CheckBox(XS(L"LoadGeometric"), m_settings::LoadGeometric);
+					Menu().CheckBox(XS(L"LoadGalaxy"), m_settings::LoadGalaxy);
+				}
+				break;
+			case 1:
+				Menu().BeginChild(XS(L"World"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"StoneOre"), m_settings::StoneOre);
+					Menu().CheckBox(XS(L"MetalOre"), m_settings::MetalOre);
+					Menu().CheckBox(XS(L"SulfurOre"), m_settings::SulfurOre);
+					//	Menu().CheckBox(XS(L"Ore Icon"), m_settings::OreIcons);
+
+					Menu().CheckBox(XS(L"Hemp"), m_settings::Hemp);
+					Menu().CheckBox(XS(L"Diesel"), m_settings::DieselBarrel);
+					//	Menu().CheckBox(XS(L"Collectables Icon"), m_settings::CollectablesIcon);
+
+					Menu().CheckBox(XS(L"Corn"), m_settings::Corn);
+					Menu().CheckBox(XS(L"Pumpkin"), m_settings::Pumpkin);
+					Menu().CheckBox(XS(L"Potato"), m_settings::Potato);
+					Menu().CheckBox(XS(L"Mushroom"), m_settings::Mushroom);
+				}
+
+				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+				{
+					Menu().Slider(XS(L"Ore Distance"), m_settings::MaxOreDistance, 0, 500);
+					Menu().Slider(XS(L"Collectables Distance"), m_settings::MaxCollectableDistance, 0, 500);
+					Menu().Slider(XS(L"Food Distance"), m_settings::MaxFoodDistance, 0, 500);
+				}
+				break;
+
+			case 2:
+				Menu().BeginChild(XS(L"World"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Stash"), m_settings::Stash);
+					Menu().CheckBox(XS(L"HackableCrate"), m_settings::HackableCrate);
+					if (m_settings::HackableCrate)
+					{
+						Menu().CheckBox(XS(L"HackableCrateFlags"), m_settings::HackableCrateFlags);
+						Menu().CheckBox(XS(L"HackableCrateTimer"), m_settings::HackableCrateTimer);
+					}
+					Menu().CheckBox(XS(L"Bradley Crate"), m_settings::BradleyCrate);
+					Menu().CheckBox(XS(L"Heli Crate"), m_settings::HeliCrate);
+				}
+
+				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+				{
+					Menu().Slider(XS(L"Crates Distance"), m_settings::MaxCrateDistance, 0, 500);
+				}
+				break;
+
+			case 3:
+				Menu().BeginChild(XS(L"World"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"DroppedItems"), m_settings::DroppedItems);
+					Menu().CheckBox(XS(L"Turret"), m_settings::AutoTurret);
+					if (m_settings::AutoTurret)
+					{
+						Menu().CheckBox(XS(L"Authorized Players"), m_settings::TurretAuthorizedPlayers);
+						Menu().CheckBox(XS(L"EquippedFlag"), m_settings::TurretEquippedFlags);
+						Menu().CheckBox(XS(L"Turret Health"), m_settings::TurretHealth);
+						Menu().CheckBox(XS(L"TurningFlag"), m_settings::TurretTurningFlag);
+						Menu().CheckBox(XS(L"TurretRange"), m_settings::TurretRange);
+					}
+					Menu().CheckBox(XS(L"Patrol Helicopter"), m_settings::PatrolHelicopter);
+				}
+
+				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+				{
+					Menu().Slider(XS(L"Dropped Distance"), m_settings::MaxDroppedDistance, 0, 500);
+					Menu().Slider(XS(L"Traps Distance"), m_settings::MaxTrapsDistance, 0, 500);
+					Menu().Slider(XS(L"APC Distance"), m_settings::MaxAPCDistance, 0, 3000);
+				}
+				break;
+			}
 			break;
 		case 2:
 			//SettingsTab().DrawSettingsTab();

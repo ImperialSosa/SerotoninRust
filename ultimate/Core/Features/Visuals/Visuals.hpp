@@ -4,6 +4,28 @@
 #include <vector>
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 
+inline UnityEngine::AssetBundle* font_bundle;
+
+inline UnityEngine::AssetBundle* FireBundleA;
+inline UnityEngine::Shader* FireShaderA;
+inline UnityEngine::Material* FireMaterialA;
+
+inline UnityEngine::AssetBundle* FireBundleB;
+inline UnityEngine::Shader* FireShaderB;
+inline UnityEngine::Material* FireMaterialB;
+
+inline UnityEngine::AssetBundle* GalaxyBundle;
+inline UnityEngine::Shader* GalaxyShader;
+inline UnityEngine::Material* GalaxyMaterial;
+
+inline UnityEngine::AssetBundle* GeometricBundle;
+inline UnityEngine::Shader* GeometricShader;
+inline UnityEngine::Material* GeometricMaterial;
+
+inline UnityEngine::AssetBundle* LightningBundle;
+inline UnityEngine::Shader* LightningShader;
+inline UnityEngine::Material* LightningMaterial;
+
 class VisualsVector {
 public:
 	VisualsVector(AssemblyCSharp::BasePlayer* player)
@@ -25,6 +47,7 @@ public:
 		Visuals obj;
 		return &obj;
 	}
+	box_bounds get_bounds(AssemblyCSharp::BasePlayer* player, float expand = 0);
 public:
 	void CachePlayers();
 	void DrawPlayers();
