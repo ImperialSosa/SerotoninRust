@@ -77,17 +77,23 @@ void MenuDraw::RenderMenu()
 				break;
 			case 1:
 				Menu().BeginChild(XS(L"Exploits"), { 60,45 }, { 220,290 });
-				{
-					Menu().CheckBoxKeyBind(XS(L"Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
+				{				
 					Menu().CheckBoxKeyBind(XS(L"AutoShoot"), m_settings::Autoshoot, m_settings::AutoshootKey);
 
 					if (m_settings::Autoshoot)
 					{
 						Menu().CheckBox(XS(L"AlwaysAutoshoot"), m_settings::AlwaysAutoshoot);
 					}
+					Menu().CheckBoxKeyBind(XS(L"Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
+					if (m_settings::Manipulation)
+					{
+						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);
+						//m_settings::ManipPoints
+					}
+
 					Menu().CheckBox(XS(L"BulletTp"), m_settings::BulletTP);
 					Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
-					
+
 					Menu().CheckBox(XS(L"PierceMaterials"), m_settings::PierceMaterials);
 					Menu().CheckBox(XS(L"Bullet Queue"), m_settings::InstantKill);
 					if (m_settings::InstantKill)

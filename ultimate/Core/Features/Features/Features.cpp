@@ -271,7 +271,7 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, p))
 				return false;
 
-			UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
+			//UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
 
 			auto tick_time = Features().LocalPlayer->lastSentTickTime();
 			float desyncTime = (UnityEngine::Time::get_realtimeSinceStartup() - tick_time) - 0.03125 * 3;
@@ -416,7 +416,7 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 
 
 		for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
-			int points = 5;
+			int points = m_settings::ManipPoints;
 			float step = (M_PI_2) / points;
 			float x, z, current = 0;
 			for (size_t i = 0; i < points; i++)
