@@ -2102,6 +2102,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(UnityEngine::Collider*, _lookingAtCollider);
 		IL2CPP_FIELD(UnityEngine::CapsuleCollider*, playerCollider);
 
+		
 		class Target {
 		public:
 			Vector3 m_position;
@@ -2142,135 +2143,206 @@ namespace AssemblyCSharp {
 				}
 			}
 		};
-		static inline auto GetAimbotTarget() -> Target {
+		static inline int ClosesestToCrosshair(uintptr_t player) {
+			int bestBone = 0;
+			float closest = FLT_MAX;
+
+			auto base_p = reinterpret_cast<AssemblyCSharp::BasePlayer*>(player);
+
+			float screen_width = UnityEngine::Screen::get_width();
+			float screen_height = UnityEngine::Screen::get_height();
+
+			for (auto bone : { (int)RustStructs::bones::head,(int)RustStructs::bones::neck, (int)RustStructs::bones::spine4, (int)RustStructs::bones::spine3,(int)RustStructs::bones::spine2, (int)RustStructs::bones::spine1_scale, 14, 2, 55, 24, 13, 1, 56, 25, 76, 45, 16, 4, (int)RustStructs::bones::r_ankle_scale, (int)RustStructs::bones::l_ankle_scale,(int)RustStructs::bones::r_hand,(int)RustStructs::bones::l_hand }) {
+				Vector3 pos3d = base_p->get_bone_transform(bone)->get_position();
+				Vector2 pos;
+				if (UnityEngine::WorldToScreen(pos3d, pos) == false) continue;
+				float length = Math::sqrtf(Math::pow((screen_width / 2) - pos.x, 2) + Math::pow((screen_height / 2) - pos.y, 2));
+				if (length < closest) {
+					closest = length;
+
+					bestBone = bone;
+				}
+			}
+			return bestBone;
+		}
+
+		static inline auto GetAimbotTarget(Vector3 Source, float MaxDist = 500) -> Target {
 			if (!InGame)
 				return {};
 
 			Target best_target = Target();
 
-			auto VisiblePlayerList = AssemblyCSharp::BasePlayer::visiblePlayerList();
-			if (!IsAddressValid(VisiblePlayerList))
+			auto client_entities = BaseNetworkable::clientEntities();
+			if (!IsAddressValid(client_entities))
 				return {};
 
-			auto Vals = VisiblePlayerList->vals;
-			auto size = Vals->count;
-			auto buffer = Vals->buffer;
-			auto camera = UnityEngine::Camera::get_main();
-			if (!IsAddressValid(camera))
+			auto entities = client_entities->entityList();
+			if (!IsAddressValid(entities))
 				return {};
 
-			auto Source = camera->get_positionz();
-			float MaxDist = 500;
+			auto m_entities = entities->vals;
 
-			for (std::int32_t index = 0; index < size; index++)
+			if (!IsAddressValid(m_entities))
+				return {};
+
+			auto m_entity_array = m_entities->buffer;
+
+			if (!IsAddressValid(m_entity_array))
+				return {};
+
+			for (std::int32_t index = 0; index < m_entities->count; index++)
 			{
-				auto BasePlayer = buffer->m_Items[index];
-				if (!IsAddressValid(BasePlayer))
+				auto base_networkable = m_entity_array->m_Items[index];
+
+				if (!IsAddressValid(base_networkable))
 					continue;
 
-				if (!BasePlayer->net())
+				if (!base_networkable->net())
 					continue;
 
-				if (!IsAddressValid(BasePlayer->playerModel()) || !IsAddressValid(BasePlayer->model()))
-					continue;
-
-				if (BasePlayer->IsDead() || BasePlayer->PlayerDestroyed() || BasePlayer->IsLocalPlayer() ||
-					BasePlayer->playerFlags() & RustStructs::PlayerFlags::Sleeping || BasePlayer->wasDead() ||
-					BasePlayer->_health() <= 0.f)
-					continue;
-
-				Target target;
-				target.m_player = BasePlayer;
-
-				if (target.m_player != nullptr)
+				if (m_settings::HeliAimbot && base_networkable->IsA(PatrolHelicopter::StaticClass()))
 				{
-					if (target.m_player != BasePlayer)
+					auto base_player = static_cast<BasePlayer*>(base_networkable);
+					if (base_player)
 					{
-						target.m_player = BasePlayer;
+						BasePlayer::Target target;
+						target.m_player = base_player;
+						target.m_heli = true;
+
+						auto velocity = base_player->GetWorldVelocity();
+						target.m_velocity = velocity;
+
+						auto pos = base_player->get_bone_transform(19)->get_position();
+						target.m_position = pos;
+
+						auto distance = Source.get_3d_dist(pos);
+						target.m_distance = distance;
+						if (distance > MaxDist)
+							continue;
+
+						auto fov = get_fov(pos);
+						target.m_fov = fov;
+
+						if (target < best_target)
+							best_target = target;
 					}
 				}
+				else if (base_networkable->IsA(BasePlayer::StaticClass())) {
+					auto BasePlayer = static_cast<AssemblyCSharp::BasePlayer*>(base_networkable);
+					if (!IsAddressValid(BasePlayer))
+						continue;
+					if (!IsAddressValid(BasePlayer->playerModel()) || !IsAddressValid(BasePlayer->model()))
+						continue;
+
+					if (BasePlayer->IsDead() || BasePlayer->PlayerDestroyed() || BasePlayer->IsLocalPlayer() ||
+						BasePlayer->playerFlags() & RustStructs::PlayerFlags::Sleeping || BasePlayer->wasDead() ||
+						BasePlayer->_health() <= 0.f)
+						continue;
+
+					auto isWounded = BasePlayer->playerFlags() & RustStructs::PlayerFlags::Wounded;
+					if (isWounded && !m_settings::TargetWounded)
+						continue;
+
+					bool isNpc = false;
+					if (BasePlayer->playerModel()->get_IsNpc()) {
+						if (!m_settings::AimbotNPC)
+							continue;
+						isNpc = true;
+					}
+
+					Target target;
+					target.m_player = BasePlayer;
+
+					if (target.m_player != nullptr)
+					{
+						if (target.m_player != BasePlayer)
+						{
+							target.m_player = BasePlayer;
+						}
+					}
 
 
-				auto velocity = BasePlayer->playerModel()->newVelocity();
-				target.m_velocity = velocity;
+					auto velocity = BasePlayer->playerModel()->newVelocity();
+					target.m_velocity = velocity;
 
-				Vector3 pos = Vector3(0.f, 0.f, 0.f);
-				int selectedAimbone = m_settings::SelectedAimbone;
-				int bone = 47;
-				switch (selectedAimbone) {
-				case 0: // Head
-					pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
-					bone = RustStructs::bones::head;
-					break;
-				case 1: // neck
-					pos = BasePlayer->get_bone_transform(RustStructs::bones::neck)->get_position();
-					bone = RustStructs::bones::neck;
-					break;
-				case 2: // spine1
-					pos = BasePlayer->get_bone_transform(RustStructs::bones::spine1)->get_position();
-					bone = RustStructs::bones::spine1;
-					break;
-				case 3: // Random bone selection
-					switch (my_rand() % 9) {
+					Vector3 pos = Vector3(0.f, 0.f, 0.f);
+					int selectedAimbone = m_settings::SelectedAimbone;
+					int bone = 47;
+					switch (selectedAimbone) {
 					case 0: // Head
 						pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
 						bone = RustStructs::bones::head;
 						break;
-					case 1: // pelvis
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::pelvis)->get_position();
-						bone = RustStructs::bones::pelvis;
+					case 1: // neck
+						pos = BasePlayer->get_bone_transform(RustStructs::bones::neck)->get_position();
+						bone = RustStructs::bones::neck;
 						break;
-					case 2: // r_hip
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::r_hip)->get_position();
-						bone = RustStructs::bones::r_hip;
-						break;
-					case 3: // r_foot
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::r_foot)->get_position();
-						bone = RustStructs::bones::r_foot;
-						break;
-					case 4: // spine1
+					case 2: // spine1
 						pos = BasePlayer->get_bone_transform(RustStructs::bones::spine1)->get_position();
 						bone = RustStructs::bones::spine1;
 						break;
-					case 5: // l_hand
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::l_hand)->get_position();
-						bone = RustStructs::bones::l_hand;
+					case 3: // Random bone selection
+						switch (my_rand() % 9) {
+						case 0: // Head
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
+							bone = RustStructs::bones::head;
+							break;
+						case 1: // pelvis
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::pelvis)->get_position();
+							bone = RustStructs::bones::pelvis;
+							break;
+						case 2: // r_hip
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::r_hip)->get_position();
+							bone = RustStructs::bones::r_hip;
+							break;
+						case 3: // r_foot
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::r_foot)->get_position();
+							bone = RustStructs::bones::r_foot;
+							break;
+						case 4: // spine1
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::spine1)->get_position();
+							bone = RustStructs::bones::spine1;
+							break;
+						case 5: // l_hand
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::l_hand)->get_position();
+							bone = RustStructs::bones::l_hand;
+							break;
+						case 6: // r_upperarm
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::r_upperarm)->get_position();
+							bone = RustStructs::bones::r_upperarm;
+							break;
+						case 7: // l_knee
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::l_knee)->get_position();
+							bone = RustStructs::bones::l_knee;
+							break;
+						case 8: // spine4
+							pos = BasePlayer->get_bone_transform(RustStructs::bones::spine4)->get_position();
+							bone = RustStructs::bones::spine4;
+							break;
+						}
 						break;
-					case 6: // r_upperarm
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::r_upperarm)->get_position();
-						bone = RustStructs::bones::r_upperarm;
-						break;
-					case 7: // l_knee
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::l_knee)->get_position();
-						bone = RustStructs::bones::l_knee;
-						break;
-					case 8: // spine4
-						pos = BasePlayer->get_bone_transform(RustStructs::bones::spine4)->get_position();
-						bone = RustStructs::bones::spine4;
+					case 4:
+						bone = ClosesestToCrosshair(ToAddress(BasePlayer));
+						pos = BasePlayer->get_bone_transform(bone)->get_position();
 						break;
 					}
-					break;
-				case 4:
-					//bone = ClosesestToCrosshair(ToAddress(BasePlayer));
-					//pos = BasePlayer->get_bone_transform(bone)->get_position();
-					break;
+
+					target.m_position = pos;
+					target.m_bone = bone;
+					target.m_npc = isNpc;
+					target.m_heli = false;
+
+					auto distance = Source.get_3d_dist(pos);
+					target.m_distance = distance;
+					if (distance > MaxDist)
+						continue;
+
+					auto fov = AssemblyCSharp::get_fov(pos);
+					target.m_fov = fov;
+
+					if (target < best_target)
+						best_target = target;
 				}
-
-				target.m_position = pos;
-				target.m_bone = bone;
-				target.m_npc = false;
-				target.m_heli = false;
-
-				auto distance = Source.get_3d_dist(pos);
-				target.m_distance = distance;
-				if (distance > MaxDist)
-					continue;
-
-				auto fov = AssemblyCSharp::get_fov(pos);
-				target.m_fov = fov;
-
-				if (target < best_target)
-					best_target = target;
 			}
 
 			return best_target;
@@ -2488,7 +2560,6 @@ namespace AssemblyCSharp {
 
 		auto IsWeapon() -> bool;
 		auto IsMelee() -> bool;
-		static inline int ClosesestToCrosshair(uintptr_t player);
 		auto GetMaxSpeed() -> float;
 		auto MaxEyeVelocity() -> float;
 

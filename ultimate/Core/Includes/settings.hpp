@@ -63,7 +63,7 @@ namespace m_settings {
 	inline bool ChangeRecoil = false;
 	inline bool Thickbullet_Arrows = false;
 	inline bool BulletTP = false;
-	inline bool Manipulation = true;
+	inline bool Manipulation = false;
 	inline bool StopPlayer = false;
 	inline bool ManipFlags = false;
 	inline bool BulletTPFlags = false;

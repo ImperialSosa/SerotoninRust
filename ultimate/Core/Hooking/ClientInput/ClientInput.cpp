@@ -1,6 +1,8 @@
 #include "../hooks.hpp"
 #include "../../ConnectionManager/ConnectionManager.hpp"
 #include "../../Features/Features/Features.hpp"
+#include "../WriteToStream/Prediction.hpp"
+
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
 {
@@ -10,9 +12,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (!IsAddressValid(Features().Instance()->LocalPlayer))
 		Features().Instance()->LocalPlayer = a1;
 
-	if (!IsAddressValid(ToAddress(Hooks::ProjectileShootHookhk.get_original<void*>())))
+	if (!IsAddressValid(ToAddress(Hooks::ProjectileShootHookhk.get_original<void*>()))
+		|| !IsAddressValid(ToAddress(Hooks::PPA_WriteToStreamhk.get_original<void*>())))
 	{
 		Hooks::ProjectileShootHookhk.VirtualFunctionHook(XS("ProjectileShoot"), HASH("WriteToStream"), &Hooks::ProjectileShootHook, XS("ProtoBuf"), 1);
+		Hooks::PPA_WriteToStreamhk.VirtualFunctionHook(XS("PlayerProjectileAttack"), HASH("WriteToStream"), &Hooks::PPA_WriteToStream, XS("ProtoBuf"), 1);
 	}
 
 	float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().Instance()->LocalPlayer->lastSentTickTime());
@@ -30,6 +34,23 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	float num6 = Features().Instance()->LocalPlayer->BoundsPadding() + num4 * num5;
 
 	m_settings::max_spoofed_eye_distance = num6;
+
+
+	if (m_settings::WaitForInstantHit)
+	{
+		auto desynctime = UnityEngine::Time::get_realtimeSinceStartup() - AssemblyCSharp::LocalPlayer::get_Entity()->lastSentTickTime();
+		auto desyncpercentage = (((desynctime / 0.85f) * 100.0f) + 1.f) / 100;
+
+
+		if (desyncpercentage >= 0.85f)
+		{
+			InstantHitReady = true;
+		}
+		else
+		{
+			InstantHitReady = false;
+		}
+	}
 
 	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
@@ -53,7 +74,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 
-	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
+	if (m_settings::BulletTP)
 	{
 		Features().Instance()->FindBulletTPAngles(num6);
 	}
@@ -62,6 +83,18 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		m_settings::Thickbullet_Indicator = false;
 		m_settings::Thickbullet_AutoShoot = false;
 	}
+
+	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+
+	if (IsAddressValid(BaseProjectile))
+	{
+		Features().AutoShoot(BaseProjectile);
+		Features().FastBullet(BaseProjectile);
+		Features().BulletQueue(BaseProjectile);
+	}
+	
+	Features().RemoveCollision();
+
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 }

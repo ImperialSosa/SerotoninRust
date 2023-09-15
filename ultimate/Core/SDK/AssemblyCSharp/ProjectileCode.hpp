@@ -2,6 +2,57 @@
 #include "AssemblyCSharp.hpp"
 #include "../../Features/Features/Features.hpp"
 
+inline float GetHitDist(AssemblyCSharp::Projectile* pr) {
+	float travel = pr->traveledTime();
+
+	float num6 = (travel + 2 / 60 + 0.03125f) * 1.5f;
+	float maxdist = 0.1f + num6 * 5.5f;
+	return maxdist;
+}
+
+
+inline bool heli_magic(AssemblyCSharp::Projectile* pr, Vector3 point) {
+	auto distt = GetHitDist(pr);
+	auto target = AssemblyCSharp::BasePlayer::GetAimbotTarget(point, distt);
+	if (pr->IsAlive() && target.m_player && !target.m_team || target.m_heli) {
+		if (!AssemblyCSharp::IsVisible(target.m_position, point)) {
+			return false;
+		}
+
+		auto ht = pr->hitTest();
+		ht->DidHit() = true;
+		ht->HitEntity() = target.m_player;
+		UnityEngine::Transform* Transform;
+
+		if (!target.m_heli) {
+			Transform = target.m_player->get_bone_transform(target.m_bone);
+		}
+		else
+		{
+			Transform = target.m_player->get_bone_transform(19);
+		}
+
+		if (!Transform)
+			return false;
+
+		ht->HitTransform() = Transform;
+
+		Vector3 hitpoint = Transform->InverseTransformPoint(point);
+		ht->HitPoint() = hitpoint;
+
+		*reinterpret_cast<Vector3*>(ht + 0x14) = point;
+
+		AssemblyCSharp::HitTest* test = (AssemblyCSharp::HitTest*)ht;
+		bool result = pr->DoHit(test, point, Vector3());
+		//Sphere(point, 0.015f, col(1, 0, 0, 1), 20, true);
+		return true;
+	}
+	return false;
+}
+
+
+
+
 inline bool bullet_tp(AssemblyCSharp::Projectile* instance, Vector3 NextCurrentPosition, Vector3 CurrentPosition, Vector3 CurrentVelocity, float deltaTime)
 {
 	if (!instance)
@@ -28,12 +79,11 @@ inline bool bullet_tp(AssemblyCSharp::Projectile* instance, Vector3 NextCurrentP
 	}
 
 	auto camera = UnityEngine::Camera::get_main();
-	if (!camera)
+	if (!IsAddressValid(camera))
 		return false;
 
-
-	auto m_target = Features().GetAimbotTarget();
-	if (!m_target.m_player)
+	auto m_target = AssemblyCSharp::BasePlayer().GetAimbotTarget(camera->get_positionz());
+	if (!IsAddressValid(m_target.m_player))
 		return false;
 
 	if (m_target.m_heli)
@@ -226,21 +276,35 @@ inline void do_movement(float delta_time, AssemblyCSharp::Projectile* instance)
 
 	ht->MaxDistance() = 0.f;
 
+
 	auto camera = UnityEngine::Camera::get_main();
-	if (!camera)
+	if (!IsAddressValid(camera))
 		return;
 
-	auto m_target = Features().GetAimbotTarget();
-	if (!m_target.m_player)
+	auto m_target = AssemblyCSharp::BasePlayer().GetAimbotTarget(camera->get_positionz());
+	if (!IsAddressValid(m_target.m_player))
 		return;
 
-	if (bullet_tp(instance, vec3, instance->currentPosition(), instance->currentVelocity(), delta_time))
+
+	if (m_target.m_player->mounted() || m_target.m_heli)
 	{
-		RPC_Counter.Reset();
-		instance->integrity() = (0);
-		flag = true;
+		if (heli_magic(instance, instance->currentPosition()))
+		{
+			RPC_Counter.Reset();
+			instance->integrity() = (0);
+			flag = true;
+		}
 	}
+	else
+	{
+		if (bullet_tp(instance, vec3, instance->currentPosition(), instance->currentVelocity(), delta_time))
+		{
+			RPC_Counter.Reset();
+			instance->integrity() = (0);
+			flag = true;
+		}
 
+	}
 
 	if (!flag && instance->IsAlive()) {
 		float magnitude3 = (vec3 - instance->currentPosition()).Length();

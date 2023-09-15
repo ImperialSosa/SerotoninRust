@@ -11,6 +11,7 @@ inline float InitialDistanceDebug = 0.f;
 inline bool CalledLaunchFromHook = false;
 inline AssemblyCSharp::Projectile* LaunchedProjectilesArray[256];
 inline size_t LaunchedProjectileSize;
+inline bool InstantHitReady = false;
 
 inline Vector3 GetAimDirectionToTarget(BasePlayer* Local, BaseProjectile* Projectile, Vector3 TargetPosition, Vector3 TargetVelocity, ItemModProjectile* mod, Vector3 EyesPosition)
 {

@@ -16,8 +16,12 @@ public:
 
 	auto FindManipulationAngles(float MaxDesyncValue) -> void;
 	auto FindBulletTPAngles(float MaxDesyncValue) -> void;
-	auto LineCast(Vector3 a, Vector3 b) -> bool;
 	Vector3 GetManipulationAngle();
+	auto AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
+	auto FastBullet(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
+	auto BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
+
+	auto RemoveCollision() -> void;
 public:
 	static inline AssemblyCSharp::BasePlayer* LocalPlayer;
 	static inline Vector3 ManipulationAngle;

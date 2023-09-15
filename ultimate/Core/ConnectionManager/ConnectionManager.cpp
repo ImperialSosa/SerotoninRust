@@ -10,12 +10,34 @@ void ConnectionManager::ResetPlayerCache()
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;
 
-	auto target = AssemblyCSharp::BasePlayer::GetAimbotTarget();
-	// Clear the target instance
-	target.Clear();
+	//auto target = AssemblyCSharp::BasePlayer::GetAimbotTarget();
+	//// Clear the target instance
+	//target.Clear();
 	translated_map.clear();
 	VisualsArray.clear();
 	VisualsArrayTemp.clear();
+
+
+	Features().BulletTPAngle = Vector3();
+	Features().ManipulationAngle = Vector3();
+
+	m_settings::MaxVerticalFlyhack = 0;
+	m_settings::VerticalFlyhack = 0;
+	m_settings::MaxHorisontalFlyhack = 0;
+	m_settings::HorisontalFlyhack = 0;
+
+	//m_settings::DrawPlayerChams = false;
+	m_settings::did_reload = false;
+	m_settings::just_shot = false;
+	m_settings::time_since_last_shot = 0.0f;
+	m_settings::fixed_time_last_shot = 0.0f;
+
+	m_settings::can_manipulate = false;
+	m_settings::StartShooting = false;
+	m_settings::Manipulation_Indicator = false;
+	m_settings::Thickbullet_Indicator = false;
+	m_settings::last_tick_time = 0.f;
+	m_settings::max_spoofed_eye_distance = 0.f;
 }
 
 bool ConnectionManager::IsConnected()

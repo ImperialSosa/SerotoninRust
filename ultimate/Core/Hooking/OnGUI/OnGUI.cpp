@@ -365,6 +365,80 @@ void SetupBundles()
 	}
 }
 
+
+#include "../../Features/Features/Features.hpp"
+void drawMisc()
+{
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
+	int yPos = 15;
+
+	int yoffset = 48;
+
+	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
+
+	if (m_settings::BulletTPFlags && m_settings::Thickbullet_Indicator && m_settings::BulletTP)
+	{
+		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Bullet TP"), Color::Red(), Color::Black(), m_settings::fontsize);
+		yPos += 10;
+	}
+
+	if (m_settings::Manipulation && m_settings::BulletTP && m_settings::BulletTPFlags && m_settings::ManipFlags && m_settings::Manipulation_Indicator)
+	{
+		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
+		yPos += 10;
+	}
+	else if (m_settings::ManipFlags && m_settings::Manipulation_Indicator && UnityEngine::Input::GetKey(m_settings::ManipKey))
+	{
+		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
+		yPos += 10;
+	}
+
+	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
+	{
+		auto desynctime = UnityEngine::Time::get_realtimeSinceStartup() - AssemblyCSharp::LocalPlayer::get_Entity()->lastSentTickTime();
+		auto desyncpercentage = (((desynctime / 0.85f) * 100.0f) + 1.f) / 100;
+
+		float red, green, blue;
+		float Num = desyncpercentage;
+		float bars = 0;
+
+		if (desyncpercentage < 0.1)
+			Num = 0;
+
+		if (Num != 0) {
+			if (Num < 0.5) {
+				red = Num * 2.f * 255.f;
+				green = 255.f;
+				blue = 0.f;
+			}
+			else {
+				red = 255.f;
+				green = (2.f - 2.f * Num) * 255.f;
+				blue = 0.f;
+			}
+
+			if (Num > 1.f)
+				Num = 1.f;
+
+
+			float xzzzz = bars++;
+
+
+			auto xpostop = screen_center.x - 50;
+			auto xpostop2 = screen_center.x - 49;
+			auto ypostop = screen_center.y + yoffset;
+			UnityEngine::GL::RectangleFilled({ xpostop, ypostop - 1 }, { xpostop + 100, ypostop + 2 }, Color(0, 0, 0, 255.f).GetUnityColor());
+			UnityEngine::GL::RectangleFilled({ xpostop, ypostop + 1 }, { xpostop + 100, ypostop + 4 }, Color(0, 0, 0, 255.f).GetUnityColor());
+			UnityEngine::GL::RectangleFilled({ xpostop2, ypostop }, { xpostop2 + (100 * desynctime), ypostop + 3 }, Color((int)(red), (int)(green), (int)(blue), 255.f).GetUnityColor());
+			yoffset += 10;
+		}
+	}
+}
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
 	screen_center = { UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f };
@@ -373,6 +447,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	ConnectorClient();
 
 	SetupStyles();
+
+
+	if (!Hooks::ProjectileUpdatehk.IsHooked())
+	{
+		Hooks::ProjectileUpdatehk.PointerSwapHook(XS("Projectile"), HASH("Update"), &Hooks::ProjectileUpdate, XS(""), 0);
+	}
 
 	if (!Hooks::ClientInputhk.IsHooked())
 	{
@@ -408,10 +488,13 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 			if (InGame)
 			{
+				drawMisc();
 
-				Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
-				UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
-
+				if (m_settings::DrawFov)
+				{
+					Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
+					UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+				}
 				Visuals().CachePlayers();
 				Visuals().DrawPlayers();
 			}
@@ -477,18 +560,22 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			}
 		}
 
-		Hooks::OnGUIhk.Unhook();
-		Hooks::Update_hk.Unhook();
+
 		Hooks::ClientInputhk.Unhook();
 		ConnectionManager().Instance()->ResetPlayerCache();
 		Hooks::ProjectileShootHookhk.Unhook();
-
+		Hooks::DoAttackhk.Unhook();
+		Hooks::ProjectileUpdatehk.Unhook();
+		Hooks::PPA_WriteToStreamhk.Unhook();
 		connector::cheat_message msg;
 		msg.msg = connector::messages::LEAVE_SHARED_ESP;
 		msg.value = XS("ServerABCD"); //Name of channel
 		auto data = connector::data(msg);
 		net->send_data(data);
 		delete net;
+
+		Hooks::OnGUIhk.Unhook();
+		Hooks::Update_hk.Unhook();
 	}
 	
 	return;

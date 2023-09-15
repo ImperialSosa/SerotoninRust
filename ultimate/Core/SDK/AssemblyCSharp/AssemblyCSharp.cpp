@@ -919,28 +919,7 @@ namespace AssemblyCSharp {
 		return is_dead(this);
 	}
 
-	int BasePlayer::ClosesestToCrosshair(uintptr_t player) {
-		int bestBone = 0;
-		float closest = FLT_MAX;
-
-		auto base_p = reinterpret_cast<AssemblyCSharp::BasePlayer*>(player);
-
-		float screen_width = UnityEngine::Screen::get_width();
-		float screen_height = UnityEngine::Screen::get_height();
-
-		for (auto bone : { (int)RustStructs::bones::head,(int)RustStructs::bones::neck, (int)RustStructs::bones::spine4, (int)RustStructs::bones::spine3,(int)RustStructs::bones::spine2, (int)RustStructs::bones::spine1_scale, 14, 2, 55, 24, 13, 1, 56, 25, 76, 45, 16, 4, (int)RustStructs::bones::r_ankle_scale, (int)RustStructs::bones::l_ankle_scale,(int)RustStructs::bones::r_hand,(int)RustStructs::bones::l_hand }) {
-			Vector3 pos3d = base_p->get_bone_transform(bone)->get_position();
-			Vector2 pos;
-			if (UnityEngine::WorldToScreen(pos3d, pos) == false) continue;
-			float length = Math::sqrtf(Math::pow((screen_width / 2) - pos.x, 2) + Math::pow((screen_height / 2) - pos.y, 2));
-			if (length < closest) {
-				closest = length;
-
-				bestBone = bone;
-			}
-		}
-		return bestBone;
-	}
+	
 
 
 

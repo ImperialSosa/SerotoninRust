@@ -2,6 +2,8 @@
 #include "../../Includes/settings.hpp"
 inline bool aim_type_opened;
 inline bool chams_type_opened;
+inline bool bullet_tpe_open;
+inline bool aim_type_opene2;
 
 void MenuDraw::RenderMenu()
 {
@@ -61,42 +63,15 @@ void MenuDraw::RenderMenu()
 					Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
 
 
-					//Menu().Slider(XS(L"Bulletspeed"), m_settings::BulletsSpeeds, 0, 3);
-					//if (m_settings::Manipulation)
-					//{
-					//	Menu().Spacer(50);
-					//	Menu().Hotkey(XS(L"Manipulation Key"), m_settings::ManipulationKey);
-					//	//Menu().CheckBox(XS(L"incude bullet tp"), m_settings::IncludeFatBullet);
-					//}
-
-					//Menu().Slider(XS(L"test slider"), textnigga, 5, 1337);
-					//Menu().Spacer(50);
-					///Menu().Hotkey(XS(L"Manipulation Key"), ManipulationKey);
-
-					////Menu().ListBox("test listbox", parsed_scripts, selected_script);
-					//Menu().Dropdown(XS("aim type"), { XS("aimlock"), XS("silent") }, aim_type, aim_type_opened);
-					//Menu().Dropdown(XS("test"), { XS("test3"), XS("test4") }, aim_ty2pe, aim_type_opene2);
-
-					////Menu().Spacer(15);
-					//Menu().MultiDropdown(XS("options"), { XS("box"),XS("name"), XS("health"), XS("ammo"), XS("weapon") }, player_esp_options, player_esp_options_opened);
-					//Menu().Spacer(50);
-					//Menu().Hotkey(XS(L"test Key"), testkey);
 				}
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
-					//Unity_String aTest2[] = { Unity_String(XS(L"Head")), Unity_String(XS(L"Neck")),Unity_String(XS(L"Chest")),Unity_String(XS(L"Random")),Unity_String(XS(L"Closest to Crosshair")) };
 
-					//Menu().Button(XS("dees nuts"), &test);
-					//Menu().Spacer(15);
-					//Menu().Hotkey(XS(L"InstantKill Key"), testkey);
 
 					Menu().CheckBox(XS(L"Target NPC"), m_settings::AimbotNPC);
 					Menu().CheckBox(XS(L"Target Wounded"), m_settings::TargetWounded);
 					Menu().CheckBox(XS(L"Target FriendList"), m_settings::TargetFriendList);
-
-					//Menu().Dropdown(XS(L"Target Bone"), m_settings::SelectedAimbone, aTest2, 5)
-
 
 				}
 				break;
@@ -106,21 +81,13 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBoxKeyBind(XS(L"Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
 					Menu().CheckBoxKeyBind(XS(L"AutoShoot"), m_settings::Autoshoot, m_settings::AutoshootKey);
 
-					//Menu().CheckBox(XS(L"Autoshoot"), m_settings::Autoshoot);
 					if (m_settings::Autoshoot)
 					{
 						Menu().CheckBox(XS(L"AlwaysAutoshoot"), m_settings::AlwaysAutoshoot);
-						//Menu().CheckBox(XS(L"OnHalfDesync"), m_settings::OnHalfDesync);
 					}
 					Menu().CheckBox(XS(L"BulletTp"), m_settings::BulletTP);
 					Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
-					//if (m_settings::BulletTP)
-					//{
-					//	if (m_settings::BTPType == 1)
-					//	{
-					//		Menu().CheckBox(XS(L"AdvancedAngleScans"), m_settings::BulletTPAnglesAll);
-					//	}
-					//}
+					
 					Menu().CheckBox(XS(L"PierceMaterials"), m_settings::PierceMaterials);
 					Menu().CheckBox(XS(L"Bullet Queue"), m_settings::InstantKill);
 					if (m_settings::InstantKill)
@@ -130,27 +97,20 @@ void MenuDraw::RenderMenu()
 
 					Menu().CheckBox(XS(L"Instant Hit"), m_settings::InstantBullet);
 					Menu().CheckBox(XS(L"WaitForInstantHit"), m_settings::WaitForInstantHit);
-
-					//	Menu().CheckBox(XS(L"Floor Hugger"), m_settings::FloorHugger);
-
-						//Menu().Dropdown(XS("BulletTPType"), { XS("Default"), XS("Advanced") }, m_settings::BTPType, BTPTypefffff);
-
-
 				}
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Auto Reload"), m_settings::AutoReload);
 
-					//Menu().CheckBox(XS(L"Hitbox Override"), m_settings::HitboxOverride);
-					//if (m_settings::HitboxOverride)
-					//{
-					//	Menu().Dropdown(XS("Hitbox"), { XS("Head"), XS("Chest"), XS("Random") }, m_settings::SelectedHitbox, aim_type_opene2);
-					//}
+					Menu().CheckBox(XS(L"Hitbox Override"), m_settings::HitboxOverride);
+					if (m_settings::HitboxOverride)
+					{
+						Menu().Dropdown(XS("Hitbox"), { XS("Head"), XS("Chest"), XS("Random") }, m_settings::SelectedHitbox, aim_type_opene2);
+					}
 
-					//if (m_settings::BulletTP)
-					//	Menu().Dropdown(XS("BTP Mode"), { XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)") }, m_settings::BulletTPIntensity, bullet_tpe_open);
-
+					if (m_settings::BulletTP)
+						Menu().Dropdown(XS("BTP Mode"), { XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)") }, m_settings::BulletTPIntensity, bullet_tpe_open);
 				}
 				break;
 
@@ -186,12 +146,13 @@ void MenuDraw::RenderMenu()
 			Menu().SubTab(XS(L"Lootables"), 2, Vector2(117, 35));
 			Menu().SubTab(XS(L"Other"), 3, Vector2(117, 35));
 
-			switch (activesubtabv)
+			switch (activesubtab)
 			{
 			case 0:
 				Menu().BeginChild(XS(L"Visuals"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Username"), m_settings::nameEsp);
+					Menu().CheckBox(XS(L"Distance"), m_settings::DrawDistance);
 					Menu().CheckBox(XS(L"Box"), m_settings::BoxEsp);
 					if (m_settings::BoxEsp)
 						m_settings::CornerBox = false;
@@ -306,10 +267,134 @@ void MenuDraw::RenderMenu()
 			}
 			break;
 		case 2:
-			//SettingsTab().DrawSettingsTab();
+		{
+			Menu().SubTab(XS(L"LocalPlayer"), 0, Vector2(156, 35)); //468
+			Menu().SubTab(XS(L"Other"), 1, Vector2(156, 35));
+			Menu().SubTab(XS(L"Friends"), 2, Vector2(156, 35));
+			//Menu().SubTab(XS(L"World"), 3, Vector2(117, 35));
+
+			switch (activesubtab)
+			{
+			case 0:
+				Menu().BeginChild(XS(L"LocalPlayer"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Flyhack Indicator"), m_settings::Flyhack_Indicator);
+					Menu().CheckBox(XS(L"Anti FlyhackKick"), m_settings::AntiFlyKick);
+					Menu().CheckBox(XS(L"Spiderman"), m_settings::SpiderMan);
+					Menu().CheckBox(XS(L"SmallerLocalRadius"), m_settings::SmallerLocalRadius);
+					Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
+					Menu().CheckBox(XS(L"Infinite Jump"), m_settings::InfiniteJump);
+					Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
+					Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
+					Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
+					Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
+				}
+
+				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
+					Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
+					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
+					Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
+					Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
+					Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
+					Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
+					Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
+					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
+					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
+
+				}
+				break;
+			case 1:
+				Menu().BeginChild(XS(L"Misc"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBoxKeyBind(XS(L"Zoom"), m_settings::Zoom, m_settings::ZoomKey);
+					if (m_settings::Zoom) {
+						Menu().Slider(XS(L"Zoom Amount"), m_settings::ZoomAmount, 0, 50);
+					}
+
+					Menu().CheckBox(XS(L"PlayerFov"), m_settings::PlayerFov);
+					if (m_settings::PlayerFov) {
+						Menu().Slider(XS(L"PlayerFov Amount"), m_settings::PlayerFovAmount, 0, 140);
+					}
+
+					Menu().CheckBox(XS(L"AutoFarmTree"), m_settings::AutoFarmTree);
+					Menu().CheckBox(XS(L"AutoFarmOre"), m_settings::AutoFarmOre);
+
+				}
+
+				Menu().BeginChild(XS(L"World"), { 285,45 }, { 220,290 });
+				{
+					Menu().CheckBox(XS(L"Brightnight"), m_settings::Brightnight);
+					Menu().CheckBox(XS(L"Stars"), m_settings::Stars);
+					Menu().CheckBox(XS(L"BrightCave"), m_settings::BrightCave);
+					Menu().CheckBox(XS(L"TimeChanger"), m_settings::TimeChanger);
+					if (m_settings::TimeChanger) {
+						Menu().Slider(XS(L"GameTime: "), m_settings::GameTime, 0, 24);
+					}
+					Menu().CheckBox(XS(L"RemoveUnderwaterEffects"), m_settings::RemoveUnderwaterEffects);
+				}
+				break;
+
+			case 2:
+				/*Menu().BeginChild(XS(L"Friend List"), { 60,45 }, { 220,290 });
+				{
+					for (const auto& wideKey : wideKeys) {
+						Menu().Text(wideKey.c_str());
+					}
+				}
+
+				Menu().BeginChild(XS(L"Settings"), { 285,45 }, { 220,290 });
+				{
+					Menu().CheckBoxKeyBind(XS(L"Add Friends"), m_settings::removefriend1, m_settings::AddFriend);
+					Menu().CheckBoxKeyBind(XS(L"Remove Friend"), m_settings::removefriend2, m_settings::RemoveFriend);
+					Menu().CheckBoxKeyBind(XS(L"Remove All"), m_settings::removefriend3, m_settings::RemoveAllFriends);
+				}*/
+				break;
+
+				/*case 3:
+					Menu().BeginChild(XS(L"Page1"), { 60,45 }, { 220,290 });
+					{
+
+					}
+
+					Menu().BeginChild(XS(L"Page2"), { 285,45 }, { 220,290 });
+					{
+					}
+					break;*/
+			}
+		}
 			break;
 		case 3:
-			//WeaponTab().DrawWeaponTab();
+			Menu().BeginChild(XS(L"Weapon"), { 60,45 }, { 220,290 });
+			{
+				Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
+				Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
+				if (m_settings::ChangeRecoil) {
+					Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
+					Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+				}
+				Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
+				if (m_settings::NormalThickBullet) {
+					Menu().Slider(XS(L"Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
+				}
+				Menu().CheckBox(XS(L"Fast Bullet"), m_settings::NormalFastBullet);
+				Menu().CheckBox(XS(L"Force Automatic"), m_settings::ForceAutomatic);
+				Menu().CheckBox(XS(L"NoSpread"), m_settings::NoSpread);
+				Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
+				Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
+				Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
+			}
+
+			Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
+			{
+				Menu().CheckBoxKeyBind(XS(L"WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
+				if (m_settings::WeaponSpammer) {
+					Menu().Slider(XS(L"WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
+				}
+
+				//Menu().Slider(XS(L"Recoil %"), m_settings::recoilPercent, 0, 100);
+			}
 			break;
 		case 4:
 			//ColorTab().DrawColorTab();
