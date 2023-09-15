@@ -810,6 +810,9 @@ auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 	if (!IsAddressValid(AimbotTarget.m_player))
 		return;
 
+	if (this->BulletTPAngle.IsZero())
+		this->BulletTPAngle = AimbotTarget.m_position;
+
 	if (m_settings::Autoshoot && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()))
 	{
 		if (m_settings::WaitForInstantHit)
