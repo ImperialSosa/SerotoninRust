@@ -195,7 +195,13 @@ void Visuals::DrawPlayers()
 			auto Target_Color = Color{ m_settings::Target_Color[0], m_settings::Target_Color[1], m_settings::Target_Color[2], m_settings::Target_Color[3] };
 
 			bool isFriend = false;
-			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(BasePlayer->get_positionz(), 500);
+			auto camera = UnityEngine::Camera::get_main();
+			if (!IsAddressValid(camera))
+				return;
+
+			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+			if (!IsAddressValid(m_target.m_player))
+				return;
 
 			Color BoxColor;
 
