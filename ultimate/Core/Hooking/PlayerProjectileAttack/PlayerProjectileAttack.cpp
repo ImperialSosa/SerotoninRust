@@ -25,15 +25,15 @@ void Hooks::PPA_WriteToStream(ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf:
 
 	auto PlayerAttack = _This->playerAttack();
 
-	if (PlayerAttack) {
+	if (IsAddressValid(PlayerAttack)) {
 
 		auto attack = PlayerAttack->attack();
 
-		if (attack)
+		if (IsAddressValid(attack))
 		{
 
 			auto camera = UnityEngine::Camera::get_main();
-			if (camera) {
+			if (IsAddressValid(camera)) {
 
 				auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
 				if (AimbotTarget.m_player) {
@@ -143,18 +143,11 @@ void Hooks::PPA_WriteToStream(ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf:
 									attack->hitPositionLocal() = { .9f, -.4f, .1f };
 									attack->hitNormalLocal() = { .9f, -.4f, .1f };
 								}
-
 							}
-
 						}
-
 					}
 				}
-
 			}
-
-
-
 		}
 	}
 
