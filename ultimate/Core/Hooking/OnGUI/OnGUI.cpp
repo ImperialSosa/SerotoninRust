@@ -49,10 +49,10 @@ void ConnectorClient()
 
 	static bool LoadOnce = false;
 
-	//connector::cheat_message msg;
-	//msg.msg = connector::messages::JOIN_SHARED_ESP;
-	//msg.value = XS("ServerABCD"); //Name of channel
-	//auto data = connector::data(msg);
+	connector::cheat_message msg;
+	msg.msg = connector::messages::JOIN_SHARED_ESP;
+	msg.value = XS("ServerABCD"); //Name of channel
+	auto data = connector::data(msg);
 
 
 	if (current_time - send_time > 0.02f)
@@ -65,9 +65,9 @@ void ConnectorClient()
 
 			if (!LoadOnce)
 			{
-				//net->send_data(data);
+				net->send_data(data);
 
-				//LOG(XS("[DEBUG] Connected to SharedESP channel"));
+				LOG(XS("[DEBUG] Connected to SharedESP channel"));
 				LoadOnce = true;
 			}
 
@@ -325,7 +325,7 @@ void SetupBundles()
 				send_time = current_time;
 			}
 	}
-	}
+}
 	if (m_settings::LoadGalaxy) {
 		if (!GalaxyBundle)
 		{
@@ -367,6 +367,8 @@ void SetupBundles()
 
 
 #include "../../Features/Features/Features.hpp"
+#include "../../Configs/Configs.hpp"
+
 void drawMisc()
 {
 	if (!InGame)
@@ -380,42 +382,6 @@ void drawMisc()
 	int yoffset = 48;
 
 	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
-
-	if (m_settings::Crosshair)
-	{
-		auto Crosshair_Color = Color{ m_settings::Crosshair_Color[0], m_settings::Crosshair_Color[1], m_settings::Crosshair_Color[2], 255 };
-
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x + 8, screen_center.y), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x - 7, screen_center.y), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y + 8), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y - 7), Color::Red());
-	}
-
-	if (m_settings::DrawFov)
-	{
-		Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
-		UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
-	}
-
-	if (m_settings::Aimline)
-	{
-		auto camera = UnityEngine::Camera::get_main();
-		if (IsAddressValid(camera)) {
-			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
-			if (m_target.m_player)
-			{
-				auto targetPos = m_target.m_position;
-				if (!targetPos.IsZero())
-				{
-					Vector2 w2sPos;
-					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
-					{
-						UnityEngine::GL::Line(Vector2(UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f), w2sPos, Color::Red());
-					}
-				}
-			}
-		}
-	}
 
 	if (m_settings::BulletTPFlags && m_settings::Thickbullet_Indicator && m_settings::BulletTP)
 	{
@@ -483,8 +449,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	ConnectorClient();
 
-	SetupStyles();
-
 	if (!Hooks::ProjectileUpdatehk.IsHooked())
 	{
 		Hooks::ProjectileUpdatehk.PointerSwapHook(XS("Projectile"), HASH("Update"), &Hooks::ProjectileUpdate, XS(""), 0);
@@ -499,40 +463,53 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	if (MenuIconBundles)
 	{
+		SetupStyles();
+
 		MenuDraw().RenderMenu();
 
+
+		//Configs().SaveConfig();
+
 		auto m_Event = UnityEngine::Event::Current();
-		if (m_Event->Type() == RustStructs::EventType::Repaint)
+		if (IsAddressValid(m_Event))
 		{
-			TextDrawBegin();
-
-			if (ConnectionManager().IsConnected())
-				InGame = true;
-			else
-				InGame = false;
-
-			notifcations::object.run();
-
-			static bool has_init = false;
-			if (!has_init)
+			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{
-				const auto string = std::wstring(XS(L"[Serotonin] Successfully Loaded!"));
-				notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+				TextDrawBegin();
 
-				has_init = true;
+				if (ConnectionManager().IsConnected())
+					InGame = true;
+				else
+					InGame = false;
+
+				notifcations::object.run();
+
+				static bool has_init = false;
+				if (!has_init)
+				{
+					const auto string = std::wstring(XS(L"[Serotonin] Successfully Loaded!"));
+					notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+					has_init = true;
+				}
+
+				if (InGame)
+				{
+					drawMisc();
+
+					if (m_settings::DrawFov)
+					{
+						Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
+						UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+					}
+					Visuals().CachePlayers();
+					Visuals().DrawPlayers();
+				}
+
+				TextDrawEnd();
 			}
 
-			if (InGame)
-			{
-				drawMisc();
-
-				Visuals().CachePlayers();
-				Visuals().DrawPlayers();
-			}
-
-			TextDrawEnd();
 		}
-
 	}
 	
 	if (UnityEngine::Input::GetKey(RustStructs::End))

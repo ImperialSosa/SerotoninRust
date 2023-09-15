@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Configs\Configs.cpp" />
     <ClCompile Include="Core\ConnectionManager\ConnectionManager.cpp" />
     <ClCompile Include="Core\Core.cpp" />
     <ClCompile Include="Core\CRT\color.cpp" />
@@ -185,6 +186,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Configs\Configs.hpp" />
     <ClInclude Include="Core\Config\Config.h" />
     <ClInclude Include="Core\ConnectionManager\ConnectionManager.hpp" />
     <ClInclude Include="Core\Core.hpp" />
@@ -260,6 +262,7 @@
     <ClInclude Include="Core\SDK\System\System.hpp" />
     <ClInclude Include="Core\SDK\UnityEngine\UnityEngine.hpp" />
     <ClInclude Include="Core\Utils\hash.hpp" />
+    <ClInclude Include="Core\Utils\json.hpp" />
     <ClInclude Include="Core\Utils\stb_sprintf.h" />
     <ClInclude Include="Core\Utils\xorstr.hpp" />
   </ItemGroup>
