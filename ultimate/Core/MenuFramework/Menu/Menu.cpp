@@ -51,9 +51,9 @@ void MenuDraw::RenderMenu()
 				Menu().BeginChild(XS(L"Aimbot"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Silent Aimbot"), m_settings::SilentAim);
-					Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
+					//Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
 					Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
-					Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
+					//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
 					if (m_settings::HeliAimbot)
 					{
 						Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
@@ -71,7 +71,7 @@ void MenuDraw::RenderMenu()
 
 					Menu().CheckBox(XS(L"Target NPC"), m_settings::AimbotNPC);
 					Menu().CheckBox(XS(L"Target Wounded"), m_settings::TargetWounded);
-					Menu().CheckBox(XS(L"Target FriendList"), m_settings::TargetFriendList);
+					//Menu().CheckBox(XS(L"Target FriendList"), m_settings::TargetFriendList);
 
 				}
 				break;
@@ -92,7 +92,7 @@ void MenuDraw::RenderMenu()
 					}
 
 					Menu().CheckBox(XS(L"BulletTp"), m_settings::BulletTP);
-					Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
+					//Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
 
 					Menu().CheckBox(XS(L"PierceMaterials"), m_settings::PierceMaterials);
 					Menu().CheckBox(XS(L"Bullet Queue"), m_settings::InstantKill);
@@ -107,7 +107,7 @@ void MenuDraw::RenderMenu()
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
-					Menu().CheckBox(XS(L"Auto Reload"), m_settings::AutoReload);
+				//	Menu().CheckBox(XS(L"Auto Reload"), m_settings::AutoReload);
 
 					Menu().CheckBox(XS(L"Hitbox Override"), m_settings::HitboxOverride);
 					if (m_settings::HitboxOverride)
@@ -169,11 +169,11 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Healthbar"), m_settings::healthBar);
 					Menu().CheckBox(XS(L"Helditem"), m_settings::helditem);
 					Menu().CheckBox(XS(L"isOutside"), m_settings::BaseCheck);
-					Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
-					Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
+					//Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
+				//	Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
 					Menu().CheckBox(XS(L"PlayerChams"), m_settings::PlayerChams);
-					Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
-					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
+				//	Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
+				//	Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
 					//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
 					Menu().CheckBoxKeyBind(XS(L"Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
 					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy") }, m_settings::SelectedChams, chams_type_opened);
@@ -190,7 +190,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Npc's"), m_settings::DrawNPC);
 					Menu().CheckBox(XS(L"Sleepers"), m_settings::DrawSleepers);
 					//Menu().CheckBox(XS(L"Disconnected"), m_settings::DrawAis);
-					Menu().CheckBox(XS(L"ShowCheatsUsers"), m_settings::ShowUsers);
+					//Menu().CheckBox(XS(L"ShowCheatsUsers"), m_settings::ShowUsers);
 
 					Menu().Slider(XS(L"PlayerDistance"), m_settings::PlayerESPDistance, 0, 500);
 					Menu().Slider(XS(L"NPC Distance"), m_settings::NPCDistance, 0, 500);
@@ -286,59 +286,59 @@ void MenuDraw::RenderMenu()
 				{
 					Menu().CheckBox(XS(L"Flyhack Indicator"), m_settings::Flyhack_Indicator);
 					Menu().CheckBox(XS(L"Anti FlyhackKick"), m_settings::AntiFlyKick);
-					Menu().CheckBox(XS(L"Spiderman"), m_settings::SpiderMan);
-					Menu().CheckBox(XS(L"SmallerLocalRadius"), m_settings::SmallerLocalRadius);
-					Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
-					Menu().CheckBox(XS(L"Infinite Jump"), m_settings::InfiniteJump);
-					Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
-					Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
-					Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
-					Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
+					//Menu().CheckBox(XS(L"Spiderman"), m_settings::SpiderMan);
+					//Menu().CheckBox(XS(L"SmallerLocalRadius"), m_settings::SmallerLocalRadius);
+					//Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
+					//Menu().CheckBox(XS(L"Infinite Jump"), m_settings::InfiniteJump);
+					//Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
+					//Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
+					//Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
+					//Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
 				}
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
-					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
-					Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
-					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
-					Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
-					Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
-					Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
-					Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
-					Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
-					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
-					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
+					//Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
+					//Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
+					//Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
+					//Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
+					//Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
+					//Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
+					//Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
+					//Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
+					//Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
+					//Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 
 				}
 				break;
 			case 1:
 				Menu().BeginChild(XS(L"Misc"), { 60,45 }, { 220,290 });
 				{
-					Menu().CheckBoxKeyBind(XS(L"Zoom"), m_settings::Zoom, m_settings::ZoomKey);
-					if (m_settings::Zoom) {
-						Menu().Slider(XS(L"Zoom Amount"), m_settings::ZoomAmount, 0, 50);
-					}
-
-					Menu().CheckBox(XS(L"PlayerFov"), m_settings::PlayerFov);
-					if (m_settings::PlayerFov) {
-						Menu().Slider(XS(L"PlayerFov Amount"), m_settings::PlayerFovAmount, 0, 140);
-					}
-
-					Menu().CheckBox(XS(L"AutoFarmTree"), m_settings::AutoFarmTree);
-					Menu().CheckBox(XS(L"AutoFarmOre"), m_settings::AutoFarmOre);
+					//Menu().CheckBoxKeyBind(XS(L"Zoom"), m_settings::Zoom, m_settings::ZoomKey);
+					//if (m_settings::Zoom) {
+					//	Menu().Slider(XS(L"Zoom Amount"), m_settings::ZoomAmount, 0, 50);
+					//}
+					//
+					//Menu().CheckBox(XS(L"PlayerFov"), m_settings::PlayerFov);
+					//if (m_settings::PlayerFov) {
+					//	Menu().Slider(XS(L"PlayerFov Amount"), m_settings::PlayerFovAmount, 0, 140);
+					//}
+					//
+					//Menu().CheckBox(XS(L"AutoFarmTree"), m_settings::AutoFarmTree);
+					//Menu().CheckBox(XS(L"AutoFarmOre"), m_settings::AutoFarmOre);
 
 				}
 
 				Menu().BeginChild(XS(L"World"), { 285,45 }, { 220,290 });
 				{
-					Menu().CheckBox(XS(L"Brightnight"), m_settings::Brightnight);
-					Menu().CheckBox(XS(L"Stars"), m_settings::Stars);
-					Menu().CheckBox(XS(L"BrightCave"), m_settings::BrightCave);
-					Menu().CheckBox(XS(L"TimeChanger"), m_settings::TimeChanger);
-					if (m_settings::TimeChanger) {
-						Menu().Slider(XS(L"GameTime: "), m_settings::GameTime, 0, 24);
-					}
-					Menu().CheckBox(XS(L"RemoveUnderwaterEffects"), m_settings::RemoveUnderwaterEffects);
+					//Menu().CheckBox(XS(L"Brightnight"), m_settings::Brightnight);
+					//Menu().CheckBox(XS(L"Stars"), m_settings::Stars);
+					//Menu().CheckBox(XS(L"BrightCave"), m_settings::BrightCave);
+					//Menu().CheckBox(XS(L"TimeChanger"), m_settings::TimeChanger);
+					//if (m_settings::TimeChanger) {
+					//	Menu().Slider(XS(L"GameTime: "), m_settings::GameTime, 0, 24);
+					//}
+					//Menu().CheckBox(XS(L"RemoveUnderwaterEffects"), m_settings::RemoveUnderwaterEffects);
 				}
 				break;
 
@@ -374,32 +374,32 @@ void MenuDraw::RenderMenu()
 		case 3:
 			Menu().BeginChild(XS(L"Weapon"), { 60,45 }, { 220,290 });
 			{
-				Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
-				Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
-				if (m_settings::ChangeRecoil) {
-					Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
-					Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
-				}
-				Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
-				if (m_settings::NormalThickBullet) {
-					Menu().Slider(XS(L"Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
-				}
-				Menu().CheckBox(XS(L"Fast Bullet"), m_settings::NormalFastBullet);
-				Menu().CheckBox(XS(L"Force Automatic"), m_settings::ForceAutomatic);
-				Menu().CheckBox(XS(L"NoSpread"), m_settings::NoSpread);
-				Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
-				Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
-				Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
+				//Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
+				//Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
+				//if (m_settings::ChangeRecoil) {
+				//	Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
+				//	Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+				//}
+				//Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
+				//if (m_settings::NormalThickBullet) {
+				//	Menu().Slider(XS(L"Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
+				//}
+				//Menu().CheckBox(XS(L"Fast Bullet"), m_settings::NormalFastBullet);
+				//Menu().CheckBox(XS(L"Force Automatic"), m_settings::ForceAutomatic);
+				//Menu().CheckBox(XS(L"NoSpread"), m_settings::NoSpread);
+				//Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
+				//Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
+				//Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
 			}
 
 			Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 			{
-				Menu().CheckBoxKeyBind(XS(L"WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
-				if (m_settings::WeaponSpammer) {
-					Menu().Slider(XS(L"WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
-				}
+				//Menu().CheckBoxKeyBind(XS(L"WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
+				//if (m_settings::WeaponSpammer) {
+				//	Menu().Slider(XS(L"WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
+				//}
 
-				//Menu().Slider(XS(L"Recoil %"), m_settings::recoilPercent, 0, 100);
+			
 			}
 			break;
 		case 4:
