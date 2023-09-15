@@ -209,7 +209,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
 
-	if (IsAddressValid(BaseProjectile))
+	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
 		Features().AutoShoot(BaseProjectile);
 		Features().FastBullet(BaseProjectile);
