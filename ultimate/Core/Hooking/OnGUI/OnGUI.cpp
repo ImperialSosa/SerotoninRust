@@ -367,6 +367,8 @@ void SetupBundles()
 
 
 #include "../../Features/Features/Features.hpp"
+#include "../../Configs/Configs.hpp"
+
 void drawMisc()
 {
 	if (!InGame)
@@ -447,9 +449,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	ConnectorClient();
 
-	SetupStyles();
-
-
 	if (!Hooks::ProjectileUpdatehk.IsHooked())
 	{
 		Hooks::ProjectileUpdatehk.PointerSwapHook(XS("Projectile"), HASH("Update"), &Hooks::ProjectileUpdate, XS(""), 0);
@@ -464,45 +463,53 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	if (MenuIconBundles)
 	{
+		SetupStyles();
+
 		MenuDraw().RenderMenu();
 
+
+		//Configs().SaveConfig();
+
 		auto m_Event = UnityEngine::Event::Current();
-		if (m_Event->Type() == RustStructs::EventType::Repaint)
+		if (IsAddressValid(m_Event))
 		{
-			TextDrawBegin();
-
-			if (ConnectionManager().IsConnected())
-				InGame = true;
-			else
-				InGame = false;
-
-			notifcations::object.run();
-
-			static bool has_init = false;
-			if (!has_init)
+			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{
-				const auto string = std::wstring(XS(L"[Serotonin] Successfully Loaded!"));
-				notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+				TextDrawBegin();
 
-				has_init = true;
-			}
+				if (ConnectionManager().IsConnected())
+					InGame = true;
+				else
+					InGame = false;
 
-			if (InGame)
-			{
-				drawMisc();
+				notifcations::object.run();
 
-				if (m_settings::DrawFov)
+				static bool has_init = false;
+				if (!has_init)
 				{
-					Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
-					UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+					const auto string = std::wstring(XS(L"[Serotonin] Successfully Loaded!"));
+					notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+					has_init = true;
 				}
-				Visuals().CachePlayers();
-				Visuals().DrawPlayers();
+
+				if (InGame)
+				{
+					drawMisc();
+
+					if (m_settings::DrawFov)
+					{
+						Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
+						UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+					}
+					Visuals().CachePlayers();
+					Visuals().DrawPlayers();
+				}
+
+				TextDrawEnd();
 			}
 
-			TextDrawEnd();
 		}
-
 	}
 	
 	if (UnityEngine::Input::GetKey(RustStructs::End))

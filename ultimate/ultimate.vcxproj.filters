@@ -33,6 +33,10 @@
     <ClCompile Include="Core\Hooking\WriteToStream\WriteToStream.cpp" />
     <ClCompile Include="Core\MenuFramework\Drawing\Drawing.cpp" />
     <ClCompile Include="Core\MenuFramework\Menu\Menu.cpp" />
+    <ClCompile Include="Core\Hooking\PlayerProjectileAttack\PlayerProjectileAttack.cpp" />
+    <ClCompile Include="Core\Hooking\DoAttack\DoAttack.cpp" />
+    <ClCompile Include="Core\Hooking\ProjectileUpdate\ProjectileUpdate.cpp" />
+    <ClCompile Include="Core\Configs\Configs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />
@@ -112,5 +116,7 @@
     <ClInclude Include="Core\MenuFramework\Drawing\Drawing.hpp" />
     <ClInclude Include="Core\MenuFramework\Menu\Menu.hpp" />
     <ClInclude Include="Core\Features\Notifications\Notifications.hpp" />
+    <ClInclude Include="Core\Utils\json.hpp" />
+    <ClInclude Include="Core\Configs\Configs.hpp" />
   </ItemGroup>
 </Project>
