@@ -61,7 +61,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
-	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
+	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
 		Features().Instance()->FindManipulationAngles(num6);
 	}

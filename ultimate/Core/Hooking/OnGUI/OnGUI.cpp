@@ -439,6 +439,7 @@ void drawMisc()
 		}
 	}
 }
+
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
 	screen_center = { UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f };
