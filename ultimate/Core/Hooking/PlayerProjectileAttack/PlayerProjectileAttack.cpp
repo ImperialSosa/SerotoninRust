@@ -9,7 +9,8 @@ void Hooks::PPA_WriteToStream(ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf:
 	if (!IsAddressValid(Features().Instance()->LocalPlayer))
 		return Hooks::PPA_WriteToStreamhk.get_original< decltype(&PPA_WriteToStream)>()(_This, Stream);
 
-
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::PPA_WriteToStreamhk.get_original< decltype(&PPA_WriteToStream)>()(_This, Stream);
 
 	if (!_This || !Stream)
 	{

@@ -26,6 +26,11 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 	if (!InGame)
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
 
+	if (!IsAddressValid(Features().LocalPlayer))
+		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
 
 	float Thickness = m_settings::NormalThickBulletThickness / 10;
 	if (m_settings::NormalThickBullet)

@@ -10,9 +10,14 @@ void ConnectionManager::ResetPlayerCache()
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;
 
-	//auto target = AssemblyCSharp::BasePlayer::GetAimbotTarget();
-	//// Clear the target instance
-	//target.Clear();
+	auto camera = UnityEngine::Camera::get_main();
+	if (IsAddressValid(camera))
+	{
+		auto target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz());
+		//// Clear the target instance
+		target.Clear();
+	}
+
 	translated_map.clear();
 	VisualsArray.clear();
 	VisualsArrayTemp.clear();
@@ -70,5 +75,6 @@ bool ConnectionManager::IsConnected()
 		return false;
 	}
 
-	return LocalPlayer->IsAlive();
+
+	return LocalPlayer->IsAlive() && !LocalPlayer->IsSleeping();
 }

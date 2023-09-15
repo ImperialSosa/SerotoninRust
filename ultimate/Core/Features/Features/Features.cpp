@@ -453,6 +453,12 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	if (!InGame)
 		return;
 
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 	if (!IsAddressValid(LocalPlayer))
 		return;
 
@@ -528,6 +534,12 @@ auto Features::FindManipulationAngles(float MaxDesyncValue) -> void
 	if (!InGame)
 		return;
 
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 	if (!IsAddressValid(LocalPlayer))
 		return;
 
@@ -574,6 +586,15 @@ auto Features::GetManipulationAngle() -> Vector3 {
 
 auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 {
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 	if (!IsAddressValid(BaseProjectile))
 		return;
 
@@ -748,6 +769,15 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 
 auto Features::FastBullet(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 {
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 	if (!IsAddressValid(BaseProjectile))
 		return;
 
@@ -799,6 +829,15 @@ auto Features::FastBullet(AssemblyCSharp::BaseProjectile* BaseProjectile) -> voi
 
 auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 {
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 	if (!IsAddressValid(BaseProjectile))
 		return;
 

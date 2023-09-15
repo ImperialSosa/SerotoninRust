@@ -97,6 +97,9 @@ void Hooks::DoAttack(AssemblyCSharp::BaseProjectile* _This)
 	if(!IsAddressValid(Features().LocalPlayer))
 		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
 
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
+
 	if (Features().LocalPlayer->lifestate() & RustStructs::Dead || !Features().LocalPlayer->IsConnected())
 	{
 		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
@@ -108,6 +111,7 @@ void Hooks::DoAttack(AssemblyCSharp::BaseProjectile* _This)
 	CalledLaunchFromHook = true;
 
 	Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
+
 	auto camera = UnityEngine::Camera::get_main();
 	if (!IsAddressValid(camera))
 		return Hooks::DoAttackhk.get_original< decltype(&DoAttack)>()(_This);
