@@ -5,5 +5,7 @@
 
 class Configs {
 public:
-	void SaveConfig();
+	static void SaveConfig();
+	static void LoadConfig();
+
 };

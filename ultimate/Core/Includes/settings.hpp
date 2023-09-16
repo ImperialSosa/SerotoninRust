@@ -31,6 +31,7 @@ namespace m_settings {
 	inline bool InstantBullet = false;
 	inline bool FixDebugCamera = false;
 	inline int SelectedChams = 0;
+	inline int SelectedConfig = 0;
 	inline bool InstantKill = false;
 	inline bool WaitForBulletTP = false;
 	inline bool Target_Indicator = false;

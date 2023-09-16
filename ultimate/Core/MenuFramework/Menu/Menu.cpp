@@ -3,7 +3,10 @@
 inline bool aim_type_opened;
 inline bool chams_type_opened;
 inline bool bullet_tpe_open;
+inline bool config_type_open;
+
 inline bool aim_type_opene2;
+#include "../../Configs/Configs.hpp"
 
 void MenuDraw::RenderMenu()
 {
@@ -403,7 +406,35 @@ void MenuDraw::RenderMenu()
 			}
 			break;
 		case 4:
-			//ColorTab().DrawColorTab();
+			Menu().BeginChild(XS(L"Colors"), { 60,45 }, { 220,290 });
+			{
+			
+				//Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
+				//Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
+				//if (m_settings::ChangeRecoil) {
+				//	Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
+				//	Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+				//}
+				//Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
+				//if (m_settings::NormalThickBullet) {
+				//	Menu().Slider(XS(L"Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
+				//}
+				//Menu().CheckBox(XS(L"Fast Bullet"), m_settings::NormalFastBullet);
+				//Menu().CheckBox(XS(L"Force Automatic"), m_settings::ForceAutomatic);
+				//Menu().CheckBox(XS(L"NoSpread"), m_settings::NoSpread);
+				//Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
+				//Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
+				//Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
+			}
+
+			Menu().BeginChild(XS(L"Configs"), { 285,45 }, { 220,290 });
+			{
+				Menu().Button(XS("Save Config"), Configs::SaveConfig);
+				Menu().Button(XS("Load Config"), Configs::LoadConfig);
+				Menu().Spacer(30);
+				
+				Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
+			}
 			break;
 		}
 	}

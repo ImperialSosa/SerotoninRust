@@ -72,7 +72,7 @@ public:
 
 			color.m_alpha = alpha / 255.f;
 
-			char str[128];
+			char str[256];
 			auto test = utf16_to_utf8(notify->m_text.GetWchar());
 			sprintf(str, XS("%ls"), test.c_str());
 			std::string WaterMark = str;

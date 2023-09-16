@@ -608,8 +608,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		MenuDraw().RenderMenu();
 
-		//Configs().SaveConfig();
-
 		auto m_Event = UnityEngine::Event::Current();
 		if (IsAddressValid(m_Event))
 		{

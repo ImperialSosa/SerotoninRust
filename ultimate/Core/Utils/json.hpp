@@ -38,7 +38,7 @@ bool my_isinf(T value) {
 }
 template <typename T>
 bool my_signbit(T value) {
-    static_assert(std::is_floating_point<T>::value, XS("T must be a floating-point type"));
+    static_assert(std::is_floating_point<T>::value, "T must be a floating-point type");
     return value < T(0);
 }
 
@@ -9761,7 +9761,7 @@ class binary_reader
             default: // anything else not supported (yet)
             {
                 std::array<char, 3> cr{{}};
-                static_cast<void>((std::snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast<unsigned char>(element_type))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+                static_cast<void>(LI_FN(snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast<unsigned char>(element_type))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
                 const std::string cr_str{cr.data()};
                 return sax->parse_error(element_type_parse_position, cr_str,
                                         parse_error::create(114, element_type_parse_position, concat("Unsupported BSON record type 0x", cr_str), nullptr));
@@ -10802,7 +10802,7 @@ class binary_reader
             case 0x9F:
                 return get_msgpack_array(conditional_static_cast<std::size_t>(static_cast<unsigned int>(current) & 0x0Fu));
 
-            // fixstr
+            // fitr
             case 0xA0:
             case 0xA1:
             case 0xA2:
@@ -11015,7 +11015,7 @@ class binary_reader
 
         switch (current)
         {
-            // fixstr
+            // fitr
             case 0xA0:
             case 0xA1:
             case 0xA2:
@@ -12333,7 +12333,7 @@ class binary_reader
     std::string get_token_string() const
     {
         std::array<char, 3> cr{{}};
-        static_cast<void>((std::snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast<unsigned char>(current))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
+        static_cast<void>(LI_FN(snprintf)(cr.data(), cr.size(), "%.2hhX", static_cast<unsigned char>(current))); // NOLINT(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
         return std::string{cr.data()};
     }
 
@@ -15852,7 +15852,7 @@ class binary_writer
                 const auto N = j.m_data.m_value.string->size();
                 if (N <= 31)
                 {
-                    // fixstr
+                    // fitr
                     write_number(static_cast<std::uint8_t>(0xA0 | N));
                 }
                 else if (N <= (std::numeric_limits<std::uint8_t>::max)())
@@ -18735,14 +18735,14 @@ class serializer
                                 if (codepoint <= 0xFFFF)
                                 {
                                     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
-                                    static_cast<void>((std::snprintf)(string_buffer.data() + bytes, 7, "\\u%04x",
+                                    static_cast<void>(LI_FN(snprintf)(string_buffer.data() + bytes, 7, "\\u%04x",
                                                                       static_cast<std::uint16_t>(codepoint)));
                                     bytes += 6;
                                 }
                                 else
                                 {
                                     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
-                                    static_cast<void>((std::snprintf)(string_buffer.data() + bytes, 13, "\\u%04x\\u%04x",
+                                    static_cast<void>(LI_FN(snprintf)(string_buffer.data() + bytes, 13, "\\u%04x\\u%04x",
                                                                       static_cast<std::uint16_t>(0xD7C0u + (codepoint >> 10u)),
                                                                       static_cast<std::uint16_t>(0xDC00u + (codepoint & 0x3FFu))));
                                     bytes += 12;
@@ -19101,7 +19101,7 @@ class serializer
 
         // the actual conversion
         // NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg,hicpp-vararg)
-        std::ptrdiff_t len = (std::snprintf)(number_buffer.data(), number_buffer.size(), "%.*g", d, x);
+        std::ptrdiff_t len = LI_FN(snprintf)(number_buffer.data(), number_buffer.size(), "%.*g", d, x);
 
         // negative value indicates an error
         JSON_ASSERT(len > 0);
