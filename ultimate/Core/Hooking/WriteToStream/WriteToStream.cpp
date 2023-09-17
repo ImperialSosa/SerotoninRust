@@ -124,7 +124,6 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
 
-
 		if (AimbotTarget.m_heli && m_settings::HeliAimbot)
 		{
 			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, BaseProjectile, AimbotTarget.m_position, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;

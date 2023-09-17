@@ -93,6 +93,7 @@ struct box_bounds {
 inline std::string xCheatsKey;
 inline std::vector<const char*> xCheatsUserArr;
 
+inline std::string GlobalMessage;
 inline float LocalPosX;
 inline float LocalPosY;
 inline float LocalPosZ;
@@ -105,7 +106,7 @@ inline std::vector<std::string> xCheatsArr;
 inline std::wstring xChetasRecievedKey;
 inline uint32_t xCheatsRecievedSteamID;
 
-//#define DEBUG_MODE //comment out for EAC 
+#define DEBUG_MODE //comment out for EAC 
 
 inline char buffer[512];
 

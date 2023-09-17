@@ -151,7 +151,18 @@ namespace UnityEngine {
 			}
 			return result;
 		}
+		Vector3 lerp(Vector3 v, float x, bool clamp = true)
+		{
+			auto delta = (v - *this);
+			if (clamp)
+				delta.clamp();
 
+			auto result = (*this + delta * x);
+			if (clamp)
+				result.clamp();
+
+			return result;
+		}
 
 		static float Distance(Vector3 a, Vector3 b)
 		{

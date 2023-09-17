@@ -242,6 +242,8 @@ namespace m_settings {
 	inline float MaxHorisontalFlyhack;
 	inline float HorisontalFlyhack;
 
+	inline bool MemoryAimbot = false;
+
 	inline bool Brightnight = false;
 	inline bool Stars = false;
 	inline bool BrightCave = false;

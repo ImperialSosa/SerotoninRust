@@ -51,14 +51,12 @@ void ConnectorClient()
 
 	connector::cheat_message msg;
 	msg.msg = connector::messages::JOIN_SHARED_ESP;
-	msg.value = XS("ServerABCD"); //Name of channel
+	msg.value = "ServerABCD"; //Name of channel
 	auto data = connector::data(msg);
-
 
 	if (current_time - send_time > 0.02f)
 	{
 		net->run();
-
 
 		if (net->ready_.load())
 		{
@@ -67,7 +65,7 @@ void ConnectorClient()
 			{
 				net->send_data(data);
 
-				LOG(XS("[DEBUG] Connected to SharedESP channel"));
+				LOG(XS("[DEBUG] Connected to SharedServerA"));
 				LoadOnce = true;
 			}
 
@@ -670,6 +668,20 @@ void drawMisc()
 	}
 }
 
+const wchar_t* ConvertToWideString(const char* str) //imports
+{
+	// Get the length of the wide string
+	size_t length = LI_FN(mbstowcs)(nullptr, str, 0);
+
+	// Allocate memory for the wide string
+	wchar_t* wideStr = new wchar_t[length + 1];
+
+	// Convert the string to wide string
+	LI_FN(mbstowcs)(wideStr, str, length + 1);
+
+	return wideStr;
+}
+
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
 	screen_center = { UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f };
@@ -691,8 +703,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		Hooks::SkyUpdatehk.PointerSwapHook(XS("TOD_Camera"), HASH("Update"), &Hooks::SkyUpdate, XS(""), 0);
 	}*/
-	
-
 
 	SetupBundles();
 
@@ -725,6 +735,24 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					has_init = true;
 				}
 
+				static std::string Message;
+				static bool DisplayMessage = false;
+				if (Message != GlobalMessage)
+				{
+					if (DisplayMessage)
+						DisplayMessage = false;
+					Message = GlobalMessage;
+				}
+				if (Message == GlobalMessage) {
+				
+					if (!DisplayMessage) {						
+				
+						auto Text = ConvertToWideString(GlobalMessage.c_str());
+						notifcations::object.push(Text, UnityEngine::Time::get_time());
+						DisplayMessage = true;
+					}
+				}
+
 				if (InGame)
 				{
 					drawMisc();
@@ -746,6 +774,13 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	if (UnityEngine::Input::GetKey(RustStructs::End))
 	{
+		connector::cheat_message msg;
+		msg.msg = connector::messages::LEAVE_SHARED_ESP;
+		msg.value = XS("ServerABCD"); //Name of channel
+		auto data = connector::data(msg);
+		net->send_data(data);
+		delete net;
+
 		MenuIconBundles->Unload(true);
 		MenuIconBundles = nullptr;
 
@@ -783,7 +818,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				GeometricMaterial = nullptr;
 			}
 
-
 			if (LightningBundle)
 			{
 				LightningBundle->Unload(true);
@@ -796,7 +830,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			{
 				font_bundle->Unload(true);
 				font_bundle = nullptr;
-
 			}
 		}
 
@@ -810,13 +843,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::PlayerWalkMovementhk.Unhook();
 		Hooks::TryToMovehk.Unhook();
 		Hooks::SkyUpdatehk.Unhook();
-
-		connector::cheat_message msg;
-		msg.msg = connector::messages::LEAVE_SHARED_ESP;
-		msg.value = XS("ServerABCD"); //Name of channel
-		auto data = connector::data(msg);
-		net->send_data(data);
-		delete net;
 
 		Hooks::OnGUIhk.Unhook();
 		Hooks::Update_hk.Unhook();

@@ -80,6 +80,8 @@ namespace UnityEngine
 		return length;
 	}
 
+
+
 	Vector2 Vector2::Normalized()
 	{
 		auto vector(*this);
@@ -878,7 +880,7 @@ namespace UnityEngine
 	{
 		const auto transform = get_transform();
 
-		if ((transform))
+		if (IsAddressValid(transform))
 		{
 			return transform->get_position();
 		}

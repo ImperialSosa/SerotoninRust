@@ -266,27 +266,32 @@ void Net::proceed_inc_data(std::vector<connector::data>& data)
 #endif
 		else if (type == connector::data::type::SHARED_ESP) {
 			auto iter_data = std::get<connector::shared_esp_data>(iter.get_data());
-			std::string username;
-			//Vec3 SharedLocalPos;
-			//box_bounds SharedBoxBounds;
+			//std::string username;
 
+			//connector::reader reader(iter_data.data.data(), iter_data.data.size());
+			//username = reader.read<std::string>();
+
+			//xCheatsKey = (const char*)username.c_str();
+
+			//auto wideKey = (const char*)username.c_str();
+			//if (std::find(xCheatsArr.begin(), xCheatsArr.end(), wideKey) == xCheatsArr.end()) {
+			//	xCheatsArr.push_back(wideKey);
+			//}
+			std::string Message;
 			connector::reader reader(iter_data.data.data(), iter_data.data.size());
-			username = reader.read<std::string>();
-			//SharedLocalPos.x = reader.read<float>();
-			//SharedLocalPos.y = reader.read<float>();
-			//SharedLocalPos.z = reader.read<float>();
+			Message = reader.read<std::string>();
 
-			xCheatsKey = (const char*)username.c_str();
-			//LocalPosX = SharedLocalPos.x;
-			//LocalPosY = SharedLocalPos.y;
-			//LocalPosZ = SharedLocalPos.z;
+			GlobalMessage = (const char*)Message.c_str();
 
-			auto wideKey = (const char*)username.c_str();
-			if (std::find(xCheatsArr.begin(), xCheatsArr.end(), wideKey) == xCheatsArr.end()) {
-				xCheatsArr.push_back(wideKey);
-			}
+			LOG(XS("[DEBUG] Message: %s"), (const char*)Message.c_str());
+
+
+
+
 
 			//LOG("[DEBUG] [SharedESP #%zu] SteamID = %s\n", iter_data.channel, username.c_str());
+			// 
+			// 
 			//LOG("[DEBUG] [SharedESP #%zu] LocalPos.x = %f\n", iter_data.channel, SharedLocalPos.x);
 			//LOG("[DEBUG] [SharedESP #%zu] LocalPos.y = %f\n", iter_data.channel, SharedLocalPos.y);
 			//LOG("[DEBUG] [SharedESP #%zu] LocalPos.z = %f\n", iter_data.channel, SharedLocalPos.z);

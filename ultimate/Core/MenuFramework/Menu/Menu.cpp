@@ -53,6 +53,7 @@ void MenuDraw::RenderMenu()
 			case 0:
 				Menu().BeginChild(XS(L"Aimbot"), { 60,45 }, { 220,290 });
 				{
+					Menu().CheckBox(XS(L"Memory Aimbot"), m_settings::MemoryAimbot);
 					Menu().CheckBox(XS(L"Silent Aimbot"), m_settings::SilentAim);
 					//Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
 					Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
@@ -175,8 +176,8 @@ void MenuDraw::RenderMenu()
 					//Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
 				//	Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
 					Menu().CheckBox(XS(L"PlayerChams"), m_settings::PlayerChams);
-				//	Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
-				//	Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
+					Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
+					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
 					//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
 					Menu().CheckBoxKeyBind(XS(L"Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
 					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy") }, m_settings::SelectedChams, chams_type_opened);

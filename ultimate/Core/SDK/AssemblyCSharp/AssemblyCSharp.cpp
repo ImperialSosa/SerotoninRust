@@ -1559,19 +1559,19 @@ namespace AssemblyCSharp {
 
 	void BasePlayer::SetVA(const Vector2& VA)
 	{
-		if ((this->input()))
-		{
-			this->input()->bodyAngles() = VA;
-		}
+		//if ((this->input()))
+		//{
+		//	this->input()->bodyAngles() = VA;
+		//}
 	}
 
 	Vector2 BasePlayer::GetVA()
 	{
-		if ((this->input()))
-		{
-			Vector2 Angles = this->input()->bodyAngles();
-			return Angles;
-		}
+		//if ((this->input()))
+		//{
+		//	Vector2 Angles = this->input()->bodyAngles();
+		//	return Angles;
+		//}
 		return Vector2{ 0, 0 };
 	}
 
