@@ -291,9 +291,9 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Anti FlyhackKick"), m_settings::AntiFlyKick);
 					//Menu().CheckBox(XS(L"Spiderman"), m_settings::SpiderMan);
 					//Menu().CheckBox(XS(L"SmallerLocalRadius"), m_settings::SmallerLocalRadius);
-					//Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
+					Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
 					//Menu().CheckBox(XS(L"Infinite Jump"), m_settings::InfiniteJump);
-					//Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
+					Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
 					//Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
 					//Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
 					//Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
@@ -301,16 +301,16 @@ void MenuDraw::RenderMenu()
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
-					//Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
+					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
 					//Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
-					//Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
+					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
 					//Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
 					//Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
 					//Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
 					//Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
 					//Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
 					//Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
-					//Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
+					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 
 				}
 				break;
@@ -377,7 +377,7 @@ void MenuDraw::RenderMenu()
 		case 3:
 			Menu().BeginChild(XS(L"Weapon"), { 60,45 }, { 220,290 });
 			{
-				//Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
+				Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
 				//Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
 				//if (m_settings::ChangeRecoil) {
 				//	Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);

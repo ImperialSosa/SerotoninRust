@@ -25,5 +25,7 @@ private:
 	HOOK(void, DoAttack, (AssemblyCSharp::BaseProjectile* _This))
 	HOOK(void, ProjectileUpdate, (AssemblyCSharp::Projectile* _This))
 	HOOK(void, PPA_WriteToStream, (ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf::Stream* Stream))
+	HOOK(void, PlayerWalkMovement, (AssemblyCSharp::PlayerWalkMovement* _This, AssemblyCSharp::InputState* _State, AssemblyCSharp::ModelState* _ModelState))
+	HOOK(void, TryToMove, (AssemblyCSharp::ItemIcon* _This))
 
 };

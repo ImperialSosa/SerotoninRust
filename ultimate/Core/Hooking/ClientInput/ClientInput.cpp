@@ -9,6 +9,9 @@ float flyhackPauseTime;
 
 bool TestFlying(AssemblyCSharp::BasePlayer* _This, Vector3 oldPos, Vector3 newPos)
 {
+	if (!InGame)
+		return false;
+
 	if (auto LocalPlayer = _This)
 	{
 		flyhackPauseTime = maxx(0.f, flyhackPauseTime - UnityEngine::Time::get_fixedDeltaTime());
@@ -65,6 +68,9 @@ bool TestFlying(AssemblyCSharp::BasePlayer* _This, Vector3 oldPos, Vector3 newPo
 
 bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 {
+	if (!InGame)
+		return false;
+
 	bool result;
 
 	if (!IsAddressValid(_This->lastSentTick()))
@@ -121,6 +127,8 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 	return false;
 }
 
+inline bool FirstInit = false;
+
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
 {
 	if(!InGame)
@@ -137,6 +145,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	{
 		Hooks::ProjectileShootHookhk.VirtualFunctionHook(XS("ProjectileShoot"), HASH("WriteToStream"), &Hooks::ProjectileShootHook, XS("ProtoBuf"), 1);
 		Hooks::PPA_WriteToStreamhk.VirtualFunctionHook(XS("PlayerProjectileAttack"), HASH("WriteToStream"), &Hooks::PPA_WriteToStream, XS("ProtoBuf"), 1);
+	}
+
+	if (!FirstInit)
+	{
+		Hooks::TryToMovehk.VirtualFunctionHook(XS("ItemIcon"), HASH("TryToMove"), &Hooks::TryToMove, XS(""), 0);
+		Hooks::PlayerWalkMovementhk.VirtualFunctionHook(XS("PlayerWalkMovement"), HASH("ClientInput"), &Hooks::PlayerWalkMovement, XS(""), 2);
+		FirstInit = true;
 	}
 
 	if (m_settings::Flyhack_Indicator)
@@ -209,14 +224,45 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
 
-	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+	if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
 		Features().AutoShoot(BaseProjectile);
 		Features().FastBullet(BaseProjectile);
 		Features().BulletQueue(BaseProjectile);
+		Features().AutoReload(BaseProjectile);
 	}
-	
+
 	Features().RemoveCollision();
+
+	if (m_settings::AdminFlags)
+	{
+		a1->playerFlags() |= RustStructs::PlayerFlags::IsAdmin;
+	}
+
+	if (m_settings::AdminCheat)
+	{
+		if (UnityEngine::Input::GetKey(m_settings::AdminCheatKey))
+			a1->GetBaseMovement()->adminCheat() = true;
+		else
+			a1->GetBaseMovement()->adminCheat() = false;
+	}
+
+	if (m_settings::NoAttackRestrictions)
+	{
+		//Shooting whilst mounted
+		if (const auto Mounted = a1->mounted())
+		{
+			Mounted->canWieldItems() = true;
+		}
+
+		//CanAttack
+		if (const auto ModelState = a1->modelState())
+		{
+			ModelState->set_flag(RustStructs::ModelState_Flag::OnGround);
+			a1->GetBaseMovement()->set_Grounded(1.f);
+		}
+
+	}
 
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);

@@ -37,6 +37,8 @@
     <ClCompile Include="Core\Hooking\DoAttack\DoAttack.cpp" />
     <ClCompile Include="Core\Hooking\ProjectileUpdate\ProjectileUpdate.cpp" />
     <ClCompile Include="Core\Configs\Configs.cpp" />
+    <ClCompile Include="Core\Hooking\PlayerWalkMovement\PlayerWalkMovement.cpp" />
+    <ClCompile Include="Core\Hooking\TryToMove\TryToMove.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />

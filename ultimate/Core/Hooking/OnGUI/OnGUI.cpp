@@ -487,6 +487,93 @@ void drawMisc()
 		}
 	}
 
+
+	if (m_settings::AutoReload)
+	{
+
+		if (auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity())
+		{
+			if (LocalPlayer->lifestate() != RustStructs::Dead)
+			{
+				if (auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>())
+				{
+					if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+					{
+						if (auto HeldItem = Features().LocalPlayer->ActiveItem())
+						{
+							if (!BaseProjectile->HasReloadCooldown())
+							{
+								if (m_settings::did_reload == false && m_settings::time_since_last_shot <= (m_settings::reload_time - (m_settings::reload_time / 10)) && m_settings::time_since_last_shot > 0)
+								{
+									float time_full = (m_settings::reload_time - (m_settings::reload_time / 10));
+									float time_left = m_settings::time_since_last_shot;
+									auto percentage = (((time_left / time_full) * 100.0f) + 1.f) / 100;
+									float bars = 0;
+									float red, green, blue;
+									float Num = percentage;
+
+									if (Num < 0.5) {
+										red = Num * 2.f * 255.f;
+										green = 255.f;
+										blue = 0.f;
+									}
+									else {
+										red = 255.f;
+										green = (2.f - 2.f * Num) * 255.f;
+										blue = 0.f;
+									}
+
+
+									if (Num > 0.01) {
+										float xzzzz = bars++;
+
+										if (auto mag = BaseProjectile->primaryMagazine())
+										{
+											if (auto def = mag->ammoType())
+											{
+												if (auto test = def->FindIconSprite(HeldItem->info()->itemid()))
+												{
+													if (auto texture = test->get_texture())
+													{
+														//auto rect = test->get_rect();
+														//UnityEngine::GUI::SetColor(Color::White());
+														//UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(screen_center.x - 25, screen_center.y + 68, rect.wid / 4.5f, rect.hei / 4.5f), texture);
+													}
+												}
+											}
+										}
+										auto xpostop = screen_center.x - 50;
+										auto xpostop2 = screen_center.x - 49;
+										auto ypostop = screen_center.y + yoffset;
+										UnityEngine::GL::RectangleFilled({ xpostop, ypostop - 1 }, { xpostop + 100, ypostop + 2 }, Color(0, 0, 0, 255.f).GetUnityColor());
+										UnityEngine::GL::RectangleFilled({ xpostop, ypostop + 1 }, { xpostop + 100, ypostop + 4 }, Color(0, 0, 0, 255.f).GetUnityColor());
+										UnityEngine::GL::RectangleFilled({ xpostop2, ypostop }, { xpostop2 + (100 * (time_left / time_full)), ypostop + 3 }, Color((int)(red), (int)(green), (int)(blue), 255.f).GetUnityColor());
+										yoffset += 10;
+									}
+								}
+							}
+							else
+							{
+								m_settings::time_since_last_shot = 0.f;
+								m_settings::just_shot = false;
+								m_settings::did_reload = true;
+							}
+
+						}
+					}
+					else
+					{
+						m_settings::time_since_last_shot = 0.f;
+						m_settings::just_shot = false;
+						m_settings::did_reload = true;
+					}
+				}
+			}
+		}
+	}
+
+
+
 	if (m_settings::Manipulation && m_settings::BulletTP && m_settings::BulletTPFlags && m_settings::ManipFlags && m_settings::Manipulation_Indicator)
 	{
 		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
@@ -637,6 +724,10 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
+
+
+					Visuals().CacheEntities();
+					Visuals().RenderEntities();
 				}
 
 				TextDrawEnd();
@@ -708,6 +799,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::DoAttackhk.Unhook();
 		Hooks::ProjectileUpdatehk.Unhook();
 		Hooks::PPA_WriteToStreamhk.Unhook();
+		Hooks::PlayerWalkMovementhk.Unhook();
+		Hooks::TryToMovehk.Unhook();
+
 		connector::cheat_message msg;
 		msg.msg = connector::messages::LEAVE_SHARED_ESP;
 		msg.value = XS("ServerABCD"); //Name of channel

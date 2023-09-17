@@ -827,8 +827,73 @@ auto Features::FastBullet(AssemblyCSharp::BaseProjectile* BaseProjectile) -> voi
 	}
 }
 
+auto Features::AutoReload(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void {
+
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().Instance()->LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
+	if (!IsAddressValid(BaseProjectile))
+		return;
+
+	m_settings::reload_time = BaseProjectile->reloadTime();
+
+	if (m_settings::AutoReload)
+	{
+		if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->HasReloadCooldown() && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()))
+		{
+			
+			if (!m_settings::did_reload)
+				m_settings::time_since_last_shot = (UnityEngine::Time::get_fixedTime() - m_settings::fixed_time_last_shot);
+
+			if (m_settings::just_shot && (m_settings::time_since_last_shot > 0.2f))
+			{
+				BaseProjectile->ServerRPC(XS("StartReload"));
+				BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Reload, XS(""));
+
+				m_settings::reload_reset_2 = false;
+				m_settings::just_shot = false;
+				//CanReload = false;
+			}
+			if (m_settings::time_since_last_shot > (BaseProjectile->reloadTime() - (BaseProjectile->reloadTime() / 10)) && !m_settings::did_reload)
+			{
+				BaseProjectile->ServerRPC(XS("Reload"));
+				m_settings::did_reload = true;
+				m_settings::time_since_last_shot = 0;
+				m_settings::reload_reset = false;
+				//CanReload = BaseProjectile->primaryMagazine()->contents() < BaseProjectile->primaryMagazine()->capacity();
+
+			}
+		}
+		else
+		{
+			m_settings::reload_reset = false;
+			m_settings::reload_reset_2 = false;
+			m_settings::did_reload = false;
+			m_settings::just_shot = false;
+			m_settings::fixed_time_last_shot = 0;
+			m_settings::time_since_last_shot = 0;
+		}
+	}
+	else
+	{
+		m_settings::reload_reset = false;
+		m_settings::reload_reset_2 = false;
+		m_settings::did_reload = false;
+		m_settings::just_shot = false;
+		m_settings::fixed_time_last_shot = 0;
+		m_settings::time_since_last_shot = 0;
+	}
+}
+
 auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 {
+
 	if (!InGame)
 		return;
 
@@ -895,6 +960,9 @@ auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 
 auto Features::RemoveCollision() -> void
 {
+	if (!InGame)
+		return;
+
 	UnityEngine::Physics::IgnoreLayerCollision(30, 12, m_settings::IgnoreTrees);
 	UnityEngine::Physics::IgnoreLayerCollision(11, 12, m_settings::IgnorePlayers);
 }

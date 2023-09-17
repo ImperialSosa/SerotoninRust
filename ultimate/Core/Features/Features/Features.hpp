@@ -20,6 +20,7 @@ public:
 	auto AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
 	auto FastBullet(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
 	auto BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
+	auto AutoReload(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void;
 
 	auto RemoveCollision() -> void;
 public:

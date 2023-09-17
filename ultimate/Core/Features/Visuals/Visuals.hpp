@@ -40,6 +40,31 @@ public:
 inline std::vector< VisualsVector> VisualsArray;
 inline std::vector< VisualsVector> VisualsArrayTemp;
 
+
+
+class PrefabList {
+public:
+	PrefabList(AssemblyCSharp::BaseNetworkable* _This)
+	{
+		if ((_This))
+		{
+			this->CachedEntity = _This;
+		}
+	}
+
+	AssemblyCSharp::BaseNetworkable* CachedEntity;
+
+	// Equality comparison operator
+	bool operator==(const PrefabList& other) const {
+		// Define your comparison logic here
+		return (CachedEntity == other.CachedEntity);
+	}
+};
+
+inline std::vector< PrefabList> PrefabVectorList;
+inline std::vector< PrefabList> PrefabListTemp;
+
+
 class Visuals {
 public:
 	static auto Instance() -> Visuals*
@@ -53,4 +78,7 @@ public:
 	void DrawPlayers();
 	using List = FPSystem::ListDictionary< uint64_t, AssemblyCSharp::BasePlayer* >;
 	List* VisiblePlayerList ;
+
+	void CacheEntities();
+	void RenderEntities();
 };
