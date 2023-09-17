@@ -110,7 +110,7 @@ void MenuDraw::RenderMenu()
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
 				{
-				//	Menu().CheckBox(XS(L"Auto Reload"), m_settings::AutoReload);
+					Menu().CheckBox(XS(L"Auto Reload"), m_settings::AutoReload);
 
 					Menu().CheckBox(XS(L"Hitbox Override"), m_settings::HitboxOverride);
 					if (m_settings::HitboxOverride)
