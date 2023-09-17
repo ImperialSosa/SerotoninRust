@@ -13,6 +13,10 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
+	m_settings::fixed_time_last_shot = UnityEngine::Time::get_fixedTime();
+	m_settings::just_shot = true;
+	m_settings::did_reload = false;
+
 	if(!m_settings::SilentAim)
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 

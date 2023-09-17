@@ -27,5 +27,6 @@ private:
 	HOOK(void, PPA_WriteToStream, (ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf::Stream* Stream))
 	HOOK(void, PlayerWalkMovement, (AssemblyCSharp::PlayerWalkMovement* _This, AssemblyCSharp::InputState* _State, AssemblyCSharp::ModelState* _ModelState))
 	HOOK(void, TryToMove, (AssemblyCSharp::ItemIcon* _This))
+	HOOK(void, SkyUpdate, (AssemblyCSharp::TOD_Camera* _This))
 
 };

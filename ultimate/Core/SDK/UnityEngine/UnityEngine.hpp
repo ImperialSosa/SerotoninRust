@@ -1901,6 +1901,29 @@ namespace UnityEngine {
 	{
 		IL2CPP_CLASS("RenderSettings");
 
+		static void set_skybox(UnityEngine::Material* mat)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethodFullArgs(HASH("UnityEngine.CoreModule::UnityEngine::RenderSettings::set_skybox(Material): Void"));
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, mat);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
 		static void set_ambientMode(RustStructs::AmbientMode value);
 		static void set_ambientIntensity(float value);
 		static void set_ambientLight(Color value);

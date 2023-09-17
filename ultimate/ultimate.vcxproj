@@ -165,6 +165,7 @@
     <ClCompile Include="Core\Hooking\OnGUI\OnGUI.cpp" />
     <ClCompile Include="Core\Hooking\PlayerWalkMovement\PlayerWalkMovement.cpp" />
     <ClCompile Include="Core\Hooking\ProjectileUpdate\ProjectileUpdate.cpp" />
+    <ClCompile Include="Core\Hooking\SkyUpdate\SkyUpdate.cpp" />
     <ClCompile Include="Core\Hooking\TryToMove\TryToMove.cpp" />
     <ClCompile Include="Core\Hooking\UpdateOnGUI\UpdateOnGUI.cpp" />
     <ClCompile Include="Core\Hooking\WriteToStream\WriteToStream.cpp" />

@@ -216,8 +216,8 @@ void Visuals::DrawPlayers()
 				return;
 
 			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
-			if (!IsAddressValid(m_target.m_player))
-				return;
+			/*if (!IsAddressValid(m_target.m_player))
+				return;*/
 
 			Color BoxColor;
 

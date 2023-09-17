@@ -127,6 +127,40 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 	return false;
 }
 
+
+
+inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSharp::BaseMelee* w)
+{
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(p)) return;
+	if (!IsAddressValid(w)) return;
+
+	if (w->nextAttackTime() >= UnityEngine::Time::get_time()) return;
+	if (w->timeSinceDeploy() < w->deployDelay()) return;
+
+	auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+	auto g_hit_test = (AssemblyCSharp::HitTest*)CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
+
+	auto trans = p->get_transform();
+	if (!trans) return;
+	UnityEngine::Ray r = UnityEngine::Ray(AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position(), (pos - AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position()).Normalized());
+
+	g_hit_test->MaxDistance() = 1000.f;
+	g_hit_test->HitTransform() = trans;
+	g_hit_test->AttackRay() = r;
+	g_hit_test->DidHit() = true;
+	g_hit_test->HitEntity() = p;
+	g_hit_test->HitPoint() = trans->InverseTransformPoint(pos);
+	g_hit_test->HitNormal() = Vector3(0, 0, 0); //trans->InverseTransformDirection(pos)
+	g_hit_test->damageProperties() = w->damageProperties();
+
+	w->StartAttackCooldown(w->repeatDelay());
+
+	return w->ProcessAttack((AssemblyCSharp::HitTest*)g_hit_test);
+}
+
 inline bool FirstInit = false;
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
@@ -222,7 +256,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		m_settings::Thickbullet_AutoShoot = false;
 	}
 
-	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+	auto base_melee = a1->GetHeldEntityCast<AssemblyCSharp::BaseMelee>();
 
 	if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
@@ -230,9 +265,268 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Features().FastBullet(BaseProjectile);
 		Features().BulletQueue(BaseProjectile);
 		Features().AutoReload(BaseProjectile);
+
+		if (m_settings::NoWeaponBob)
+		{
+			auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
+
+			if (IsAddressValid(ActiveModel))
+			{
+
+				if (IsAddressValid(ActiveModel->bob()))
+				{
+					ActiveModel->bob()->bobAmountRun() = { 0.f, 0.f, 0.f, 0.f };
+					ActiveModel->bob()->bobAmountWalk() = { 0.f, 0.f, 0.f, 0.f };
+				}
+
+				if (IsAddressValid(ActiveModel->sway()))
+				{
+					ActiveModel->sway()->positionalSwaySpeed() = { 0 };
+					ActiveModel->sway()->positionalSwayAmount() = { 0 };
+				}
+
+				if (IsAddressValid(ActiveModel->lower()))
+				{
+					ActiveModel->lower()->lowerOnSprint() = false;
+					ActiveModel->lower()->lowerWhenCantAttack() = false;
+					ActiveModel->lower()->shouldLower() = false;
+				}
+			}
+		}
+
+		if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
+		{
+
+			if (m_settings::ChangeRecoil)
+			{
+				if (const auto RecoilProperties = BaseProjectile->recoil())
+				{
+					static float orig[6];
+					static bool StoreOrig = false;
+
+					if (const auto newRecoilOverride = RecoilProperties->newRecoilOverride())
+					{
+						if (!StoreOrig)
+						{
+							orig[0] = newRecoilOverride->recoilYawMin();
+							orig[1] = newRecoilOverride->recoilYawMax();
+							orig[2] = newRecoilOverride->recoilPitchMin();
+							orig[3] = newRecoilOverride->recoilPitchMax();
+							//orig[4] = newRecoilOverride->ADSScale();
+							//orig[5] = newRecoilOverride->movementPenalty();
+
+							StoreOrig = true;
+						}
+
+						const float amount = m_settings::recoilPercent / 100;
+						const float amountY = m_settings::RecoilPercentY / 100;
+						newRecoilOverride->recoilYawMin() = orig[0] * amount;
+						newRecoilOverride->recoilYawMax() = orig[1] * amount;
+						newRecoilOverride->recoilPitchMin() = orig[2] * amountY;
+						newRecoilOverride->recoilPitchMax() = orig[3] * amountY;
+						//newRecoilOverride->ADSScale() = orig[4] * amount;
+						//newRecoilOverride->movementPenalty() = orig[5] * amount;
+					}
+					else
+					{
+						if (!StoreOrig)
+						{
+							orig[0] = RecoilProperties->recoilYawMin();
+							orig[1] = RecoilProperties->recoilYawMax();
+							orig[2] = RecoilProperties->recoilPitchMin();
+							orig[3] = RecoilProperties->recoilPitchMax();
+							//orig[4] = RecoilProperties->ADSScale();
+							//orig[5] = RecoilProperties->movementPenalty();
+
+							StoreOrig = true;
+						}
+
+						const float amount = m_settings::recoilPercent / 100;
+						const float amountY = m_settings::RecoilPercentY / 100;
+						RecoilProperties->recoilYawMin() = orig[0] * amount;
+						RecoilProperties->recoilYawMax() = orig[1] * amount;
+						RecoilProperties->recoilPitchMin() = orig[2] * amountY;
+						RecoilProperties->recoilPitchMax() = orig[3] * amountY;
+					}
+				}
+			}
+
+			if (m_settings::ForceAutomatic)
+			{
+				BaseProjectile->automatic() = true;
+			}
+
+			if (m_settings::NoSpread)
+			{
+				BaseProjectile->stancePenalty() = 0.f;
+				BaseProjectile->aimconePenalty() = 0.f;
+				BaseProjectile->aimCone() = 0.f;
+				BaseProjectile->hipAimCone() = 0.f;
+				BaseProjectile->aimconePenaltyPerShot() = 0.f;
+			}
+
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (m_settings::WeaponSpammer && UnityEngine::Input::GetKey(m_settings::WeaponSpamKey))
+			{
+				float delay = m_settings::WeaponSpamDelay / 100;
+				if (current_time - send_time > delay)
+				{
+					BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
+					send_time = current_time;
+				}
+			}
+		}
+		else
+		{
+			if (m_settings::InstantHeal)
+			{
+
+				float nextActionTime = 0, period = 1.4721;
+				auto health = a1->_health();
+
+				auto Held = a1->GetHeldItemSafe();
+
+				if (Held)
+				{
+					auto HeldEntity = Held->heldEntity();
+					if (HeldEntity)
+					{
+						if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
+							//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
+							auto Time = UnityEngine::Time::get_time();
+
+							if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() <= Time) {
+								if (Time > nextActionTime) {
+									nextActionTime = Time + period;
+									if (health < 99)
+										BaseProjectile->ServerRPC(XS("UseSelf"));
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if (m_settings::BulletTP)
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				if (AimbotTarget.m_player->IsConnected())
+				{
+					AimbotTarget.m_player->get_transform()->set_rotation(Vector4(0.f, 0.f, 0.f, 1.f)); //Fix all player rotations for bullet tp to not have invalids.
+				}
+			}
+		}
 	}
 
 	Features().RemoveCollision();
+
+
+	if (m_settings::NoMovementRestrictions)
+	{
+		AssemblyCSharp::LocalPlayer::get_Entity()->clothingBlocksAiming() = false;
+	}
+
+	if (m_settings::NoSway)
+	{
+		AssemblyCSharp::LocalPlayer::get_Entity()->clothingAccuracyBonus() = 1.f;
+	}
+
+	if (m_settings::PlayerChams)
+		ConVar::Culling::entityMinCullDist() = m_settings::PlayerESPDistance;
+
+	static bool ResetGameTime = false;
+	if (m_settings::TimeChanger || m_settings::RemoveUnderwaterEffects || ResetGameTime)
+	{
+		auto admin_c = CIl2Cpp::FindClass(XS("ConVar"), XS("Admin"));
+		auto instance = uint64_t(admin_c->static_fields);
+
+		if (m_settings::TimeChanger) {
+			*(float*)(instance + 0x0) = m_settings::GameTime;
+			ResetGameTime = true;
+		}
+		if (!m_settings::TimeChanger && ResetGameTime) {
+			*(float*)(instance + 0x0) = -1;
+			ResetGameTime = false;
+		}
+
+		if (m_settings::RemoveUnderwaterEffects) {
+			*(bool*)(instance + 0x11) = false;
+		}
+	}
+
+
+	if (m_settings::AutoFarmOre)
+	{
+		if (IsAddressValid(base_melee))
+		{
+			if (base_melee->class_name_hash() == HASH("BaseMelee") || base_melee->class_name_hash() == HASH("JackHammer"))
+			{
+				f_object ore_hot_spot = f_object::get_closest_object(a1->get_bone_transform(47)->get_position(),
+					XS(""),
+					Vector3(),
+					Vector3(),
+					Vector3(),
+					true,
+					XS("OreHotSpot"));
+				if (ore_hot_spot.valid) {
+					Vector3 local = a1->ClosestPoint(ore_hot_spot.position);
+					if (local.get_3d_dist(ore_hot_spot.position) <= 3.5f) {
+						DoOreAttack(ore_hot_spot.position, (AssemblyCSharp::BaseEntity*)ore_hot_spot.entity, base_melee);
+					}
+				}
+			}
+		}
+		
+	}
+
+	if (m_settings::AutoFarmTree)
+	{
+		if (IsAddressValid(base_melee))
+		{
+			if (base_melee->class_name_hash() == HASH("BaseMelee") || base_melee->class_name_hash() == HASH("Chainsaw"))
+			{
+				f_object tree_entity = f_object::get_closest_object(a1->get_bone_transform(48)->get_position(),
+					XS(""),
+					Vector3(),
+					Vector3(),
+					Vector3(),
+					true,
+					XS("TreeEntity"));
+				if (tree_entity.valid) {
+					tree_entity.position = Vector3();
+					f_object tree_marker = f_object::get_closest_object(a1->get_bone_transform(48)->get_position(),
+						XS(""),
+						Vector3(),
+						Vector3(),
+						Vector3(),
+						true,
+						XS("TreeMarker"));
+					if (tree_marker.valid) {
+						Vector3 locala = a1->ClosestPoint(tree_marker.position);
+						if (locala.get_3d_dist(tree_marker.position) <= 3.5f) {
+							tree_entity.position = tree_marker.position;
+							Vector3 local = a1->ClosestPoint(tree_entity.position);
+							if (local.get_3d_dist(tree_entity.position) <= 3.5f) {
+								DoOreAttack(tree_entity.position, (AssemblyCSharp::BaseEntity*)tree_entity.entity, base_melee);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+	//UnityEngine::RenderSettings::set_skybox(nullptr);
 
 	if (m_settings::AdminFlags)
 	{
@@ -261,9 +555,123 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			ModelState->set_flag(RustStructs::ModelState_Flag::OnGround);
 			a1->GetBaseMovement()->set_Grounded(1.f);
 		}
+	}
 
+
+	if (m_settings::PlayerFov || m_settings::Zoom)
+	{
+		auto g_graphics_ = CIl2Cpp::FindClass(XS("ConVar"), XS("Graphics"));
+		auto instance = std::uint64_t(g_graphics_->static_fields);
+		bool zooming = false;
+
+		if (m_settings::Zoom && UnityEngine::Input::GetKey(m_settings::ZoomKey))
+			zooming = true;
+		else
+			zooming = false;
+
+		if (zooming)
+			*(float*)(instance + 0x18) = m_settings::ZoomAmount;
+		else if (!zooming && m_settings::PlayerFov)
+			*(float*)(instance + 0x18) = m_settings::PlayerFovAmount;
+		else
+			*(float*)(instance + 0x18) = 90.f;
+	}
+
+	if (const auto LocalMovement = a1->movement())
+	{
+		if (m_settings::SpiderMan)
+		{
+			LocalMovement->groundAngle() = 0.f;
+			LocalMovement->groundAngleNew() = 0.f;
+		}
+
+		if (m_settings::SmallerLocalRadius)
+		{
+			LocalMovement->capsule()->set_radius(0.44);
+		}
+
+		if (m_settings::InfiniteJump)
+		{
+			LocalMovement->landTime() = 0.f;
+			LocalMovement->jumpTime() = 0.f;
+			LocalMovement->groundTime() = 100000.f;
+		}
+
+		if (m_settings::AlwaysSprint)
+		{
+			LocalMovement->sprintForced() = true;
+		}
+	}
+
+	if (m_settings::InstantRevive && UnityEngine::Input::GetKey(m_settings::InstantReviveKey))
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				AimbotTarget.m_player->ServerRPC(XS("RPC_Assist"));
+			}
+		}
+	}
+
+	if (m_settings::FixDebugCamera)
+	{
+		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.camspeed 1"), nullptr);
+	}
+
+	if (m_settings::KeepTargetAlive && UnityEngine::Input::GetKey(m_settings::KeepAliveKey))
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				AimbotTarget.m_player->ServerRPC(XS("RPC_KeepAlive"));
+			}
+		}
+	}
+
+	if (m_settings::LootBodyThruWall && UnityEngine::Input::GetKey(m_settings::LootBodyThruWallKey))
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				AimbotTarget.m_player->ServerRPC(XS("RPC_LootPlayer"));
+			}
+		}
+	}
+
+	if (m_settings::LootCorpseThruWall && UnityEngine::Input::GetKey(m_settings::LootCorpseThruWallKey))
+	{
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				AimbotTarget.m_player->ServerRPC(XS("RPC_LootCorpse"));
+			}
+		}
 	}
 
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
+
+	if (m_settings::Spinbot)
+	{
+		Vector3 remain;
+		remain.x = 100;
+		remain.y = my_rand() % 999 + -999;
+		remain.z = 100;
+
+		if (const auto aimAngles = a2)
+		{
+			if (const auto CurrentAimAngle = aimAngles->current())
+			{
+				CurrentAimAngle->aimAngles() = remain;
+			}
+		}
+	}
 }

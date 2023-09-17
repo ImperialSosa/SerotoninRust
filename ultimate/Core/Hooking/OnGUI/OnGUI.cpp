@@ -687,6 +687,13 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::ClientInputhk.VirtualFunctionHook(XS("BasePlayer"), HASH("ClientInput"), &Hooks::ClientInput, XS(""), 1);
 	}
 
+	/*if (!Hooks::SkyUpdatehk.IsHooked())
+	{
+		Hooks::SkyUpdatehk.PointerSwapHook(XS("TOD_Camera"), HASH("Update"), &Hooks::SkyUpdate, XS(""), 0);
+	}*/
+	
+
+
 	SetupBundles();
 
 	if (MenuIconBundles)
@@ -735,7 +742,8 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		}
 	}
-	
+
+
 	if (UnityEngine::Input::GetKey(RustStructs::End))
 	{
 		MenuIconBundles->Unload(true);
@@ -801,6 +809,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::PPA_WriteToStreamhk.Unhook();
 		Hooks::PlayerWalkMovementhk.Unhook();
 		Hooks::TryToMovehk.Unhook();
+		Hooks::SkyUpdatehk.Unhook();
 
 		connector::cheat_message msg;
 		msg.msg = connector::messages::LEAVE_SHARED_ESP;

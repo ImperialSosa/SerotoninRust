@@ -1678,6 +1678,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(UnityEngine::Material*, Skybox);
 	};
 
+
 	struct TOD_Sky : UnityEngine::MonoBehaviour
 	{
 		IL2CPP_CLASS("TOD_Sky");
@@ -1739,6 +1740,13 @@ namespace AssemblyCSharp {
 
 			return stored_pointer;
 		}
+	};
+
+	struct TOD_Camera : Il2CppObject
+	{
+		IL2CPP_CLASS("TOD_Camera");
+
+		IL2CPP_FIELD(TOD_Sky*, sky);
 	};
 
 	struct ItemContainerId // TypeDefIndex: 9515

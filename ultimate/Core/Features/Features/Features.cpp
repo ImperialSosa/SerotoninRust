@@ -963,6 +963,9 @@ auto Features::RemoveCollision() -> void
 	if (!InGame)
 		return;
 
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
 	UnityEngine::Physics::IgnoreLayerCollision(30, 12, m_settings::IgnoreTrees);
 	UnityEngine::Physics::IgnoreLayerCollision(11, 12, m_settings::IgnorePlayers);
 }
