@@ -441,8 +441,16 @@ void drawMisc()
 				auto targetPos = m_target.m_position;
 				if (!targetPos.IsZero())
 				{
+					auto bulletTPPos = Features().BulletTPAngle;
+
+					if (bulletTPPos.IsZero())
+					{
+						bulletTPPos = targetPos;
+					}
+
+
 					Vector2 w2sPos;
-					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
+					if (UnityEngine::WorldToScreen(bulletTPPos, w2sPos))
 					{
 						UnityEngine::GL::Line(Vector2(UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f), w2sPos, Color::Red());
 					}
