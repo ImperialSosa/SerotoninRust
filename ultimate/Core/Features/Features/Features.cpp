@@ -893,7 +893,6 @@ auto Features::AutoReload(AssemblyCSharp::BaseProjectile* BaseProjectile) -> voi
 
 auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 {
-
 	if (!InGame)
 		return;
 

@@ -248,7 +248,14 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 	else
 	{
-		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
+		if (m_settings::InstantBullet)
+		{
+			Features().Instance()->LocalPlayer->clientTickInterval() = 0.35f;
+		}
+		else
+		{
+			Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
+		}
 	}
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
@@ -275,18 +282,322 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-	if (IsAddressValid(BaseProjectile))
+	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
 		Features().BaseProjectile = BaseProjectile;
 
 
 
-		if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile) && Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+
+		if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile))
 		{
-			Features().AutoShoot(Features().BaseProjectile);
-			Features().FastBullet(Features().BaseProjectile);
-			Features().BulletQueue(Features().BaseProjectile);
-			Features().AutoReload(Features().BaseProjectile);
+
+			//autoshoot
+			auto camera = UnityEngine::Camera::get_main();
+			if (IsAddressValid(camera))
+			{
+				auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz());
+				if (IsAddressValid(AimbotTarget.m_player))
+				{
+
+					if (Features().BulletTPAngle.IsZero())
+						Features().BulletTPAngle = AimbotTarget.m_position;
+
+					if (m_settings::Autoshoot && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()))
+					{
+						if (m_settings::WaitForInstantHit)
+						{
+							if (InstantHitReady)
+							{
+								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								{
+									CalledLaunchFromHook = true;
+									BaseProjectile->DoAttackRecreation();
+									CalledLaunchFromHook = false;
+
+								}
+							}
+						}
+						else
+						{
+							if (!m_settings::AlwaysAutoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey))
+							{
+								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								{
+									CalledLaunchFromHook = true;
+									BaseProjectile->DoAttackRecreation();
+									CalledLaunchFromHook = false;
+								}
+							}
+							else if (m_settings::AlwaysAutoshoot)
+							{
+								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								{
+									CalledLaunchFromHook = true;
+									BaseProjectile->DoAttackRecreation();
+									CalledLaunchFromHook = false;
+
+								}
+							}
+
+						}
+					}
+
+
+					//bullet queue
+					if (m_settings::InstantKill && AimbotTarget.m_player->IsAlive())
+					{
+						if (m_settings::WaitForInstantHit)
+						{
+							if (InstantHitReady)
+							{
+								if (!BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseLauncher::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BowWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CompoundBowWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CrossbowWeapon::StaticClass()))
+								{
+									if (BaseProjectile->primaryMagazine()->contents() > 0)
+									{
+
+										if (m_settings::WaitForBulletTP)
+										{
+
+											Vector3 pos = AimbotTarget.m_position;
+
+											if (Features().BulletTPAngle.IsZero())
+												Features().BulletTPAngle = AimbotTarget.m_position;
+
+											if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+											{
+
+												float maxpacketsperSECOND = 1;
+												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
+												{
+													CalledLaunchFromHook = true;
+													for (int i = 0; i < 4; i++)
+													{
+														BaseProjectile->primaryMagazine()->contents()--;
+
+														BaseProjectile->LaunchProjectile();
+														BaseProjectile->UpdateAmmoDisplay();
+														BaseProjectile->ShotFired();
+														BaseProjectile->DidAttackClientside();
+														break;
+													}
+													//a1->SendClientTick();
+													RPC_Counter3.Increment();
+													CalledLaunchFromHook = false;
+												}
+											}
+										}
+										else
+										{
+											if (Features().BulletTPAngle.IsZero())
+												Features().BulletTPAngle = AimbotTarget.m_position;
+
+											if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+											{
+												float maxpacketsperSECOND = 1;
+												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
+												{
+													CalledLaunchFromHook = true;
+
+													int magazineContents = BaseProjectile->primaryMagazine()->contents();
+													for (int i = 0; i < 4; i++)
+													{
+														BaseProjectile->primaryMagazine()->contents()--;
+
+														BaseProjectile->LaunchProjectile();
+														BaseProjectile->UpdateAmmoDisplay();
+														BaseProjectile->ShotFired();
+														BaseProjectile->DidAttackClientside();
+														break;
+													}
+													RPC_Counter3.Increment();
+													CalledLaunchFromHook = false;
+
+												}
+
+											}
+
+										}
+
+									}
+								}
+							}
+						}
+						else
+						{
+							if (!BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseLauncher::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BowWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CompoundBowWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CrossbowWeapon::StaticClass()))
+							{
+								if (BaseProjectile->primaryMagazine()->contents() > 0)
+								{
+
+									if (m_settings::WaitForBulletTP)
+									{
+
+										Vector3 pos = AimbotTarget.m_position;
+
+										if (Features().BulletTPAngle.IsZero())
+											Features().BulletTPAngle = AimbotTarget.m_position;
+
+										if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+										{
+
+											float maxpacketsperSECOND = 1;
+											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
+											{
+												CalledLaunchFromHook = true;
+												for (int i = 0; i < 4; i++)
+												{
+													BaseProjectile->primaryMagazine()->contents()--;
+
+													BaseProjectile->LaunchProjectile();
+													BaseProjectile->UpdateAmmoDisplay();
+													BaseProjectile->ShotFired();
+													BaseProjectile->DidAttackClientside();
+													break;
+												}
+												//a1->SendClientTick();
+												RPC_Counter3.Increment();
+												CalledLaunchFromHook = false;
+											}
+
+										}
+									}
+									else
+									{
+										if (Features().BulletTPAngle.IsZero())
+											Features().BulletTPAngle = AimbotTarget.m_position;
+
+										if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+										{
+											float maxpacketsperSECOND = 1;
+											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
+											{
+												CalledLaunchFromHook = true;
+
+												int magazineContents = BaseProjectile->primaryMagazine()->contents();
+												for (int i = 0; i < 4; i++)
+												{
+													BaseProjectile->primaryMagazine()->contents()--;
+
+													BaseProjectile->LaunchProjectile();
+													BaseProjectile->UpdateAmmoDisplay();
+													BaseProjectile->ShotFired();
+													BaseProjectile->DidAttackClientside();
+													break;
+												}
+												RPC_Counter3.Increment();
+												CalledLaunchFromHook = false;
+
+											}
+
+										}
+
+									}
+
+								}
+							}
+						}
+					}
+				}
+			}
+
+			//fastbullet
+			if (m_settings::NormalFastBullet) {
+				auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+				auto ActiveItem = LocalPlayer->ActiveItem();
+				auto HeldItem = ActiveItem->GetHeldEntity();
+				auto PrefabID = HeldItem->prefabID();
+
+				if (ActiveItem) {
+					static float orig[10];
+
+					if (PrefabID == 1978739833 || PrefabID == 1537401592 || PrefabID == 3474489095 || PrefabID == 3243900999 || //ak, compound, doublebarrel, tommy
+						PrefabID == 2696589892 || PrefabID == 1877401463 || PrefabID == 4231282088 || PrefabID == 563371667 || //waterpipe, spas-12, semi-rifle, semi-pistol
+						PrefabID == 2477536592 || PrefabID == 554582418 || PrefabID == 3305012504 || PrefabID == 636374895 ||  //revolver, pump, python, prototype-17
+						PrefabID == 4279856314 || PrefabID == 2293870814 || PrefabID == 844375121 || PrefabID == 2836331625 || //nailgun, m92-pistol, lr-300, hunting-bow
+						PrefabID == 2176761593) { //eoka
+						orig[0] = 1.f;
+					}
+					else if (PrefabID == 2545523575 || PrefabID == 3759841439) { //mp4a5, custom-smg
+						orig[0] = 0.8f;
+					}
+					else if (PrefabID == 3459133190) { //hmlmg
+						orig[0] = 1.2f;
+					}
+					else if (PrefabID == 1440914039) {//m249
+						orig[0] = 1.3f;
+					}
+					else if (PrefabID == 1517089664) { //m39 rifle
+						orig[0] = 1.25f;
+					}
+					else if (PrefabID == 2620171289) {//l96
+						orig[0] = 3.f;
+					}
+					else if (PrefabID == 1665481300) { //bolty
+						orig[0] = 1.75f;
+					}
+					else if (PrefabID == 2727391082) { //crossbow
+						orig[0] = 1.5f;
+					}
+					else {
+						orig[0] = 1.f;
+					}
+
+					BaseProjectile->projectileVelocityScale() = orig[0] + 0.39f;
+				}
+			}
+
+			
+			m_settings::reload_time = BaseProjectile->reloadTime();
+
+			if (m_settings::AutoReload)
+			{
+				if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->HasReloadCooldown() && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()))
+				{
+
+					if (!m_settings::did_reload)
+						m_settings::time_since_last_shot = (UnityEngine::Time::get_fixedTime() - m_settings::fixed_time_last_shot);
+
+					if (m_settings::just_shot && (m_settings::time_since_last_shot > 0.2f))
+					{
+						BaseProjectile->ServerRPC(XS("StartReload"));
+						BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Reload, XS(""));
+
+						m_settings::reload_reset_2 = false;
+						m_settings::just_shot = false;
+						//CanReload = false;
+					}
+					if (m_settings::time_since_last_shot > (BaseProjectile->reloadTime() - (BaseProjectile->reloadTime() / 10)) && !m_settings::did_reload)
+					{
+						BaseProjectile->ServerRPC(XS("Reload"));
+						m_settings::did_reload = true;
+						m_settings::time_since_last_shot = 0;
+						m_settings::reload_reset = false;
+						//CanReload = BaseProjectile->primaryMagazine()->contents() < BaseProjectile->primaryMagazine()->capacity();
+
+					}
+				}
+				else
+				{
+					m_settings::reload_reset = false;
+					m_settings::reload_reset_2 = false;
+					m_settings::did_reload = false;
+					m_settings::just_shot = false;
+					m_settings::fixed_time_last_shot = 0;
+					m_settings::time_since_last_shot = 0;
+				}
+			}
+			else
+			{
+				m_settings::reload_reset = false;
+				m_settings::reload_reset_2 = false;
+				m_settings::did_reload = false;
+				m_settings::just_shot = false;
+				m_settings::fixed_time_last_shot = 0;
+				m_settings::time_since_last_shot = 0;
+			}
+
+			//Features().AutoReload(Features().BaseProjectile);
 
 			if (m_settings::NoWeaponBob)
 			{
@@ -294,11 +605,16 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 				if (IsAddressValid(ActiveModel))
 				{
+					if (a1->input()->state()->IsDown(RustStructs::BUTTON::FIRE_PRIMARY))
+						ActiveModel->animator()->set_speed(-1);
+
 
 					if (IsAddressValid(ActiveModel->bob()))
 					{
 						ActiveModel->bob()->bobAmountRun() = { 0.f, 0.f, 0.f, 0.f };
 						ActiveModel->bob()->bobAmountWalk() = { 0.f, 0.f, 0.f, 0.f };
+						//ActiveModel->bob()->bobSpeedWalk() = 0.f;
+						//ActiveModel->bob()->bobSpeedRun() = 0.f;
 					}
 
 					if (IsAddressValid(ActiveModel->sway()))
@@ -316,7 +632,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 			}
 
-			if (Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
+			if (IsAddressValid(Features().BaseProjectile) && Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
 			{
 
 				if (m_settings::ChangeRecoil)

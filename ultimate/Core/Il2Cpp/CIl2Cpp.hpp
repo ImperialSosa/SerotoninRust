@@ -137,26 +137,26 @@ namespace CIl2Cpp {
 	{
 		const auto domain = il2cpp_domain_get();
 
-		if ((domain))
+		if (IsAddressValid(domain))
 		{
 			std::size_t count = 0;
 			const auto assemblies = il2cpp_domain_get_assemblies(domain, &count);
 
-			if ((assemblies))
+			if (IsAddressValid(assemblies))
 			{
 				for (std::size_t index = 0; index < count; index++)
 				{
 					const auto assembly = assemblies[index];
 
-					if ((assembly))
+					if (IsAddressValid(assembly))
 					{
 						const auto image = il2cpp_assembly_get_image(assembly);
 
-						if ((image))
+						if (IsAddressValid(image))
 						{
 							const auto instance = FindClass(image, name_space, name);
 
-							if ((instance))
+							if (IsAddressValid(instance))
 							{
 								return instance;
 							}
@@ -181,16 +181,16 @@ namespace CIl2Cpp {
 	{
 		auto super = object;
 
-		while ((super))
+		while (IsAddressValid(super))
 		{
 			auto iterator = static_cast<void*>(nullptr);
 			auto field = il2cpp_class_get_fields(super, &iterator);
 
-			while ((field))
+			while (IsAddressValid(field))
 			{
 				const auto name = il2cpp_field_get_name(field);
 
-				if ((name))
+				if (IsAddressValid(name))
 				{
 					if (Hash(name, true) == name_hash)
 					{
@@ -210,16 +210,16 @@ namespace CIl2Cpp {
 	{
 		auto super = object;
 
-		while ((super))
+		while (IsAddressValid(super))
 		{
 			auto iterator = static_cast<void*>(nullptr);
 			auto prop = il2cpp_class_get_properties(super, &iterator);
 
-			while ((prop))
+			while (IsAddressValid(prop))
 			{
 				const auto name = il2cpp_property_get_name(prop);
 
-				if ((name))
+				if (IsAddressValid(name))
 				{
 					if (Hash(name, true) == name_hash)
 					{

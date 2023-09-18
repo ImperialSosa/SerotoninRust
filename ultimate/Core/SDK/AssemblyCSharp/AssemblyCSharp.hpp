@@ -134,6 +134,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(ViewModelLower*, lower);
 		IL2CPP_FIELD(ViewmodelBob*, bob);
 		IL2CPP_FIELD(bool, useViewModelCamera);
+		IL2CPP_FIELD(UnityEngine::Animator*, animator);
 
 	};
 
@@ -2087,7 +2088,11 @@ namespace AssemblyCSharp {
 			return {};
 		}
 	};
-
+	struct ItemId// TypeDefIndex: 9516
+	{
+		// Fields
+		unsigned long Value; // 0x0
+	};
 	struct LocalPlayer;
 	struct BasePlayer : PatrolHelicopter
 	{
@@ -2109,11 +2114,48 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(BaseMountable*, mounted);
 		IL2CPP_FIELD(PlayerWalkMovement*, movement);
 		IL2CPP_FIELD(PlayerTick*, lastSentTick);
-		//	IL2CPP_FIELD(Vector3, lookingAtPoint);
+		IL2CPP_FIELD(ItemId, clActiveItem);
 		IL2CPP_FIELD(UnityEngine::Collider*, _lookingAtCollider);
 		IL2CPP_FIELD(UnityEngine::CapsuleCollider*, playerCollider);
 
-		
+
+		auto item() -> Item*
+		{
+			auto ActiveUid = this->clActiveItem();
+			if (!IsAddressValid(ActiveUid.Value))
+				return { };
+
+			auto inventory = this->inventory();
+			if (!inventory)
+				return { };
+
+			auto belt = inventory->containerBelt();
+			if (!belt)
+				return { };
+
+			auto itemList = belt->itemList();
+			if (!itemList)
+				return { };
+
+			auto items = *reinterpret_cast<uint64_t*>(itemList + 0x10);
+			if (!items)
+				return { };
+
+			for (int i = 0; i < 6; i++)
+			{
+				auto item = *reinterpret_cast<Item**> (items + 0x20 + (i * 0x8));
+				if (!item)
+					continue;
+
+				if (ActiveUid.Value == item->uid())
+					return item;
+			}
+
+			return { };
+		}
+
+
+
 		class Target {
 		public:
 			Vector3 m_position;
@@ -2937,11 +2979,7 @@ namespace AssemblyCSharp {
 
 	};
 
-	struct ItemId// TypeDefIndex: 9516
-	{
-		// Fields
-		unsigned long Value; // 0x0
-	};
+	
 
 	struct LocalPlayer : Il2CppObject
 	{
