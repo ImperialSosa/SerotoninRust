@@ -634,7 +634,7 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 									//	return;
 									//}
 
-								float maxpacketsperSECOND = 1500;
+								float maxpacketsperSECOND = 1;
 								if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 								{
 									CalledLaunchFromHook = true;
@@ -661,7 +661,7 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 
 							if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->ManipulationAngle, this->BulletTPAngle))
 							{
-								float maxpacketsperSECOND = 1500;
+								float maxpacketsperSECOND = 1;
 								if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 								{
 									CalledLaunchFromHook = true;
@@ -708,7 +708,7 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 						if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->ManipulationAngle, this->BulletTPAngle))
 						{
 
-							float maxpacketsperSECOND = 1500;
+							float maxpacketsperSECOND = 1;
 							if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 							{
 								CalledLaunchFromHook = true;
@@ -736,7 +736,7 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 
 						if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->ManipulationAngle, this->BulletTPAngle))
 						{
-							float maxpacketsperSECOND = 1500;
+							float maxpacketsperSECOND = 1;
 							if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 							{
 								CalledLaunchFromHook = true;
