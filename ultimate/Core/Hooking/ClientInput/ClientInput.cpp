@@ -310,153 +310,153 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (IsAddressValid(BaseProjectile))
 	{
 		Features().BaseProjectile = BaseProjectile;
-	}
 
-	auto base_melee = a1->GetHeldEntityCast<AssemblyCSharp::BaseMelee>();
 
-	if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile) && Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
-	{
-		Features().AutoShoot(Features().BaseProjectile);
-		Features().FastBullet(Features().BaseProjectile);
-		Features().BulletQueue(Features().BaseProjectile);
-		Features().AutoReload(Features().BaseProjectile);
 
-		if (m_settings::NoWeaponBob)
+		if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile) && Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 		{
-			auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
+			Features().AutoShoot(Features().BaseProjectile);
+			Features().FastBullet(Features().BaseProjectile);
+			Features().BulletQueue(Features().BaseProjectile);
+			Features().AutoReload(Features().BaseProjectile);
 
-			if (IsAddressValid(ActiveModel))
+			if (m_settings::NoWeaponBob)
 			{
+				auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
 
-				if (IsAddressValid(ActiveModel->bob()))
+				if (IsAddressValid(ActiveModel))
 				{
-					ActiveModel->bob()->bobAmountRun() = { 0.f, 0.f, 0.f, 0.f };
-					ActiveModel->bob()->bobAmountWalk() = { 0.f, 0.f, 0.f, 0.f };
-				}
 
-				if (IsAddressValid(ActiveModel->sway()))
-				{
-					ActiveModel->sway()->positionalSwaySpeed() = { 0 };
-					ActiveModel->sway()->positionalSwayAmount() = { 0 };
-				}
-
-				if (IsAddressValid(ActiveModel->lower()))
-				{
-					ActiveModel->lower()->lowerOnSprint() = false;
-					ActiveModel->lower()->lowerWhenCantAttack() = false;
-					ActiveModel->lower()->shouldLower() = false;
-				}
-			}
-		}
-
-		if (Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
-		{
-
-			if (m_settings::ChangeRecoil)
-			{
-				if (const auto RecoilProperties = Features().BaseProjectile->recoil())
-				{
-					static float orig[6];
-					static bool StoreOrig = false;
-
-					if (const auto newRecoilOverride = RecoilProperties->newRecoilOverride())
+					if (IsAddressValid(ActiveModel->bob()))
 					{
-						if (!StoreOrig)
-						{
-							orig[0] = newRecoilOverride->recoilYawMin();
-							orig[1] = newRecoilOverride->recoilYawMax();
-							orig[2] = newRecoilOverride->recoilPitchMin();
-							orig[3] = newRecoilOverride->recoilPitchMax();
-							//orig[4] = newRecoilOverride->ADSScale();
-							//orig[5] = newRecoilOverride->movementPenalty();
-
-							StoreOrig = true;
-						}
-
-						const float amount = m_settings::recoilPercent / 100;
-						const float amountY = m_settings::RecoilPercentY / 100;
-						newRecoilOverride->recoilYawMin() = orig[0] * amount;
-						newRecoilOverride->recoilYawMax() = orig[1] * amount;
-						newRecoilOverride->recoilPitchMin() = orig[2] * amountY;
-						newRecoilOverride->recoilPitchMax() = orig[3] * amountY;
-						//newRecoilOverride->ADSScale() = orig[4] * amount;
-						//newRecoilOverride->movementPenalty() = orig[5] * amount;
+						ActiveModel->bob()->bobAmountRun() = { 0.f, 0.f, 0.f, 0.f };
+						ActiveModel->bob()->bobAmountWalk() = { 0.f, 0.f, 0.f, 0.f };
 					}
-					else
+
+					if (IsAddressValid(ActiveModel->sway()))
 					{
-						if (!StoreOrig)
-						{
-							orig[0] = RecoilProperties->recoilYawMin();
-							orig[1] = RecoilProperties->recoilYawMax();
-							orig[2] = RecoilProperties->recoilPitchMin();
-							orig[3] = RecoilProperties->recoilPitchMax();
-							//orig[4] = RecoilProperties->ADSScale();
-							//orig[5] = RecoilProperties->movementPenalty();
+						ActiveModel->sway()->positionalSwaySpeed() = { 0 };
+						ActiveModel->sway()->positionalSwayAmount() = { 0 };
+					}
 
-							StoreOrig = true;
-						}
-
-						const float amount = m_settings::recoilPercent / 100;
-						const float amountY = m_settings::RecoilPercentY / 100;
-						RecoilProperties->recoilYawMin() = orig[0] * amount;
-						RecoilProperties->recoilYawMax() = orig[1] * amount;
-						RecoilProperties->recoilPitchMin() = orig[2] * amountY;
-						RecoilProperties->recoilPitchMax() = orig[3] * amountY;
+					if (IsAddressValid(ActiveModel->lower()))
+					{
+						ActiveModel->lower()->lowerOnSprint() = false;
+						ActiveModel->lower()->lowerWhenCantAttack() = false;
+						ActiveModel->lower()->shouldLower() = false;
 					}
 				}
 			}
 
-			if (m_settings::ForceAutomatic)
+			if (Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
 			{
-				Features().BaseProjectile->automatic() = true;
-			}
 
-			if (m_settings::NoSpread)
-			{
-				Features().BaseProjectile->stancePenalty() = 0.f;
-				Features().BaseProjectile->aimconePenalty() = 0.f;
-				Features().BaseProjectile->aimCone() = 0.f;
-				Features().BaseProjectile->hipAimCone() = 0.f;
-				Features().BaseProjectile->aimconePenaltyPerShot() = 0.f;
-			}
-
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (m_settings::WeaponSpammer && UnityEngine::Input::GetKey(m_settings::WeaponSpamKey))
-			{
-				float delay = m_settings::WeaponSpamDelay / 100;
-				if (current_time - send_time > delay)
+				if (m_settings::ChangeRecoil)
 				{
-					Features().BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
-					send_time = current_time;
+					if (const auto RecoilProperties = Features().BaseProjectile->recoil())
+					{
+						static float orig[6];
+						static bool StoreOrig = false;
+
+						if (const auto newRecoilOverride = RecoilProperties->newRecoilOverride())
+						{
+							if (!StoreOrig)
+							{
+								orig[0] = newRecoilOverride->recoilYawMin();
+								orig[1] = newRecoilOverride->recoilYawMax();
+								orig[2] = newRecoilOverride->recoilPitchMin();
+								orig[3] = newRecoilOverride->recoilPitchMax();
+								//orig[4] = newRecoilOverride->ADSScale();
+								//orig[5] = newRecoilOverride->movementPenalty();
+
+								StoreOrig = true;
+							}
+
+							const float amount = m_settings::recoilPercent / 100;
+							const float amountY = m_settings::RecoilPercentY / 100;
+							newRecoilOverride->recoilYawMin() = orig[0] * amount;
+							newRecoilOverride->recoilYawMax() = orig[1] * amount;
+							newRecoilOverride->recoilPitchMin() = orig[2] * amountY;
+							newRecoilOverride->recoilPitchMax() = orig[3] * amountY;
+							//newRecoilOverride->ADSScale() = orig[4] * amount;
+							//newRecoilOverride->movementPenalty() = orig[5] * amount;
+						}
+						else
+						{
+							if (!StoreOrig)
+							{
+								orig[0] = RecoilProperties->recoilYawMin();
+								orig[1] = RecoilProperties->recoilYawMax();
+								orig[2] = RecoilProperties->recoilPitchMin();
+								orig[3] = RecoilProperties->recoilPitchMax();
+								//orig[4] = RecoilProperties->ADSScale();
+								//orig[5] = RecoilProperties->movementPenalty();
+
+								StoreOrig = true;
+							}
+
+							const float amount = m_settings::recoilPercent / 100;
+							const float amountY = m_settings::RecoilPercentY / 100;
+							RecoilProperties->recoilYawMin() = orig[0] * amount;
+							RecoilProperties->recoilYawMax() = orig[1] * amount;
+							RecoilProperties->recoilPitchMin() = orig[2] * amountY;
+							RecoilProperties->recoilPitchMax() = orig[3] * amountY;
+						}
+					}
+				}
+
+				if (m_settings::ForceAutomatic)
+				{
+					Features().BaseProjectile->automatic() = true;
+				}
+
+				if (m_settings::NoSpread)
+				{
+					Features().BaseProjectile->stancePenalty() = 0.f;
+					Features().BaseProjectile->aimconePenalty() = 0.f;
+					Features().BaseProjectile->aimCone() = 0.f;
+					Features().BaseProjectile->hipAimCone() = 0.f;
+					Features().BaseProjectile->aimconePenaltyPerShot() = 0.f;
+				}
+
+				static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+				float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+				if (m_settings::WeaponSpammer && UnityEngine::Input::GetKey(m_settings::WeaponSpamKey))
+				{
+					float delay = m_settings::WeaponSpamDelay / 100;
+					if (current_time - send_time > delay)
+					{
+						Features().BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
+						send_time = current_time;
+					}
 				}
 			}
-		}
-		else
-		{
-			if (m_settings::InstantHeal)
+			else
 			{
-
-				float nextActionTime = 0, period = 1.4721;
-				auto health = a1->_health();
-
-				auto Held = a1->GetHeldItemSafe();
-
-				if (Held)
+				if (m_settings::InstantHeal)
 				{
-					auto HeldEntity = Held->heldEntity();
-					if (HeldEntity)
-					{
-						if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
-							//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
-							auto Time = UnityEngine::Time::get_time();
 
-							if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() <= Time) {
-								if (Time > nextActionTime) {
-									nextActionTime = Time + period;
-									if (health < 99)
-										BaseProjectile->ServerRPC(XS("UseSelf"));
+					float nextActionTime = 0, period = 1.4721;
+					auto health = a1->_health();
+
+					auto Held = a1->GetHeldItemSafe();
+
+					if (Held)
+					{
+						auto HeldEntity = Held->heldEntity();
+						if (HeldEntity)
+						{
+							if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
+								//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
+								auto Time = UnityEngine::Time::get_time();
+
+								if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() <= Time) {
+									if (Time > nextActionTime) {
+										nextActionTime = Time + period;
+										if (health < 99)
+											BaseProjectile->ServerRPC(XS("UseSelf"));
+									}
 								}
 							}
 						}
@@ -464,8 +464,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 			}
 		}
-	}
 
+	}
 	if (m_settings::BulletTP)
 	{
 		auto camera = UnityEngine::Camera::get_main();
@@ -516,6 +516,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+	auto base_melee = a1->GetHeldEntityCast<AssemblyCSharp::BaseMelee>();
 
 	if (m_settings::AutoFarmOre)
 	{

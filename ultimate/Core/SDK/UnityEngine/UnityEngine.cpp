@@ -482,7 +482,7 @@ namespace UnityEngine
 	{
 		auto super = klass;
 
-		while ((super))
+		while (IsAddressValid(super))
 		{
 			if (super == object)
 			{

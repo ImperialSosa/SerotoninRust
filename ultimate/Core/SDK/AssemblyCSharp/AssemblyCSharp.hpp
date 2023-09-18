@@ -1279,7 +1279,10 @@ namespace AssemblyCSharp {
 			this->needsCycle() = true;
 		}
 	};
+	struct TimedExplosive : BaseMelee {
+		IL2CPP_CLASS("TimedExplosive");
 
+	};
 
 	struct JackHammer : BaseMelee {
 		IL2CPP_CLASS("JackHammer");
@@ -2657,18 +2660,18 @@ namespace AssemblyCSharp {
 
 		template<typename T>
 		T* GetHeldEntityCast() {
-			if (!this) return {};
+			if (!IsAddressValid(this)) return {};
 			static uintptr_t procedure = 0;
-			if (!(procedure))
+			if (!IsAddressValid(procedure))
 			{
 				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("GetHeldEntity"), 0);
-				if ((method))
+				if (IsAddressValid(method))
 				{
 					procedure = ToAddress(method->methodPointer);
 				}
 			}
 
-			if ((procedure))
+			if (IsAddressValid(procedure))
 			{
 				return Call<T*>(procedure, this);
 			}
