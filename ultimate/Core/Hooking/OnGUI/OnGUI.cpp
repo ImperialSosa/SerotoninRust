@@ -51,7 +51,7 @@ void ConnectorClient()
 
 	connector::cheat_message msg;
 	msg.msg = connector::messages::JOIN_SHARED_ESP;
-	msg.value = "ServerABCD"; //Name of channel
+	msg.value = "TrollServer1"; //Name of channel
 	auto data = connector::data(msg);
 
 	if (current_time - send_time > 0.02f)
@@ -776,7 +776,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		connector::cheat_message msg;
 		msg.msg = connector::messages::LEAVE_SHARED_ESP;
-		msg.value = XS("ServerABCD"); //Name of channel
+		msg.value = XS("TrollServer1"); //Name of channel
 		auto data = connector::data(msg);
 		net->send_data(data);
 		delete net;
