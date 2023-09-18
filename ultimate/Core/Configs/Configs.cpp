@@ -194,6 +194,8 @@ void Configs::LoadConfig()
     m_settings::OmniSprint = config[XS("OmniSprint")];
     m_settings::InstantHeal = config[XS("InstantHeal")];
     m_settings::IgnoreTrees = config[XS("IgnoreTrees")];
+    m_settings::RemoveAttackAnimations = config[XS("RemoveAttackAnimations")];
+
     m_settings::IgnorePlayers = config[XS("IgnorePlayers")];
     m_settings::InstantRevive = config[XS("InstantRevive")];
     m_settings::PlayerFov = config[XS("PlayerFov")];
@@ -888,6 +890,8 @@ void Configs::SaveConfig()
     config[XS("OmniSprint")] = m_settings::OmniSprint;
     config[XS("InstantHeal")] = m_settings::InstantHeal;
     config[XS("IgnoreTrees")] = m_settings::IgnoreTrees;
+    config[XS("RemoveAttackAnimations")] = m_settings::RemoveAttackAnimations;
+
     config[XS("IgnorePlayers")] = m_settings::IgnorePlayers;
     config[XS("InstantRevive")] = m_settings::InstantRevive;
     config[XS("PlayerFov")] = m_settings::PlayerFov;

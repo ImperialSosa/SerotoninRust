@@ -599,14 +599,41 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 			//Features().AutoReload(Features().BaseProjectile);
 
+
+			if (m_settings::RemoveAttackAnimations)
+			{
+				auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
+
+				if (IsAddressValid(ActiveModel))
+				{
+					if (IsAddressValid(ActiveModel->animator()))
+					{
+						if (IsAddressValid(BaseProjectile))
+						{
+							if (!BaseProjectile->HasAttackCooldown())
+							{
+								if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay())
+								{
+									if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+									{
+										if (a1->input()->state()->IsDown(RustStructs::BUTTON::FIRE_PRIMARY))
+											ActiveModel->animator()->set_speed(-1);
+									}
+								}
+							}
+						
+						}
+					}
+				}
+			}
+
 			if (m_settings::NoWeaponBob)
 			{
 				auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
 
 				if (IsAddressValid(ActiveModel))
 				{
-					if (a1->input()->state()->IsDown(RustStructs::BUTTON::FIRE_PRIMARY))
-						ActiveModel->animator()->set_speed(-1);
+					
 
 
 					if (IsAddressValid(ActiveModel->bob()))

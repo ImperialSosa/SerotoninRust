@@ -124,6 +124,16 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(bool, shouldLower);
 	};
 
+	struct ViewmodelPunch : Il2CppObject {
+		IL2CPP_CLASS("ViewmodelPunch");
+
+
+		IL2CPP_FIELD(float, punchDuration);
+		IL2CPP_FIELD(float, punchStartTime);
+		IL2CPP_FIELD(Vector3, punchDirection);
+
+	};
+
 	struct BaseViewModel : UnityEngine::MonoBehaviour
 	{
 		IL2CPP_CLASS("BaseViewModel");
@@ -135,6 +145,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(ViewmodelBob*, bob);
 		IL2CPP_FIELD(bool, useViewModelCamera);
 		IL2CPP_FIELD(UnityEngine::Animator*, animator);
+		IL2CPP_FIELD(ViewmodelPunch*, punch);
 
 	};
 
@@ -440,10 +451,25 @@ namespace AssemblyCSharp {
 	};
 	struct BasePlayer;
 
+	struct HeldEntityPunchEntry : Il2CppObject {
+		IL2CPP_CLASS("HeldEntity.PunchEntry");
+
+
+		IL2CPP_FIELD(Vector3, amount);
+		IL2CPP_FIELD(float, duration);
+		IL2CPP_FIELD(float, startTime);
+		IL2CPP_FIELD(Vector3, amountAdded);
+
+	};
+
 	struct HeldEntity : BaseEntity
 	{
 		IL2CPP_CLASS("HeldEntity");
 		IL2CPP_FIELD(ViewModel*, viewModel);
+		IL2CPP_FIELD(Vector3, punchAdded);
+		IL2CPP_FIELD(FPSystem::List<HeldEntityPunchEntry*>*, _punches);
+
+		IL2CPP_FIELD(float, lastPunchTime);
 
 		BasePlayer* GetOwnerPlayer()
 		{

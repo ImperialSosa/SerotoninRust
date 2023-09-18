@@ -397,6 +397,7 @@ void MenuDraw::RenderMenu()
 				Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
 				Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
 				//Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
+				Menu().CheckBox(XS(L"RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
 			}
 
 			Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
