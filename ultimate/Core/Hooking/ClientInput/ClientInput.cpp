@@ -163,38 +163,6 @@ inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSha
 
 inline bool FirstInit = false;
 
-Vector2 CalcAngle(const Vector3& Src, const Vector3& Dst)
-{
-	Vector3 dir = Src - Dst;
-	return Vector2{ RAD2DEG(Math::asinf(dir.y / dir.Length())), RAD2DEG(-Math::atan2f(dir.x, -dir.z)) };
-}
-
-inline auto CalculateAngle(Vector3 from, Vector3 to) -> Vector2 {
-	const auto direction = from - to;
-
-	const auto pitch = Math::asinf(direction.y / (direction.Length()));
-	const auto yaw = -Math::atan2f(direction.x, -direction.z);
-
-	return Vector2{ pitch, yaw } *57.2957795131f;
-}
-
-Vector3 calculate_angle(const Vector3& source, const Vector3& destination)
-{
-	constexpr auto r2d = 57.2957795131f; /* 180 / pi, used for conversion from radians to degrees */
-	constexpr auto d2r = 0.01745329251f; /* pi / 180, used for conversion from degrees to radians */
-
-	Vector3 direction = source - destination;
-	return { Math::asinf(direction.y / direction.Length()) * r2d, -Math::atan2f(direction.x, -direction.z) * r2d, 0.f };
-}
-
-void Normalize(float& Yaw, float& Pitch)
-{
-	if (Pitch < -89) Pitch = -89;
-	else if (Pitch > 89) Pitch = 89;
-	if (Yaw < -360) Yaw += 360;
-	else if (Yaw > 360) Yaw -= 360;
-}
-
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
 {
 	if(!InGame)
@@ -228,7 +196,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			if (AimbotTarget.m_player) {
 				auto LocalPos = LocalPlayer->get_bone_transform(47)->get_position();
 				auto TargetBone = AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position();
-
+				auto CameraPos = camera->get_positionz();
 				
 				//Vector3 angle_to = calculate_angle(LocalPos, TargetBone);
 				//angle_to = LocalPlayer->input()->bodyAngles().lerp(angle_to, (1.f - 0.f));
