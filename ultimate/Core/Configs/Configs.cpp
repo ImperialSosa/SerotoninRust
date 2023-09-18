@@ -66,6 +66,7 @@ void Configs::LoadConfig()
     m_settings::AimbotNPC = config.value(XS("AimbotNPC"), m_settings::AimbotNPC);
     m_settings::HeliAimbot = config.value(XS("HeliAimbot"), m_settings::HeliAimbot);
     m_settings::ManipPoints = config.value(XS("ManipPoints"), m_settings::ManipPoints);
+    m_settings::HitMaterial = config.value(XS("HitMaterial"), m_settings::HitMaterial);
     m_settings::InstantEoka = config.value(XS("InstantEoka"), m_settings::InstantEoka);
     m_settings::TargetWounded = config.value(XS("TargetWounded"), m_settings::TargetWounded);
     m_settings::ShowUsers = config.value(XS("ShowUsers"), m_settings::ShowUsers);
@@ -749,6 +750,8 @@ void Configs::SaveConfig()
     config[XS("HeliAimbot")] = m_settings::HeliAimbot;
     config[XS("ManipPoints")] = m_settings::ManipPoints;
     config[XS("InstantEoka")] = m_settings::InstantEoka;
+    config[XS("HitMaterial")] = m_settings::HitMaterial;
+
     config[XS("TargetWounded")] = m_settings::TargetWounded;
     config[XS("ShowUsers")] = m_settings::ShowUsers;
     config[XS("SelectedAimbone")] = m_settings::SelectedAimbone;

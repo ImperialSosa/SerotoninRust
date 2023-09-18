@@ -3,6 +3,41 @@
 #include "../System/System.hpp"
 #include "../../Includes/settings.hpp"
 #include "../ProtoBuf/ProtoBuf.h"
+
+namespace Rust {
+	IL2CPP_NAME_SPACE("Rust");
+
+
+	struct DamageTypeList : Il2CppObject {
+		IL2CPP_CLASS("DamageTypeList");
+
+
+		float Total()
+		{
+
+			if (!this)return 0.f;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("Total"), 0);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<float>(procedure, this);
+			}
+
+
+			return 0.f;
+		}
+	};
+}
+
 namespace AssemblyCSharp {
 	static float crt_sqrt2(float number)
 	{
@@ -590,8 +625,12 @@ namespace AssemblyCSharp {
 
 	struct BaseEntity;
 	struct Projectile;
+
+	
+
 	struct HitInfo : Il2CppObject {
 		IL2CPP_CLASS("HitInfo");
+		IL2CPP_FIELD(Rust::DamageTypeList*, damageTypes);
 
 		IL2CPP_FIELD(float, ProjectileDistance);
 		IL2CPP_FIELD(float, ProjectileIntegrity);
@@ -2143,6 +2182,26 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(ItemId, clActiveItem);
 		IL2CPP_FIELD(UnityEngine::Collider*, _lookingAtCollider);
 		IL2CPP_FIELD(UnityEngine::CapsuleCollider*, playerCollider);
+
+
+
+		bool IsPlayer() {
+			if (!this) return false;
+			return !strcmp(this->class_name(), XS("BasePlayer")) ||
+				!strcmp(this->class_name(), XS("NPCPlayerApex")) ||
+				!strcmp(this->class_name(), XS("NPCMurderer")) ||
+				!strcmp(this->class_name(), XS("NPCPlayer")) ||
+				!strcmp(this->class_name(), XS("HumanNPC")) ||
+				!strcmp(this->class_name(), XS("Scientist")) ||
+				!strcmp(this->class_name(), XS("TunnelDweller")) ||
+				!strcmp(this->class_name(), XS("HTNPlayer")) ||
+				!strcmp(this->class_name(), XS("HumanNPCNew")) ||
+				!strcmp(this->class_name(), XS("ScientistNPCNew")) ||
+				!strcmp(this->class_name(), XS("BanditGuard")) ||
+				!strcmp(this->class_name(), XS("ScientistNPC")) ||
+				!strcmp(this->class_name(), XS("NPCMissionProvider")) ||
+				!strcmp(this->class_name(), XS("NPCShopkeeper"));
+		}
 
 
 		auto item() -> Item*

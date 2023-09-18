@@ -27,6 +27,7 @@ void Hooks::PlayerWalkMovement(AssemblyCSharp::PlayerWalkMovement* _This, Assemb
 	if (m_settings::AdminFlags)
 		_ModelState->remove_flag(RustStructs::ModelState_Flag::Flying);
 
+
 	auto g_local_player = AssemblyCSharp::LocalPlayer::get_Entity();
 	if (g_local_player)
 	{

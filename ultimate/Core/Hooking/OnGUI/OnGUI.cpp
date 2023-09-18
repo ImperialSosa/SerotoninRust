@@ -371,6 +371,10 @@ float RecordedPointsX[100] = {};
 float RecordedPointsY[100] = {};
 float RecordedPointsZ[100] = {};
 
+float GRD_TO_BOG(float GRD) {
+	return (M_PI / 180) * GRD;
+}
+
 void drawMisc()
 {
 	if (!InGame)
@@ -393,6 +397,38 @@ void drawMisc()
 		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x - 7, screen_center.y), Color::Red());
 		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y + 8), Color::Red());
 		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y - 7), Color::Red());
+	}
+
+	if (m_settings::Swastika)
+	{
+		auto sped = m_settings::SwastikaSpeed / 10;
+		float speed = sped;
+		float razmer = 10;
+		bool cadicall = false;
+
+		float xs = screen_center.x, ys = screen_center.y;
+		static float rotation_degree = 0.f;
+		if (rotation_degree > 89.f)
+			rotation_degree = 0.f;
+		rotation_degree += speed;
+		int length = (int)(screen_center.x / razmer / m_settings::SwastikaSize);
+		float gamma = Math::atanf(length / length);
+		int i = 0;
+		while (i < 4)
+		{
+			std::vector <int> p
+			{
+				int(length * Math::sinf(GRD_TO_BOG(rotation_degree + (i * 90)))),
+					int(length * Math::cosf(GRD_TO_BOG(rotation_degree + (i * 90)))),
+					int((length / Math::cosf(gamma)) * Math::sinf(GRD_TO_BOG(rotation_degree + (i * 90) + RAD2DEG(gamma)))),
+					int((length / Math::cosf(gamma)) * Math::cosf(GRD_TO_BOG(rotation_degree + (i * 90) + RAD2DEG(gamma))))
+			};
+
+			UnityEngine::GL::Line(Vector2(xs, ys), Vector2(xs + p[0], ys - p[1]), Color::Red());
+			UnityEngine::GL::Line(Vector2(xs + p[0], ys - p[1]), Vector2(xs + p[2], ys - p[3]), Color::Red());
+
+			i++;
+		}
 	}
 
 	if (m_settings::Aimline)
@@ -708,6 +744,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::SteamPlatformUpdatehk.VirtualFunctionHook(XS("SteamPlatform"), HASH("Update"), &Hooks::SteamPlatformUpdate, XS("Rust.Platform.Steam"), 0);
 	}
 
+	if (!Hooks::OnAttackedhk.IsHooked())
+	{
+		Hooks::OnAttackedhk.VirtualFunctionHook(XS("BasePlayer"), HASH("OnAttacked"), &Hooks::OnAttacked, XS(""), 1);
+	}
+
+
 	/*if (!Hooks::SkyUpdatehk.IsHooked())
 	{
 		Hooks::SkyUpdatehk.PointerSwapHook(XS("TOD_Camera"), HASH("Update"), &Hooks::SkyUpdate, XS(""), 0);
@@ -853,6 +895,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::TryToMovehk.Unhook();
 		Hooks::SkyUpdatehk.Unhook();
 		Hooks::SteamPlatformUpdatehk.Unhook();
+		Hooks::OnAttackedhk.Unhook();
 
 		Hooks::OnGUIhk.Unhook();
 		Hooks::Update_hk.Unhook();

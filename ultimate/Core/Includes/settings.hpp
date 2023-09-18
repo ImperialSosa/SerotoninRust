@@ -14,6 +14,7 @@ namespace m_settings {
 	inline bool DrawClothing = false;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
+	inline int HitMaterial = 0;
 	inline bool HeliAimbot = false;
 	inline bool RemoveAttackAnimations = false;
 	inline bool TurretOnFlags = false;

@@ -41,6 +41,7 @@
     <ClCompile Include="Core\Hooking\TryToMove\TryToMove.cpp" />
     <ClCompile Include="Core\Hooking\SkyUpdate\SkyUpdate.cpp" />
     <ClCompile Include="Core\Hooking\SteamPlatform\SteamPlatform.cpp" />
+    <ClCompile Include="Core\Hooking\OnAttacked\OnAttacked.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />

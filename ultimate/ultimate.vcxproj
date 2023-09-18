@@ -155,6 +155,7 @@
     <ClCompile Include="Core\CRT\crt.cpp" />
     <ClCompile Include="Core\CRT\math.cpp" />
     <ClCompile Include="Core\CRT\mutex\smutex.cpp" />
+    <ClCompile Include="Core\Hooking\OnAttacked\OnAttacked.cpp" />
     <ClCompile Include="Core\Hooking\PlayerProjectileAttack\PlayerProjectileAttack.cpp" />
     <ClCompile Include="Core\Hooking\DoAttack\DoAttack.cpp" />
     <ClCompile Include="Core\Features\EyeHack\EyeHack.cpp" />

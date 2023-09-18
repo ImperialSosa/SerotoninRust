@@ -29,5 +29,6 @@ private:
 	HOOK(void, TryToMove, (AssemblyCSharp::ItemIcon* _This))
 	HOOK(void, SkyUpdate, (AssemblyCSharp::TOD_Camera* _This))
 	HOOK(void, SteamPlatformUpdate, (RustPlatformSteam::SteamPlatform* _This))
+	HOOK(void, OnAttacked, (AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::HitInfo* hitinfo))
 
 };

@@ -1188,6 +1188,16 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 	if (!is_menu_open)
 		return;
 
+
+	bool bCringe = false;
+
+	if (IsComboOpen && iCurrentOpenedCombo != Hash(title, false))
+		bCringe = true;
+
+	if (!IsComboOpen && bComboOpenedInThisFrame)
+		bComboOpenedInThisFrame = false;
+
+
 	float left = 70.f;
 	float leveling = 0.f;
 	float width = 120;
@@ -1201,6 +1211,7 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 		is_open = true;
 		interacting = true;
 		IsComboOpen = true;
+		bComboOpenedInThisFrame = true;
 	}
 
 	if (menu_event == RustStructs::EventType::Repaint)
@@ -1214,6 +1225,7 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 			is_open = false;
 			interacting = false;
 			IsComboOpen = false;
+			bComboOpenedInThisFrame = false;
 		}
 
 		const auto str = std::wstring(items.at(value).begin(), items.at(value).end());

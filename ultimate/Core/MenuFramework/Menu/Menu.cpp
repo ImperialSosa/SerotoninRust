@@ -4,9 +4,21 @@ inline bool aim_type_opened;
 inline bool chams_type_opened;
 inline bool bullet_tpe_open;
 inline bool config_type_open;
+inline bool hitmat_open;
 
 inline bool aim_type_opene2;
 #include "../../Configs/Configs.hpp"
+#include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
+
+
+auto reset_player_model()
+{
+	if (InGame)
+	{
+		AssemblyCSharp::PlayerModel().RebuildAll();
+	}
+}
+
 
 void MenuDraw::RenderMenu()
 {
@@ -65,7 +77,10 @@ void MenuDraw::RenderMenu()
 					Menu().Slider(XS(L"Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 					Menu().Slider(XS(L"Fov Slider"), m_settings::AimbotFOV, 0, 1000);
 					Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
+					
+					Menu().Spacer(50);
 
+					Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water")}, m_settings::HitMaterial, hitmat_open);
 
 				}
 
@@ -128,6 +143,17 @@ void MenuDraw::RenderMenu()
 				Menu().BeginChild(XS(L"Visuals"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Crosshair"), m_settings::Crosshair);
+					if (m_settings::Crosshair)
+					{
+						m_settings::Swastika = false;
+					}
+
+					Menu().CheckBox(XS(L"SwastikaCrosshair"), m_settings::Swastika);
+					if (m_settings::Swastika)
+					{
+						m_settings::Crosshair = false;
+						Menu().Slider(XS(L"SwastikaSize"), m_settings::SwastikaSize, 1, 20);
+					}
 					Menu().CheckBox(XS(L"FOV Circle"), m_settings::DrawFov);
 					Menu().CheckBox(XS(L"Target Snapline"), m_settings::Aimline);
 					Menu().CheckBox(XS(L"Target Marker"), m_settings::AimMarker);
@@ -413,7 +439,8 @@ void MenuDraw::RenderMenu()
 		case 4:
 			Menu().BeginChild(XS(L"Colors"), { 60,45 }, { 220,290 });
 			{
-			
+				Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+
 				//Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
 				//Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
 				//if (m_settings::ChangeRecoil) {
