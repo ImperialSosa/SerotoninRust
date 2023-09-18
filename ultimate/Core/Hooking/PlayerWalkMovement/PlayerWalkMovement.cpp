@@ -14,6 +14,9 @@ void Hooks::PlayerWalkMovement(AssemblyCSharp::PlayerWalkMovement* _This, Assemb
 		return Hooks::PlayerWalkMovementhk.get_original< decltype(&PlayerWalkMovement)>()(_This, _State, _ModelState);
 	}
 
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::PlayerWalkMovementhk.get_original< decltype(&PlayerWalkMovement)>()(_This, _State, _ModelState);
+
 	if (Features().LocalPlayer->lifestate() & RustStructs::Dead || !Features().LocalPlayer->IsConnected())
 		return Hooks::PlayerWalkMovementhk.get_original< decltype(&PlayerWalkMovement)>()(_This, _State, _ModelState);
 

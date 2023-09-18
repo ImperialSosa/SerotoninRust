@@ -1976,7 +1976,7 @@ namespace AssemblyCSharp {
 
 
 		IL2CPP_FIELD(InputState*, state);
-		IL2CPP_FIELD(Vector3, bodyAngles);
+		IL2CPP_FIELD(Vector2, bodyAngles);
 		IL2CPP_FIELD(Vector2, recoilAngles);
 	};
 

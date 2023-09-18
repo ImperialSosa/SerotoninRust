@@ -28,5 +28,6 @@ public:
 	static inline Vector3 ManipulationAngle;
 	static inline Vector3 BulletTPAngle;
 	static inline Vector3 BTPSeperator;
+	static inline AssemblyCSharp::BaseProjectile* BaseProjectile;
 
 };

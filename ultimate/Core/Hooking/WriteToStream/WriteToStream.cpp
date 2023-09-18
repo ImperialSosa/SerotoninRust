@@ -28,18 +28,17 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 	if (!IsAddressValid(AimbotTarget.m_player))
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
-	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-	if (!IsAddressValid(BaseProjectile))
+	if (!IsAddressValid(Features().BaseProjectile))
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
-	if (BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
+	if (Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
 
 	if (!Features().LocalPlayer->IsWeapon())
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
-	auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+	auto PrimaryMagazine = Features().BaseProjectile->primaryMagazine();
 	if (!IsAddressValid(PrimaryMagazine))
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
@@ -47,7 +46,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 	if (!IsAddressValid(AmmoType))
 		return 	Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
-	auto created_projectiles = BaseProjectile->createdProjectiles();
+	auto created_projectiles = Features().BaseProjectile->createdProjectiles();
 	if (!created_projectiles)
 		return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 
@@ -126,12 +125,12 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		if (AimbotTarget.m_heli && m_settings::HeliAimbot)
 		{
-			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, BaseProjectile, AimbotTarget.m_position, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
+			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, AimbotTarget.m_position, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
 			m_aim_angle = (aim_angle).Normalized() * OriginalVelocity.Length();
 		}
 		else
 		{
-			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
+			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
 			m_aim_angle = (aim_angle).Normalized() * OriginalVelocity.Length();
 		}
 	}
