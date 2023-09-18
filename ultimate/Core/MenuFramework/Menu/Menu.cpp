@@ -260,6 +260,7 @@ void MenuDraw::RenderMenu()
 					{
 						Menu().CheckBox(XS(L"Authorized Players"), m_settings::TurretAuthorizedPlayers);
 						Menu().CheckBox(XS(L"EquippedFlag"), m_settings::TurretEquippedFlags);
+						Menu().CheckBox(XS(L"TurretOnFlags"), m_settings::TurretOnFlags);
 						Menu().CheckBox(XS(L"Turret Health"), m_settings::TurretHealth);
 						Menu().CheckBox(XS(L"TurningFlag"), m_settings::TurretTurningFlag);
 						Menu().CheckBox(XS(L"TurretRange"), m_settings::TurretRange);

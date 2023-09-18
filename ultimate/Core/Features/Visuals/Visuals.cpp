@@ -1133,6 +1133,16 @@ void Visuals::RenderEntities()
 								auto turret_baseentity = static_cast<AssemblyCSharp::BaseCombatEntity*>(BaseEntity);
 
 								auto TurretColor = Color{ m_settings::TurretColor[0], m_settings::TurretColor[1], m_settings::TurretColor[2], m_settings::TurretColor[3] };
+								auto flags = turret_entity->flags();
+								/*if (flags & 2) {
+									TurretColor = Color{ m_settings::TurretColor[0], m_settings::TurretColor[1], m_settings::TurretColor[2], m_settings::TurretColor[3] };
+								}
+								else
+								{
+									TurretColor = Color(0, 255, 0, 255.f);
+								}*/
+								
+								
 								std::string player_name = XS("Turret");
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
@@ -1145,7 +1155,7 @@ void Visuals::RenderEntities()
 								auto muzzlePos = turret_entity->muzzlePos()->get_position();
 								auto sightRange = turret_entity->sightRange();
 								auto authorizedPlayers = turret_entity->authorizedPlayers();
-								auto flags = turret_entity->flags();
+								
 
 								auto _health = turret_baseentity->_health();
 								auto _maxhealth = turret_baseentity->_maxHealth();
@@ -1188,6 +1198,19 @@ void Visuals::RenderEntities()
 									}
 								}
 
+								if (m_settings::TurretOnFlags)
+								{
+									if (flags & 2) {
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("ON"), Color::Red(), Color::Black(), m_settings::WorldFontSize);
+										yoffset += 12.f;
+									}
+									else
+									{
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OFF"), Color::Green(), Color::Black(), m_settings::WorldFontSize);
+										yoffset += 12.f;
+									}
+								}
+
 								if (m_settings::TurretTurningFlag) {
 									if (turret_entity->wasTurning()) {
 										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Turning"), Color::White(), Color::Black(), m_settings::WorldFontSize);
@@ -1213,11 +1236,24 @@ void Visuals::RenderEntities()
 											if (current) {
 												const auto str = current->username();
 												if (str) {
-													std::string player_name = XS("[A]:");
+
+
+													char retstr[256];
+													sprintf(retstr, XS("%s [%llu] [%dm]"), str->string_safe().c_str(), current->userid(), (int)distance);
+
+
+													//if (UnityEngine::Input::GetKey(RustStructs::F))
+													//{
+													//	char stringstr[256];
+													//	sprintf(stringstr, XS("client.reportplayer %llu"), current->userid());
+													//	AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), stringstr, nullptr);
+													//}
+
+													/*std::string player_name = str->string_safe();
 													char str[128];
 													sprintf(str, XS("[%dm]"), (int)distance);
-													player_name = player_name + " " + str;
-													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::Turquoise(), Color::Black(), m_settings::WorldFontSize);
+													player_name = player_name + " " + str;*/
+													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize);
 													yoffset += 12.f;
 												}
 											}

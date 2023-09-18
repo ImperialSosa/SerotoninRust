@@ -15,7 +15,9 @@ namespace m_settings {
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
 	inline bool HeliAimbot = false;
+	inline bool TurretOnFlags = false;
 	inline int ManipPoints = 5;
+	inline bool ReportAllAuthedTurret = false;
 	inline bool InstantEoka = false;
 	inline bool TargetWounded = false;
 	inline bool ShowUsers = false;

@@ -367,6 +367,10 @@ void SetupBundles()
 #include "../../Features/Features/Features.hpp"
 #include "../../Configs/Configs.hpp"
 
+float RecordedPointsX[100] = {};
+float RecordedPointsY[100] = {};
+float RecordedPointsZ[100] = {};
+
 void drawMisc()
 {
 	if (!InGame)

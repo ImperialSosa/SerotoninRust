@@ -415,7 +415,9 @@ void Configs::LoadConfig()
     if (config.find(XS("TurretRange")) != config.end()) {
         m_settings::TurretRange = config[XS("TurretRange")];
     }
-
+    if (config.find(XS("TurretOnFlags")) != config.end()) {
+        m_settings::TurretOnFlags = config[XS("TurretOnFlags")];
+    }
     // Load TurretAuthorizedPlayers from JSON
     if (config.find(XS("TurretAuthorizedPlayers")) != config.end()) {
         m_settings::TurretAuthorizedPlayers = config[XS("TurretAuthorizedPlayers")];
@@ -1007,6 +1009,7 @@ void Configs::SaveConfig()
     config[XS("BradleyCrate")] = m_settings::BradleyCrate;
     config[XS("HeliCrate")] = m_settings::HeliCrate;
     config[XS("TurretRange")] = m_settings::TurretRange;
+    config[XS("TurretOnFlags")] = m_settings::TurretOnFlags;
     config[XS("TurretAuthorizedPlayers")] = m_settings::TurretAuthorizedPlayers;
     config[XS("TurretTurningFlag")] = m_settings::TurretTurningFlag;
     config[XS("TurretEquippedFlags")] = m_settings::TurretEquippedFlags;
