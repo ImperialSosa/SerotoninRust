@@ -298,6 +298,8 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
 					Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
 					Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
+					Menu().CheckBox(XS(L"NameSpoofer"), m_settings::NameSpoofer);
+
 				}
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });

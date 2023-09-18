@@ -19,6 +19,7 @@ namespace m_settings {
 	inline bool InstantEoka = false;
 	inline bool TargetWounded = false;
 	inline bool ShowUsers = false;
+	inline bool NameSpoofer = false;
 	inline int SelectedAimbone = 0;
 	inline bool MeleeAimbot = false;
 	inline bool FloorHugger = false;

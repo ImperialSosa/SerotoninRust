@@ -4473,7 +4473,32 @@ namespace RustPlatformSteam {
 		IL2CPP_PROPERTY(bool, IsValid);
 		IL2CPP_PROPERTY(FPSystem::String*, UserName);
 
-		void set_UserName(const char* str)
+		void set_UserId(unsigned int userID)
+		{
+			if (!this) return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_UserId"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this, userID);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		void set_UserName(FPSystem::String* str)
 		{
 			if (!this) return;
 
@@ -4489,7 +4514,7 @@ namespace RustPlatformSteam {
 
 			if ((procedure))
 			{
-				return Call<void>(procedure, this, CIl2Cpp::il2cpp_string_new(str));
+				return Call<void>(procedure, this, (str));
 			}
 			else
 			{
@@ -4526,7 +4551,37 @@ namespace RustPlatformSteam {
 		}
 	};
 }
+namespace Facepunch
+{
+	IL2CPP_NAME_SPACE("Facepunch");
 
+	struct RandomUsernames  : Il2CppObject {
+		IL2CPP_CLASS("RandomUsernames");
+
+		static FPSystem::String* Get(int v)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("Get"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<FPSystem::String*>(procedure, v);
+			}
+			else
+			{
+
+				return {};
+			}
+		}
+	};
+}
 namespace Rust_Workshop
 {
 	IL2CPP_NAME_SPACE("Rust.Workshop");

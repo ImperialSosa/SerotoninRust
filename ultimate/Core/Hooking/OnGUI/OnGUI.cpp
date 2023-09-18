@@ -699,6 +699,11 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::ClientInputhk.VirtualFunctionHook(XS("BasePlayer"), HASH("ClientInput"), &Hooks::ClientInput, XS(""), 1);
 	}
 
+	if (!Hooks::SteamPlatformUpdatehk.IsHooked())
+	{
+		Hooks::SteamPlatformUpdatehk.VirtualFunctionHook(XS("SteamPlatform"), HASH("Update"), &Hooks::SteamPlatformUpdate, XS("Rust.Platform.Steam"), 0);
+	}
+
 	/*if (!Hooks::SkyUpdatehk.IsHooked())
 	{
 		Hooks::SkyUpdatehk.PointerSwapHook(XS("TOD_Camera"), HASH("Update"), &Hooks::SkyUpdate, XS(""), 0);
@@ -843,6 +848,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::PlayerWalkMovementhk.Unhook();
 		Hooks::TryToMovehk.Unhook();
 		Hooks::SkyUpdatehk.Unhook();
+		Hooks::SteamPlatformUpdatehk.Unhook();
 
 		Hooks::OnGUIhk.Unhook();
 		Hooks::Update_hk.Unhook();

@@ -28,5 +28,6 @@ private:
 	HOOK(void, PlayerWalkMovement, (AssemblyCSharp::PlayerWalkMovement* _This, AssemblyCSharp::InputState* _State, AssemblyCSharp::ModelState* _ModelState))
 	HOOK(void, TryToMove, (AssemblyCSharp::ItemIcon* _This))
 	HOOK(void, SkyUpdate, (AssemblyCSharp::TOD_Camera* _This))
+	HOOK(void, SteamPlatformUpdate, (RustPlatformSteam::SteamPlatform* _This))
 
 };
