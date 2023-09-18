@@ -45,6 +45,39 @@ void ConnectionManager::ResetPlayerCache()
 	m_settings::Thickbullet_Indicator = false;
 	m_settings::last_tick_time = 0.f;
 	m_settings::max_spoofed_eye_distance = 0.f;
+
+	/* Chams */
+	{
+		if (GalaxyBundle)
+		{
+			GalaxyShader = nullptr;
+			GalaxyMaterial = nullptr;
+		}
+
+		if (FireBundleA)
+		{
+			FireShaderA = nullptr;
+			FireMaterialA = nullptr;
+		}
+
+		if (FireBundleB)
+		{
+			FireShaderB = nullptr;
+			FireMaterialB = nullptr;
+		}
+
+		if (GeometricBundle)
+		{
+			GeometricShader = nullptr;
+			GeometricMaterial = nullptr;
+		}
+
+		if (LightningBundle)
+		{
+			LightningShader = nullptr;
+			LightningMaterial = nullptr;
+		}
+	}
 }
 
 bool ConnectionManager::IsConnected()
