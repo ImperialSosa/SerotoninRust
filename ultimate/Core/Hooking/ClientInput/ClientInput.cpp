@@ -46,12 +46,12 @@ bool TestFlying(AssemblyCSharp::BasePlayer* _This, Vector3 oldPos, Vector3 newPo
 			}
 			if (flag) {
 				float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
-				float num6 = _This->GetJumpHeight() + num5 + 3.5f;
+				float num6 = _This->GetJumpHeight() + num5 + 3.8f;
 				if (flyhackDistanceVertical > num6) {
 					return true;
 				}
 				float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
-				float num8 = 5.f + num7 + 3.5;
+				float num8 = 5.f + num7 + 3.8f;
 				if (flyhackDistanceHorizontal > num8) {
 					return true;
 				}
@@ -94,7 +94,7 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 					result = TestFlying(LocalPlayer, oldPos, modelPos);
 
 					float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
-					float num6 = _This->GetJumpHeight() + num5 + 3.0f;
+					float num6 = _This->GetJumpHeight() + num5 + 3.8f;
 
 					m_settings::MaxVerticalFlyhack = num6;
 					m_settings::VerticalFlyhack = flyhackDistanceVertical;
@@ -102,7 +102,7 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 					float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
 					float num8 = 5.f + num7;
 
-					m_settings::MaxHorisontalFlyhack = num8 + 3.0f;
+					m_settings::MaxHorisontalFlyhack = num8 + 3.8f;
 					m_settings::HorisontalFlyhack = flyhackDistanceHorizontal;
 
 					if (result && PreventFlyhack)
