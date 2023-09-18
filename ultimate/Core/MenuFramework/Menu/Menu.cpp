@@ -107,6 +107,7 @@ void MenuDraw::RenderMenu()
 					if (m_settings::Manipulation)
 					{
 						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);
+						Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
 						//m_settings::ManipPoints
 					}
 
