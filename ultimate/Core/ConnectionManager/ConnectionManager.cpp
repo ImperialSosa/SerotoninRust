@@ -9,6 +9,7 @@ void ConnectionManager::ResetPlayerCache()
 {
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;
+	Features().Instance()->BaseProjectile = nullptr;
 
 	auto camera = UnityEngine::Camera::get_main();
 	if (IsAddressValid(camera))

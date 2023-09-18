@@ -14,6 +14,14 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 	if (!_This->isAuthoritative())
 		return;
 
+
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
+
 	float Thickness = m_settings::NormalThickBulletThickness / 10;
 	if (m_settings::NormalThickBullet)
 		_This->thickness() = Thickness;
@@ -75,6 +83,14 @@ void LaunchRecreation()
 {
 	if (!InGame)
 		return;
+
+
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return;
+
 
 	for (size_t i = 0; i < LaunchedProjectileSize; i++)
 	{

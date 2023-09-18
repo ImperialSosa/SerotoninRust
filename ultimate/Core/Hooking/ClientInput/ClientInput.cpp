@@ -307,14 +307,19 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+	if (IsAddressValid(BaseProjectile))
+	{
+		Features().BaseProjectile = BaseProjectile;
+	}
+
 	auto base_melee = a1->GetHeldEntityCast<AssemblyCSharp::BaseMelee>();
 
-	if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+	if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile) && Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
-		Features().AutoShoot(BaseProjectile);
-		Features().FastBullet(BaseProjectile);
-		Features().BulletQueue(BaseProjectile);
-		Features().AutoReload(BaseProjectile);
+		Features().AutoShoot(Features().BaseProjectile);
+		Features().FastBullet(Features().BaseProjectile);
+		Features().BulletQueue(Features().BaseProjectile);
+		Features().AutoReload(Features().BaseProjectile);
 
 		if (m_settings::NoWeaponBob)
 		{
@@ -344,12 +349,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			}
 		}
 
-		if (BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
+		if (Features().BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !Features().BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass()))
 		{
 
 			if (m_settings::ChangeRecoil)
 			{
-				if (const auto RecoilProperties = BaseProjectile->recoil())
+				if (const auto RecoilProperties = Features().BaseProjectile->recoil())
 				{
 					static float orig[6];
 					static bool StoreOrig = false;
@@ -403,16 +408,16 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 			if (m_settings::ForceAutomatic)
 			{
-				BaseProjectile->automatic() = true;
+				Features().BaseProjectile->automatic() = true;
 			}
 
 			if (m_settings::NoSpread)
 			{
-				BaseProjectile->stancePenalty() = 0.f;
-				BaseProjectile->aimconePenalty() = 0.f;
-				BaseProjectile->aimCone() = 0.f;
-				BaseProjectile->hipAimCone() = 0.f;
-				BaseProjectile->aimconePenaltyPerShot() = 0.f;
+				Features().BaseProjectile->stancePenalty() = 0.f;
+				Features().BaseProjectile->aimconePenalty() = 0.f;
+				Features().BaseProjectile->aimCone() = 0.f;
+				Features().BaseProjectile->hipAimCone() = 0.f;
+				Features().BaseProjectile->aimconePenaltyPerShot() = 0.f;
 			}
 
 			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
@@ -423,7 +428,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				float delay = m_settings::WeaponSpamDelay / 100;
 				if (current_time - send_time > delay)
 				{
-					BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
+					Features().BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
 					send_time = current_time;
 				}
 			}

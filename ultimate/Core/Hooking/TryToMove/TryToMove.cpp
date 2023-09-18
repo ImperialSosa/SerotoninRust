@@ -12,6 +12,9 @@ void Hooks::TryToMove(AssemblyCSharp::ItemIcon* _This)
 	if(!IsAddressValid(Features().LocalPlayer))
 		return Hooks::TryToMovehk.get_original< decltype(&TryToMove)>()(_This);
 
+	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
+		return Hooks::TryToMovehk.get_original< decltype(&TryToMove)>()(_This);
+
 	if (Features().LocalPlayer->lifestate() & RustStructs::Dead || !Features().LocalPlayer->IsConnected())
 	{
 		return Hooks::TryToMovehk.get_original< decltype(&TryToMove)>()(_This);
