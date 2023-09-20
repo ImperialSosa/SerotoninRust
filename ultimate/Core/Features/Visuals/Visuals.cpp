@@ -1313,7 +1313,7 @@ void Visuals::RenderEntities()
 									auto TimeRemaining = 900 - (int)hackSeconds;
 									std::string player_name = XS("Timer");
 									char str[128];
-									sprintf(str, XS("[%dm]"), (int)TimeRemaining);
+									sprintf(str, XS("[%ds]"), (int)TimeRemaining);
 									player_name = player_name + " " + str;
 
 									if (flags & 256) {}
