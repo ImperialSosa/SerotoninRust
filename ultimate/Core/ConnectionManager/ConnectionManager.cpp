@@ -91,6 +91,12 @@ void ConnectionManager::ResetPlayerCache()
 			LightningShader = nullptr;
 			LightningMaterial = nullptr;
 		}
+
+		if (WireFrameBundle)
+		{
+			WireFrameShader = nullptr;
+			WireFrameMaterial = nullptr;
+		}
 	}
 }
 

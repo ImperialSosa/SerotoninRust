@@ -206,7 +206,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
 					//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
 					Menu().CheckBoxKeyBind(XS(L"Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
-					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy") }, m_settings::SelectedChams, chams_type_opened);
+					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame")}, m_settings::SelectedChams, chams_type_opened);
 
 				}
 

@@ -896,6 +896,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		SetupStyles();
 
+		//if (!WireFrameBundle)
+		//	WireFrameBundle = UnityEngine::AssetBundle::LoadFromFile_Internal(XS("C:\\WireFrame.unity3d"), 0, 0);
+
 		MenuDraw().RenderMenu();
 
 		auto m_Event = UnityEngine::Event::Current();
@@ -1003,6 +1006,14 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				GalaxyBundle = nullptr;
 				GalaxyShader = nullptr;
 				GalaxyMaterial = nullptr;
+			}
+
+			if (WireFrameBundle)
+			{
+				WireFrameBundle->Unload(true);
+				WireFrameBundle = nullptr;
+				WireFrameShader = nullptr;
+				WireFrameMaterial = nullptr;
 			}
 
 			if (FireBundleA)
