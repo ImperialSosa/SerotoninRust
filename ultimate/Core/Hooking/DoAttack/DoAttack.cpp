@@ -65,9 +65,13 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Color::Red(), 5.f, false, false);
 		}
 
-		do_movement(delta_time, _This);
-		do_velocity_update(delta_time, _This);
-
+		auto project_ = (Projectile_c*)_This;
+		bool res = project_->DoMovement(delta_time, project_);
+		if (!res)
+		{
+			project_->DoVelocityUpdate(delta_time);
+		}
+		
 		transform->set_position(_This->currentPosition());
 		transform->set_rotation(Vector4::QuaternionLookRotation(_This->currentVelocity(), { 0.f, 1.f, 0.f }));
 	}

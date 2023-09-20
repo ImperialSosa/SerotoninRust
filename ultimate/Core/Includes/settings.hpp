@@ -18,6 +18,12 @@ namespace m_settings {
 	inline bool HeliAimbot = false;
 	inline bool RemoveAttackAnimations = false;
 	inline bool TurretOnFlags = false;
+	inline bool AmongusPrefabSpawn = false;
+	inline bool HerbertPrefabSpawn = false;
+	inline RustStructs::KeyCode AmongusKey = RustStructs::KeyCode::F;
+	inline RustStructs::KeyCode HerbertKey = RustStructs::KeyCode::C;
+
+
 	inline int ManipPoints = 5;
 	inline bool ReportAllAuthedTurret = false;
 	inline bool InstantEoka = false;

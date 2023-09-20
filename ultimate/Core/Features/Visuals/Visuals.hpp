@@ -17,7 +17,8 @@ inline UnityEngine::Material* FireMaterialB;
 inline UnityEngine::AssetBundle* GalaxyBundle;
 inline UnityEngine::Shader* GalaxyShader;
 inline UnityEngine::Material* GalaxyMaterial;
-
+static UnityEngine::AssetBundle* AmongUsAsset = nullptr;
+static UnityEngine::AssetBundle* HerbetAsset = nullptr;
 inline UnityEngine::AssetBundle* GeometricBundle;
 inline UnityEngine::Shader* GeometricShader;
 inline UnityEngine::Material* GeometricMaterial;
@@ -45,6 +46,9 @@ inline std::vector< VisualsVector> VisualsArray;
 inline std::vector< VisualsVector> VisualsArrayTemp;
 
 
+inline UnityEngine::GameObject* ExplosionAsset = nullptr;
+inline UnityEngine::GameObject* AmongusPrefab = nullptr;
+inline UnityEngine::GameObject* HerbertPrefab = nullptr;
 
 class PrefabList {
 public:

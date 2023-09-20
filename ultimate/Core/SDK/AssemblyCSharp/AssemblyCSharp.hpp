@@ -636,6 +636,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, ProjectileIntegrity);
 		IL2CPP_FIELD(float, ProjectileTravelTime);
 		IL2CPP_FIELD(Vector3, ProjectileVelocity);
+		IL2CPP_FIELD(bool, DidHit);
 
 		IL2CPP_FIELD(uint64_t, HitMaterial);
 		IL2CPP_FIELD(uint64_t, HitBone);
@@ -3523,13 +3524,13 @@ namespace AssemblyCSharp {
 		IL2CPP_CLASS("ConsoleSystem.Arg");
 		IL2CPP_FIELD(CSOption*, Option);
 		IL2CPP_FIELD(CSCommand*, cmd);
-
+		IL2CPP_FIELD(FPSystem::String*, FullString);
 		bool HasPermissionn();
 	};
 
 	struct ConsoleSystem : Il2CppObject {
 		IL2CPP_CLASS("ConsoleSystem");
-
+		IL2CPP_STATIC_FIELD(ConsoleSystemArg*, CurrentArgs);
 		static FPSystem::String* Run(CSOption* option, const char* cmd, uintptr_t* args)
 		{
 			static uintptr_t procedure = 0;
@@ -4639,6 +4640,36 @@ namespace RustPlatformSteam {
 namespace Facepunch
 {
 	IL2CPP_NAME_SPACE("Facepunch");
+
+	struct CommandLine : Il2CppObject {
+		IL2CPP_CLASS("CommandLine");
+
+		IL2CPP_STATIC_PROPERTY(FPSystem::String*, Full);
+
+
+		static FPSystem::ListDictionary< FPSystem::String*, FPSystem::String* >* GetSwitches()
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("GetSwitches"), 0);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<FPSystem::ListDictionary< FPSystem::String*, FPSystem::String* >*>(procedure);
+			}
+			else
+			{
+
+				return {};
+			}
+		}
+	};
 
 	struct RandomUsernames  : Il2CppObject {
 		IL2CPP_CLASS("RandomUsernames");

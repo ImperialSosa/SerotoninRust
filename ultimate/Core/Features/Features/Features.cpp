@@ -150,7 +150,7 @@ inline void BulletTPAnglesHarvey1(std::vector<Vector3>& re, float radius = 2.4f)
 
 inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 100)
 {
-	float radius = 2.4; // Radius of the sphere
+	float radius = 2.4f; // Radius of the sphere
 	//int numPoints = 100; // Number of points to generate
 
 	for (int i = 0; i < numPoints; ++i) {
@@ -373,10 +373,10 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 
 				for (auto v : positions) {
 
-					if (v.y > 1.f)
+					if (v.y > 1.3f)
 						continue;
 
-					if (v.y > -1.f)
+					if (v.y > -1.3f)
 						continue;
 
 					if (v.x > 9.f)

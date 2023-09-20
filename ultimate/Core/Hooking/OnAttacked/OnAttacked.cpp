@@ -14,16 +14,36 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return Hooks::OnAttackedhk.get_original< decltype(&OnAttacked)>()(instance, hitinfo);
 
-
 	if (instance->IsPlayer())
 	{
-	/*	char str[256];
-		sprintf(str, XS("Hit: %ls for %d hp"), instance->get_displayName()->c_str(), (int)hitinfo->damageTypes()->Total());
+		/*if (hitinfo->DidHit()) {
+			if (ExplosionAsset)
+			{
+				if (hitinfo->Initiator() == AssemblyCSharp::LocalPlayer::get_Entity() && UnityEngine::Time::get_realtimeSinceStartup() - instance->lastHeadshotSoundTime() > 0.01f)
+				{
+					auto camera = UnityEngine::Camera::get_main();
+					if (IsAddressValid(camera)) {
+						auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+						if (IsAddressValid(m_target.m_player))
+						{
+							ExplosionAsset->set_active(true);
+							UnityEngine::GameObject().Instantiate(ExplosionAsset, m_target.m_position, m_target.m_player->eyes()->get_rotation());
+						}
+						else
+						{
+							ExplosionAsset->set_active(false);
+						}
+					}
+					else {
+						ExplosionAsset->set_active(false);
+					}
+					instance->lastHeadshotSoundTime() = UnityEngine::Time::get_realtimeSinceStartup();
+				}
+				
+			}
+		}*/
 
-		std::string strz = str;
-		const auto string = std::wstring(strz.begin(), strz.end());
-		notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());*/
-
+		
 
 
 		if (m_settings::HitboxOverride)
@@ -58,6 +78,5 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 		}
 
 	}
-
 	Hooks::OnAttackedhk.get_original< decltype(&OnAttacked)>()(instance, hitinfo);
 }

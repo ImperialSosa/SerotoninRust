@@ -696,6 +696,98 @@ namespace UnityEngine {
 		IL2CPP_FIELD(uintptr_t, m_CachedPtr);
 		IL2CPP_PROPERTY(FPSystem::String*, name);
 
+		static void DestroyImmediate(Object* object)
+		{
+			if (!object)
+				return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("DestroyImmediate"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, object);
+			}
+
+
+			return;
+		}
+
+		static void Destroy(Object* object)
+		{
+			if (!object)
+				return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("Destroy"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, object);
+			}
+
+
+			return;
+		}
+
+
+		void set_active(bool value)
+		{
+			if (!this)return;
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_active"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this, value);
+			}
+
+
+			return;
+		}
+
+		static Object* Instantiate(Object* Original, Vector3 Position, Vector4 Rotation)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("Internal_InstantiateSingle"), 3);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<Object*>(procedure, Original, Position, Rotation);
+			}
+
+
+			return {};
+		}
+
 		void set_name(const char* str)
 		{
 			if (!this)return;

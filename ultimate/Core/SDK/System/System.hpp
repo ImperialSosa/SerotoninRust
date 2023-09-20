@@ -81,6 +81,14 @@ namespace FPSystem {
 			return type;
 		}
 
+		static Type* GameObject() {
+			Type* type = GetType(XS("UnityEngine.GameObject, UnityEngine.CoreModule"));
+			if (IS_NULL_POINTER(type))
+				return nullptr;
+
+			return type;
+		}
+
 		static Type* Sprite() {
 			Type* type = GetType(XS("UnityEngine.Sprite, UnityEngine.CoreModule"));
 			if (IS_NULL_POINTER(type))
