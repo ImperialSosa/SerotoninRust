@@ -1,7 +1,7 @@
 #include "../Hooks.hpp"
 #include "../../SDK/AssemblyCSharp/ProjectileCode.hpp"
 #include "../WriteToStream/Prediction.hpp"
-
+#include "../../Features/Features/Features.hpp"
 
 
 float GetEffectScale(AssemblyCSharp::Projectile* _This)
@@ -83,22 +83,15 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 		delta_time *= UnityEngine::Time::get_timeScale();
 
 
-		if (m_settings::BulletTracers)
+	
+
+
+		auto project_ = (Projectile_c*)_This;
+		bool res = project_->DoMovement(delta_time, project_);
+		if (!res)
 		{
-			Vector3 a = _This->currentVelocity() * delta_time;
-			float magnitude = a.Length();
-			float num2 = 1 / magnitude;
-			Vector3 vec2 = a * num2;
-			bool flag = false;
-
-			Vector3 vec3 = _This->currentPosition() + vec2 * magnitude;
-
-			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Color::Red(), 5.f, false, false);
+			project_->DoVelocityUpdate(delta_time);
 		}
-
-
-		do_movement(delta_time, _This);
-		do_velocity_update(delta_time, _This);
 
 		transform->set_position(_This->currentPosition());
 		transform->set_rotation(Vector4::QuaternionLookRotation(_This->currentVelocity(), { 0.f, 1.f, 0.f }));
@@ -111,6 +104,7 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 		_This->SetEffectScale(GetEffectScale(_This));
 		_This->DoFlybySound();
 	}
+
 	_This->initialDistance() = OriginalOriginalDistance;
 
 }

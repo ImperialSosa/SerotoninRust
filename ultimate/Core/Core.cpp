@@ -20,6 +20,8 @@ void Core::Init()
 	if (!CIl2Cpp::CreateIL2CPP())
 		return;
 
+	CIl2Cpp::il2cpp_thread_attach(CIl2Cpp::il2cpp_domain_get());
+
 	LOG(XS("[DEBUG] GameAssembly - %p"), m_game_assembly);
 
 

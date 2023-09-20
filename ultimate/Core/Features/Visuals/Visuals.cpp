@@ -1302,7 +1302,7 @@ void Visuals::RenderEntities()
 									auto TimeRemaining = 900 - (int)hackSeconds;
 									std::string player_name = XS("Timer");
 									char str[128];
-									sprintf(str, XS("[%dm]"), (int)distance);
+									sprintf(str, XS("[%d seconds]"), (int)TimeRemaining);
 									player_name = player_name + " " + str;
 
 									if (flags & 256) {}
@@ -1468,90 +1468,93 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-
-							if (EntityID == heli_crate && m_settings::HeliCrate)
+							else if (EntityID == heli_crate && m_settings::HeliCrate)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == bradley_crate && m_settings::BradleyCrate)
+							else if (EntityID == bradley_crate && m_settings::BradleyCrate)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate)
+							else if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == autoturret_deployed && m_settings::AutoTurret)
+							else if (EntityID == autoturret_deployed && m_settings::AutoTurret)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == player_corpse && m_settings::Corpse)
+							else if (EntityID == player_corpse && m_settings::Corpse)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == player_backpack && m_settings::BackPack)
+							else if (EntityID == player_backpack && m_settings::BackPack)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == StoneCollectable || EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
+							else if (EntityID == StoneCollectable || EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == MetalCollectable || EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
+							else if (EntityID == MetalCollectable || EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == SulfurCollectable || EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
+							else if (EntityID == SulfurCollectable || EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == dieselCollectable && m_settings::DieselBarrel)
+							else if (EntityID == dieselCollectable && m_settings::DieselBarrel)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == HempCollectable && m_settings::Hemp)
+							else if (EntityID == HempCollectable && m_settings::Hemp)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == StashID && m_settings::Stash)
+							else if (EntityID == StashID && m_settings::Stash)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom)
+							else if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == PumpkinID && m_settings::Pumpkin)
+							else if (EntityID == PumpkinID && m_settings::Pumpkin)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == PotatoID && m_settings::Potato)
+							else if (EntityID == PotatoID && m_settings::Potato)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (EntityID == CornID && m_settings::Corn)
+							else if (EntityID == CornID && m_settings::Corn)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems)
+							else if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else
+							{
+								continue;
 							}
 						}
 					}

@@ -242,7 +242,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-	if (UnityEngine::Input::GetKey(m_settings::ManipKey))
+	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
 		Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
 	}
@@ -326,7 +326,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
-									CalledLaunchFromHook = false;
+									
 								}
 							}
 							else if (m_settings::AlwaysAutoshoot)
@@ -335,11 +335,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
-									CalledLaunchFromHook = false;
+									
 
 								}
 							}
-
+							CalledLaunchFromHook = false;
 						}
 					}
 

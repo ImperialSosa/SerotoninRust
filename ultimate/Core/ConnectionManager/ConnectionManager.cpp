@@ -20,6 +20,7 @@ void ConnectionManager::ResetPlayerCache()
 	}
 
 	translated_map.clear();
+
 	VisualsArray.clear();
 	VisualsArrayTemp.clear();
 
@@ -49,6 +50,18 @@ void ConnectionManager::ResetPlayerCache()
 
 	/* Chams */
 	{
+
+		if (HerbertPrefab)
+		{
+			HerbertPrefab = nullptr;
+		}
+
+		if (AmongusPrefab)
+		{
+			AmongusPrefab = nullptr;
+		}
+
+
 		if (GalaxyBundle)
 		{
 			GalaxyShader = nullptr;

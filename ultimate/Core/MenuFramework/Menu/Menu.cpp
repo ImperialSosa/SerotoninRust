@@ -10,7 +10,7 @@ inline bool aim_type_opene2;
 #include "../../Configs/Configs.hpp"
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 
-
+#include "../../Features/Visuals/Visuals.hpp"
 auto reset_player_model()
 {
 	if (InGame)
@@ -18,7 +18,6 @@ auto reset_player_model()
 		AssemblyCSharp::PlayerModel().RebuildAll();
 	}
 }
-
 
 void MenuDraw::RenderMenu()
 {
@@ -308,7 +307,7 @@ void MenuDraw::RenderMenu()
 		{
 			Menu().SubTab(XS(L"LocalPlayer"), 0, Vector2(156, 35)); //468
 			Menu().SubTab(XS(L"Other"), 1, Vector2(156, 35));
-			Menu().SubTab(XS(L"Friends"), 2, Vector2(156, 35));
+			Menu().SubTab(XS(L"Prefab"), 2, Vector2(156, 35));
 			//Menu().SubTab(XS(L"World"), 3, Vector2(117, 35));
 
 			switch (activesubtab)
@@ -377,7 +376,18 @@ void MenuDraw::RenderMenu()
 				break;
 
 			case 2:
-				/*Menu().BeginChild(XS(L"Friend List"), { 60,45 }, { 220,290 });
+				Menu().BeginChild(XS(L"Prefab Spawner"), { 60,45 }, { 220,290 });
+				{
+					Menu().CheckBoxKeyBind(XS(L"AmongusPrefab"), m_settings::AmongusPrefabSpawn, m_settings::AmongusKey);
+					Menu().CheckBoxKeyBind(XS(L"HerbertPrefab"), m_settings::HerbertPrefabSpawn, m_settings::HerbertKey);
+
+				}
+
+				Menu().BeginChild(XS(L"Settings"), { 285,45 }, { 220,290 });
+				{
+
+				}
+			/*	Menu().BeginChild(XS(L"Friend List"), { 60,45 }, { 220,290 });
 				{
 					for (const auto& wideKey : wideKeys) {
 						Menu().Text(wideKey.c_str());

@@ -204,6 +204,7 @@ bool is_base64(char c) {
 	return (custom_isalnum(c) || (c == '+') || (c == '/'));
 }
 
+
 std::string base64_decode(const std::string& encoded_string) {
 	int in_len = static_cast<int>(encoded_string.size());
 	int i = 0, j = 0, in = 0;
@@ -322,8 +323,9 @@ void SetupBundles()
 				}
 				send_time = current_time;
 			}
+		}
 	}
-}
+
 	if (m_settings::LoadGalaxy) {
 		if (!GalaxyBundle)
 		{
@@ -359,6 +361,98 @@ void SetupBundles()
 				}
 				send_time = current_time;
 			}
+		}
+	}
+
+
+
+	if (!HerbetAsset)
+	{
+		static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+		float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+		if (current_time - send_time > 5)
+		{
+			static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+			if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+			{
+
+				webclient->_cctor();
+
+				auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/herbert.php"));
+				auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+				auto resp = webclient->DownloadString(request_msg_str.c_str());
+				std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+				static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+				float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+				if (current_time2 - send_time2 > 5)
+				{
+					auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+					HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+					LOG(XS("[DEBUG] HerbetAsset Bundle Loaded"));
+					send_time2 = current_time2;
+				}
+			}
+			send_time = current_time;
+		}
+	}
+
+	if (!AmongUsAsset)
+	{
+		static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+		float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+		if (current_time - send_time > 5)
+		{
+			static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+			if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+			{
+
+				webclient->_cctor();
+
+				auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/amongus.php"));
+				auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+				auto resp = webclient->DownloadString(request_msg_str.c_str());
+				std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+				static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+				float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+				if (current_time2 - send_time2 > 5)
+				{
+					auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+					AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+					
+					LOG(XS("[DEBUG] AmongUsAsset Bundle Loaded"));
+					send_time2 = current_time2;
+				}
+			}
+
+			send_time = current_time;
+		}
+	}
+
+	if (HerbetAsset)
+	{
+		if (!HerbertPrefab)
+		{
+			HerbertPrefab = HerbetAsset->LoadAsset<UnityEngine::GameObject>(XS("herbert the pervert v2.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+		}
+	}
+
+	if (AmongUsAsset)
+	{
+		if (!AmongusPrefab)
+		{
+			AmongusPrefab = AmongUsAsset->LoadAsset<UnityEngine::GameObject>(XS("amongus.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
 		}
 	}
 }
@@ -436,7 +530,7 @@ void drawMisc()
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
 			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
-			if (m_target.m_player)
+			if (IsAddressValid(m_target.m_player))
 			{
 				auto targetPos = m_target.m_position;
 				if (!targetPos.IsZero())
@@ -464,7 +558,7 @@ void drawMisc()
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
 			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
-			if (m_target.m_player)
+			if (IsAddressValid(m_target.m_player))
 			{
 				auto targetPos = m_target.m_position;
 
@@ -730,6 +824,39 @@ const wchar_t* ConvertToWideString(const char* str) //imports
 	return wideStr;
 }
 
+
+auto prefab_spawner() -> void
+{
+	if (!InGame)
+		return;
+
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
+	if (!IsAddressValid(Features().LocalPlayer->eyes()))
+		return;
+
+	if (m_settings::HerbertPrefabSpawn && UnityEngine::Input::GetKey(m_settings::HerbertKey))
+	{
+		if (HerbertPrefab)
+		{
+			auto lookingatPoint = Features().LocalPlayer->lookingAtPoint();
+			UnityEngine::Object().Instantiate(HerbertPrefab, lookingatPoint, Features().LocalPlayer->eyes()->get_rotation());
+		}
+	}
+
+	if (m_settings::AmongusPrefabSpawn && UnityEngine::Input::GetKey(m_settings::AmongusKey))
+	{
+		if (AmongusPrefab)
+		{
+			auto lookingatPoint = Features().LocalPlayer->lookingAtPoint();
+			UnityEngine::Object().Instantiate(AmongusPrefab, lookingatPoint, Features().LocalPlayer->eyes()->get_rotation());
+
+		}
+	}
+}
+
+static inline bool HasTriggered = false;
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
 	screen_center = { UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f };
@@ -816,6 +943,8 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				{
 					drawMisc();
 
+					prefab_spawner();
+
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 
@@ -845,6 +974,29 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		/* Chams */
 		{
+
+			if (HerbetAsset)
+			{
+				HerbetAsset->Unload(true);
+				HerbetAsset = nullptr;
+
+				if (HerbertPrefab)
+				{
+					HerbertPrefab = nullptr;
+				}
+			}
+
+			if (AmongUsAsset)
+			{
+				AmongUsAsset->Unload(true);
+				AmongUsAsset = nullptr;
+
+				if (AmongusPrefab)
+				{
+					AmongusPrefab = nullptr;
+				}
+			}
+
 			if (GalaxyBundle)
 			{
 				GalaxyBundle->Unload(true);
@@ -904,7 +1056,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::SkyUpdatehk.Unhook();
 		Hooks::SteamPlatformUpdatehk.Unhook();
 		Hooks::OnAttackedhk.Unhook();
-
 		Hooks::OnGUIhk.Unhook();
 		Hooks::Update_hk.Unhook();
 	}

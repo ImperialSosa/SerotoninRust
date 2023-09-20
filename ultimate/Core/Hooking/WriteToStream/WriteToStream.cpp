@@ -159,6 +159,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
 		{
 			if (AimbotTarget.m_player || manipulated) {
+				//c_projectile->initialVelocity() = m_aim_angle;
 				c_projectile->currentVelocity() = m_aim_angle;
 			}
 		}
