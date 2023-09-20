@@ -145,6 +145,9 @@ namespace m_settings {
 	inline bool LootCorpseThruWall = false;
 	inline RustStructs::KeyCode LootCorpseThruWallKey = RustStructs::KeyCode::Z;
 
+	inline bool LoadAmongusAsset = false;
+	inline bool LoadHerbertAsset = false;
+
 	inline bool Stash = false;
 	inline bool Hemp = false;
 	inline bool CollectablesIcon = false;

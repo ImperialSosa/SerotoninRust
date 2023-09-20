@@ -349,7 +349,6 @@ void SetupBundles()
 			}
 		}
 	}
-
 	if (m_settings::LoadGalaxy) {
 		if (!GalaxyBundle)
 		{
@@ -387,96 +386,96 @@ void SetupBundles()
 			}
 		}
 	}
-
-
-
-	if (!HerbetAsset)
-	{
-		static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-		float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-		if (current_time - send_time > 5)
+	if (m_settings::LoadHerbertAsset) {
+		if (!HerbetAsset)
 		{
-			static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
 
-			if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+			if (current_time - send_time > 5)
 			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
 
-				webclient->_cctor();
-
-				auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/herbert.php"));
-				auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-				auto resp = webclient->DownloadString(request_msg_str.c_str());
-				std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-				static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-				float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-				if (current_time2 - send_time2 > 5)
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
 				{
-					auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-					HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-					LOG(XS("[DEBUG] HerbetAsset Bundle Loaded"));
-					send_time2 = current_time2;
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/herbert.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+						LOG(XS("[DEBUG] HerbetAsset Bundle Loaded"));
+						send_time2 = current_time2;
+					}
 				}
+				send_time = current_time;
 			}
-			send_time = current_time;
 		}
-	}
 
-	if (!AmongUsAsset)
-	{
-		static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-		float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-		if (current_time - send_time > 5)
+		if (HerbetAsset)
 		{
-			static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-			if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+			if (!HerbertPrefab)
 			{
-
-				webclient->_cctor();
-
-				auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/amongus.php"));
-				auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-				auto resp = webclient->DownloadString(request_msg_str.c_str());
-				std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-				static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-				float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-				if (current_time2 - send_time2 > 5)
-				{
-					auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-					AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-					
-					LOG(XS("[DEBUG] AmongUsAsset Bundle Loaded"));
-					send_time2 = current_time2;
-				}
+				HerbertPrefab = HerbetAsset->LoadAsset<UnityEngine::GameObject>(XS("herbert the pervert v2.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
 			}
-
-			send_time = current_time;
 		}
 	}
-
-	if (HerbetAsset)
-	{
-		if (!HerbertPrefab)
+	if (m_settings::LoadAmongusAsset) {
+		if (!AmongUsAsset)
 		{
-			HerbertPrefab = HerbetAsset->LoadAsset<UnityEngine::GameObject>(XS("herbert the pervert v2.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/amongus.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+
+						LOG(XS("[DEBUG] AmongUsAsset Bundle Loaded"));
+						send_time2 = current_time2;
+					}
+				}
+
+				send_time = current_time;
+			}
 		}
-	}
 
-	if (AmongUsAsset)
-	{
-		if (!AmongusPrefab)
+		if (AmongUsAsset)
 		{
-			AmongusPrefab = AmongUsAsset->LoadAsset<UnityEngine::GameObject>(XS("amongus.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+			if (!AmongusPrefab)
+			{
+				AmongusPrefab = AmongUsAsset->LoadAsset<UnityEngine::GameObject>(XS("amongus.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+			}
 		}
 	}
 }
