@@ -65,7 +65,7 @@ void ConnectorClient()
 			{
 				net->send_data(data);
 
-				LOG(XS("[DEBUG] Connected to SharedServerA"));
+				LOG(XS("[DEBUG] Connected to TrollServer1"));
 				LoadOnce = true;
 			}
 
@@ -175,6 +175,30 @@ void ConnectorClient()
 					}
 				}
 				net->shared_files_mutex_.unlock();
+
+				//if (current_time2 - send_time2 > 0.8f)
+				//{
+				//	auto camera = UnityEngine::Camera::get_main();
+				//	if (IsAddressValid(camera)) {
+				//		auto Target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+				//		Vector3 TargetPos = Target.m_position;
+				//		connector::writer write;
+				//		write.write(TargetPos.x);
+				//		write.write(TargetPos.y);
+				//		write.write(TargetPos.z);
+
+				//		//send data to server
+				//		connector::shared_esp_data shared_data;
+				//		shared_data.channel = HASHH("ServerABCD");//hash of the channel where we want to send data
+				//		shared_data.data.resize(write.size() + 1, 0);
+				//		memcpy(shared_data.data.data(), write.data(), write.size());
+
+				//		data = connector::data(shared_data);
+				//		net->send_data(data);
+
+				//	}
+				//	send_time2 = current_time2;
+				//}
 			}
 		}
 		send_time = current_time;

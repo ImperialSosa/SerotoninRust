@@ -282,7 +282,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
+	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) || BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()))
 	{
 		Features().BaseProjectile = BaseProjectile;
 
@@ -747,13 +747,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			{
 				if (m_settings::InstantHeal)
 				{
-
 					float nextActionTime = 0, period = 1.4721;
 					auto health = a1->_health();
 
-					auto Held = a1->GetHeldItemSafe();
-
-					if (Held)
+					auto Held = a1->ActiveItem();
+					
+					if (IsAddressValid(Held))
 					{
 						auto HeldEntity = Held->heldEntity();
 						if (HeldEntity)

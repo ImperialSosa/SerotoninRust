@@ -106,13 +106,12 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBoxKeyBind(XS(L"Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
 					if (m_settings::Manipulation)
 					{
-						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);
-						Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
+						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);				
 						//m_settings::ManipPoints
 					}
 
 					Menu().CheckBox(XS(L"BulletTp"), m_settings::BulletTP);
-					//Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
+					Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
 
 					Menu().CheckBox(XS(L"PierceMaterials"), m_settings::PierceMaterials);
 					Menu().CheckBox(XS(L"Bullet Queue"), m_settings::InstantKill);
@@ -189,7 +188,6 @@ void MenuDraw::RenderMenu()
 				Menu().BeginChild(XS(L"Visuals"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS(L"Username"), m_settings::nameEsp);
-					//Menu().CheckBox(XS(L"Distance"), m_settings::DrawDistance);
 					Menu().CheckBox(XS(L"Box"), m_settings::BoxEsp);
 					if (m_settings::BoxEsp)
 						m_settings::CornerBox = false;
@@ -335,10 +333,10 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
 					Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
 					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
-					Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
-					Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
-					Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
-					Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
+				//	Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
+				//	Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
+				//	Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
+				//	Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
 					Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
 					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
 					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);

@@ -658,8 +658,6 @@ void Visuals::CachePlayers()
 	if (!this->VisiblePlayerList)
 		this->VisiblePlayerList = AssemblyCSharp::BasePlayer::visiblePlayerList();
 
-
-
 	auto Vals = VisiblePlayerList->vals;
 	auto size = Vals->count;
 	auto buffer = Vals->buffer;
@@ -750,8 +748,6 @@ void Visuals::RenderEntities()
 {
 	if (!InGame)
 		return;
-
-
 
 	for (auto CachedEntity : PrefabVectorList)
 	{
@@ -1254,7 +1250,7 @@ void Visuals::RenderEntities()
 
 
 													char retstr[256];
-													sprintf(retstr, XS("%s [%llu] [%dm]"), str->string_safe().c_str(), current->userid(), (int)distance);
+													sprintf(retstr, XS("%s [%dm]"), str->string_safe().c_str(), (int)distance);
 
 
 													//if (UnityEngine::Input::GetKey(RustStructs::F))
@@ -1317,7 +1313,7 @@ void Visuals::RenderEntities()
 									auto TimeRemaining = 900 - (int)hackSeconds;
 									std::string player_name = XS("Timer");
 									char str[128];
-									sprintf(str, XS("[%dm]"), (int)distance);
+									sprintf(str, XS("[%dm]"), (int)TimeRemaining);
 									player_name = player_name + " " + str;
 
 									if (flags & 256) {}
