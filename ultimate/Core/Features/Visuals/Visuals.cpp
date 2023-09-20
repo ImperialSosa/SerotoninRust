@@ -614,6 +614,21 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
+											case 5:
+												if (WireFrameBundle) {
+													if (!WireFrameShader) //Galaxy
+														WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!WireFrameMaterial)
+														WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != WireFrameShader)
+													{
+														MainRenderer->set_material(WireFrameMaterial);
+														WireFrameMaterial->set_shader(WireFrameShader);
+													}
+												}
+												break;
 
 											}
 										}

@@ -26,6 +26,10 @@ inline UnityEngine::AssetBundle* LightningBundle;
 inline UnityEngine::Shader* LightningShader;
 inline UnityEngine::Material* LightningMaterial;
 
+inline UnityEngine::AssetBundle* WireFrameBundle;
+inline UnityEngine::Shader* WireFrameShader;
+inline UnityEngine::Material* WireFrameMaterial;
+
 class VisualsVector {
 public:
 	VisualsVector(AssemblyCSharp::BasePlayer* player)
