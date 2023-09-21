@@ -332,10 +332,10 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
 					Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
 					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
-				//	Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
-				//	Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
-				//	Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
-				//	Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
+					Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
+					Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
+					Menu().CheckBoxKeyBind(XS(L"Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
+					Menu().CheckBoxKeyBind(XS(L"Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
 					Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
 					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
 					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
@@ -376,9 +376,14 @@ void MenuDraw::RenderMenu()
 			case 2:
 				Menu().BeginChild(XS(L"Prefab Spawner"), { 60,45 }, { 220,290 });
 				{
-					Menu().CheckBoxKeyBind(XS(L"AmongusPrefab"), m_settings::AmongusPrefabSpawn, m_settings::AmongusKey);
-					Menu().CheckBoxKeyBind(XS(L"HerbertPrefab"), m_settings::HerbertPrefabSpawn, m_settings::HerbertKey);
-
+					Menu().CheckBox(XS(L"LoadAmongus"), m_settings::LoadAmongusAsset);
+					if (m_settings::LoadAmongusAsset) {
+						Menu().CheckBoxKeyBind(XS(L"AmongusPrefab"), m_settings::AmongusPrefabSpawn, m_settings::AmongusKey);
+					}
+					Menu().CheckBox(XS(L"LoadHerbert"), m_settings::LoadHerbertAsset);
+					if (m_settings::LoadHerbertAsset) {
+						Menu().CheckBoxKeyBind(XS(L"HerbertPrefab"), m_settings::HerbertPrefabSpawn, m_settings::HerbertKey);
+					}
 				}
 
 				Menu().BeginChild(XS(L"Settings"), { 285,45 }, { 220,290 });
@@ -449,23 +454,6 @@ void MenuDraw::RenderMenu()
 			Menu().BeginChild(XS(L"Colors"), { 60,45 }, { 220,290 });
 			{
 				Menu().Button(XS("Reset PlayerModels"), reset_player_model);
-
-				//Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
-				//Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
-				//if (m_settings::ChangeRecoil) {
-				//	Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
-				//	Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
-				//}
-				//Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
-				//if (m_settings::NormalThickBullet) {
-				//	Menu().Slider(XS(L"Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
-				//}
-				//Menu().CheckBox(XS(L"Fast Bullet"), m_settings::NormalFastBullet);
-				//Menu().CheckBox(XS(L"Force Automatic"), m_settings::ForceAutomatic);
-				//Menu().CheckBox(XS(L"NoSpread"), m_settings::NoSpread);
-				//Menu().CheckBox(XS(L"NoWeaponBob"), m_settings::NoWeaponBob);
-				//Menu().CheckBox(XS(L"NoSway"), m_settings::NoSway);
-				//Menu().CheckBox(XS(L"InstantEoka"), m_settings::InstantEoka);
 			}
 
 			Menu().BeginChild(XS(L"Configs"), { 285,45 }, { 220,290 });
