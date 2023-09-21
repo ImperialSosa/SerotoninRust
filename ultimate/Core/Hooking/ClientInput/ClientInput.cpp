@@ -902,7 +902,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::AdminCheat)
 	{
-		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey))
+		if (UnityEngine::Input::GetKey(m_settings::AdminCheatKey))
 			a1->GetBaseMovement()->adminCheat() = true;
 		else
 			a1->GetBaseMovement()->adminCheat() = false;
