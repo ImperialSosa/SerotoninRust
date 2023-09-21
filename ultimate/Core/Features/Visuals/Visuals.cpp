@@ -470,7 +470,7 @@ void Visuals::DrawPlayers()
 				if (IsAddressValid(item))
 				{
 					auto info = item->info();
-
+					
 					if (IsAddressValid(info))
 					{
 						auto display_name = info->GetDisplayName(item);
@@ -493,6 +493,87 @@ void Visuals::DrawPlayers()
 				}
 			}
 
+			if (m_settings::ammoESP) {
+				const auto item = BasePlayer->ActiveItem();
+				if (IsAddressValid(item))
+				{
+					auto info = item->info();
+
+					if (IsAddressValid(info))
+					{
+						auto display_name = info->GetDisplayName(item);
+						if (IsAddressValid(display_name))
+						{
+							auto BaseProjectile = BasePlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+							if (IsAddressValid(BaseProjectile))
+							{
+								auto Magazine = BaseProjectile->primaryMagazine();
+								if (IsAddressValid(Magazine))
+								{
+									std::string AmmoType;
+									auto ammoType = Magazine->ammoType();
+									auto AmmoID = ammoType->itemid();
+
+									if (Magazine->contents() <= 0)
+										AmmoType = XS("Empty");
+									else if (AmmoID == -1211166256)
+										AmmoType = XS("5.56 Ammo");
+									else if (AmmoID == -1321651331)
+										AmmoType = XS("Explosive 5.56 Ammo");
+									else if (AmmoID == 1712070256)
+										AmmoType = XS("HV 5.56 Ammo");
+									else if (AmmoID == 605467368)
+										AmmoType = XS("Incendiary 5.56 Ammo");
+									else if (AmmoID == 785728077)
+										AmmoType = XS("Pistol Bullet");
+									else if (AmmoID == -1691396643)
+										AmmoType = XS("HV Pistol Bullet");
+									else if (AmmoID == 51984655)
+										AmmoType = XS("Incendiary Pistol Bullet");
+									else if (AmmoID == -2097376851)
+										AmmoType = XS("Nailgun Nails");
+									else if (AmmoID == 550753330)
+										AmmoType = XS("SnowBalls");
+									else if (AmmoID == -1685290200)
+										AmmoType = XS("12 Gauge Buckshot");
+									else if (AmmoID == -1036635990)
+										AmmoType = XS("12 Gauge Incendiary Shell");
+									else if (AmmoID == -727717969)
+										AmmoType = XS("12 Gauge Slug");
+									else if (AmmoID == 588596902)
+										AmmoType = XS("Handmade Shell");
+									else if (AmmoID == 1055319033)
+										AmmoType = XS("40mm Shotgun Round");
+									else if (AmmoID == 349762871)
+										AmmoType = XS("40mm HE Grenade");
+									else if (AmmoID == 915408809)
+										AmmoType = XS("40mm Smoke Grenade");
+									else if (AmmoID == -1841918730)
+										AmmoType = XS("High Velocity Rocket");
+									else if (AmmoID == 1296788329)
+										AmmoType = XS("Homing Missile");
+									else if (AmmoID == -17123659)
+										AmmoType = XS("Smoke Rocket WIP!!!!");
+									else if (AmmoID == 1638322904)
+										AmmoType = XS("Incendiary Rocket");
+									else if (AmmoID == -1843426638)
+										AmmoType = XS("MLRS Rocket");
+									else if (AmmoID == -742865266)
+										AmmoType = XS("Rocket");
+									else if (AmmoID == -384243979)
+										AmmoType = XS("SAM Ammo");
+									else
+										AmmoType = XS("Unknown");
+
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), AmmoType.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize);
+									yoffset += 13;
+								}
+							}
+						}
+					}
+				}
+			}
+
 			if (m_settings::BaseCheck)
 			{
 				Vector3 position = BasePlayer->get_bone_transform(47)->get_position() + Vector3(0.f, 500.f, 0.f);
@@ -508,6 +589,29 @@ void Visuals::DrawPlayers()
 					yoffset += 13;
 				}
 
+			}
+
+			if (m_settings::HeldItemIcon)
+			{
+
+				const auto item = BasePlayer->ActiveItem();
+				if (IsAddressValid(item))
+				{
+					auto info = item->info();
+
+					if (IsAddressValid(info))
+					{
+						auto IconSprite = info->FindIconSprite(info->itemid());
+
+						if (IconSprite) {
+							auto IconTexture = IconSprite->get_texture();
+
+							yoffset += 4;
+							UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
+							yoffset += 24;
+						}
+					}
+				}
 			}
 
 			if (m_settings::PlayerChams)
@@ -625,7 +729,8 @@ void Visuals::DrawPlayers()
 													if (material->shader() != WireFrameShader)
 													{
 														MainRenderer->set_material(WireFrameMaterial);
-														WireFrameMaterial->set_shader(WireFrameShader);
+														WireFrameMaterial->set_shader(WireFrameShader);		
+														//WireFrameMaterial->SetColor("_Color", Color::Red());
 													}
 												}
 												break;

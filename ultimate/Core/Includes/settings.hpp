@@ -22,7 +22,7 @@ namespace m_settings {
 	inline bool HerbertPrefabSpawn = false;
 	inline RustStructs::KeyCode AmongusKey = RustStructs::KeyCode::F;
 	inline RustStructs::KeyCode HerbertKey = RustStructs::KeyCode::C;
-
+	inline bool HeldItemIcon = false;
 
 	inline int ManipPoints = 5;
 	inline bool ReportAllAuthedTurret = false;
@@ -224,6 +224,7 @@ namespace m_settings {
 	inline bool healthBar = false;
 	inline bool Skeleton = false;
 	inline bool helditem = false;
+	inline bool ammoESP = false;
 	inline bool EspVisCheck = false;
 	inline float DrawBox_Color[4] = { 205.f, 5.0f, 2.0f, 255.f };
 	inline float VisCheck_Color[4] = { 63.f, 210.0f, 0.0f, 255.f };

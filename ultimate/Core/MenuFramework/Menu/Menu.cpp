@@ -196,9 +196,11 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Skeleton"), m_settings::Skeleton);
 					Menu().CheckBox(XS(L"Healthbar"), m_settings::healthBar);
 					Menu().CheckBox(XS(L"Helditem"), m_settings::helditem);
+					Menu().CheckBox(XS(L"HeldItem (icons)"), m_settings::HeldItemIcon);
+					//Menu().CheckBox(XS(L"AmmoType"), m_settings::ammoESP);
 					Menu().CheckBox(XS(L"isOutside"), m_settings::BaseCheck);
-					//Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
-				//	Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
+					Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
+					Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
 					Menu().CheckBox(XS(L"PlayerChams"), m_settings::PlayerChams);
 					Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
 					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);

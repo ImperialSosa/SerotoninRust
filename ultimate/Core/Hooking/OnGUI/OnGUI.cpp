@@ -215,6 +215,7 @@ void TextDrawEnd()
 {
 	UnityEngine::GL::PopMatrix();
 	UnityEngine::GL::RenderText();
+	UnityEngine::GL::RenderIcons();
 }
 
 static const std::string base64_chars =
@@ -650,7 +651,6 @@ void drawMisc()
 		}
 	}
 
-
 	if (m_settings::AutoReload)
 	{
 
@@ -734,8 +734,6 @@ void drawMisc()
 			}
 		}
 	}
-
-
 
 	if (m_settings::Manipulation && m_settings::BulletTP && m_settings::BulletTPFlags && m_settings::ManipFlags && m_settings::Manipulation_Indicator)
 	{
@@ -847,7 +845,6 @@ const wchar_t* ConvertToWideString(const char* str) //imports
 	return wideStr;
 }
 
-
 auto prefab_spawner() -> void
 {
 	if (!InGame)
@@ -859,7 +856,7 @@ auto prefab_spawner() -> void
 	if (!IsAddressValid(Features().LocalPlayer->eyes()))
 		return;
 
-	if (m_settings::HerbertPrefabSpawn && UnityEngine::Input::GetKey(m_settings::HerbertKey))
+	if (m_settings::HerbertPrefabSpawn && UnityEngine::Input::GetKeyDown(m_settings::HerbertKey))
 	{
 		if (HerbertPrefab)
 		{
@@ -868,7 +865,7 @@ auto prefab_spawner() -> void
 		}
 	}
 
-	if (m_settings::AmongusPrefabSpawn && UnityEngine::Input::GetKey(m_settings::AmongusKey))
+	if (m_settings::AmongusPrefabSpawn && UnityEngine::Input::GetKeyDown(m_settings::AmongusKey))
 	{
 		if (AmongusPrefab)
 		{
@@ -876,6 +873,155 @@ auto prefab_spawner() -> void
 			UnityEngine::Object().Instantiate(AmongusPrefab, lookingatPoint, Features().LocalPlayer->eyes()->get_rotation());
 
 		}
+	}
+}
+
+inline Vector2 hotbar_pos;
+inline Vector2 window_size2;
+inline bool sex2 = false;
+inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, const Vector2& window_size) {
+	if (m_settings::DrawInventory || m_settings::DrawClothing)
+	{
+		if (!sex2) {
+			hotbar_pos = pos;
+			sex2 = true;
+		}
+
+		window_size2 = window_size;
+
+		auto mouse = UnityEngine::Input::GetMousePosition();
+		auto width = UnityEngine::Screen::get_width();
+		auto height = UnityEngine::Screen::get_height();
+		auto menu_event = event->Type();
+		auto key_code = UnityEngine::Event::get_keyCode(event);
+
+		mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
+		mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
+		auto mouse_state = UnityEngine::Input::GetMouseButton(0);
+
+		if (main_menu_open)
+		{
+			if (Menu().is_mouse_in_box({ hotbar_pos.x, hotbar_pos.y }, { hotbar_pos.x + window_size2.x, hotbar_pos.y + window_size2.y }) && mouse_state && !hover_element) {
+				hotbar_pos.x += mouse_pos.x - old_mouse_pos.x;
+				hotbar_pos.y += mouse_pos.y - old_mouse_pos.y;
+			}
+			else {
+				hover_element = false;
+			}
+
+		}
+
+		auto camera = UnityEngine::Camera::get_main();
+		float info_y = 0;
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+			if (IsAddressValid(AimbotTarget.m_player))
+			{
+				auto inventory = AimbotTarget.m_player->inventory();
+				if (IsAddressValid(inventory))
+				{
+					if (m_settings::DrawInventory) {
+						auto containerBelt = inventory->containerBelt();
+						if (IsAddressValid(containerBelt))
+						{
+							auto ItemList = containerBelt->itemList();
+							if (IsAddressValid(ItemList))
+							{
+								if (menu_event == RustStructs::EventType::Repaint)
+								{
+									for (int i = 0; i < ItemList->_size; i++) {
+										auto item = ItemList->_items->m_Items[i];
+										if (!item)
+											continue;
+
+										if (i > ItemList->_size - 1)
+										{
+											info_y += 13;
+											continue;
+										}
+
+										if (IsAddressValid(item)) {
+
+											auto amount = item->amount();
+											auto name = item->GetItemName();
+
+											auto camera = UnityEngine::Camera::get_main();
+											if (IsAddressValid(camera)) {
+												auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+												if (IsAddressValid(m_target.m_player))
+												{
+													std::string ItemName = "";
+													char str[128];
+													sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
+													ItemName = str;
+
+													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
+														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
+															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), 11);
+													}
+													else
+														UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), 11);
+												}
+											}
+										}
+
+										info_y += 13;
+									}
+									info_y += 10;
+									//info_y = 0;
+								}
+							}
+						}
+					}
+					if (m_settings::DrawClothing) {
+						auto containerWear = inventory->containerWear();
+						if (IsAddressValid(containerWear))
+						{
+							auto ItemList = containerWear->itemList();
+							if (IsAddressValid(ItemList))
+							{
+								for (int i = 0; i < ItemList->_size; i++) {
+									auto item = ItemList->_items->m_Items[i];
+									if (!item)
+										continue;
+
+									if (i > ItemList->_size - 1)
+									{
+										info_y += 13;
+										continue;
+									}
+
+									if (IsAddressValid(item)) {
+
+										auto name = item->GetItemName();
+
+										auto camera = UnityEngine::Camera::get_main();
+										if (IsAddressValid(camera)) {
+											auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+
+											std::string ItemName = "";
+											char str[128];
+											sprintf(str, XS("%s"), name->string_safe().c_str());
+											ItemName = str;
+
+											if (IsAddressValid(m_target.m_player))
+											{
+												UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), 11);
+											}
+										}
+									}
+
+									info_y += 13;
+								}
+								info_y = 0;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//Menu().end_window();
 	}
 }
 
@@ -924,6 +1070,17 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		MenuDraw().RenderMenu();
 
+		if (is_menu_open) {
+			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
+				auto z = UnityEngine::rect_t{ hotbar_pos.x - 50, hotbar_pos.y - 20, hotbar_pos.x + 50, hotbar_pos.y + 70 };
+
+				if (z.contains(mouse_pos))
+				{
+					hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
+				}
+			}
+		}
+
 		auto m_Event = UnityEngine::Event::Current();
 		if (IsAddressValid(m_Event))
 		{
@@ -969,11 +1126,16 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				{
 					drawMisc();
 
-					prefab_spawner();
+					float x = screen_center.x;
+					float YPos = (UnityEngine::screen_size.y / 8);
+					int YOffset = 40;
+					DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 25 }, { 50, 50 });
+
+					if (m_settings::HerbertPrefabSpawn || m_settings::AmongusPrefabSpawn)
+						prefab_spawner();
 
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
-
 
 					Visuals().CacheEntities();
 					Visuals().RenderEntities();

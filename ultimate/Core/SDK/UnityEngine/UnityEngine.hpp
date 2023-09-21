@@ -940,7 +940,7 @@ namespace UnityEngine {
 	{
 		IL2CPP_CLASS("Material");
 
-		void SetColor(int proper, Color value) {
+		void SetColor(FPSystem::String* proper, Color value) {
 			if (!this) return;
 
 			static uintptr_t procedure = 0;
@@ -2819,7 +2819,23 @@ namespace UnityEngine {
 		}
 	};
 
+	struct textcmd2_t {
+		Vector2 pos;
+		Vector2 size;
+		Texture2D* texture;
+		Color backgroundColor;
+
+		textcmd2_t() = default;
+		textcmd2_t(Vector2 a, Vector2 b, Texture2D* c, const Color& d) {
+			pos = a;
+			size = b;
+			texture = c;
+			backgroundColor = d;
+		}
+	};
+
 	inline std::list<textcmd_t*> text_buffer;
+	inline std::list<textcmd2_t*> icon_buffer;
 	inline UnityEngine::Material* LineMat = nullptr;
 	inline UnityEngine::GUIStyle* gui_style = nullptr;
 
@@ -2998,6 +3014,17 @@ namespace UnityEngine {
 			End();
 		}
 
+		static void DrawIcon(const Vector2& pos, const Vector2& size, UnityEngine::Texture2D* texture, Color backgroundColor)
+		{
+			textcmd2_t* cmd = new textcmd2_t;
+			cmd->pos = pos;
+			cmd->size = size;
+			cmd->texture = texture;
+			cmd->backgroundColor = backgroundColor;
+
+			icon_buffer.emplace_back(cmd);
+		}
+
 		static void TextOutline(const Vector2& pos, const Color& color, Color outlineColor, const char* text, bool centered, int size = 11)
 		{
 			textcmd_t* cmd = new textcmd_t;
@@ -3022,9 +3049,13 @@ namespace UnityEngine {
 			return text_buffer;
 		}
 
+		static std::list<textcmd2_t*>& get_icon_buffer() {
+			return icon_buffer;
+		}
+
 		static void UnityLabel(const Vector2& pos, Il2CppString* text, UnityEngine::GUIStyle* style) {
 
-			UnityEngine::rect_t rect{ pos.x, pos.y, 200, 20 };
+			UnityEngine::rect_t rect{ pos.x, pos.y, 400, 20 };
 
 			const auto label = reinterpret_cast<void(*)(UnityEngine::rect_t, Il2CppString*, UnityEngine::GUIStyle*)>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GUI")), HASH("Label"), 3)));
 			if (!label)
@@ -3043,7 +3074,7 @@ namespace UnityEngine {
 				if (entry->centered)
 				{
 					UnityEngine::GUIStyle::SetAlignment(gui_style, 0x4);
-					entry->pos.x -= 100;
+					entry->pos.x -= 200;
 					entry->pos.y -= 12;
 				}
 				else
@@ -3066,6 +3097,21 @@ namespace UnityEngine {
 				UnityEngine::GUI::SetColor(entry->clr);
 
 				UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+
+				it = text_buffer.erase(it);
+			}
+		}
+
+		static void RenderIcons()
+		{
+			auto& text_buffer = get_icon_buffer();
+			auto it = text_buffer.begin();
+			while (it != text_buffer.end())
+			{
+				const auto& entry = *it;
+
+				UnityEngine::GUI::SetColor(entry->backgroundColor);
+				UnityEngine::GUI::DrawTexture(rect_t{ entry->pos.x, entry->pos.y, entry->size.x, entry->size.y }, entry->texture);
 
 				it = text_buffer.erase(it);
 			}

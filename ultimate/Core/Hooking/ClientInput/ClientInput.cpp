@@ -202,6 +202,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				//angle_to = LocalPlayer->input()->bodyAngles().lerp(angle_to, (1.f - 0.f));
 				
 				//LocalPlayer->input()->bodyAngles() = angle_to;
+				Vector2 AimPos;
+				if (UnityEngine::WorldToScreen(TargetBone, AimPos))
+					mouse_event(MOUSEEVENTF_MOVE, AimPos.x, AimPos.y, 0, 0);
+				
+			
 			}
 		}
 	}
@@ -282,7 +287,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) || BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()))
+	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
 		Features().BaseProjectile = BaseProjectile;
 
@@ -743,38 +748,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					}
 				}
 			}
-			else
-			{
-				if (m_settings::InstantHeal)
-				{
-					float nextActionTime = 0, period = 1.4721;
-					auto health = a1->_health();
-
-					auto Held = a1->ActiveItem();
-					
-					if (IsAddressValid(Held))
-					{
-						auto HeldEntity = Held->heldEntity();
-						if (HeldEntity)
-						{
-							if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
-								//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
-								auto Time = UnityEngine::Time::get_time();
-
-								if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() <= Time) {
-									if (Time > nextActionTime) {
-										nextActionTime = Time + period;
-										if (health < 99)
-											BaseProjectile->ServerRPC(XS("UseSelf"));
-									}
-								}
-							}
-						}
-					}
-				}
-			}
 		}
-
 	}
 	if (m_settings::BulletTP)
 	{
@@ -796,6 +770,34 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (m_settings::NoMovementRestrictions)
 	{
 		AssemblyCSharp::LocalPlayer::get_Entity()->clothingBlocksAiming() = false;
+	}
+
+	if (m_settings::InstantHeal)
+	{
+		float nextActionTime = 0, period = 1.4721;
+		auto health = a1->_health();
+
+		auto Held = a1->ActiveItem();
+
+		if (IsAddressValid(Held))
+		{
+			auto HeldEntity = Held->heldEntity();
+			if (HeldEntity)
+			{
+				if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
+					//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
+					auto Time = UnityEngine::Time::get_time();
+
+					if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() <= Time) {
+						if (Time > nextActionTime) {
+							nextActionTime = Time + period;
+							if (health < 99)
+								BaseProjectile->ServerRPC(XS("UseSelf"));
+						}
+					}
+				}
+			}
+		}
 	}
 
 	if (m_settings::NoSway)
@@ -900,7 +902,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::AdminCheat)
 	{
-		if (UnityEngine::Input::GetKey(m_settings::AdminCheatKey))
+		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey))
 			a1->GetBaseMovement()->adminCheat() = true;
 		else
 			a1->GetBaseMovement()->adminCheat() = false;
