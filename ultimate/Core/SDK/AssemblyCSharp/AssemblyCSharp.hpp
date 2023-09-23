@@ -2373,7 +2373,7 @@ namespace AssemblyCSharp {
 					if (!IsAddressValid(BasePlayer->playerModel()) || !IsAddressValid(BasePlayer->model()))
 						continue;
 
-					if (BasePlayer->IsDead() || BasePlayer->PlayerDestroyed() || BasePlayer->IsLocalPlayer() ||
+					if (BasePlayer->IsDead() || BasePlayer->IsLocalPlayer() ||
 						BasePlayer->playerFlags() & RustStructs::PlayerFlags::Sleeping || BasePlayer->wasDead() ||
 						BasePlayer->_health() <= 0.f)
 						continue;
