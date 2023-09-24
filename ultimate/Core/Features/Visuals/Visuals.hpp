@@ -14,6 +14,10 @@ inline UnityEngine::AssetBundle* FireBundleB;
 inline UnityEngine::Shader* FireShaderB;
 inline UnityEngine::Material* FireMaterialB;
 
+inline UnityEngine::AssetBundle* ColorBundle;
+inline UnityEngine::Shader* ColorShader;
+inline UnityEngine::Material* ColorMaterial;
+
 inline UnityEngine::AssetBundle* GalaxyBundle;
 inline UnityEngine::Shader* GalaxyShader;
 inline UnityEngine::Material* GalaxyMaterial;

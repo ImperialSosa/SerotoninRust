@@ -22,11 +22,23 @@ void Hooks::PlayerWalkMovement(AssemblyCSharp::PlayerWalkMovement* _This, Assemb
 
 	Hooks::PlayerWalkMovementhk.get_original< decltype(&PlayerWalkMovement)>()(_This, _State, _ModelState);
 
-
-
 	if (m_settings::AdminFlags)
 		_ModelState->remove_flag(RustStructs::ModelState_Flag::Flying);
 
+	static bool SilentWalking = false;
+	if (m_settings::SilentWalk)
+	{
+		if (UnityEngine::Input::GetKeyDown(m_settings::SilentWalkKey) && !SilentWalking)
+			SilentWalking = true;
+		else if (UnityEngine::Input::GetKeyDown(m_settings::SilentWalkKey) && SilentWalking)
+			SilentWalking = false;
+
+		if (SilentWalking)
+			_ModelState->remove_flag(RustStructs::ModelState_Flag::OnGround);
+		
+	}
+	else
+		SilentWalking = false;
 
 	auto g_local_player = AssemblyCSharp::LocalPlayer::get_Entity();
 	if (g_local_player)

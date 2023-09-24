@@ -5,6 +5,7 @@ inline bool chams_type_opened;
 inline bool bullet_tpe_open;
 inline bool config_type_open;
 inline bool hitmat_open;
+inline bool wchams_type_opens;
 
 inline bool aim_type_opene2;
 #include "../../Configs/Configs.hpp"
@@ -77,7 +78,7 @@ void MenuDraw::RenderMenu()
 					Menu().Slider(XS(L"Fov Slider"), m_settings::AimbotFOV, 0, 1000);
 					Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
 					
-					Menu().Spacer(50);
+					//Menu().Spacer(50);
 
 					Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water")}, m_settings::HitMaterial, hitmat_open);
 
@@ -206,7 +207,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
 					//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
 					Menu().CheckBoxKeyBind(XS(L"Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
-					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame")}, m_settings::SelectedChams, chams_type_opened);
+					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color") }, m_settings::SelectedChams, chams_type_opened);
 
 				}
 
@@ -229,6 +230,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"LoadLightning"), m_settings::LoadLightning);
 					Menu().CheckBox(XS(L"LoadGeometric"), m_settings::LoadGeometric);
 					Menu().CheckBox(XS(L"LoadGalaxy"), m_settings::LoadGalaxy);
+					Menu().CheckBox(XS(L"LoadWireFrame"), m_settings::LoadWireFrame);
 				}
 				break;
 			case 1:
@@ -317,14 +319,16 @@ void MenuDraw::RenderMenu()
 				{
 					Menu().CheckBox(XS(L"Flyhack Indicator"), m_settings::Flyhack_Indicator);
 					Menu().CheckBox(XS(L"Anti FlyhackKick"), m_settings::AntiFlyKick);
+					Menu().CheckBox(XS(L"Anti DeathBarrier"), m_settings::AntiDeathBarrier);
 					Menu().CheckBox(XS(L"Spiderman"), m_settings::SpiderMan);
 					Menu().CheckBox(XS(L"SmallerLocalRadius"), m_settings::SmallerLocalRadius);
 					Menu().CheckBox(XS(L"Admin Flags"), m_settings::AdminFlags);
 					Menu().CheckBox(XS(L"Infinite Jump"), m_settings::InfiniteJump);
 					Menu().CheckBox(XS(L"Omnisprint"), m_settings::OmniSprint);
+					Menu().CheckBox(XS(L"ToggleSprint"), m_settings::AlwaysSprint);
 					Menu().CheckBox(XS(L"NoMovementReduction"), m_settings::NoMovementRestrictions);
-					Menu().CheckBox(XS(L"Ignore Trees"), m_settings::IgnoreTrees);
-					Menu().CheckBox(XS(L"Ignore Players"), m_settings::IgnorePlayers);
+					Menu().CheckBox(XS(L"NoCollision (Trees)"), m_settings::IgnoreTrees);
+					Menu().CheckBox(XS(L"NoCollision (Players)"), m_settings::IgnorePlayers);
 					Menu().CheckBox(XS(L"NameSpoofer"), m_settings::NameSpoofer);
 
 				}
@@ -333,6 +337,7 @@ void MenuDraw::RenderMenu()
 				{
 					Menu().CheckBox(XS(L"Instant Loot"), m_settings::InstantLoot);
 					Menu().CheckBox(XS(L"Instant Heal"), m_settings::InstantHeal);
+					Menu().CheckBox(XS(L"Adjust NoClipSpeed"), m_settings::AdjustNoClipSpeed);
 					Menu().CheckBoxKeyBind(XS(L"NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
 					Menu().CheckBoxKeyBind(XS(L"InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
 					Menu().CheckBoxKeyBind(XS(L"Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
@@ -341,7 +346,8 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Spinbot"), m_settings::Spinbot);
 					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
 					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
-
+					Menu().CheckBoxKeyBind(XS(L"SilentWalk"), m_settings::SilentWalk, m_settings::SilentWalkKey);
+					Menu().CheckBoxKeyBind(XS(L"TeleportMax"), m_settings::TeleportMax, m_settings::TeleportMaxKey);
 				}
 				break;
 			case 1:
@@ -426,8 +432,8 @@ void MenuDraw::RenderMenu()
 				Menu().CheckBox(XS(L"No Attack Restrictions"), m_settings::NoAttackRestrictions);
 				Menu().CheckBox(XS(L"Recoil Modifier"), m_settings::ChangeRecoil);
 				if (m_settings::ChangeRecoil) {
-					Menu().Slider(XS(L"Recoil Percent X"), m_settings::recoilPercent, 0, 100);
-					Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+					Menu().Slider(XS(L"Recoil Percent"), m_settings::recoilPercent, 0, 100);
+				//	Menu().Slider(XS(L"Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
 				}
 				Menu().CheckBox(XS(L"Thickness Modifier"), m_settings::NormalThickBullet);
 				if (m_settings::NormalThickBullet) {
@@ -448,8 +454,13 @@ void MenuDraw::RenderMenu()
 				if (m_settings::WeaponSpammer) {
 					Menu().Slider(XS(L"WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
 				}
+				Menu().CheckBox(XS(L"WeaponChams"), m_settings::WeaponChams);
+				Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame") }, m_settings::WeaponSelectedChams, wchams_type_opens);
 
-			
+				Menu().CheckBox(XS(L"LoadLightning"), m_settings::LoadLightning);
+				Menu().CheckBox(XS(L"LoadGeometric"), m_settings::LoadGeometric);
+				Menu().CheckBox(XS(L"LoadGalaxy"), m_settings::LoadGalaxy);
+				Menu().CheckBox(XS(L"LoadWireFrame"), m_settings::LoadWireFrame);
 			}
 			break;
 		case 4:

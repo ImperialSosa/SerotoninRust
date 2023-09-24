@@ -198,8 +198,9 @@ void Visuals::DrawPlayers()
 
 			auto is_Visible = IsVisible(camera->get_positionz());
 			bool IsWounded = BasePlayer->playerFlags() & RustStructs::PlayerFlags::Wounded;
-			auto VisCheckColor = is_Visible ? Color{ m_settings::VisCheck_Color[0], m_settings::VisCheck_Color[1], m_settings::VisCheck_Color[2], m_settings::VisCheck_Color[3] } : Color{ m_settings::DrawBox_Color[0], m_settings::DrawBox_Color[1], m_settings::DrawBox_Color[2], m_settings::DrawBox_Color[3] };
+			auto VisibleColor = Color{ m_settings::VisCheck_Color[0], m_settings::VisCheck_Color[1], m_settings::VisCheck_Color[2], m_settings::VisCheck_Color[3] };
 			auto DrawBox_Color = Color{ m_settings::DrawBox_Color[0], m_settings::DrawBox_Color[1], m_settings::DrawBox_Color[2], m_settings::DrawBox_Color[3] };
+			auto VisCheckColor = is_Visible ? VisibleColor : DrawBox_Color;
 			auto NameTag_Color = Color{ m_settings::DrawNameTag_Color[0], m_settings::DrawNameTag_Color[1], m_settings::DrawNameTag_Color[2], m_settings::DrawNameTag_Color[3] };
 			auto Sleeper_Color = Color{ m_settings::Sleeper_Color[0], m_settings::Sleeper_Color[1], m_settings::Sleeper_Color[2], m_settings::Sleeper_Color[3] };
 			auto Wounded_Color = Color{ m_settings::Wounded_Color[0], m_settings::Wounded_Color[1], m_settings::Wounded_Color[2], m_settings::Wounded_Color[3] };
@@ -231,10 +232,10 @@ void Visuals::DrawPlayers()
 				BoxColor = Sleeper_Color;
 			else if (BasePlayer->playerFlags() & RustStructs::PlayerFlags::Wounded && m_settings::DrawWounded)
 				BoxColor = Wounded_Color;
-			else if (BasePlayer->IsDead() && m_settings::DrawDead)
-				BoxColor = Dead_Color;
 			else if (BasePlayer->playerFlags() & RustStructs::PlayerFlags::SafeZone && m_settings::DrawSafezone)
 				BoxColor = Safezone_Color;
+			else if (BasePlayer->IsDead() && m_settings::DrawDead)
+				BoxColor = Dead_Color;
 			else
 				BoxColor = m_settings::EspVisCheck ? VisCheckColor : DrawBox_Color;
 
@@ -367,7 +368,7 @@ void Visuals::DrawPlayers()
 					UnityEngine::GL::Line(Vector2(RKneeLoc.x, RKneeLoc.y), Vector2(RAnkleLoc.x, RAnkleLoc.y), SkeletonColor);
 				}
 			}
-
+			
 			if (m_settings::healthBar)
 			{
 				float bar_health = 0;
@@ -734,7 +735,25 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
+											case 6:
+												if (ColorBundle) {
+													if (!ColorShader) //Galaxy
+														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
+													if (material->shader() != ColorShader)
+													{
+														material->set_shader(ColorShader);
+														material->SetColor("_ColorVisible", VisibleColor.GetUnityColor());
+														material->SetColor("_ColorBehind", BoxColor.GetUnityColor());
+
+														if (npc)
+														{
+															material->SetColor("_ColorVisible", BoxColor.GetUnityColor());
+															material->SetColor("_ColorBehind", BoxColor.GetUnityColor());
+														}
+													}
+												}
+												break;
 											}
 										}
 									}

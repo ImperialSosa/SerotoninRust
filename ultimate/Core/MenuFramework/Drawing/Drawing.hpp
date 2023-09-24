@@ -72,7 +72,7 @@ inline static float accent_color_[4] = { 252, 3, 98, 255 };
 inline float menu_alpha;
 inline static bool wakeup{ false };
 inline static bool sex{ false };
-inline Vector2 window_pos{ 50, 50 }, mouse_pos, next_item_pos, next_color_pos;
+inline Vector2 window_pos{ 50, 50 }, mouse_pos, next_item_pos, next_color_pos, next_combo_pos;
 inline Vector2 window_sizemain;
 inline Vector2 old_mouse_pos;
 inline bool mouse_state, insert_state;

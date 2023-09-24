@@ -15,6 +15,12 @@ namespace m_settings {
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
 	inline int HitMaterial = 0;
+	inline bool SilentWalk = false;
+	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;
+
+	inline bool TeleportMax = false;
+	inline RustStructs::KeyCode TeleportMaxKey = RustStructs::KeyCode::H;
+	inline bool WeaponChams = false;
 	inline bool HeliAimbot = false;
 	inline bool RemoveAttackAnimations = false;
 	inline bool TurretOnFlags = false;
@@ -41,7 +47,9 @@ namespace m_settings {
 	inline bool HackableCrateFlags = false;
 	inline bool InstantBullet = false;
 	inline bool FixDebugCamera = false;
+	inline bool AdjustNoClipSpeed = false;
 	inline int SelectedChams = 0;
+	inline int WeaponSelectedChams = 0;
 	inline int SelectedConfig = 0;
 	inline bool InstantKill = false;
 	inline bool WaitForBulletTP = false;
@@ -107,6 +115,7 @@ namespace m_settings {
 	inline bool LoadGalaxy = false;
 	inline bool LoadLightning = false;
 	inline bool LoadGeometric = false;
+	inline bool LoadWireFrame = false;
 
 	inline RustStructs::KeyCode AutoshootKey = RustStructs::KeyCode::F;
 	inline bool IncludeFatBullet = false;
@@ -128,6 +137,7 @@ namespace m_settings {
 	inline bool IgnorePlayers = false;
 	inline bool InstantRevive = false;
 	inline bool PlayerFov = false;
+	inline bool AntiDeathBarrier = false;
 	inline float PlayerFovAmount = 90.f;
 	inline bool Zoom = false;
 	inline RustStructs::KeyCode ZoomKey = RustStructs::KeyCode::G;

@@ -97,6 +97,12 @@ void ConnectionManager::ResetPlayerCache()
 			WireFrameShader = nullptr;
 			WireFrameMaterial = nullptr;
 		}
+
+		if (ColorBundle)
+		{
+			ColorShader = nullptr;
+			ColorMaterial = nullptr;
+		}
 	}
 }
 

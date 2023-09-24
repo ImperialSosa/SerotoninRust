@@ -30,5 +30,6 @@ private:
 	HOOK(void, SkyUpdate, (AssemblyCSharp::TOD_Camera* _This))
 	HOOK(void, SteamPlatformUpdate, (RustPlatformSteam::SteamPlatform* _This))
 	HOOK(void, OnAttacked, (AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::HitInfo* hitinfo))
-
+	HOOK(void, LateUpdate, (AssemblyCSharp::TOD_Sky* TOD_Sky))
+	HOOK(void, BlockSprint, (AssemblyCSharp::BasePlayer* instance, float duration))
 };

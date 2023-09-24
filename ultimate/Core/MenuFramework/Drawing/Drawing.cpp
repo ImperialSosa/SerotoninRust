@@ -1206,8 +1206,6 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
 
-
-
 		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 3, next_item_pos.y, 300, 50, wstring.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
 
 		if (is_open && !is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
@@ -1244,10 +1242,13 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 
 				outline_box({ next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling }, { width, 15 }, Color(0, 0, 0, 255.f));
 				UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + left + 3.f, next_item_pos.y + 1 + 15 + (i * 15) - 2 + leveling, 300, 50, cur.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
+				
 			}
 
 			outline_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { width, 15 }, Color(0, 0, 0, 255.f));
 			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + left + 3.f, next_item_pos.y + 1 - 1 + leveling, 300, 50, str.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
+
+			next_item_pos.y += items.size() * 15.f;
 		}
 		else {
 			fill_box({ next_item_pos.x + left , next_item_pos.y + 1 + leveling, width, 15 }, Color(34, 34, 34, 255.f));
@@ -1257,7 +1258,7 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 		}
 	}
 
-	next_item_pos.y += 40;
+	next_item_pos.y += 20;
 }
 
 void Menu::MultiDropdown(const std::string& title, const std::vector<std::string> items, std::vector<bool>& value, bool& is_open) {

@@ -2,6 +2,7 @@
 #include "../../ConnectionManager/ConnectionManager.hpp"
 #include "../../Features/Features/Features.hpp"
 #include "../WriteToStream/Prediction.hpp"
+#include "../../Features/Visuals/Visuals.hpp"
 
 float flyhackDistanceVertical = 0.f;
 float flyhackDistanceHorizontal = 0.f;
@@ -127,7 +128,34 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 	return false;
 }
 
+bool TestInsideTerrain(Vector3 pos)
+{
+	if (!AssemblyCSharp::TerrainMeta::get_Terrain()) return false;
+	if (!AssemblyCSharp::TerrainMeta::get_HeightMap()) return false;
+	if (!AssemblyCSharp::TerrainMeta::get_Terrain()) return false;
+	if (!AssemblyCSharp::TerrainMeta::get_Collision()) return false;
 
+	float height = AssemblyCSharp::TerrainMeta::get_HeightMap()->GetHeight(pos);
+
+	if (pos.y > height - 0.3f)
+		return false;
+
+	float gaysex = AssemblyCSharp::TerrainMeta::get_Position().y + AssemblyCSharp::TerrainMeta::get_Terrain()->SampleHeight(pos);
+	return pos.y <= gaysex - 0.3f && !AssemblyCSharp::TerrainMeta::get_Collision()->GetIgnore(pos, 0.01f);
+}
+
+bool IsInsideTerrain(bool prevent = false)
+{
+	BasePlayer* player = AssemblyCSharp::LocalPlayer::get_Entity();
+	if (!IsAddressValid(player))
+		return false;
+
+	bool result = TestInsideTerrain(player->get_transform()->get_position());
+
+	if (prevent && result)
+		player->ForcePositionTo(player->lastSentTick()->position());
+	return result;
+}
 
 inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSharp::BaseMelee* w)
 {
@@ -185,6 +213,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	{
 		Hooks::TryToMovehk.VirtualFunctionHook(XS("ItemIcon"), HASH("TryToMove"), &Hooks::TryToMove, XS(""), 0);
 		Hooks::PlayerWalkMovementhk.VirtualFunctionHook(XS("PlayerWalkMovement"), HASH("ClientInput"), &Hooks::PlayerWalkMovement, XS(""), 2);
+		Hooks::BlockSprinthk.VirtualFunctionHook(XS("BasePlayer"), HASH("BlockSprint"), &Hooks::BlockSprint, XS(""), 1);
+		Hooks::LateUpdatehk.PointerSwapHook(XS("TOD_Sky"), HASH("LateUpdate"), &Hooks::LateUpdate, XS(""), 0);
 		FirstInit = true;
 	}
 
@@ -193,7 +223,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-			if (AimbotTarget.m_player) {
+			if (IsAddressValid(AimbotTarget.m_player)) {
 				auto LocalPos = LocalPlayer->get_bone_transform(47)->get_position();
 				auto TargetBone = AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position();
 				auto CameraPos = camera->get_positionz();
@@ -287,12 +317,157 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+
+	if (IsAddressValid(BaseProjectile) && a1->IsMelee() || a1->IsWeapon())
+	{
+		if (m_settings::WeaponChams) {
+			if (IsAddressValid(AssemblyCSharp::BaseViewModel::get_ActiveModel()))
+			{
+				AssemblyCSharp::BaseViewModel::get_ActiveModel()->useViewModelCamera() = false;
+			}
+
+			auto g_render = AssemblyCSharp::BaseViewModel::get_ActiveModel()->GetComponentsInChildren(FPSystem::Type::Renderer());
+			if (IsAddressValid(g_render))
+			{
+				auto size = g_render->max_length;
+				for (int i = 0; i < size; i++)
+				{
+					auto MainRenderer = g_render->m_Items[i];
+					if (!IsAddressValid(MainRenderer))
+						continue;
+
+					auto material = MainRenderer->material();
+
+					if (!IsAddressValid(material))
+						continue;
+
+					if (material->get_name()->Contains(XS("sparks2"))
+						|| material->get_name()->Contains(XS("puff-3"))
+						|| material->get_name()->Contains(XS("c4_smoke_01"))
+						|| material->get_name()->Contains(XS("HeavyRefract"))
+						|| material->get_name()->Contains(XS("pfx_smoke_whispy_1_white_viewmodel"))
+						|| material->get_name()->Contains(XS("Ak47uIce Specular"))
+						//|| Material->name()->Contains(E(L"ak47_barrel_ice"
+						//|| Material->name()->Contains(E(L"ak47_maggrip_ice"
+						|| material->get_name()->Contains(XS("muzzle_embers"))
+						|| material->get_name()->Contains(XS("c4charge"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("muzzle_fumes1"))
+						|| material->get_name()->Contains(XS("muzzle_fumes2"))
+						|| material->get_name()->Contains(XS("muzzle_fumes3"))
+						|| material->get_name()->Contains(XS("wispy-2"))
+						|| material->get_name()->Contains(XS("quickblast-1"))
+						|| material->get_name()->Contains(XS("muzzle_flash-front-3x3"))
+						|| material->get_name()->Contains(XS("muzzle_flash-cross"))
+						|| material->get_name()->Contains(XS("muzzle_flash-side-1x4")))
+						continue;
+
+					int selectedChams = m_settings::WeaponSelectedChams;
+
+					switch (selectedChams) {
+					case 0:
+						if (FireBundleA) {
+							if (!FireShaderA) //Blue Fire
+								FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!FireMaterialA)
+								FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != FireShaderA)
+							{
+								MainRenderer->set_material(FireMaterialA);
+								FireMaterialA->set_shader(FireShaderA);
+							}
+						}
+						break;
+					case 1:
+						if (FireBundleB) {
+							if (!FireShaderB) //Red Fire
+								FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!FireMaterialB)
+								FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != FireShaderB)
+							{
+								MainRenderer->set_material(FireMaterialB);
+								FireMaterialB->set_shader(FireShaderB);
+							}
+						}
+						break;
+					case 2:
+						if (LightningBundle) {
+							if (!LightningShader) //Lightning
+								LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!LightningMaterial)
+								LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != LightningShader)
+							{
+								MainRenderer->set_material(LightningMaterial);
+								LightningMaterial->set_shader(LightningShader);
+							}
+						}
+						break;
+					case 3:
+						if (GeometricBundle) {
+							if (!GeometricShader) //Geometric Disolve
+								GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!GeometricMaterial)
+								GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != GeometricShader)
+							{
+								MainRenderer->set_material(GeometricMaterial);
+								GeometricMaterial->set_shader(GeometricShader);
+							}
+						}
+						break;
+					case 4:
+						if (GalaxyBundle) {
+							if (!GalaxyShader) //Galaxy
+								GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!GalaxyMaterial)
+								GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != GalaxyShader)
+							{
+								MainRenderer->set_material(GalaxyMaterial);
+								GalaxyMaterial->set_shader(GalaxyShader);
+							}
+						}
+						break;
+					case 5:
+						if (WireFrameBundle) {
+							if (!WireFrameShader) //Galaxy
+								WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!WireFrameMaterial)
+								WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != WireFrameShader)
+							{
+								MainRenderer->set_material(WireFrameMaterial);
+								WireFrameMaterial->set_shader(WireFrameShader);
+								//WireFrameMaterial->SetColor("_Color", Color::Red());
+							}
+						}
+						break;
+
+					}
+				}
+			}
+		}
+	}
+
 	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
 		Features().BaseProjectile = BaseProjectile;
-
-
-
 
 		if (IsAddressValid(Features().LocalPlayer) && IsAddressValid(Features().BaseProjectile))
 		{
@@ -682,41 +857,19 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								orig[1] = newRecoilOverride->recoilYawMax();
 								orig[2] = newRecoilOverride->recoilPitchMin();
 								orig[3] = newRecoilOverride->recoilPitchMax();
-								//orig[4] = newRecoilOverride->ADSScale();
-								//orig[5] = newRecoilOverride->movementPenalty();
+								orig[4] = newRecoilOverride->ADSScale();
+								orig[5] = newRecoilOverride->movementPenalty();
 
 								StoreOrig = true;
 							}
 
 							const float amount = m_settings::recoilPercent / 100;
-							const float amountY = m_settings::RecoilPercentY / 100;
 							newRecoilOverride->recoilYawMin() = orig[0] * amount;
 							newRecoilOverride->recoilYawMax() = orig[1] * amount;
-							newRecoilOverride->recoilPitchMin() = orig[2] * amountY;
-							newRecoilOverride->recoilPitchMax() = orig[3] * amountY;
-							//newRecoilOverride->ADSScale() = orig[4] * amount;
-							//newRecoilOverride->movementPenalty() = orig[5] * amount;
-						}
-						else
-						{
-							if (!StoreOrig)
-							{
-								orig[0] = RecoilProperties->recoilYawMin();
-								orig[1] = RecoilProperties->recoilYawMax();
-								orig[2] = RecoilProperties->recoilPitchMin();
-								orig[3] = RecoilProperties->recoilPitchMax();
-								//orig[4] = RecoilProperties->ADSScale();
-								//orig[5] = RecoilProperties->movementPenalty();
-
-								StoreOrig = true;
-							}
-
-							const float amount = m_settings::recoilPercent / 100;
-							const float amountY = m_settings::RecoilPercentY / 100;
-							RecoilProperties->recoilYawMin() = orig[0] * amount;
-							RecoilProperties->recoilYawMax() = orig[1] * amount;
-							RecoilProperties->recoilPitchMin() = orig[2] * amountY;
-							RecoilProperties->recoilPitchMax() = orig[3] * amountY;
+							newRecoilOverride->recoilPitchMin() = orig[2] * amount;
+							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
+							newRecoilOverride->ADSScale() = orig[4] * amount;
+							newRecoilOverride->movementPenalty() = orig[5] * amount;
 						}
 					}
 				}
@@ -900,12 +1053,34 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		a1->playerFlags() |= RustStructs::PlayerFlags::IsAdmin;
 	}
 
+	static bool DoNoclip = false;
 	if (m_settings::AdminCheat)
 	{
-		if (UnityEngine::Input::GetKey(m_settings::AdminCheatKey))
+		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey) && !DoNoclip)
+			DoNoclip = true;
+		else if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey) && DoNoclip)
+			DoNoclip = false;
+
+
+		if (DoNoclip)
 			a1->GetBaseMovement()->adminCheat() = true;
 		else
 			a1->GetBaseMovement()->adminCheat() = false;
+	}
+	else
+		DoNoclip = false;
+
+	if (m_settings::TeleportMax)
+	{
+		auto Movement = a1->movement();
+		auto LocalPos = a1->get_transform()->get_position();
+
+		if (IsAddressValid(Movement)) {
+			if (UnityEngine::Input::GetKey(m_settings::TeleportMaxKey))
+				Movement->capsuleHeight() = 8.5f;
+			else
+				Movement->capsuleHeight() = 1.8f;	
+		}
 	}
 
 	if (m_settings::NoAttackRestrictions)
@@ -980,6 +1155,18 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				AimbotTarget.m_player->ServerRPC(XS("RPC_Assist"));
 			}
 		}
+	}
+
+	if (m_settings::AntiDeathBarrier)
+	{
+		IsInsideTerrain(m_settings::AntiDeathBarrier);
+	}
+
+	if (m_settings::AdjustNoClipSpeed)
+	{
+		ConVar::Player::noclipspeed() = 5.f;
+		ConVar::Player::noclipspeedfast() = 10.f;
+		ConVar::Player::noclipspeedslow() = 2.f;
 	}
 
 	if (m_settings::FixDebugCamera)

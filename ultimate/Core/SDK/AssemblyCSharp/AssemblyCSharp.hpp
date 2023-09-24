@@ -2576,6 +2576,28 @@ namespace AssemblyCSharp {
 			return false;
 		}
 
+		bool InSafeZone()
+		{
+			if (!this) return false;
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("InSafeZone"), 0);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<bool>(procedure, this);
+			}
+
+
+			return false;
+		}
+
 		void ForcePositionTo(Vector3 Pos)
 		{
 			if (!this)return;
@@ -3947,6 +3969,14 @@ namespace ConVar {
 		IL2CPP_CLASS("Culling");
 
 		IL2CPP_STATIC_FIELD(float, entityMinCullDist);
+	};
+
+	struct Player : AssemblyCSharp::ConsoleSystem {
+		IL2CPP_CLASS("Player");
+
+		IL2CPP_STATIC_FIELD(float, noclipspeed);
+		IL2CPP_STATIC_FIELD(float, noclipspeedslow);
+		IL2CPP_STATIC_FIELD(float, noclipspeedfast);
 	};
 }
 

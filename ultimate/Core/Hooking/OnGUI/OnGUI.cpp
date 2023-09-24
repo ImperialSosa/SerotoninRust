@@ -75,6 +75,7 @@ void ConnectorClient()
 				static bool ReceivedFile2 = false;
 				static bool ReceivedFile3 = false;
 				static bool ReceivedFile4 = false;
+				static bool ReceivedFile5 = false;
 
 				//request your uploaded file anytime else
 				if (!ReceivedFile1)
@@ -118,6 +119,18 @@ void ConnectorClient()
 					net->send_data(data);
 					DataSent3 = true;
 				}
+
+				static bool DataSent4 = false;
+				if (ReceivedFile5 && !DataSent4)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "ColorBundle"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent4 = true;
+				}
+
 				net->shared_files_mutex_.lock();
 				if (net->shared_files_.size() > 0)
 				{
@@ -170,7 +183,20 @@ void ConnectorClient()
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
 							FireBundleB = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
+							ReceivedFile5 = true;
 							ReceivedFile4 = false;
+						}
+
+						if (ReceivedFile5 && DataSent4)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							ColorBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile5 = false;
 						}
 					}
 				}
@@ -380,6 +406,43 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						GalaxyBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] Galaxy Bundle Loaded"));
+						send_time2 = current_time2;
+					}
+				}
+				send_time = current_time;
+			}
+		}
+	}
+	if (m_settings::LoadWireFrame) {
+		if (!WireFrameBundle)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/wireframe.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						WireFrameBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+						LOG(XS("[DEBUG] WireFrame Bundle Loaded"));
 						send_time2 = current_time2;
 					}
 				}
@@ -1225,6 +1288,14 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				GeometricMaterial = nullptr;
 			}
 
+			if (ColorBundle)
+			{
+				ColorBundle->Unload(true);
+				ColorBundle = nullptr;
+				ColorShader = nullptr;
+				ColorMaterial = nullptr;
+			}
+
 			if (LightningBundle)
 			{
 				LightningBundle->Unload(true);
@@ -1254,6 +1325,8 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::OnAttackedhk.Unhook();
 		Hooks::OnGUIhk.Unhook();
 		Hooks::Update_hk.Unhook();
+		Hooks::BlockSprinthk.Unhook();
+		Hooks::LateUpdatehk.Unhook();
 	}
 	
 	return;
