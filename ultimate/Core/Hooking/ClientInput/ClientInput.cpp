@@ -279,6 +279,25 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
+		if (const auto input = Features().Instance()->LocalPlayer->input())
+		{
+			if (const auto state = input->state())
+			{
+				if (state->WasJustPressed(RustStructs::BUTTON::FORWARD)
+					|| state->WasJustPressed(RustStructs::BUTTON::BACKWARD)
+					|| state->WasJustPressed(RustStructs::BUTTON::LEFT)
+					|| state->WasJustPressed(RustStructs::BUTTON::RIGHT))
+				{
+					Features().Instance()->LocalPlayer->clientTickInterval() = 0.80f;
+				}
+				else
+				{
+					Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
+				}
+			}
+
+		}
+
 		Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
 	}
 	else

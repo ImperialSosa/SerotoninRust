@@ -14,6 +14,9 @@ namespace m_settings {
 	inline bool DrawClothing = false;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
+	inline bool DisableHitSounds = false;
+	inline bool CustomHitSounds = false;
+
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
 	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;

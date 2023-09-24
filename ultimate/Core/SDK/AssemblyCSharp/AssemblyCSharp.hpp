@@ -1748,6 +1748,29 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(UnityEngine::Material*, Skybox);
 	};
 
+	struct WaterCollision : UnityEngine::MonoBehaviour
+	{
+		IL2CPP_CLASS("WaterCollision");
+	};
+
+	struct WaterSystem : UnityEngine::MonoBehaviour
+	{
+		IL2CPP_CLASS("WaterSystem");
+
+
+		inline static WaterCollision* Collision()
+		{
+			static std::size_t offset = 0;
+			const auto field = CIl2Cpp::FindField(StaticClass(), HASH("<Collision>k__BackingField"));
+			if ((field))
+			{
+				offset = CIl2Cpp::il2cpp_field_get_offset(field);
+			}
+
+			return *reinterpret_cast<WaterCollision**>(ToAddress(StaticClass()) + offset);
+			//<Resources>k__backingfield
+		}
+	};
 
 	struct TOD_Sky : UnityEngine::MonoBehaviour
 	{

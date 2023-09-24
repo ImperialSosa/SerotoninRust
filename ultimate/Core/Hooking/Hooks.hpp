@@ -32,4 +32,5 @@ private:
 	HOOK(void, OnAttacked, (AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::HitInfo* hitinfo))
 	HOOK(void, LateUpdate, (AssemblyCSharp::TOD_Sky* TOD_Sky))
 	HOOK(void, BlockSprint, (AssemblyCSharp::BasePlayer* instance, float duration))
+
 };
