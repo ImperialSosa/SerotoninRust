@@ -330,6 +330,8 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"NoCollision (Trees)"), m_settings::IgnoreTrees);
 					Menu().CheckBox(XS(L"NoCollision (Players)"), m_settings::IgnorePlayers);
 					Menu().CheckBox(XS(L"NameSpoofer"), m_settings::NameSpoofer);
+					Menu().CheckBox(XS(L"DisableHitSounds"), m_settings::DisableHitSounds);
+					Menu().CheckBox(XS(L"CustomHitSounds"), m_settings::CustomHitSounds);
 
 				}
 

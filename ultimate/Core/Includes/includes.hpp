@@ -106,7 +106,7 @@ inline std::vector<std::string> xCheatsArr;
 inline std::wstring xChetasRecievedKey;
 inline uint32_t xCheatsRecievedSteamID;
 static inline bool HitPlayer = false;
-//#define DEBUG_MODE //comment out for EAC 
+#define DEBUG_MODE //comment out for EAC 
 
 inline char buffer[512];
 

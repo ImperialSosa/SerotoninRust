@@ -43,8 +43,28 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 			}
 		}*/
 
-		
 
+		if (m_settings::CustomHitSounds)
+		{
+			if(hitinfo->Initiator() == AssemblyCSharp::LocalPlayer::get_Entity() && UnityEngine::Time::get_realtimeSinceStartup() - instance->lastHeadshotSoundTime() > 0.01f)
+			{
+				typedef NTSTATUS(WINAPI * tPlaySoundW)(LPCWSTR, HMODULE, DWORD);
+				tPlaySoundW PlaySoundW_ = nullptr;
+
+				const auto image_winmm = GetImage(HASH(L"Winmm.dll"));
+
+				if (IsAddressValid(image_winmm))
+					PlaySoundW_ = (tPlaySoundW)(GetImageExport(image_winmm, HASH("PlaySoundW")));
+				
+				PlaySoundW_(XS(L"C:\\hitsound.wav"), NULL, 0x0001);
+				instance->lastHeadshotSoundTime() = UnityEngine::Time::get_realtimeSinceStartup();
+			}
+		}
+
+		if (m_settings::DisableHitSounds)
+		{
+			return;
+		}
 
 		if (m_settings::HitboxOverride)
 		{
@@ -78,5 +98,6 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 		}
 
 	}
+	
 	Hooks::OnAttackedhk.get_original< decltype(&OnAttacked)>()(instance, hitinfo);
 }

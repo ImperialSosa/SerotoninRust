@@ -481,6 +481,15 @@ void Configs::LoadConfig()
         m_settings::BoxEsp = config[XS("BoxEsp")];
     }
 
+    if (config.find(XS("DisableHitSounds")) != config.end()) {
+        m_settings::DisableHitSounds = config[XS("DisableHitSounds")];
+    }
+
+    if (config.find(XS("CustomHitSounds")) != config.end()) {
+        m_settings::CustomHitSounds = config[XS("CustomHitSounds")];
+    }
+
+
     // Load Swastika from JSON
     if (config.find(XS("Swastika")) != config.end()) {
         m_settings::Swastika = config[XS("Swastika")];
@@ -1047,6 +1056,11 @@ void Configs::SaveConfig()
     config[XS("Swastika")] = m_settings::Swastika;
     config[XS("SwastikaSpeed")] = static_cast<int>(m_settings::SwastikaSpeed);
     config[XS("SwastikaSize")] = static_cast<int>(m_settings::SwastikaSize);
+
+    config[XS("CustomHitSounds")] = m_settings::CustomHitSounds;
+    config[XS("DisableHitSounds")] = m_settings::DisableHitSounds;
+
+
     config[XS("CornerBox")] = m_settings::CornerBox;
     config[XS("healthBar")] = m_settings::healthBar;
     config[XS("Skeleton")] = m_settings::Skeleton;
