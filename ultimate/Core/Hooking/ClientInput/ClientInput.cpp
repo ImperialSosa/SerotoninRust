@@ -1073,7 +1073,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (m_settings::TeleportMax)
 	{
 		auto Movement = a1->movement();
-		auto LocalPos = a1->get_transform()->get_position();
 
 		if (IsAddressValid(Movement)) {
 			if (UnityEngine::Input::GetKey(m_settings::TeleportMaxKey))
