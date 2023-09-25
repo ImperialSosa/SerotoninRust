@@ -556,6 +556,11 @@ float GRD_TO_BOG(float GRD) {
 	return (M_PI / 180) * GRD;
 }
 
+void drawRaidESP()
+{
+	LogSystem::RenderExplosions();
+}
+
 void drawMisc()
 {
 	if (!InGame)
@@ -1189,6 +1194,11 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				{
 					drawMisc();
 
+					if (m_settings::RaidESP)
+					{
+						drawRaidESP();
+					}
+
 					float x = screen_center.x;
 					float YPos = (UnityEngine::screen_size.y / 8);
 					int YOffset = 40;
@@ -1327,6 +1337,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::Update_hk.Unhook();
 		Hooks::BlockSprinthk.Unhook();
 		Hooks::LateUpdatehk.Unhook();
+		Hooks::OnNetworkMessagehk.Unhook();
 	}
 	
 	return;

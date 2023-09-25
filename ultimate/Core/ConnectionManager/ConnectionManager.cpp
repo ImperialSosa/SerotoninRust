@@ -4,7 +4,6 @@
 #include "../Features/Visuals/Visuals.hpp"
 #include "../Features/Features/Features.hpp"
 
-
 void ConnectionManager::ResetPlayerCache()
 {
 	Visuals().Instance()->VisiblePlayerList = nullptr;

@@ -68,12 +68,12 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"Memory Aimbot"), m_settings::MemoryAimbot);
 					Menu().CheckBox(XS(L"Silent Aimbot"), m_settings::SilentAim);
 					//Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
-					Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
+					//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
 					//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
-					if (m_settings::HeliAimbot)
-					{
-						Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
-					}
+					////if (m_settings::HeliAimbot)
+					//{
+					//	Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
+					//}
 					Menu().Slider(XS(L"Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 					Menu().Slider(XS(L"Fov Slider"), m_settings::AimbotFOV, 0, 1000);
 					Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
@@ -294,6 +294,19 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS(L"TurretRange"), m_settings::TurretRange);
 					}
 					Menu().CheckBox(XS(L"Patrol Helicopter"), m_settings::PatrolHelicopter);
+
+					Menu().CheckBox(XS(L"Raid ESP"), m_settings::RaidESP);
+					if (m_settings::RaidESP)
+					{
+						Menu().CheckBox(XS(L"Show Rocket"), m_settings::ShowRocket);
+						Menu().CheckBox(XS(L"Show C4"), m_settings::ShowC4);
+						Menu().CheckBox(XS(L"Show Satchel"), m_settings::ShowSatchel);
+						Menu().CheckBox(XS(L"Show ExploAmmo"), m_settings::ShowExplosiveAmmo);
+
+
+						Menu().Slider(XS(L"Raid Timer"), m_settings::MaxRaidTimer, 0, 5000);
+
+					}
 				}
 
 				Menu().BeginChild(XS(L"Other"), { 285,45 }, { 220,290 });
@@ -301,6 +314,9 @@ void MenuDraw::RenderMenu()
 					Menu().Slider(XS(L"Dropped Distance"), m_settings::MaxDroppedDistance, 0, 500);
 					Menu().Slider(XS(L"Traps Distance"), m_settings::MaxTrapsDistance, 0, 500);
 					Menu().Slider(XS(L"APC Distance"), m_settings::MaxAPCDistance, 0, 3000);
+
+					Menu().Slider(XS(L"Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
+
 				}
 				break;
 			}

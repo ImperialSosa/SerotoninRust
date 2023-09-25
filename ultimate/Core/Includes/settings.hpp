@@ -14,9 +14,15 @@ namespace m_settings {
 	inline bool DrawClothing = false;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
+	inline bool RaidESP = false;
+	inline bool ShowRocket = false;
+	inline bool ShowC4 = false;
+	inline bool ShowSatchel = false;
+	inline bool ShowExplosiveAmmo = false;
 	inline bool DisableHitSounds = false;
 	inline bool CustomHitSounds = false;
-
+	inline float MaxExplosionDistance = 5000.f;
+	inline float MaxRaidTimer = 120.f;
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
 	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;
