@@ -62,6 +62,8 @@ void Configs::LoadConfig()
     m_settings::NormalThickBullet = config.value(XS("NormalThickBullet"), m_settings::NormalThickBullet);
     m_settings::DrawInventory = config.value(XS("DrawInventory"), m_settings::DrawInventory);
     m_settings::DrawClothing = config.value(XS("DrawClothing"), m_settings::DrawClothing);
+    m_settings::DrawInventoryIcons = config.value(XS("DrawInventoryIcons"), m_settings::DrawInventoryIcons);
+    m_settings::DrawClothingIcons = config.value(XS("DrawClothingIcons"), m_settings::DrawClothingIcons);
     m_settings::NormalThickBulletThickness = config.value(XS("NormalThickBulletThickness"), m_settings::NormalThickBulletThickness);
     m_settings::AimbotNPC = config.value(XS("AimbotNPC"), m_settings::AimbotNPC);
     m_settings::HeliAimbot = config.value(XS("HeliAimbot"), m_settings::HeliAimbot);
@@ -754,6 +756,8 @@ void Configs::SaveConfig()
     config[XS("NormalThickBullet")] = m_settings::NormalThickBullet;
     config[XS("DrawInventory")] = m_settings::DrawInventory;
     config[XS("DrawClothing")] = m_settings::DrawClothing;
+    config[XS("DrawInventoryIcons")] = m_settings::DrawInventoryIcons;
+    config[XS("DrawClothingIcons")] = m_settings::DrawClothingIcons;
     config[XS("NormalThickBulletThickness")] = static_cast<int>(m_settings::NormalThickBulletThickness);
     config[XS("AimbotNPC")] = m_settings::AimbotNPC;
     config[XS("HeliAimbot")] = m_settings::HeliAimbot;
@@ -1208,5 +1212,14 @@ void Configs::SaveConfig()
     LI_FN(fclose)(file);
     config.clear();
     const auto string = std::wstring(XS(L"[Serotonin] Saved Config!"));
+    notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+}
+
+void Buttons::ClearRaidCache() {
+
+    LogSystem::loggedExplosions.clear();
+
+    const auto string = std::wstring(XS(L"[Serotonin] Cleared Raid Cache!"));
     notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
 }

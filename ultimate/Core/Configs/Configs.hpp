@@ -7,5 +7,9 @@ class Configs {
 public:
 	static void SaveConfig();
 	static void LoadConfig();
+};
 
+class Buttons {
+public:
+	static void ClearRaidCache();
 };

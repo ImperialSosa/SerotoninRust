@@ -11,19 +11,18 @@ namespace m_settings {
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
 	inline bool DrawInventory = false;
+	inline bool DrawInventoryIcons = false;
 	inline bool DrawClothing = false;
+	inline bool DrawClothingIcons = false;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
+	inline bool RaidESP = false;
+	inline bool ShowRocket = false;
+	inline bool ShowC4 = false;
+	inline bool ShowSatchel = false;
+	inline bool ShowExplosiveAmmo = false;
 	inline bool DisableHitSounds = false;
 	inline bool CustomHitSounds = false;
-	inline bool OutlinedText = true;
-	inline bool ShadedText = false;
-	inline bool KillEffects = false;
-	inline bool LoadExplosionEffect = false;
-	inline bool LoadGhostEffect = false;
-	inline int SelectedKillEffect = 0;
-	inline bool WorldOutlinedText = true;
-	inline bool WorldShadedText = false;
 
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
@@ -236,6 +235,9 @@ namespace m_settings {
 	inline bool SavePos = false;
 	inline RustStructs::KeyCode SavePosKey = RustStructs::KeyCode::F;
 
+	inline float MaxExplosionDistance = 5000.f;
+	inline float MaxRaidTimer = 120.f;
+
 	inline bool nameEsp = false;
 	inline bool BoxEsp = false;
 	inline bool Swastika = false;
@@ -260,6 +262,16 @@ namespace m_settings {
 	inline float fontsize = 10.f;
 	inline bool TagsVisCheck = false;
 
+	inline bool WorldOutlinedText = true;
+	inline bool WorldShadedText = false;
+	inline bool OutlinedText = true;
+	inline bool ShadedText = false;
+
+	inline int SelectedKillEffect = 0;
+	inline bool KillEffects = false;
+	inline bool LoadExplosionEffect = false;
+	inline bool LoadGhostEffect = false;
+
 	inline bool DrawNPC = false;
 	inline float NPCDistance = 30.f;
 	inline bool DrawDead = false;
@@ -281,6 +293,7 @@ namespace m_settings {
 	inline bool MemoryAimbot = false;
 
 	inline bool Brightnight = false;
+	inline bool CustomSky = false;
 	inline bool Stars = false;
 	inline bool BrightCave = false;
 	inline bool TimeChanger = false;

@@ -1576,6 +1576,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, ReflectionMultiplier); //Brightness multiplier of the reflection probe
 
 		IL2CPP_FIELD(uintptr_t, AmbientColor); //Brightness multiplier of the reflection probe
+		IL2CPP_FIELD(uintptr_t, CloudColor); //Brightness multiplier of the reflection probe
 		IL2CPP_FIELD(uintptr_t, SkyColor); //Brightness multiplier of the reflection probe
 	};
 

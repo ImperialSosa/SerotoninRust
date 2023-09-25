@@ -41,16 +41,19 @@ void Hooks::OnNetworkMessage(AssemblyCSharp::Client* _This, Network::Message* me
 				return Hooks::OnNetworkMessagehk.get_original< decltype(&OnNetworkMessage)>()(_This, message);
 			}
 
+			auto pos = effect->worldPos();
+			if (pos.IsZero())
+				pos = effect->origin();
 
 			if (effect->pooledstringid() == 1798302402 && m_settings::ShowExplosiveAmmo)
-				LogSystem::LogExplosion(XS("Explosive Ammo"), effect->origin());
+				LogSystem::LogExplosion(XS("Explosive Ammo"), pos);
 			else if (effect->pooledstringid() == 857997843 && m_settings::ShowC4)
-				LogSystem::LogExplosion(XS("C4"), effect->origin());
+				LogSystem::LogExplosion(XS("C4"), pos);
 			else if (effect->pooledstringid() == 1289728008 && m_settings::ShowSatchel)
-				LogSystem::LogExplosion(XS("Satchel"), effect->origin());
+				LogSystem::LogExplosion(XS("Satchel"), pos);
 			else if (effect->pooledstringid() == -1241151013 && m_settings::ShowRocket)
 			{
-				LogSystem::LogExplosion(XS("Rocket"), effect->origin());
+				LogSystem::LogExplosion(XS("Rocket"), pos);
 			}
 		}
 	}

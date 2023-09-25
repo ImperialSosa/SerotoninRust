@@ -104,11 +104,6 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS(L"AlwaysAutoshoot"), m_settings::AlwaysAutoshoot);
 					}
 					Menu().CheckBoxKeyBind(XS(L"Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
-					if (m_settings::Manipulation)
-					{
-						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);				
-						//m_settings::ManipPoints
-					}
 
 					Menu().CheckBox(XS(L"BulletTp"), m_settings::BulletTP);
 					Menu().CheckBox(XS(L"AutoStop"), m_settings::StopPlayer);
@@ -135,7 +130,13 @@ void MenuDraw::RenderMenu()
 					}
 
 					if (m_settings::BulletTP)
-						Menu().Dropdown(XS("BTP Mode"), { XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)") }, m_settings::BulletTPIntensity, bullet_tpe_open);
+						Menu().Dropdown(XS("BTP Mode"), { XS("Lowest"), XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)")}, m_settings::BulletTPIntensity, bullet_tpe_open);
+
+					if (m_settings::Manipulation)
+					{
+						Menu().Slider(XS(L"ManipAngles"), m_settings::ManipPoints, 5, 100);
+						//m_settings::ManipPoints
+					}
 				}
 				break;
 
@@ -201,7 +202,17 @@ void MenuDraw::RenderMenu()
 					//Menu().CheckBox(XS(L"AmmoType"), m_settings::ammoESP);
 					Menu().CheckBox(XS(L"isOutside"), m_settings::BaseCheck);
 					Menu().CheckBox(XS(L"Inventory"), m_settings::DrawInventory);
+					if (m_settings::DrawInventory)
+						m_settings::DrawInventoryIcons = false;
+					Menu().CheckBox(XS(L"Inventory (icons)"), m_settings::DrawInventoryIcons);
+					if (m_settings::DrawInventoryIcons)
+						m_settings::DrawInventory = false;
 					Menu().CheckBox(XS(L"Clothing"), m_settings::DrawClothing);
+					if (m_settings::DrawClothing)
+						m_settings::DrawClothingIcons = false;
+					Menu().CheckBox(XS(L"Clothing (icons)"), m_settings::DrawClothingIcons);
+					if (m_settings::DrawClothingIcons)
+						m_settings::DrawClothing = false;
 					Menu().CheckBox(XS(L"PlayerChams"), m_settings::PlayerChams);
 					Menu().CheckBox(XS(L"Corpse"), m_settings::Corpse);
 					Menu().CheckBox(XS(L"Backpack"), m_settings::BackPack);
@@ -304,7 +315,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS(L"Show ExploAmmo"), m_settings::ShowExplosiveAmmo);
 
 
-						Menu().Slider(XS(L"Raid Timer"), m_settings::MaxRaidTimer, 0, 5000);
+						Menu().Slider(XS(L"Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
 
 					}
 				}
@@ -365,7 +376,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS(L"FixDebugCamera"), m_settings::FixDebugCamera);
 					Menu().CheckBoxKeyBind(XS(L"Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 					Menu().CheckBoxKeyBind(XS(L"SilentWalk"), m_settings::SilentWalk, m_settings::SilentWalkKey);
-					Menu().CheckBoxKeyBind(XS(L"TeleportMax"), m_settings::TeleportMax, m_settings::TeleportMaxKey);
+					Menu().CheckBoxKeyBind(XS(L"TeleportMaxHeight"), m_settings::TeleportMax, m_settings::TeleportMaxKey);
 				}
 				break;
 			case 1:
@@ -388,7 +399,7 @@ void MenuDraw::RenderMenu()
 
 				Menu().BeginChild(XS(L"World"), { 285,45 }, { 220,290 });
 				{
-					//Menu().CheckBox(XS(L"Brightnight"), m_settings::Brightnight);
+					Menu().CheckBox(XS(L"Brightnight"), m_settings::Brightnight);
 					//Menu().CheckBox(XS(L"Stars"), m_settings::Stars);
 					//Menu().CheckBox(XS(L"BrightCave"), m_settings::BrightCave);
 					Menu().CheckBox(XS(L"TimeChanger"), m_settings::TimeChanger);
@@ -496,6 +507,7 @@ void MenuDraw::RenderMenu()
 			Menu().BeginChild(XS(L"Colors"), { 60,45 }, { 220,290 });
 			{
 				Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+				Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 			}
 
 			Menu().BeginChild(XS(L"Configs"), { 285,45 }, { 220,290 });
@@ -503,7 +515,7 @@ void MenuDraw::RenderMenu()
 				Menu().CheckBox(XS(L"OutlinedText"), m_settings::OutlinedText);
 				if (m_settings::OutlinedText)
 					m_settings::ShadedText = false;
-				Menu().CheckBox(XS(L"ShadedText"), m_settings::ShadedText);
+				Menu().CheckBox(XS(L"ShadowedText"), m_settings::ShadedText);
 				if (m_settings::ShadedText)
 					m_settings::OutlinedText = false;
 

@@ -92,6 +92,7 @@ public:
 	std::string name;
 	float timeSince;
 	Vector3 position;
+	int amount = 1;
 };
 
 class LogSystem {
@@ -108,15 +109,17 @@ public:
 		std::vector<Explosion>::iterator it;
 		for (it = loggedExplosions.begin(); it != loggedExplosions.end(); it++) {
 			Vector2 explPos;
+			
 			if (it->position.Distance(pos) <= 25.0f) {
+
 				explosionCollision = true;
 				break;
-			}
+			}			
 		}
 		if (!explosionCollision) {
 			Explosion explosion = Explosion();
 			char str[256];
-			sprintf(str, XS("%s Raid"), type.c_str());
+			sprintf(str, XS("%s"), type.c_str());
 			explosion.name = str;
 			explosion.position = pos;
 			explosion.timeSince = UnityEngine::Time::get_realtimeSinceStartup();
@@ -136,6 +139,7 @@ public:
 				LogSystem::loggedExplosions.erase(LogSystem::loggedExplosions.begin() + i);
 				continue;
 			}
+
 			Explosion explosion = LogSystem::loggedExplosions.at(i);
 
 			Vector2 explPos;
@@ -144,11 +148,32 @@ public:
 			{
 				if (UnityEngine::WorldToScreen(explosion.position, explPos))
 				{
-					std::string string;
+					auto yoffset = 0.f;
+
+					std::string raiddistance;
 					char str[256];
-					sprintf(str, XS("%s [%1.0fm] [%d]"), explosion.name.c_str(), explosion.position.get_3d_dist(Features().LocalPlayer->get_transform()->get_position()), (int)(m_settings::MaxRaidTimer - (UnityEngine::Time::get_realtimeSinceStartup() - LogSystem::loggedExplosions[i].timeSince)));
-					string += str;
-					UnityEngine::GL().TextCenter(explPos, string.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
+					sprintf(str, XS("Raid [%1.0fm]"), explosion.position.get_3d_dist(Features().LocalPlayer->get_transform()->get_position()));
+					raiddistance += str;
+
+					std::string explosionType;
+					char str1[256];
+					sprintf(str1, XS("%s [%d]"), explosion.name.c_str(), (int)LogSystem::loggedExplosions[i].amount);
+					explosionType += str1;
+
+					std::string TimeSinceLastShot;
+					char str2[256];
+					sprintf(str2, XS("LastShot: [%d]"), (int)((UnityEngine::Time::get_realtimeSinceStartup() - LogSystem::loggedExplosions[i].timeSince)));
+					TimeSinceLastShot += str2;
+
+
+					UnityEngine::GL().TextCenter(Vector2(explPos.x, explPos.y + yoffset), raiddistance.c_str(), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+					yoffset += 13.f;
+
+					UnityEngine::GL().TextCenter(Vector2(explPos.x, explPos.y + yoffset), TimeSinceLastShot.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+					yoffset += 13.f;
+
+					UnityEngine::GL().TextCenter(Vector2(explPos.x, explPos.y + yoffset), explosionType.c_str(), Color::White(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+					yoffset += 13.f;
 				}
 			}
 		

@@ -24,6 +24,9 @@ void ConnectionManager::ResetPlayerCache()
 	VisualsArrayTemp.clear();
 
 	PrefabVectorList.clear();
+
+	LogSystem::loggedExplosions.clear();
+
 	PrefabListTemp.clear();
 
 	Features().BulletTPAngle = Vector3();

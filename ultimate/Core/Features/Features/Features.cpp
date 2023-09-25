@@ -170,6 +170,40 @@ inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 
 		re.emplace_back(0.f, 0.f, z);
 		re.emplace_back(0.f, 0.f, -z);
 
+		/*
+		
+		re.emplace_back(x, y, z);
+		re.emplace_back(-x, -y, -z);
+
+		re.emplace_back(0.f, y, z);
+		re.emplace_back(x, 0.f, z);
+		re.emplace_back(x, y, 0.f);
+
+		re.emplace_back(0.f, -y, -z);
+		re.emplace_back(-x, 0.f,- z);
+		re.emplace_back(-x, -y, 0.f);
+
+		re.emplace_back(x, 0.f, 0.f);
+		re.emplace_back(0.f, y, 0.f);
+		re.emplace_back(0.f, 0.f, z);
+
+		re.emplace_back(-x, 0.f, 0.f);
+		re.emplace_back(0.f, -y, 0.f);
+		re.emplace_back(0.f, 0.f, -z);
+		
+		*/
+
+	}
+}
+
+inline void BulletTPAnglesModeCrazy(std::vector<Vector3>& re, float step = 0.4)
+{
+	for (float x = -2.2; x <= 2.2; x += step) {
+		for (float y = -2.4; y <= 2.4; y += step) {
+			for (float z = -2.2; z <= 2.2; z += step) {
+				re.emplace_back(x, y, z);
+			}
+		}
 	}
 }
 
@@ -496,12 +530,14 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 
 	std::vector<Vector3> arrz;
 	if (m_settings::BulletTPIntensity == 0)
-		GenerateBulletTPAngles(arrz, maxDist);
+		BulletTPAnglesModeCrazy(arrz, 0.4f);
 	else if (m_settings::BulletTPIntensity == 1)
-		BulletTPAnglesHarvey1(arrz, maxDist);
+		GenerateBulletTPAngles(arrz, maxDist);
 	else if (m_settings::BulletTPIntensity == 2)
-		BulletTPAnglesModeIntense(arrz, 100);
+		BulletTPAnglesHarvey1(arrz, maxDist);
 	else if (m_settings::BulletTPIntensity == 3)
+		BulletTPAnglesModeIntense(arrz, 100);
+	else if (m_settings::BulletTPIntensity == 4)
 		BulletTPAnglesModeIntense(arrz, 250);
 
 	for (const auto& s : arrz)

@@ -1041,7 +1041,7 @@ inline Vector2 hotbar_pos;
 inline Vector2 window_size2;
 inline bool sex2 = false;
 inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, const Vector2& window_size) {
-	if (m_settings::DrawInventory || m_settings::DrawClothing)
+	if (m_settings::DrawInventory || m_settings::DrawInventoryIcons)
 	{
 		if (!sex2) {
 			hotbar_pos = pos;
@@ -1074,6 +1074,7 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 
 		auto camera = UnityEngine::Camera::get_main();
 		float info_y = 0;
+		float info_y_icons = 0;
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 			if (IsAddressValid(AimbotTarget.m_player))
@@ -1118,10 +1119,10 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 
 													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
 														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
-															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), 11);
+															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize);
 													}
 													else
-														UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), 11);
+														UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 												}
 											}
 										}
@@ -1134,6 +1135,129 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 							}
 						}
 					}
+					if (m_settings::DrawInventoryIcons) {
+						auto containerBelt = inventory->containerBelt();
+						if (IsAddressValid(containerBelt))
+						{
+							auto ItemList = containerBelt->itemList();
+							if (IsAddressValid(ItemList))
+							{
+								if (menu_event == RustStructs::EventType::Repaint)
+								{
+									std::string player_name = utf16_to_utf8(AimbotTarget.m_player->get_displayName()->c_str());					
+									Vector2 Size = Vector2(60, 60);
+
+									//BackGround
+									{
+										UnityEngine::GL::TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + 12.5), player_name.c_str(), Color::White(), Color::Black(), 10);
+									}
+
+									for (int i = 0; i < ItemList->_size; i++) {
+										auto item = ItemList->_items->m_Items[i];
+										if (!item)
+											continue;
+
+										if (i > ItemList->_size - 1)
+										{
+											info_y_icons += 65;
+											continue;
+										}
+
+										if (IsAddressValid(item)) {
+
+											auto amount = item->amount();
+											auto name = item->GetItemName();
+
+											auto sprite_the_drink = item->get_iconSprite();
+											if (!sprite_the_drink)
+												continue;
+
+											auto texture = sprite_the_drink->get_texture();
+											if (!texture)
+												continue;
+
+											auto camera = UnityEngine::Camera::get_main();
+											if (IsAddressValid(camera)) {
+												auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+												if (IsAddressValid(m_target.m_player))
+												{
+													//std::string ItemName = "";
+													//char str[128];
+													//sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
+													//ItemName = str;
+													//
+													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
+														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
+															UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
+													}
+													else
+														UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+
+													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Size, texture, Color::White());
+												}
+											}
+										}
+
+										info_y_icons += 65;
+									}
+									info_y_icons = 0;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		//Menu().end_window();
+	}
+}
+
+inline Vector2 hotbar_pos_c;
+inline Vector2 window_size2_c;
+inline bool sex2_c = false;
+
+inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, const Vector2& window_size) {
+	if (m_settings::DrawClothing || m_settings::DrawInventoryIcons)
+	{
+		if (!sex2_c) {
+			hotbar_pos_c = pos;
+			sex2_c = true;
+		}
+
+		window_size2_c = window_size;
+
+		auto mouse = UnityEngine::Input::GetMousePosition();
+		auto width = UnityEngine::Screen::get_width();
+		auto height = UnityEngine::Screen::get_height();
+		auto menu_event = event->Type();
+		auto key_code = UnityEngine::Event::get_keyCode(event);
+
+		mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
+		mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
+		auto mouse_state = UnityEngine::Input::GetMouseButton(0);
+
+		if (main_menu_open)
+		{
+			if (Menu().is_mouse_in_box({ hotbar_pos_c.x, hotbar_pos_c.y }, { hotbar_pos_c.x + window_size2_c.x, hotbar_pos_c.y + window_size2_c.y }) && mouse_state && !hover_element) {
+				hotbar_pos_c.x += mouse_pos.x - old_mouse_pos.x;
+				hotbar_pos_c.y += mouse_pos.y - old_mouse_pos.y;
+			}
+			else {
+				hover_element = false;
+			}
+
+		}
+
+		auto camera = UnityEngine::Camera::get_main();
+		float info_y = 0;
+		float info_y_icons = 0;
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+			if (IsAddressValid(AimbotTarget.m_player))
+			{
+				auto inventory = AimbotTarget.m_player->inventory();
+				if (IsAddressValid(inventory))
+				{
 					if (m_settings::DrawClothing) {
 						auto containerWear = inventory->containerWear();
 						if (IsAddressValid(containerWear))
@@ -1167,7 +1291,7 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 
 											if (IsAddressValid(m_target.m_player))
 											{
-												UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), 11);
+												UnityEngine::GL().TextCenter(Vector2(hotbar_pos_c.x, hotbar_pos_c.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 											}
 										}
 									}
@@ -1175,6 +1299,70 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 									info_y += 13;
 								}
 								info_y = 0;
+							}
+						}
+					}
+					if (m_settings::DrawClothingIcons) {
+						auto containerBelt = inventory->containerWear();
+						if (IsAddressValid(containerBelt))
+						{
+							auto ItemList = containerBelt->itemList();
+							if (IsAddressValid(ItemList))
+							{
+								if (menu_event == RustStructs::EventType::Repaint)
+								{
+									Vector2 Size = Vector2(60, 60);
+
+									for (int i = 0; i < ItemList->_size; i++) {
+										auto item = ItemList->_items->m_Items[i];
+										if (!item)
+											continue;
+
+										if (i > ItemList->_size - 1)
+										{
+											info_y_icons += 65;
+											continue;
+										}
+
+										if (IsAddressValid(item)) {
+
+											auto amount = item->amount();
+											auto name = item->GetItemName();
+
+											auto sprite_the_drink = item->get_iconSprite();
+											if (!sprite_the_drink)
+												continue;
+
+											auto texture = sprite_the_drink->get_texture();
+											if (!texture)
+												continue;
+
+											auto camera = UnityEngine::Camera::get_main();
+											if (IsAddressValid(camera)) {
+												auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+												if (IsAddressValid(m_target.m_player))
+												{
+													//std::string ItemName = "";
+													//char str[128];
+													//sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
+													//ItemName = str;
+													//
+													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
+														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
+															UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
+													}
+													else
+														UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+
+													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Size, texture, Color::White());
+												}
+											}
+										}
+
+										info_y_icons += 65;
+									}
+									info_y_icons = 0;
+								}
 							}
 						}
 					}
@@ -1230,11 +1418,20 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		if (is_menu_open) {
 			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-				auto z = UnityEngine::rect_t{ hotbar_pos.x - 50, hotbar_pos.y - 20, hotbar_pos.x + 50, hotbar_pos.y + 70 };
+				auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
 
 				if (z.contains(mouse_pos))
 				{
 					hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
+				}
+			}
+
+			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
+				auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
+
+				if (z.contains(mouse_pos))
+				{
+					hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
 				}
 			}
 		}
@@ -1287,12 +1484,45 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					if (m_settings::RaidESP)
 					{
 						drawRaidESP();
+
 					}
 
 					float x = screen_center.x;
 					float YPos = (UnityEngine::screen_size.y / 8);
 					int YOffset = 40;
-					DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 25 }, { 50, 50 });
+
+					if (m_settings::DrawInventoryIcons && m_settings::DrawClothingIcons) {
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 5.f;
+					}
+					else if (m_settings::DrawInventory) {
+						Vector2 WindowSize = Vector2(50, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 25.f;
+					}
+					else if (m_settings::DrawInventoryIcons) {
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 25.f;
+					}
+
+					if (m_settings::DrawClothing) {
+						Vector2 WindowSize = Vector2(50, 50);
+
+						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
+						YOffset += 25.f;
+					}
+					else if (m_settings::DrawClothingIcons) {
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
+						YOffset += 5.f;
+					}
+
 
 					if (m_settings::HerbertPrefabSpawn || m_settings::AmongusPrefabSpawn)
 						prefab_spawner();
