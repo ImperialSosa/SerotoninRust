@@ -2,313 +2,310 @@
 #pragma optimize( "", on )
 
 
-inline const wchar_t* GetKey(RustStructs::KeyCode iKey)
+inline const char* GetKey(RustStructs::KeyCode iKey)
 {
 	switch (iKey)
 	{
 	case 0:
-		return L"-";
+		return "-";
 	case 8:
-		return L"Backspace";
+		return "Backspace";
 	case 127:
-		return L"Delete";
+		return "Delete";
 	case 9:
-		return L"Tab";
+		return "Tab";
 	case 12:
-		return L"Clear";
+		return "Clear";
 	case 13:
-		return L"Return";
+		return "Return";
 	case 19:
-		return L"Pause";
+		return "Pause";
 	case 27:
-		return L"Escape";
+		return "Escape";
 	case 32:
-		return L"Space";
+		return "Space";
 	case 256:
-		return L"Keypad0";
+		return "Keypad0";
 	case 257:
-		return L"Keypad1";
+		return "Keypad1";
 	case 258:
-		return L"Keypad2";
+		return "Keypad2";
 	case 259:
-		return L"Keypad3";
+		return "Keypad3";
 	case 260:
-		return L"Keypad4";
+		return "Keypad4";
 	case 261:
-		return L"Keypad5";
+		return "Keypad5";
 	case 262:
-		return L"Keypad6";
+		return "Keypad6";
 	case 263:
-		return L"Keypad7";
+		return "Keypad7";
 	case 264:
-		return L"Keypad8";
+		return "Keypad8";
 	case 265:
-		return L"Keypad9";
+		return "Keypad9";
 	case 266:
-		return L"KeypadPeriod";
+		return "KeypadPeriod";
 	case 267:
-		return L"KeypadDivide";
+		return "KeypadDivide";
 	case 268:
-		return L"KeypadMultiply";
+		return "KeypadMultiply";
 	case 269:
-		return L"KeypadMinus";
+		return "KeypadMinus";
 	case 270:
-		return L"KeypadPlus";
+		return "KeypadPlus";
 	case 271:
-		return L"KeypadEnter";
+		return "KeypadEnter";
 	case 272:
-		return L"KeypadEquals";
+		return "KeypadEquals";
 	case 273:
-		return L"UpArrow";
+		return "UpArrow";
 	case 274:
-		return L"DownArrow";
+		return "DownArrow";
 	case 275:
-		return L"RightArrow";
+		return "RightArrow";
 	case 276:
-		return L"LeftArrow";
+		return "LeftArrow";
 	case 277:
-		return L"Insert";
+		return "Insert";
 	case 278:
-		return L"Home";
+		return "Home";
 	case 279:
-		return L"End";
+		return "End";
 	case 280:
-		return L"PageUp";
+		return "PageUp";
 	case 281:
-		return L"PageDown";
+		return "PageDown";
 	case 282:
-		return L"F1";
+		return "F1";
 	case 283:
-		return L"F2";
+		return "F2";
 	case 284:
-		return L"F3";
+		return "F3";
 	case 285:
-		return L"F4";
+		return "F4";
 	case 286:
-		return L"F5";
+		return "F5";
 	case 287:
-		return L"F6";
+		return "F6";
 	case 288:
-		return L"F7";
+		return "F7";
 	case 289:
-		return L"F8";
+		return "F8";
 	case 290:
-		return L"F9";
+		return "F9";
 	case 291:
-		return L"F10";
+		return "F10";
 	case 292:
-		return L"F11";
+		return "F11";
 	case 293:
-		return L"F12";
+		return "F12";
 	case 294:
-		return L"F13";
+		return "F13";
 	case 295:
-		return L"F14";
+		return "F14";
 	case 296:
-		return L"F15";
+		return "F15";
 	case 48:
-		return L"Alpha0";
+		return "Alpha0";
 	case 49:
-		return L"Alpha1";
+		return "Alpha1";
 	case 50:
-		return L"Alpha2";
+		return "Alpha2";
 	case 51:
-		return L"Alpha3";
+		return "Alpha3";
 	case 52:
-		return L"Alpha4";
+		return "Alpha4";
 	case 53:
-		return L"Alpha5";
+		return "Alpha5";
 	case 54:
-		return L"Alpha6";
+		return "Alpha6";
 	case 55:
-		return L"Alpha7";
+		return "Alpha7";
 	case 56:
-		return L"Alpha8";
+		return "Alpha8";
 	case 57:
-		return L"Alpha9";
+		return "Alpha9";
 	case 33:
-		return L"Exclaim";
+		return "Exclaim";
 	case 34:
-		return L"DoubleQuote";
+		return "DoubleQuote";
 	case 35:
-		return L"Hash";
+		return "Hash";
 	case 36:
-		return L"Dollar";
+		return "Dollar";
 	case 37:
-		return L"Percent";
+		return "Percent";
 	case 38:
-		return L"Ampersand";
+		return "Ampersand";
 	case 39:
-		return L"Quote";
+		return "Quote";
 	case 40:
-		return L"LeftParen";
+		return "LeftParen";
 	case 41:
-		return L"RightParen";
+		return "RightParen";
 	case 42:
-		return L"Asterisk";
+		return "Asterisk";
 	case 43:
-		return L"Plus";
+		return "Plus";
 	case 44:
-		return L"Comma";
+		return "Comma";
 	case 45:
-		return L"Minus";
+		return "Minus";
 	case 46:
-		return L"Period";
+		return "Period";
 	case 47:
-		return L"Slash";
+		return "Slash";
 	case 58:
-		return L"Colon";
+		return "Colon";
 	case 59:
-		return L"Semicolon";
+		return "Semicolon";
 	case 60:
-		return L"Less";
+		return "Less";
 	case 61:
-		return L"Equals";
+		return "Equals";
 	case 62:
-		return L"Greater";
+		return "Greater";
 	case 63:
-		return L"Question";
+		return "Question";
 	case 64:
-		return L"At";
+		return "At";
 	case 91:
-		return L"LeftBracket";
+		return "LeftBracket";
 	case 92:
-		return L"Backslash";
+		return "Backslash";
 	case 93:
-		return L"RightBracket";
+		return "RightBracket";
 	case 94:
-		return L"Caret";
+		return "Caret";
 	case 95:
-		return L"Underscore";
+		return "Underscore";
 	case 96:
-		return L"BackQuote";
+		return "BackQuote";
 	case 97:
-		return L"A";
+		return "A";
 	case 98:
-		return L"B";
+		return "B";
 	case 99:
-		return L"C";
+		return "C";
 	case 100:
-		return L"D";
+		return "D";
 	case 101:
-		return L"E";
+		return "E";
 	case 102:
-		return L"F";
+		return "F";
 	case 103:
-		return L"G";
+		return "G";
 	case 104:
-		return L"H";
+		return "H";
 	case 105:
-		return L"I";
+		return "I";
 	case 106:
-		return L"J";
+		return "J";
 	case 107:
-		return L"K";
+		return "K";
 	case 108:
-		return L"L";
+		return "L";
 	case 109:
-		return L"M";
+		return "M";
 	case 110:
-		return L"N";
+		return "N";
 	case 111:
-		return L"O";
+		return "O";
 	case 112:
-		return L"P";
+		return "P";
 	case 113:
-		return L"Q";
+		return "Q";
 	case 114:
-		return L"R";
+		return "R";
 	case 115:
-		return L"S";
+		return "S";
 	case 116:
-		return L"T";
+		return "T";
 	case 117:
-		return L"U";
+		return "U";
 	case 118:
-		return L"V";
+		return "V";
 	case 119:
-		return L"W";
+		return "W";
 	case 120:
-		return L"X";
+		return "X";
 	case 121:
-		return L"Y";
+		return "Y";
 	case 122:
-		return L"Z";
+		return "Z";
 	case 123:
-		return L"LeftCurlyBracket";
+		return "LeftCurlyBracket";
 	case 124:
-		return L"Pipe";
+		return "Pipe";
 	case 125:
-		return L"RightCurlyBracket";
+		return "RightCurlyBracket";
 	case 126:
-		return L"Tilde";
+		return "Tilde";
 	case 300:
-		return L"Numlock";
+		return "Numlock";
 	case 301:
-		return L"CapsLock";
+		return "CapsLock";
 	case 302:
-		return L"ScrollLock";
+		return "ScrollLock";
 	case 303:
-		return L"RightShift";
+		return "RightShift";
 	case 304:
-		return L"LeftShift";
+		return "LeftShift";
 	case 305:
-		return L"RightControl";
+		return "RightControl";
 	case 306:
-		return L"LeftControl";
+		return "LeftControl";
 	case 307:
-		return L"RightAlt";
+		return "RightAlt";
 	case 308:
-		return L"LeftAlt";
+		return "LeftAlt";
 	case 309:
-		return L"Left Windows";
+		return "Left Windows";
 	case 310:
-		return L"Right Windows";
+		return "Right Windows";
 	case 311:
-		return L"LeftWindows";
+		return "LeftWindows";
 	case 312:
-		return L"RightWindows";
+		return "RightWindows";
 	case 313:
-		return L"AltGr";
+		return "AltGr";
 	case 315:
-		return L"Help";
+		return "Help";
 	case 316:
-		return L"Print";
+		return "Print";
 	case 317:
-		return L"SysReq";
+		return "SysReq";
 	case 318:
-		return L"Break";
+		return "Break";
 	case 319:
-		return L"Menu";
+		return "Menu";
 	case 323:
-		return L"Mouse0";
+		return "Mouse0";
 	case 324:
-		return L"Mouse1";
+		return "Mouse1";
 	case 325:
-		return L"Mouse2";
+		return "Mouse2";
 	case 326:
-		return L"Mouse3";
+		return "Mouse3";
 	case 327:
-		return L"Mouse4";
+		return "Mouse4";
 	case 328:
-		return L"Mouse5";
+		return "Mouse5";
 	case 329:
-		return L"Mouse6";
+		return "Mouse6";
 	case 900:
-		return L"Left mouse";
+		return "Left mouse";
 	case 901:
-		return L"Right mouse";
+		return "Right mouse";
 	case 902:
-		return L"Middle button";
+		return "Middle button";
 	}
 
-	/* Convert text */
-	char szValue[64];
-	wchar_t wszValue[64];
-	itoass(static_cast<float>(iKey), szValue, 10);
-	AnsiToUnicodeRRR(szValue, wszValue);
+	char str[128];
+	sprintf(str, XS("%s"), iKey);
 
-	return wszValue;
+	return str;
 }
 
 bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open)
@@ -363,14 +360,15 @@ bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos,
 	if (menu_event == RustStructs::EventType::Repaint && is_menu_open)
 	{
 
-		fill_box(UnityEngine::rect_t(window_pos.x, window_pos.y, window_size.x, window_size.y), Color(22.f, 22.f, 22.f, 255.f));
-		fill_box(UnityEngine::rect_t(window_pos.x, window_pos.y, window_size.x, 25), Color(28, 28, 28, 255.f));
+		/* BackGround */
+		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos + window_size), Color(22.f, 22.f, 22.f, 255.f).GetUnityColor());
 
+		/* Side + Top bar */
+		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + window_size.x, window_pos.y + 35), Color(28, 28, 28, 255.f).GetUnityColor());
+		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + 50, window_pos.y + window_size.y), Color(28, 28, 28, 255.f).GetUnityColor());
 
-		fill_box(UnityEngine::rect_t(window_pos.x, window_pos.y + 25, window_size.x, 10), Color(28, 28, 28, 255.f));
-		fill_box(UnityEngine::rect_t(window_pos.x, window_pos.y, 50, window_size.y), Color(28, 28, 28, 255.f));
-
-		outline_box(Vector2(window_pos.x - 1, window_pos.y - 1), Vector2(window_size.x, window_size.y), Color(0, 0, 0, 255.f));
+		/* BackGround Outline */
+		UnityEngine::GL().Rectangle(Vector2(window_pos), Vector2(window_pos + window_size), Color(0, 0, 0, 255.f).GetUnityColor());
 	}
 	next_tab_pos = { window_pos.x, window_pos.y + 55 };
 	next_subtab_pos = { window_pos.x + 50, window_pos.y };
@@ -434,7 +432,7 @@ void Menu::Tab(const wchar_t* name, int id, Vector2 tab_size) {
 		if (isActive)
 		{
 			//UnityEngine::GL::Line(Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 15 }, Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 55 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
-			outline_box(Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 15 }, Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 55 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
+			//outline_box(Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 15 }, Vector2{ next_tab_pos.x + 50, next_tab_pos.y + tab_size.y - 55 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 
 			clrr = isActive ? Color(accent_color_[0], accent_color_[1], accent_color_[2], accent_color_[3]) : txt2;
 		}
@@ -466,16 +464,13 @@ void Menu::Tab(const wchar_t* name, int id, Vector2 tab_size) {
 
 		auto texture = MenuIconBundles->LoadAsset<UnityEngine::Texture2D>(icon1, (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
 
-
-		UnityEngine::GUI::SetColor(clrr.GetUnityColor());
-		UnityEngine::GUI::DrawTexture({ next_tab_pos.x + 5 + tab_size.x / 2 - 55, next_tab_pos.y + tab_size.y / 2 - 40, 35.f, 35.f }, texture);
-
+		UnityEngine::GL().DrawIcon(Vector2(next_tab_pos.x + 5 + tab_size.x / 2 - 55, next_tab_pos.y + tab_size.y / 2 - 30), Vector2(35.f, 35.f), texture, clrr.GetUnityColor());
 	}
 	//next_tab_pos.x += 112;
 	next_tab_pos.y += 42;
 }
 
-void Menu::SubTab(const wchar_t* name, int id, Vector2 tab_size) {
+void Menu::SubTab(const char* name, int id, Vector2 tab_size) {
 
 	if (!is_menu_open)
 		return;
@@ -492,34 +487,38 @@ void Menu::SubTab(const wchar_t* name, int id, Vector2 tab_size) {
 	{
 		Color txt = isHovered ? Color(255.f, 255.f, 255.f, 255.f) : Color(166, 166, 166, 255.f);
 		Color Active = Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f);
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2, tab_size.x, tab_size.y, (name), txt.GetUnityColor(), true, true);
+		//UnityEngine::GL().MenuText(UnityEngine::gui_style, next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2, tab_size.x, tab_size.y, (name), txt.GetUnityColor(), true, true);
+		UnityEngine::GL().MenuText(Vector2(next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2), txt.GetUnityColor(), Color::Black(), name, true);
 
 		if (id == activesubtab) {
 			//UnityEngine::GL().Rectangle({ next_subtab_pos.x, next_subtab_pos.y }, { tab_size.x - 1, tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
 			//UnityEngine::GL::Line(Vector2{ next_subtab_pos.x, next_subtab_pos.y + tab_size.y }, Vector2{ next_subtab_pos.x + tab_size.x - 1 , next_subtab_pos.y + tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
-			outline_box(Vector2{ next_subtab_pos.x, next_subtab_pos.y + tab_size.y }, Vector2{ next_subtab_pos.x + tab_size.x - 1 , next_subtab_pos.y + tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2, tab_size.x, tab_size.y, (name), Active.GetUnityColor(), true, true);
+			//outline_box(Vector2{ next_subtab_pos.x, next_subtab_pos.y + tab_size.y }, Vector2{ next_subtab_pos.x + tab_size.x - 1 , next_subtab_pos.y + tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
+			//UnityEngine::GL().MenuText(UnityEngine::gui_style, next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2, tab_size.x, tab_size.y, (name), Active.GetUnityColor(), true, true);
+			UnityEngine::GL().MenuText(Vector2(next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2), Active.GetUnityColor(), Color::Black(), name, true);
 		}
 	}
 	next_subtab_pos.x += tab_size.x; //112
 }
 
-void Menu::BeginChild(const wchar_t* title, const Vector2& pos, const Vector2& size)
+void Menu::BeginChild(const char* title, const Vector2& pos, const Vector2& size)
 {
 	if (!is_menu_open)
 		return;
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		fill_box(UnityEngine::rect_t{ window_pos.x + pos.x,  window_pos.y + pos.y, size.x, size.y }, Color(28, 28, 28, 255.f));
-		outline_box({ window_pos.x + pos.x,  window_pos.y + pos.y }, { size.x, size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 66.f));
+		auto AccentColor = Color(accent_color_[0], accent_color_[1], accent_color_[2], accent_color_[3]);
 
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, window_pos.x + pos.x + 15.f, window_pos.y + pos.y - 10.f, 300, 20, title, Color(accent_color_[0], accent_color_[1], accent_color_[2], accent_color_[3]), false, true, 12);
+		UnityEngine::GL().RectangleFilled(Vector2(window_pos + pos), Vector2(window_pos + pos + size), Color(28, 28, 28, 255.f).GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(window_pos + pos), Vector2(window_pos + pos + size), AccentColor.GetUnityColor());
+
+		UnityEngine::GL().MenuText(Vector2(window_pos.x + pos.x + 15.f, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
 	}
 	next_item_pos = { window_pos.x + pos.x + 10, window_pos.y + pos.y + 15 };
 }
 
-void Menu::Hotkey(const wchar_t* szTitle, RustStructs::KeyCode& iKey)
+void Menu::Hotkey(const char* szTitle, RustStructs::KeyCode& iKey)
 {
 	if (!is_menu_open)
 		return;
@@ -590,15 +589,15 @@ void Menu::Hotkey(const wchar_t* szTitle, RustStructs::KeyCode& iKey)
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		//UnityEngine::GL().MenuText(gui_style, next_item_pos.x, next_item_pos.y, 300, 50, szTitle, Color(189.f, 189.f, 189.f, 255.f), false, false, 12);
-		fill_box({ next_item_pos.x, next_item_pos.y + 30, 80, 20 }, Color(61, 61, 61, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 30), Vector2(next_item_pos.x + 80, next_item_pos.y + 50), Color(61, 61, 61, 255.f).GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 30), Vector2(next_item_pos.x + 80, next_item_pos.y + 50), Color(0, 0, 0, 255.f).GetUnityColor());
 
 		Color cNotReadColor = bHovered ? Color(189.f, 189.f, 189.f, 255.f) : Color(255.f, 255.f, 255.f, 0.6 * 255.f);
 		Color cTextColor = bWaited ? Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f) : cNotReadColor;
 
-		auto key = iKey == 0 ? std::wstring(XS(L"no key")) : std::wstring(XS(L"key: ")) + GetKey((RustStructs::KeyCode)iKey);
+		auto key = iKey == 0 ? std::string(XS("Unbinded")) : std::string(XS("")) + GetKey((RustStructs::KeyCode)iKey);
 
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + static_cast<float>(80) / 2, next_item_pos.y + 40, 300, 50, key.c_str(), cTextColor, true, false, 12);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + static_cast<float>(80) / 2, next_item_pos.y + 40), cTextColor.GetUnityColor(), Color::Black(), key.c_str(), false);
 	}
 
 
@@ -626,16 +625,17 @@ void Menu::Button(const std::string& title, void* callback) {
 	Color txt = isHovered ? Color(23, 23, 23, 255.f) : Color(61, 61, 61, 255.f);
 
 
-	const auto wstring = std::wstring(title.begin(), title.end());
+	const auto wstring = std::string(title.begin(), title.end());
 
 	if (menu_event == RustStructs::EventType::Repaint)
-		fill_box({ next_item_pos.x, next_item_pos.y + 16, 140, 20 }, txt);
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), txt.GetUnityColor());
 
 
 	if (is_mouse_in_box({ next_item_pos.x - 25, next_item_pos.y + 16 }, { next_item_pos.x - 25 + 196, next_item_pos.y + 16 + 20 }) && mouse_state && !old_mouse_state)
 	{
 		if (menu_event == RustStructs::EventType::Repaint)
-			fill_box({ next_item_pos.x , next_item_pos.y + 16 , 140, 20 }, Color(23, 23, 23, 255.f));
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(23, 23, 23, 255.f).GetUnityColor());
+
 
 		if (callback != 0x0)
 			reinterpret_cast<void(*)(void)>(callback)();
@@ -643,9 +643,9 @@ void Menu::Button(const std::string& title, void* callback) {
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(52, 52, 52, 255.f).GetUnityColor());
 
-		outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 20 }, Color(52, 52, 52, 255.f));
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 140 / 2, next_item_pos.y + 27, 300, 25, wstring.c_str(), Color(255, 255, 255, 255.f), true, true, 12);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 140 / 2, next_item_pos.y + 27), Color::White(), Color::Black(), wstring.c_str(), true);
 	}
 
 	next_item_pos.y += 25;
@@ -678,16 +678,19 @@ void Menu::ListBox(const std::string& title, const std::vector<std::string> item
 
 			Color clr = idx == selected_index ? Color(255, 255, 255, 255.f).GetUnityColor() : Color(54, 54, 54, 255.f).GetUnityColor();
 
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 7, next_item_pos.y + (idx * 18), 300, 20, cleaned.c_str(), clr, false, false, 12);
+			char str[128];
+			sprintf(str, XS("%s"), cleaned.c_str());
+
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 7, next_item_pos.y + (idx * 18)), clr.GetUnityColor(), Color::Black(), str, false);
 		}
 
-		outline_box({ next_item_pos.x, next_item_pos.y }, { 130, (items.size() * 18) + 10.f }, Color(52, 52, 52, 255.f));
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos), Vector2(next_item_pos.x + 130, next_item_pos.y + (items.size() * 18) + 10.f), Color(52, 52, 52, 255.f).GetUnityColor());
 	}
 
 	next_item_pos.y += (items.size() * 18) + 10.f;
 }
 
-void Menu::Text(const wchar_t* szTitle) {
+void Menu::Text(const char* szTitle) {
 	if (!is_menu_open)
 		return;
 
@@ -704,12 +707,12 @@ void Menu::Text(const wchar_t* szTitle) {
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 17, next_item_pos.y - 4, 150, 100, szTitle, Color::White(), false, true, 12.f);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 17, next_item_pos.y - 4), Color::White(), Color::Black(), szTitle, false);
 	}
 	next_item_pos.y += 15;
 }
 
-void Menu::CheckBox(const wchar_t* szTitle, bool& bValue) {
+void Menu::CheckBox(const char* szTitle, bool& bValue) {
 	if (!is_menu_open)
 		return;
 
@@ -732,24 +735,25 @@ void Menu::CheckBox(const wchar_t* szTitle, bool& bValue) {
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
 
-		fill_box({ next_item_pos.x, next_item_pos.y , 11, 11 }, Color(34, 34, 34, 255.f));
+		//fill_box({ next_item_pos.x, next_item_pos.y , 11, 11 }, Color(34, 34, 34, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 10), Color(34, 34, 34, 255.f).GetUnityColor());
 
 		if (bValue)
-			fill_box({ next_item_pos.x, next_item_pos.y, 11, 11 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 10), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 
-		outline_box({ next_item_pos.x, next_item_pos.y }, { 11, 11 }, Color(0, 0, 0, 255.f));
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 11), Color(0, 0, 0, 255.f).GetUnityColor());
 
 		Color txt = isHovered ? Color(77, 75, 75, 255.f) : Color(224.f, 224.f, 224.f, 255.f);
 
 		Color cText = bValue ? Color(224.f, 224.f, 224.f, 255.f) : Color(255.f, 255.f, 255.f, 0.6 * 255.f);
-		// Render text
 
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 17, next_item_pos.y - 4, 150, 100, szTitle, txt.GetUnityColor(), false, true, 12.f);
+		// Render text
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 17, next_item_pos.y - 4), txt.GetUnityColor(), Color::Black(), szTitle, false);
 	}
 	next_item_pos.y += 15;
 }
 
-void Menu::CheckBoxKeyBind(const wchar_t* szTitle, bool& bValue, RustStructs::KeyCode& iKey) {
+void Menu::CheckBoxKeyBind(const char* szTitle, bool& bValue, RustStructs::KeyCode& iKey) {
 	if (!is_menu_open)
 		return;
 
@@ -771,20 +775,19 @@ void Menu::CheckBoxKeyBind(const wchar_t* szTitle, bool& bValue, RustStructs::Ke
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-
-		fill_box({ next_item_pos.x, next_item_pos.y , 11, 11 }, Color(34, 34, 34, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 10), Color(34, 34, 34, 255.f).GetUnityColor());
 
 		if (bValue)
-			fill_box({ next_item_pos.x, next_item_pos.y, 11, 11 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 10), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 
-		outline_box({ next_item_pos.x, next_item_pos.y }, { 11, 11 }, Color(0, 0, 0, 255.f));
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos), Vector2(next_item_pos.x + 11, next_item_pos.y + 11), Color(0, 0, 0, 255.f).GetUnityColor());
 
 		Color txt = isHovered ? Color(77, 75, 75, 255.f) : Color(224.f, 224.f, 224.f, 255.f);
 
 		Color cText = bValue ? Color(224.f, 224.f, 224.f, 255.f) : Color(255.f, 255.f, 255.f, 0.6 * 255.f);
 		// Render text
 
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 17, next_item_pos.y - 4, 150, 100, szTitle, txt.GetUnityColor(), false, true, 12.f);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 17, next_item_pos.y - 4), txt.GetUnityColor(), Color::Black(), szTitle, false);
 	}
 	next_item_pos.y += 15;
 
@@ -859,105 +862,20 @@ void Menu::CheckBoxKeyBind(const wchar_t* szTitle, bool& bValue, RustStructs::Ke
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		//UnityEngine::GL().MenuText(gui_style, next_item_pos.x, next_item_pos.y, 300, 50, szTitle, Color(189.f, 189.f, 189.f, 255.f), false, false, 12);
-		fill_box({ next_item_pos.x + keybindwidthpos, (next_item_pos.y - 15) + (keybindheightpos + 10), keybindwidth, keybindheight }, Color(34, 34, 34, 255.f));
-		outline_box({ next_item_pos.x + keybindwidthpos, (next_item_pos.y - 15) + (keybindheightpos + 10) }, { keybindwidth, keybindheight }, Color(0, 0, 0, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + keybindwidthpos, (next_item_pos.y - 15) + (keybindheightpos + 15)), Vector2(next_item_pos.x + keybindwidthpos + keybindwidth, (next_item_pos.y - 15) + (keybindheightpos + 15) + keybindheight), Color(34, 34, 34, 255.f).GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + keybindwidthpos, (next_item_pos.y - 15) + (keybindheightpos + 15)), Vector2(next_item_pos.x + keybindwidthpos + keybindwidth, (next_item_pos.y - 15) + (keybindheightpos + 15) + keybindheight), Color(0, 0, 0, 255.f).GetUnityColor());
 
 		Color cNotReadColor = bHovered ? Color(189.f, 189.f, 189.f, 255.f) : Color(255.f, 255.f, 255.f, 0.6 * 255.f);
 		Color cTextColor = bWaited ? Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f) : cNotReadColor;
 
 		//auto key = iKey == 0 ? std::wstring(XS(L"no key")) : std::wstring(XS(L"key: ")) + GetKey((RustStructs::KeyCode)iKey);
-		auto key = iKey == 0 ? std::wstring(XS(L"Unbinded")) : std::wstring(XS(L"")) + GetKey((RustStructs::KeyCode)iKey);
+		auto key = iKey == 0 ? std::string(XS("Unbinded")) : std::string(XS("")) + GetKey((RustStructs::KeyCode)iKey);
 
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + static_cast<float>(keybindwidth) / 2 + keybindwidthpos, (next_item_pos.y - 12) + (keybindheightpos + keybindheight), 300, 50, key.c_str(), cTextColor, true, false, 11);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + static_cast<float>(keybindwidth) / 2 + keybindwidthpos, (next_item_pos.y - 7) + (keybindheightpos) + keybindheight), cTextColor.GetUnityColor(), Color::Black(), key.c_str(), true);
 	}
 
 
 	//next_item_pos.y += 15;
-}
-
-void Menu::Slider(const wchar_t* szTitle, int& iValue, int iMin, int iMax, bool color)
-{
-	if (!is_menu_open)
-		return;
-
-	float slidersize = 190.f;
-
-	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 20 }, { next_item_pos.x + slidersize + 0.1f, next_item_pos.y + 35 }) && mouse_state) {
-		IsInteractingWidthObject = true;
-	}
-
-	bool bHovered = false;
-	if (bComboOpenedInThisFrame && vecLastCringePosition.x == next_item_pos.x && vecLastCringePosition.y > next_item_pos.y + 14 + 20 + 6 && iOpenedCringeY < next_item_pos.y)
-	{
-		//next_item_pos.y += 20 + 20 + 6 + 20;
-		return;
-	}
-
-
-	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 20 }, { next_item_pos.x + slidersize + 0.1f, next_item_pos.y + 35 }) && !bComboOpenedInThisFrame)
-	{
-		bHovered = true;
-		if (mouse_state && (!old_mouse_state || !bComboOpenedInThisFrame) && !interacting)
-		{
-			int intValue = static_cast<int>((old_mouse_pos.x - next_item_pos.x) * (iMax - iMin) / slidersize + 0.1f);
-			iValue = max(iMin, min(iMax, intValue));
-			hover_element = true;
-		}
-	}
-
-	if (menu_event == RustStructs::EventType::Repaint)
-	{
-
-
-		Color cLableColor = bHovered ? Color(77, 75, 75, 255.f) : Color(189.f, 189.f, 189.f, 255.f);
-
-		/* Render lable name */
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x, next_item_pos.y, 300, 100, szTitle, cLableColor.GetUnityColor(), false, false, 12.f);
-
-		std::wstring wszValue = std::to_wstring(iValue);
-
-		/* Cringe hardcode to normalize text */
-		int iValueToAddForText = 0;
-		if (iValue >= 10000)
-			iValueToAddForText = -5;
-		else if (iValue >= 1000)
-			iValueToAddForText = 1;
-		else if (iValue >= 100)
-			iValueToAddForText = 8;
-		else if (iValue >= 10)
-			iValueToAddForText = 15;
-		else if (iValue >= 0)
-			iValueToAddForText = 20;
-
-		/* Render value text*/
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x - 12 + (slidersize - 18) + iValueToAddForText, next_item_pos.y, 300, 100, wszValue.c_str(), { 116.f, 77.f, 169.f, 255.f }, false, false, 12.f);
-
-		/* Render slider bar */
-		fill_box({ next_item_pos.x, next_item_pos.y + 20, slidersize, 5 }, Color(34, 34, 34, 255.f));
-
-		/* Calculate one amount */
-		float flOneAmount = slidersize / (iMax - iMin);
-
-		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 20 }, { next_item_pos.x + 250 + 0.1f, next_item_pos.y + 35 }) && mouse_state && (!old_mouse_state || !bComboOpenedInThisFrame) && !interacting)
-		{
-			int intValue = static_cast<int>((old_mouse_pos.x - next_item_pos.x) * (iMax - iMin) / slidersize + 0.1f);
-			iValue = max(iMin, min(iMax, intValue));
-		}
-
-		/* clamp for slider */
-		iValue = max(iMin, min(iMax, iValue));
-
-		/* Calculate current size of value */
-		float flCurrentSize = flOneAmount * (iValue - iMin);
-
-		/* Render progress */
-		fill_box({ next_item_pos.x, next_item_pos.y + 20, flCurrentSize, 5 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
-
-		outline_box({ next_item_pos.x, next_item_pos.y + 20 }, { slidersize, 5 }, Color(0, 0, 0, 255.f));
-	}
-
-	next_item_pos.y += 20 + 10;
 }
 
 enum class WidgetType
@@ -1057,7 +975,7 @@ void DrawColorPickerBox(const Vector2& position, const Vector2& size)
 	//DrawFilledBox({ position.x, position.y, size.x, size.y }, { 255.f, 255.f, 255.f, 255.f }, ColorPickerTexture);
 }
 
-void Menu::Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax, bool color)
+void Menu::Slider(const char* szTitle, float& flValue, float iMin, float iMax, bool color)
 {
 	if (!is_menu_open)
 		return;
@@ -1098,11 +1016,11 @@ void Menu::Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax
 		Color cLableColor = bHovered ? Color(77, 75, 75, 255.f) : Color(189.f, 189.f, 189.f, 255.f);
 
 		/* Render lable name */
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x, next_item_pos.y, 300, 100, szTitle, cLableColor.GetUnityColor(), false, false, 12.f);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x, next_item_pos.y), cLableColor.GetUnityColor(), Color::Black(), szTitle, false);
 
 		/* Convert text */
 		char szValue[64];
-		wchar_t wszValue[64];
+		char wszValue[64];
 
 		// Conversion without itoass
 		int intValue = static_cast<int>(flValue);
@@ -1128,7 +1046,7 @@ void Menu::Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax
 		{
 			wszValue[i] = static_cast<wchar_t>(szValue[i]);
 		}
-		wszValue[length] = L'\0';
+		wszValue[length] = '\0';
 
 		int iValueToAddForText = 0;
 
@@ -1145,10 +1063,10 @@ void Menu::Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax
 			iValueToAddForText = 20;
 
 		/* Render value text*/
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x - 12 + (slidersize - 18) + iValueToAddForText, next_item_pos.y, 300, 100, wszValue, { 116.f, 77.f, 169.f, 255.f }, false, true, 12.f);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x - 12 + (slidersize - 18) + iValueToAddForText, next_item_pos.y), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor(), Color::Black(), wszValue, false);
 
 		/* Render slider bar */
-		fill_box({ next_item_pos.x, next_item_pos.y + 20, slidersize, 5 }, Color(34, 34, 34, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 20), Vector2(next_item_pos.x + slidersize, next_item_pos.y + 24), Color(34, 34, 34, 255.f).GetUnityColor());
 
 		/* Calculate one amount */
 		float flOneAmount = slidersize / (iMax - iMin);
@@ -1176,9 +1094,8 @@ void Menu::Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax
 			flValue = iMax;
 
 		/* Render progress */
-		fill_box({ next_item_pos.x, next_item_pos.y + 20, flCurrentSize, 5 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
-
-		outline_box({ next_item_pos.x, next_item_pos.y + 20 }, { slidersize, 5 }, Color(0, 0, 0, 255.f));
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 20), Vector2(next_item_pos.x + flCurrentSize, next_item_pos.y + 24), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 20), Vector2(next_item_pos.x + slidersize, next_item_pos.y + 25), Color(0, 0, 0, 255.f).GetUnityColor());
 	}
 
 	next_item_pos.y += 20 + 10;
@@ -1191,45 +1108,45 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 	float left = 70.f;
 	float leveling = 0.f;
 	float width = 120;
-	const auto wstring = std::wstring(title.begin(), title.end());
-
-	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 + 16 }) && mouse_state) {
+	const auto wstring = std::string(title.begin(), title.end());
+	
+	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 }) && mouse_state) {
 		IsInteractingWidthObject = true;
 	}
-
-	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 + 16 }) && mouse_state && !old_mouse_state && !interacting) {
+	
+	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 }) && mouse_state && !old_mouse_state && !interacting) {
 		is_open = true;
 		interacting = true;
 		IsComboOpen = true;
 	}
-
+	
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 3, next_item_pos.y, 300, 50, wstring.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
-
+	
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 3, next_item_pos.y), Color::White(), Color::Black(), wstring.c_str(), false);
+	
 		if (is_open && !is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
 			is_open = false;
 			interacting = false;
 			IsComboOpen = false;
 		}
-
-		const auto str = std::wstring(items.at(value).begin(), items.at(value).end());
-
+	
+		const auto str = std::string(items.at(value).begin(), items.at(value).end());
+	
 		if (is_open)
 		{
-			fill_box({ next_item_pos.x + left, next_item_pos.y + leveling + 1 , width, 15 }, Color(34, 34, 34, 255.f));
-			fill_box({ next_item_pos.x + left, next_item_pos.y + 1 + 14 + leveling, width, items.size() * 15.f }, Color(27, 27, 27, 255.f));
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + leveling + 1), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 1 + 15), Color(34, 34, 34, 255.f).GetUnityColor());
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + leveling + items.size() * 15.f), Color(27, 27, 27, 255.f).GetUnityColor());
 
 			for (auto i{ 0 }; i < items.size(); i++) {
-
-				const auto cur = std::wstring(items.at(i).begin(), items.at(i).end());
-
+	
+				const auto cur = std::string(items.at(i).begin(), items.at(i).end());
+	
 				if (value == i)
 				{
-					fill_box({ next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling, width, 15 }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f));
+					UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + (i * 15) + leveling + 15), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 				}
-
+	
 				if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + 1 + 13 + (i * 15) + leveling }, { next_item_pos.x + width , next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 }))
 				{
 					if (mouse_state)
@@ -1239,22 +1156,23 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 						interacting = false;
 					}
 				}
+	
+				UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + (i * 15) + leveling + 15), Color(0, 0, 0, 255.f).GetUnityColor());
 
-				outline_box({ next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling }, { width, 15 }, Color(0, 0, 0, 255.f));
-				UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + left + 3.f, next_item_pos.y + 1 + 15 + (i * 15) - 2 + leveling, 300, 50, cur.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
+				UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y + 15 + (i * 15) - 2 + leveling), Color::White(), Color::Black(), cur.c_str(), false);
 				
 			}
-
-			outline_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { width, 15 }, Color(0, 0, 0, 255.f));
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + left + 3.f, next_item_pos.y + 1 - 1 + leveling, 300, 50, str.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
-
+	
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 15), Color::Black());
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling), Color::White(), Color::Black(), str.c_str(), false);
+	
 			next_item_pos.y += items.size() * 15.f;
 		}
 		else {
-			fill_box({ next_item_pos.x + left , next_item_pos.y + 1 + leveling, width, 15 }, Color(34, 34, 34, 255.f));
-			outline_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { width, 15 }, Color(0, 0, 0, 255.f));
-
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling, 300, 50, str.c_str(), Color(255, 255, 255, 255.f), false, true, 11);
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling) + 15, Color(34, 34, 34, 255.f).GetUnityColor());
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling) + 15, Color(0, 0, 0, 255.f).GetUnityColor());
+	
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling), Color::White(), Color::Black(), str.c_str(), false);
 		}
 	}
 
@@ -1265,95 +1183,95 @@ void Menu::MultiDropdown(const std::string& title, const std::vector<std::string
 	if (!is_menu_open)
 		return;
 
-	const auto wstring = std::wstring(title.begin(), title.end());
-
-	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 15 + 16 }) && mouse_state && !old_mouse_state && !interacting) {
-		is_open = true;
-		interacting = true;
-	}
-
-	if (is_open)
-	{
-		for (size_t i{ 0 }; i < items.size(); i++)
-		{
-			if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 }) && mouse_state) {
-				IsInteractingWidthObject = true;
-			}
-
-			if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 })) {
-				if (mouse_state && !old_mouse_state)
-				{
-					value[i] = !value[i];
-				}
-			}
-		}
-	}
-
-	if (menu_event == RustStructs::EventType::Repaint)
-	{
-		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
-			IsInteractingWidthObject = true;
-		}
-
-		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y, 300, 50, wstring.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-
-		if (is_open && !is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
-			is_open = false;
-			interacting = false;
-		}
-
-		std::wstring str;
-
-		for (size_t i{ 0 }; i < items.size(); i++) {
-			if (value[i]) {
-				auto wstr = std::wstring(items.at(i).begin(), items.at(i).end());
-
-				if (str.length() + wstr.length() <= 15) {
-					if (!str.empty()) {
-						str.append(XS(L", "));
-					}
-					str.append(wstr);
-				}
-				else {
-					str.append(XS(L"..."));
-					break;
-				}
-			}
-		}
-
-		if (is_open)
-		{
-			fill_box({ next_item_pos.x, next_item_pos.y + 16 + 1, 140, 15 }, Color(61, 61, 61, 255.f));
-			fill_box({ next_item_pos.x, next_item_pos.y + 1 + 14 + 16, 140, items.size() * 15.f }, Color(27, 27, 27, 255.f));
-
-			for (size_t i{ 0 }; i < items.size(); i++) {
-
-				const auto cur = std::wstring(items.at(i).begin(), items.at(i).end());
-
-				if (value[i])
-				{
-					fill_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16, 140, 15 }, Color(171, 171, 171, 255.f));
-				}
-
-				Color clrr = value[i] ? Color::Red() : Color::White();
-
-				outline_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-
-				UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 + 15 + (i * 15) - 2 + 16, 300, 50, cur.c_str(), clrr, false, false, 12);
-			}
-
-			outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-
-
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-		}
-		else {
-			fill_box({ next_item_pos.x , next_item_pos.y + 1 + 16, 140, 15 }, Color(61, 61, 61, 255.f));
-			outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-
-			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-		}
-	}
+	//const auto wstring = std::wstring(title.begin(), title.end());
+	//
+	//if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 15 + 16 }) && mouse_state && !old_mouse_state && !interacting) {
+	//	is_open = true;
+	//	interacting = true;
+	//}
+	//
+	//if (is_open)
+	//{
+	//	for (size_t i{ 0 }; i < items.size(); i++)
+	//	{
+	//		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 }) && mouse_state) {
+	//			IsInteractingWidthObject = true;
+	//		}
+	//
+	//		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 })) {
+	//			if (mouse_state && !old_mouse_state)
+	//			{
+	//				value[i] = !value[i];
+	//			}
+	//		}
+	//	}
+	//}
+	//
+	//if (menu_event == RustStructs::EventType::Repaint)
+	//{
+	//	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
+	//		IsInteractingWidthObject = true;
+	//	}
+	//
+	//	UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y, 300, 50, wstring.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
+	//
+	//	if (is_open && !is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
+	//		is_open = false;
+	//		interacting = false;
+	//	}
+	//
+	//	std::wstring str;
+	//
+	//	for (size_t i{ 0 }; i < items.size(); i++) {
+	//		if (value[i]) {
+	//			auto wstr = std::wstring(items.at(i).begin(), items.at(i).end());
+	//
+	//			if (str.length() + wstr.length() <= 15) {
+	//				if (!str.empty()) {
+	//					str.append(XS(L", "));
+	//				}
+	//				str.append(wstr);
+	//			}
+	//			else {
+	//				str.append(XS(L"..."));
+	//				break;
+	//			}
+	//		}
+	//	}
+	//
+	//	if (is_open)
+	//	{
+	//		fill_box({ next_item_pos.x, next_item_pos.y + 16 + 1, 140, 15 }, Color(61, 61, 61, 255.f));
+	//		fill_box({ next_item_pos.x, next_item_pos.y + 1 + 14 + 16, 140, items.size() * 15.f }, Color(27, 27, 27, 255.f));
+	//
+	//		for (size_t i{ 0 }; i < items.size(); i++) {
+	//
+	//			const auto cur = std::wstring(items.at(i).begin(), items.at(i).end());
+	//
+	//			if (value[i])
+	//			{
+	//				fill_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16, 140, 15 }, Color(171, 171, 171, 255.f));
+	//			}
+	//
+	//			Color clrr = value[i] ? Color::Red() : Color::White();
+	//
+	//			outline_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
+	//
+	//			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 + 15 + (i * 15) - 2 + 16, 300, 50, cur.c_str(), clrr, false, false, 12);
+	//		}
+	//
+	//		outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
+	//
+	//
+	//		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
+	//	}
+	//	else {
+	//		fill_box({ next_item_pos.x , next_item_pos.y + 1 + 16, 140, 15 }, Color(61, 61, 61, 255.f));
+	//		outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
+	//
+	//		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
+	//	}
+	//}
 
 	next_item_pos.y += 40;
 }

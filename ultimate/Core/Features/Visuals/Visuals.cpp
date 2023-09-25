@@ -403,8 +403,8 @@ void Visuals::DrawPlayers()
 				//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
 				//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
 
-				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 4.f), Color::Black());
-				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2((footPos.x - (bar_width / 2)) + bar_health, bo.bottom + yoffset + 4.f), bar_color);
+				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 3.f), Color::Black());
+				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2((footPos.x - (bar_width / 2)) + bar_health, bo.bottom + yoffset + 3.f), bar_color);
 				UnityEngine::GL::Rectangle(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 4.f), Color::Black());
 				yoffset += 13;
 			}
@@ -1516,6 +1516,46 @@ void Visuals::RenderEntities()
 								player_name = player_name + " " + str;
 								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
+
+								//if (m_settings::healthBar)
+								//{
+								//	float bar_health = 0;
+								//	auto health = base_heli->_health();
+								//	//auto max_health = base_player->_maxHealth();
+								//	float max_health = 100.f;
+								//	float draw_health = health;
+
+								//	if (health > max_health)
+								//	{
+								//		draw_health = max_health;
+								//	}
+
+								//	const auto bar_width = 30;
+								//	bar_health = (bar_width / max_health) * draw_health;
+
+								//	auto bar_color = Color::Green();
+								//	if (health > 50.f)
+								//	{
+								//		bar_color = Color::Green();
+								//	}
+								//	else if (health > 20.f && health < 40.f)
+								//	{
+								//		bar_color = Color::Orange();
+								//	}
+								//	else if (health < 20.f)
+								//	{
+								//		bar_color = Color::Red();
+								//	}
+
+								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
+								//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+
+								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
+								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
+								//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+								//	yoffset += 13;
+								//}
 							}
 						}
 					}

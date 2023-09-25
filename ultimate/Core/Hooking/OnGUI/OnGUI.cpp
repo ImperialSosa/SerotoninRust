@@ -13,13 +13,14 @@ inline UnityEngine::GUISkin* gui_skin = nullptr;
 
 void SetupStyles()
 {
-	if (UnityEngine::gui_style && gui_skin)
+	if (UnityEngine::gui_style && gui_skin && UnityEngine::menu_gui_style)
 		return;
 
-	if (gui_skin == nullptr || UnityEngine::gui_style == nullptr)
+	if (gui_skin == nullptr || UnityEngine::gui_style == nullptr || UnityEngine::menu_gui_style == nullptr)
 	{
 		gui_skin = UnityEngine::GUI::GetSkin();
 		UnityEngine::gui_style = gui_skin->m_label();
+		UnityEngine::menu_gui_style = gui_skin->m_label();
 		static bool FontLoaded = false;
 		if (!FontLoaded)
 		{
@@ -27,12 +28,13 @@ void SetupStyles()
 
 			gui_skin->m_Font() = ToAddress(g_font);
 
-			UnityEngine::gui_style->SetFontSize(9);
+			UnityEngine::gui_style->SetFontSize(10);
 
 			FontLoaded = true;
 		}
 
 		UnityEngine::GUIStyle::SetAlignment(UnityEngine::gui_style, 0);
+		UnityEngine::GUIStyle::SetAlignment(UnityEngine::menu_gui_style, 0);
 		UnityEngine::GUI::SetColor(Color::White());
 	}
 
@@ -241,6 +243,7 @@ void TextDrawEnd()
 {
 	UnityEngine::GL::PopMatrix();
 	UnityEngine::GL::RenderText();
+	UnityEngine::GL::RenderMenuText();
 	UnityEngine::GL::RenderIcons();
 }
 
@@ -1414,8 +1417,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		SetupStyles();
 
-		MenuDraw().RenderMenu();
-
 		if (is_menu_open) {
 			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
 				auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
@@ -1439,10 +1440,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		auto m_Event = UnityEngine::Event::Current();
 		if (IsAddressValid(m_Event))
 		{
+			TextDrawBegin();
+
+			MenuDraw().RenderMenu();
+
 			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{
-				TextDrawBegin();
-
 				if (ConnectionManager().IsConnected())
 					InGame = true;
 				else
@@ -1532,11 +1535,10 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 					Visuals().CacheEntities();
 					Visuals().RenderEntities();
-				}
-
-				TextDrawEnd();
+				}	
 			}
 
+			TextDrawEnd();
 		}
 	}
 

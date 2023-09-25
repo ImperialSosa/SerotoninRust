@@ -2811,9 +2811,10 @@ namespace UnityEngine {
 		bool centered;
 		bool draw_outlined;
 		bool draw_shaded;
+		int size;
 
 		textcmd_t() = default;
-		textcmd_t(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt, bool e, bool f) {
+		textcmd_t(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt, bool e, bool f, int g) {
 			outline = a;
 			pos = b;
 			clr = c;
@@ -2821,6 +2822,25 @@ namespace UnityEngine {
 			text = txt;
 			draw_outlined = e;
 			draw_shaded = f;
+			size = g;
+		}
+	};
+
+	struct menu_textcmd_t {
+		bool outline;
+		Vector2 pos;
+		Color clr;
+		Color outlineColor;
+		Il2CppString* text;
+		bool centered;
+
+		menu_textcmd_t() = default;
+		menu_textcmd_t(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt) {
+			outline = a;
+			pos = b;
+			clr = c;
+			outlineColor = d;
+			text = txt;
 		}
 	};
 
@@ -2841,8 +2861,10 @@ namespace UnityEngine {
 
 	inline std::list<textcmd_t*> text_buffer;
 	inline std::list<textcmd2_t*> icon_buffer;
+	inline std::list<menu_textcmd_t*> menu_text_buffer;
 	inline UnityEngine::Material* LineMat = nullptr;
 	inline UnityEngine::GUIStyle* gui_style = nullptr;
+	inline UnityEngine::GUIStyle* menu_gui_style = nullptr;
 
 	struct GL {
 		IL2CPP_CLASS("GL");
@@ -3039,7 +3061,7 @@ namespace UnityEngine {
 			cmd->text = CIl2Cpp::il2cpp_string_new(text);
 			cmd->pos = pos;
 			cmd->centered = centered;
-			//gui_style->SetFontSize(size);
+			cmd->size = size;
 			cmd->draw_outlined = outlined;
 			cmd->draw_shaded = shaded;
 
@@ -3051,8 +3073,25 @@ namespace UnityEngine {
 			return TextOutline(centerPos, color, outlineColor, str, true, size, outlined, shaded);
 		}
 
+		static void MenuText(const Vector2& pos, const Color& color, Color outlineColor, const char* text, bool centered)
+		{
+			menu_textcmd_t* cmd = new menu_textcmd_t;
+			cmd->outline = outlineColor.m_alpha > 0;
+			cmd->clr = color;
+			cmd->outlineColor = outlineColor;
+			cmd->text = CIl2Cpp::il2cpp_string_new(text);
+			cmd->pos = pos;
+			cmd->centered = centered;
+
+			menu_text_buffer.emplace_back(cmd);
+		}
+
 		static std::list<textcmd_t*>& get_text_buffer() {
 			return text_buffer;
+		}
+
+		static std::list<menu_textcmd_t*>& get_menu_text_buffer() {
+			return menu_text_buffer;
 		}
 
 		static std::list<textcmd2_t*>& get_icon_buffer() {
@@ -3085,6 +3124,8 @@ namespace UnityEngine {
 				}
 				else
 					UnityEngine::GUIStyle::SetAlignment(gui_style, 0x0);
+
+				gui_style->SetFontSize(10); //FPS?
 
 				if (entry->draw_outlined) {
 					UnityEngine::GUI::SetColor(entry->outlineColor);
@@ -3120,6 +3161,41 @@ namespace UnityEngine {
 			}
 		}
 
+		static void RenderMenuText()
+		{
+			auto& text_buffer = get_menu_text_buffer();
+			auto it = text_buffer.begin();
+			while (it != text_buffer.end())
+			{
+				const auto& entry = *it;
+				if (entry->centered)
+				{
+					UnityEngine::GUIStyle::SetAlignment(menu_gui_style, 0x4);
+					entry->pos.x -= 200;
+					entry->pos.y -= 12;
+				}
+				else
+					UnityEngine::GUIStyle::SetAlignment(menu_gui_style, 0x0);
+
+				UnityEngine::menu_gui_style->SetFontSize(12); //FPS?
+
+				UnityEngine::GUI::SetColor(entry->outlineColor);
+
+				UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y + 1), entry->text, menu_gui_style);
+				UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y - 1), entry->text, menu_gui_style);
+
+				UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y - 1), entry->text, menu_gui_style);
+				UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, menu_gui_style);
+
+
+				UnityEngine::GUI::SetColor(entry->clr);
+
+				UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, menu_gui_style);
+
+				it = text_buffer.erase(it);
+			}
+		}
+
 		static void RenderIcons()
 		{
 			auto& text_buffer = get_icon_buffer();
@@ -3134,137 +3210,6 @@ namespace UnityEngine {
 				it = text_buffer.erase(it);
 			}
 		}
-
-		//static void Line(Vector2 start, Vector2 end, Color color, float size = 1.f) {
-
-		//	//if (!LineMat)
-		//	//{
-		//		LineMat = (UnityEngine::Material*)CIl2Cpp::il2cpp_object_new((void*)CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material")));
-		//		UnityEngine::Material::CreateWithShader(LineMat, UnityEngine::Shader::Find((XS("Hidden/Internal-Colored"))));
-
-		//		LineMat->SetInt((XS("_SrcBlend")), 5);
-		//		LineMat->SetInt((XS("_DstBlend")), 10);
-		//		LineMat->SetInt((XS("_Cull")), 0);
-		//		LineMat->SetInt((XS("_ZWrite")), 0);
-		//		UnityEngine::Object::DontDestroyOnLoad((UnityEngine::Object*)LineMat);
-		//	//}
-
-		//	gl_start(RustStructs::GlMode::Lines);
-		//	Colorz(color);
-
-		//	Vertex(Vector3(start.x, start.y, size));
-		//	Vertex(Vector3(end.x, end.y, size));
-		//	gl_end();
-		//}
-
-
-		//static void GlFillRectangle(Vector2 pos, Vector2 size, Color col) {
-		//	if (!LineMat)
-		//	{
-		//		LineMat = (UnityEngine::Material*)CIl2Cpp::il2cpp_object_new((void*)CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material")));
-		//		UnityEngine::Material::CreateWithShader(LineMat, UnityEngine::Shader::Find((XS("Hidden/Internal-Colored"))));
-
-		//		LineMat->SetInt((XS("_SrcBlend")), 5);
-		//		LineMat->SetInt((XS("_DstBlend")), 10);
-		//		LineMat->SetInt((XS("_Cull")), 0);
-		//		LineMat->SetInt((XS("_ZWrite")), 0);
-		//		UnityEngine::Object::DontDestroyOnLoad((UnityEngine::Object*)LineMat);
-		//	}
-
-		//	gl_start(RustStructs::GlMode::Quads);
-		//	Colorz(col);
-		//	Vertex(Vector3(pos.x, pos.y, 0));
-		//	Vertex(Vector3(pos.x + size.x, pos.y, 0));
-		//	Vertex(Vector3(pos.x + size.x, pos.y + size.y, 0));
-		//	Vertex(Vector3(pos.x, pos.y + size.y, 0));
-		//	gl_end();
-		//}
-		//static void GradientFillRect(Vector2 pos, Vector2 size, Color col, Color col2) {
-		//	if (!LineMat)
-		//	{
-		//		LineMat = (UnityEngine::Material*)CIl2Cpp::il2cpp_object_new((void*)CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material")));
-		//		UnityEngine::Material::CreateWithShader(LineMat, UnityEngine::Shader::Find((XS("Hidden/Internal-Colored"))));
-
-		//		LineMat->SetInt((XS("_SrcBlend")), 5);
-		//		LineMat->SetInt((XS("_DstBlend")), 10);
-		//		LineMat->SetInt((XS("_Cull")), 0);
-		//		LineMat->SetInt((XS("_ZWrite")), 0);
-		//		UnityEngine::Object::DontDestroyOnLoad((UnityEngine::Object*)LineMat);
-		//	}
-
-		//	gl_start(RustStructs::GlMode::Quads);
-		//	Colorz(col.GetUnityColor());
-		//	Vertex(Vector3(pos.x, pos.y, 0));
-		//	Vertex(Vector3(pos.x + size.x, pos.y, 0));
-		//	Colorz(col2.GetUnityColor());
-		//	Vertex(Vector3(pos.x + size.x, pos.y + size.y, 0));
-		//	Vertex(Vector3(pos.x, pos.y + size.y, 0));
-		//	gl_end();
-		//}
-
-		inline static void MenuText(UnityEngine::GUIStyle* style, float x, float y, float m_flWidth, float m_flHeight, Unity_String text, Color clr, bool centered = false, bool m_bOutlined = true, float size = 12) {
-			if (!style)
-				return;
-
-			style->SetFontSize(size);
-			float w = 200.f;
-			float h = 200.f;
-
-			if (centered) {
-				UnityEngine::GUIStyle::SetAlignment(style, 0x4);
-				if (m_bOutlined)
-				{
-					UnityEngine::GUI::SetColor(Color(0.f, 0.f, 0.f, 255.f));
-
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 101, y - 100, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 100, y - 101, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 99, y - 100, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 100, y - 99, w, h }, text, (uintptr_t)style);
-
-				}
-				UnityEngine::GUI::SetColor(clr);
-
-				UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 100, y - 100, w, h }, text, (uintptr_t)style);
-			}
-			else {
-				UnityEngine::GUIStyle::SetAlignment(style, 0x0);
-				if (m_bOutlined)
-				{
-					UnityEngine::GUI::SetColor(Color(0.f, 0.f, 0.f, 255.f));
-
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 1, y - 1, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x + 1, y + 1, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x - 1, y + 1, w, h }, text, (uintptr_t)style);
-					UnityEngine::GUI::Label(UnityEngine::rect_t{ x + 1, y - 1, w, h }, text, (uintptr_t)style);
-
-				}
-
-				UnityEngine::GUI::SetColor(clr);
-
-				UnityEngine::GUI::Label(UnityEngine::rect_t{ x, y, w, h }, text, (uintptr_t)style);
-			}
-
-		}
-
-		static void Text(const Vector2& pos, Unity_String text, uintptr_t style, bool centered = false) {
-			if (!style)
-				return;
-
-			rect_t rect{ pos.x, pos.y, 100, 20 };
-
-			const auto label = reinterpret_cast<void(*)(UnityEngine::rect_t, Unity_String, uintptr_t)>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GUI")), HASH("Label"), 3)));
-			if (!label)
-				return;
-
-			if (centered)
-			{
-				UnityEngine::GUIStyle::SetAlignment((UnityEngine::GUIStyle*)style, 0x4);
-			}
-
-
-			Call<void>(uintptr_t(label), rect, text, style);
-		}
-
 	};
 
 

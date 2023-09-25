@@ -68,7 +68,7 @@ inline char* itoass(int m_iValue, char* m_pBuffer, int m_iRadix)
 	return m_pBuffer;
 }
 
-inline static float accent_color_[4] = { 252, 3, 98, 255 };
+inline static float accent_color_[4] = { 255, 255, 255, 255 };
 inline float menu_alpha;
 inline static bool wakeup{ false };
 inline static bool sex{ false };
@@ -119,35 +119,6 @@ inline bool bComboOpenedInThisFrame = false;
 static inline bool IsComboOpen = false;
 static inline unsigned long long iCurrentSelectedKeybind = 0;
 
-inline void fill_box(UnityEngine::rect_t pos, Color clr)
-{
-	UnityEngine::Texture2D* white_texture = nullptr;
-	if (!white_texture)
-	{
-		white_texture = UnityEngine::Texture2D::get_whiteTexture();
-	}
-
-	UnityEngine::GUI::SetColor(clr.GetUnityColor());
-	UnityEngine::GUI::DrawTexture(pos, white_texture);
-}
-
-
-inline void outline_box(Vector2 pos, Vector2 size, Color clr)
-{
-	UnityEngine::Texture2D* white_texture = nullptr;
-
-	if (!white_texture)
-	{
-		white_texture = UnityEngine::Texture2D::get_whiteTexture();
-	}
-
-	UnityEngine::GUI::SetColor(clr.GetUnityColor());
-	UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(pos.x, pos.y, 1, size.y), white_texture);
-	UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(pos.x + size.x, pos.y, 1, size.y), white_texture);
-	UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(pos.x, pos.y, size.x, 1), white_texture);
-	UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(pos.x, pos.y + size.y, size.x, 1), white_texture);
-}
-
 inline void Arrow(const Vector2& screensize, float x, float y, Color Color)
 {
 	//UnityEngine::GL::GlFillRectangle({ x, y }, { 1, 3 }, Color);
@@ -170,19 +141,19 @@ public:
 	bool window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open);
 	bool is_mouse_in_box(const Vector2& pos1, const Vector2& pos2);
 	void Tab(const wchar_t* name, int id, Vector2 tab_size = Vector2(112, 35));
-	void SubTab(const wchar_t* name, int id, Vector2 tab_size = Vector2(112, 35));
-	void BeginChild(const wchar_t* title, const Vector2& pos, const Vector2& size);
-	void Slider(const wchar_t* szTitle, float& flValue, float iMin, float iMax, bool color = false);
-	void Slider(const wchar_t* szTitle, int& iValue, int iMin, int iMax, bool color = false);
+	void SubTab(const char* name, int id, Vector2 tab_size = Vector2(112, 35));
+	void BeginChild(const char* title, const Vector2& pos, const Vector2& size);
+	void Slider(const char* szTitle, float& flValue, float iMin, float iMax, bool color = false);
+	//void Slider(const char* szTitle, int& iValue, int iMin, int iMax, bool color = false);
 	void MultiDropdown(const std::string& title, const std::vector<std::string> items, std::vector<bool>& value, bool& is_open);
 	void Dropdown(const std::string& title, const std::vector<std::string> items, int& value, bool& is_open);
 	void ListBox(const std::string& title, const std::vector<std::string> items, int& selected_index);
 	void Button(const std::string& title, void* callback);
 	void Spacer(int size);
-	void CheckBox(const wchar_t* szTitle, bool& bValue);
-	void Text(const wchar_t* szTitle);
-	void CheckBoxKeyBind(const wchar_t* szTitle, bool& bValue, RustStructs::KeyCode& iKey);
+	void CheckBox(const char* szTitle, bool& bValue);
+	void Text(const char* szTitle);
+	void CheckBoxKeyBind(const char* szTitle, bool& bValue, RustStructs::KeyCode& iKey);
 	void ColorPicker(const wchar_t* name, Color selectedColor);
-	void Hotkey(const wchar_t* szTitle, RustStructs::KeyCode& iKey);
+	void Hotkey(const char* szTitle, RustStructs::KeyCode& iKey);
 	void end_window();
 };

@@ -33,7 +33,7 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 				_This->Atmosphere()->Brightness() = 5.f;
 				_This->Atmosphere()->Fogginess() = 0.f;
 				
-				m_settings::GameTime = 20.f;
+				m_settings::GameTime = 6.5f;
 
 				auto Ambient = Night->AmbientColor();
 				uintptr_t AmbientColor = *(uintptr_t*)(Ambient + 0x10);

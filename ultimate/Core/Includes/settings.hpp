@@ -40,7 +40,7 @@ namespace m_settings {
 	inline RustStructs::KeyCode HerbertKey = RustStructs::KeyCode::C;
 	inline bool HeldItemIcon = false;
 
-	inline int ManipPoints = 5;
+	inline float ManipPoints = 5;
 	inline bool ReportAllAuthedTurret = false;
 	inline bool InstantEoka = false;
 	inline bool TargetWounded = false;
@@ -130,7 +130,7 @@ namespace m_settings {
 	inline RustStructs::KeyCode AutoshootKey = RustStructs::KeyCode::F;
 	inline bool IncludeFatBullet = false;
 
-	inline int recoilPercent = 100;
+	inline float recoilPercent = 100;
 	inline int RecoilPercentY = 100;
 
 	inline bool AdminFlags = false;
