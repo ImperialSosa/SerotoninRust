@@ -2328,7 +2328,7 @@ namespace AssemblyCSharp {
 			return bestBone;
 		}
 
-		static inline auto GetAimbotTarget(Vector3 Source, float MaxDist = 500) -> Target;
+		static auto GetAimbotTarget(Vector3 Source, float MaxDist = 500) -> Target;
 
 		int NewProjectileID()
 		{

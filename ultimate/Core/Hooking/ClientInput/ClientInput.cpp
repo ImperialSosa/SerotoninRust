@@ -292,14 +292,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 	else
 	{
-		if (m_settings::InstantBullet)
-		{
-			Features().Instance()->LocalPlayer->clientTickInterval() = 0.35f;
-		}
-		else
-		{
-			Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
-		}
+		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
