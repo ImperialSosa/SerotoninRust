@@ -3,6 +3,7 @@
 #include "../../CRT/memory.hpp"
 #include <vector>
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
+#include "../Features/Features.hpp"
 
 inline UnityEngine::AssetBundle* font_bundle;
 
@@ -84,6 +85,76 @@ inline std::vector< PrefabList> PrefabVectorList;
 inline std::vector< PrefabList> PrefabListTemp;
 
 
+inline float timee = 120.f;
+
+struct Explosion {
+public:
+	std::string name;
+	float timeSince;
+	Vector3 position;
+};
+
+class LogSystem {
+public:
+	static inline int max_entries = 10;
+
+	static inline std::vector<Explosion> loggedExplosions = std::vector<Explosion>();
+
+	static inline void LogExplosion(std::string type, Vector3 pos) {
+		if (!InGame)
+			return;
+
+		bool explosionCollision = false;
+		std::vector<Explosion>::iterator it;
+		for (it = loggedExplosions.begin(); it != loggedExplosions.end(); it++) {
+			Vector2 explPos;
+			if (it->position.Distance(pos) <= 25.0f) {
+				explosionCollision = true;
+				break;
+			}
+		}
+		if (!explosionCollision) {
+			Explosion explosion = Explosion();
+			char str[256];
+			sprintf(str, XS("%s Raid"), type.c_str());
+			explosion.name = str;
+			explosion.position = pos;
+			explosion.timeSince = UnityEngine::Time::get_realtimeSinceStartup();
+			loggedExplosions.push_back(explosion);
+		}
+	}
+
+	static inline void RenderExplosions() {
+		if (!InGame)
+			return;
+
+		if (!IsAddressValid(Features().LocalPlayer))
+			return;
+
+		for (int i = 0; i < LogSystem::loggedExplosions.size(); i++) {
+			if ((UnityEngine::Time::get_realtimeSinceStartup() - LogSystem::loggedExplosions[i].timeSince) >= m_settings::MaxRaidTimer) {
+				LogSystem::loggedExplosions.erase(LogSystem::loggedExplosions.begin() + i);
+				continue;
+			}
+			Explosion explosion = LogSystem::loggedExplosions.at(i);
+
+			Vector2 explPos;
+
+			if (explosion.position.Distance(Features().LocalPlayer->get_transform()->get_position()) <= m_settings::MaxExplosionDistance)
+			{
+				if (UnityEngine::WorldToScreen(explosion.position, explPos))
+				{
+					std::string string;
+					char str[256];
+					sprintf(str, XS("%s [%1.0fm] [%d]"), explosion.name.c_str(), explosion.position.get_3d_dist(Features().LocalPlayer->get_transform()->get_position()), (int)(m_settings::MaxRaidTimer - (UnityEngine::Time::get_realtimeSinceStartup() - LogSystem::loggedExplosions[i].timeSince)));
+					string += str;
+					UnityEngine::GL().TextCenter(explPos, string.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
+				}
+			}
+		
+		}
+	}
+};
 class Visuals {
 public:
 	static auto Instance() -> Visuals*
@@ -100,4 +171,7 @@ public:
 
 	void CacheEntities();
 	void RenderEntities();
+
+public:
+	AssemblyCSharp::BasePlayer::Target GetAimbotTargetSafe(Vector3 Source, float MaxDist = 500);
 };

@@ -1705,3 +1705,140 @@ void Visuals::CacheEntities()
 	}
 
 }
+
+AssemblyCSharp::BasePlayer::Target Visuals::GetAimbotTargetSafe(Vector3 Source, float MaxDist)
+{
+	if (!InGame)
+		return {};
+
+	if (!VisiblePlayerList)
+		VisiblePlayerList = AssemblyCSharp::BasePlayer::visiblePlayerList();
+
+	auto Vals = VisiblePlayerList->vals;
+	auto size = Vals->count;
+	auto buffer = Vals->buffer;
+	AssemblyCSharp::BasePlayer::Target best_target = AssemblyCSharp::BasePlayer::Target();
+
+	for (std::int32_t index = 0; index < size; index++)
+	{
+		auto BasePlayer = buffer->m_Items[index];
+		if (!IsAddressValid(BasePlayer))
+			continue;
+
+		if(!IsAddressValid(BasePlayer->net()))
+			continue;
+
+		if (!IsAddressValid(BasePlayer->playerModel()) || !IsAddressValid(BasePlayer->model()))
+			continue;
+
+		if (BasePlayer->IsDead() || BasePlayer->IsLocalPlayer() ||
+			BasePlayer->playerFlags() & RustStructs::PlayerFlags::Sleeping || BasePlayer->wasDead() ||
+			BasePlayer->_health() <= 0.f)
+			continue;
+
+		auto isWounded = BasePlayer->playerFlags() & RustStructs::PlayerFlags::Wounded;
+		if (isWounded && !m_settings::TargetWounded)
+			continue;
+
+		bool isNpc = false;
+		if (BasePlayer->playerModel()->get_IsNpc()) {
+			if (!m_settings::AimbotNPC)
+				continue;
+			isNpc = true;
+		}
+
+		AssemblyCSharp::BasePlayer::Target target;
+		target.m_player = BasePlayer;
+
+		if (target.m_player != nullptr)
+		{
+			if (target.m_player != BasePlayer)
+			{
+				target.m_player = BasePlayer;
+			}
+		}
+
+
+		auto velocity = BasePlayer->playerModel()->newVelocity();
+		target.m_velocity = velocity;
+
+		Vector3 pos = Vector3(0.f, 0.f, 0.f);
+		int selectedAimbone = m_settings::SelectedAimbone;
+		int bone = 47;
+		switch (selectedAimbone) {
+		case 0: // Head
+			pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
+			bone = RustStructs::bones::head;
+			break;
+		case 1: // neck
+			pos = BasePlayer->get_bone_transform(RustStructs::bones::neck)->get_position();
+			bone = RustStructs::bones::neck;
+			break;
+		case 2: // spine1
+			pos = BasePlayer->get_bone_transform(RustStructs::bones::spine1)->get_position();
+			bone = RustStructs::bones::spine1;
+			break;
+		case 3: // Random bone selection
+			switch (my_rand() % 9) {
+			case 0: // Head
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
+				bone = RustStructs::bones::head;
+				break;
+			case 1: // pelvis
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::pelvis)->get_position();
+				bone = RustStructs::bones::pelvis;
+				break;
+			case 2: // r_hip
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::r_hip)->get_position();
+				bone = RustStructs::bones::r_hip;
+				break;
+			case 3: // r_foot
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::r_foot)->get_position();
+				bone = RustStructs::bones::r_foot;
+				break;
+			case 4: // spine1
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::spine1)->get_position();
+				bone = RustStructs::bones::spine1;
+				break;
+			case 5: // l_hand
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::l_hand)->get_position();
+				bone = RustStructs::bones::l_hand;
+				break;
+			case 6: // r_upperarm
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::r_upperarm)->get_position();
+				bone = RustStructs::bones::r_upperarm;
+				break;
+			case 7: // l_knee
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::l_knee)->get_position();
+				bone = RustStructs::bones::l_knee;
+				break;
+			case 8: // spine4
+				pos = BasePlayer->get_bone_transform(RustStructs::bones::spine4)->get_position();
+				bone = RustStructs::bones::spine4;
+				break;
+			}
+			break;
+		case 4:
+			bone = AssemblyCSharp::BasePlayer::ClosesestToCrosshair(ToAddress(BasePlayer));
+			pos = BasePlayer->get_bone_transform(bone)->get_position();
+			break;
+		}
+
+		target.m_position = pos;
+		target.m_bone = bone;
+		target.m_npc = isNpc;
+		target.m_heli = false;
+
+		auto distance = Source.get_3d_dist(pos);
+		target.m_distance = distance;
+		if (distance > MaxDist)
+			continue;
+
+		auto fov = AssemblyCSharp::get_fov(pos);
+		target.m_fov = fov;
+
+		if (target < best_target)
+			best_target = target;
+	}
+	return best_target;
+}

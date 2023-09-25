@@ -121,6 +121,20 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 			continue;
 
 
+
+
+		LaunchedProjectileSize = created_projectiles_size;
+
+		if (m_settings::BulletTP)
+		{
+			if (CalledLaunchFromHook)
+			{
+				c_projectile->integrity() = 0.f;
+				LaunchedProjectilesArray[index] = c_projectile;
+			}
+		}
+
+
 		AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
 
 		if (AimbotTarget.m_heli && m_settings::HeliAimbot)
@@ -154,26 +168,14 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 	for (std::int32_t index = 0; index < created_projectiles_size; index++)
 	{
 		auto c_projectile = *(Projectile**)((uintptr_t)created_projectiles_ + 0x20 + index * 0x8);
-		if (!c_projectile) continue;
+		if (!c_projectile) 
+			continue;
 
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
 		{
 			if (AimbotTarget.m_player || manipulated) {
-				//c_projectile->initialVelocity() = m_aim_angle;
+				c_projectile->initialVelocity() = m_aim_angle;
 				c_projectile->currentVelocity() = m_aim_angle;
-			}
-		}
-
-
-
-		LaunchedProjectileSize = created_projectiles_size;
-
-		if (m_settings::BulletTP)
-		{
-			if (CalledLaunchFromHook)
-			{
-				c_projectile->integrity() = 0.f;
-				LaunchedProjectilesArray[index] = c_projectile;
 			}
 		}
 
@@ -201,6 +203,8 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 			}
 		}
 	}
+
+	created_projectiles->Clear();
 
 	return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 }

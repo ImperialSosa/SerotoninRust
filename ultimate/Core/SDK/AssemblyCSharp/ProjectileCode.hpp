@@ -2,7 +2,6 @@
 #include "AssemblyCSharp.hpp"
 
 
-
 namespace O::Projectile {
 	constexpr auto initialVelocity = 0x18;
 	constexpr auto drag = 0x24;
@@ -369,7 +368,7 @@ public:
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
 		if (!hTest)
 		{
-			auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+			auto g_hit_test_class = AssemblyCSharp::HitTest::StaticClass();
 			hTest = (AssemblyCSharp::HitTest*)CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
 		}
 
@@ -541,7 +540,7 @@ public:
 		if (!ht) {
 			/*HitTest_TypeInfo*/
 
-			auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+			auto g_hit_test_class = AssemblyCSharp::HitTest::StaticClass();
 			auto g_hit_test = CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
 			ht = (AssemblyCSharp::HitTest*)g_hit_test;
 			hitTest() = (AssemblyCSharp::HitTest*)g_hit_test;
@@ -619,11 +618,17 @@ public:
 		if (!m_target.m_player)
 			return false;
 
+		float real_travel_time = this->traveledTime();
+		Vector3 vel = this->currentVelocity();
+
 		if (m_target.m_player->mounted() || m_target.m_heli)
 		{
 			if (DoFatBulletHit(pr, currentPosition()))
 			{
 				RPC_Counter.Reset();
+
+				this->currentVelocity() = (vel);
+				this->traveledTime() = (real_travel_time);
 				integrity() = (0);
 				flag = true;
 				return false;

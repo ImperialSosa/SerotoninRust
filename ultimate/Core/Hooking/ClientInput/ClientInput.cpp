@@ -169,10 +169,19 @@ inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSha
 	if (w->timeSinceDeploy() < w->deployDelay()) return;
 
 	auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+	if (!IsAddressValid(g_hit_test_class))
+		return;
+	
 	auto g_hit_test = (AssemblyCSharp::HitTest*)CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
+	if (!IsAddressValid(g_hit_test))
+		return;
+
 
 	auto trans = p->get_transform();
-	if (!trans) return;
+	if (!IsAddressValid(trans))
+		return;
+
+
 	UnityEngine::Ray r = UnityEngine::Ray(AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position(), (pos - AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position()).Normalized());
 
 	g_hit_test->MaxDistance() = 1000.f;
@@ -181,7 +190,7 @@ inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSha
 	g_hit_test->DidHit() = true;
 	g_hit_test->HitEntity() = p;
 	g_hit_test->HitPoint() = trans->InverseTransformPoint(pos);
-	g_hit_test->HitNormal() = Vector3(0, 0, 0); //trans->InverseTransformDirection(pos)
+	g_hit_test->HitNormal() = trans->InverseTransformDirection(pos);
 	g_hit_test->damageProperties() = w->damageProperties();
 
 	w->StartAttackCooldown(w->repeatDelay());
@@ -279,37 +288,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
-		if (const auto input = Features().Instance()->LocalPlayer->input())
-		{
-			if (const auto state = input->state())
-			{
-				if (state->WasJustPressed(RustStructs::BUTTON::FORWARD)
-					|| state->WasJustPressed(RustStructs::BUTTON::BACKWARD)
-					|| state->WasJustPressed(RustStructs::BUTTON::LEFT)
-					|| state->WasJustPressed(RustStructs::BUTTON::RIGHT))
-				{
-					Features().Instance()->LocalPlayer->clientTickInterval() = 0.80f;
-				}
-				else
-				{
-					Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
-				}
-			}
-
-		}
-
 		Features().Instance()->LocalPlayer->clientTickInterval() = .99f;
 	}
 	else
 	{
-		if (m_settings::InstantBullet)
-		{
-			Features().Instance()->LocalPlayer->clientTickInterval() = 0.35f;
-		}
-		else
-		{
-			Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
-		}
+		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))

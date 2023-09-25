@@ -1,4 +1,5 @@
 #include "AssemblyCSharp.hpp"
+#include "../../Features/Visuals/Visuals.hpp"
 
 namespace AssemblyCSharp {
 
@@ -291,6 +292,14 @@ namespace AssemblyCSharp {
 	void Item::SetSkin(uint64_t skin_id)
 	{
 		skin() = skin_id;
+	}
+
+
+	auto BasePlayer::GetAimbotTarget(Vector3 Source, float MaxDist) -> BasePlayer::Target {
+		if (!InGame)
+			return {};
+
+		return Visuals().GetAimbotTargetSafe(Source, MaxDist);
 	}
 
 	Item* ItemContainer::GetItem(int id)
