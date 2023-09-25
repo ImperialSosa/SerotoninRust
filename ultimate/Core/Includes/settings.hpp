@@ -16,6 +16,14 @@ namespace m_settings {
 	inline bool AimbotNPC = false;
 	inline bool DisableHitSounds = false;
 	inline bool CustomHitSounds = false;
+	inline bool OutlinedText = true;
+	inline bool ShadedText = false;
+	inline bool KillEffects = false;
+	inline bool LoadExplosionEffect = false;
+	inline bool LoadGhostEffect = false;
+	inline int SelectedKillEffect = 0;
+	inline bool WorldOutlinedText = true;
+	inline bool WorldShadedText = false;
 
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
@@ -168,7 +176,7 @@ namespace m_settings {
 	inline bool ShowBulletTPAngle = false;
 	inline bool DroppedItems = false;
 	inline float DroppedItemColor[4] = { 255.f, 255.f, 255.f, 255.f };
-	inline float HempColor[4] = { 108.f, 238.f, 0.f, 255.f };
+	inline float HempColor[4] = { 0.f, 176.f, 21.f, 255.f };
 	inline float DieselColor[4] = { 72.f, 72.f, 72.f, 255.f };
 	inline float StoneColor[4] = { 238.f, 238.f, 238.f, 255.f };
 	inline float MetalColor[4] = { 100.f, 49.f, 49.f, 255.f };

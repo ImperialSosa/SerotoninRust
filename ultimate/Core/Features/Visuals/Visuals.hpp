@@ -21,8 +21,7 @@ inline UnityEngine::Material* ColorMaterial;
 inline UnityEngine::AssetBundle* GalaxyBundle;
 inline UnityEngine::Shader* GalaxyShader;
 inline UnityEngine::Material* GalaxyMaterial;
-static UnityEngine::AssetBundle* AmongUsAsset = nullptr;
-static UnityEngine::AssetBundle* HerbetAsset = nullptr;
+
 inline UnityEngine::AssetBundle* GeometricBundle;
 inline UnityEngine::Shader* GeometricShader;
 inline UnityEngine::Material* GeometricMaterial;
@@ -34,6 +33,12 @@ inline UnityEngine::Material* LightningMaterial;
 inline UnityEngine::AssetBundle* WireFrameBundle;
 inline UnityEngine::Shader* WireFrameShader;
 inline UnityEngine::Material* WireFrameMaterial;
+
+static UnityEngine::AssetBundle* AmongUsAsset = nullptr;
+static UnityEngine::AssetBundle* HerbetAsset = nullptr;
+inline UnityEngine::AssetBundle* ExplosionAsset = nullptr;
+inline UnityEngine::AssetBundle* GhostAsset = nullptr;
+inline UnityEngine::AssetBundle* TestAsset = nullptr;
 
 class VisualsVector {
 public:
@@ -50,9 +55,11 @@ inline std::vector< VisualsVector> VisualsArray;
 inline std::vector< VisualsVector> VisualsArrayTemp;
 
 
-inline UnityEngine::GameObject* ExplosionAsset = nullptr;
+inline UnityEngine::GameObject* ExplosionPrefab = nullptr;
+inline UnityEngine::GameObject* GhostPrefab = nullptr;
 inline UnityEngine::GameObject* AmongusPrefab = nullptr;
 inline UnityEngine::GameObject* HerbertPrefab = nullptr;
+inline UnityEngine::GameObject* TestPrefab = nullptr;
 
 class PrefabList {
 public:

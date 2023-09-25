@@ -253,7 +253,7 @@ void Visuals::DrawPlayers()
 			{
 				if (BasePlayer == m_target.m_player)
 				{
-					UnityEngine::GL::TextCenter(Vector2(headPos.x, headPos.y - yoffsethead), XS("Target"), BoxColor, Color::Black(), m_settings::fontsize);
+					UnityEngine::GL::TextCenter(Vector2(headPos.x, headPos.y - yoffsethead), XS("Target"), BoxColor, Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					yoffsethead += 12.f;
 				}
 			}
@@ -420,7 +420,7 @@ void Visuals::DrawPlayers()
 						sprintf(str, XS("[%dm]"), (int)distance);
 						player_name = player_name + " " + str;
 
-						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize);
+						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					}
 					else
 					{
@@ -431,7 +431,7 @@ void Visuals::DrawPlayers()
 							sprintf(str, XS("[%dm]"), (int)distance);
 							player_name = player_name + " " + str;
 
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize);
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 						}
 
 					}
@@ -446,7 +446,7 @@ void Visuals::DrawPlayers()
 						sprintf(str, XS("[%dm]"), (int)distance);
 						player_name = player_name + " " + str;
 		
-						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize);
+						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					}
 					else
 					{
@@ -456,7 +456,7 @@ void Visuals::DrawPlayers()
 							char str[128];
 							sprintf(str, XS("[%dm]"), (int)distance);
 							player_name = player_name + " " + str;
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize);
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 						}
 					}
 
@@ -481,12 +481,12 @@ void Visuals::DrawPlayers()
 
 							if (m_settings::TagsVisCheck)
 							{
-								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize);
+								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 								yoffset += 13;
 							}
 							else
 							{
-								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize);
+								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 								yoffset += 13;
 							}
 						}
@@ -566,7 +566,7 @@ void Visuals::DrawPlayers()
 									else
 										AmmoType = XS("Unknown");
 
-									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), AmmoType.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize);
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), AmmoType.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 									yoffset += 13;
 								}
 							}
@@ -581,12 +581,12 @@ void Visuals::DrawPlayers()
 				UnityEngine::RaycastHit hitInfo;
 				if (AssemblyCSharp::GamePhysics::Trace(UnityEngine::Ray(BasePlayer->get_bone_transform(47)->get_position(), position), 0.f, hitInfo, 500.f, 2097152, RustStructs::QueryTriggerInteraction::Ignore, nullptr))
 				{
-					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize);
+					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					yoffset += 13;
 				}
 				else
 				{
-					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize);
+					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					yoffset += 13;
 				}
 
@@ -933,7 +933,7 @@ void Visuals::RenderEntities()
 										sprintf(str, XS("[%dm]"), (int)distance);
 										player_name = player_name + " " + str;
 
-										UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DroppedColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DroppedColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									}
 								}
 							}
@@ -956,7 +956,7 @@ void Visuals::RenderEntities()
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), HempColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), HempColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 								if (m_settings::CollectablesIcon)
 								{
@@ -980,7 +980,7 @@ void Visuals::RenderEntities()
 									char str[128];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DieselColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DieselColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::CollectablesIcon)
 									{
@@ -1013,7 +1013,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 								if (m_settings::FoodIcons)
 								{
@@ -1042,7 +1042,7 @@ void Visuals::RenderEntities()
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1072,7 +1072,7 @@ void Visuals::RenderEntities()
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1102,7 +1102,7 @@ void Visuals::RenderEntities()
 									char str[128];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1135,7 +1135,7 @@ void Visuals::RenderEntities()
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1160,7 +1160,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1185,7 +1185,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1215,7 +1215,7 @@ void Visuals::RenderEntities()
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BackpackColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BackpackColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -1228,7 +1228,7 @@ void Visuals::RenderEntities()
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), CorpseColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), CorpseColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1249,7 +1249,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1283,7 +1283,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), TurretColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), TurretColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								auto aimDir = turret_entity->aimDir();
@@ -1328,7 +1328,7 @@ void Visuals::RenderEntities()
 
 								if (m_settings::TurretEquippedFlags) {
 									if (flags & 512) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Equipped"), Color::White(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Equipped"), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -1336,19 +1336,19 @@ void Visuals::RenderEntities()
 								if (m_settings::TurretOnFlags)
 								{
 									if (flags & 2) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("ON"), Color::Red(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("ON"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 									else
 									{
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OFF"), Color::Green(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OFF"), Color::Green(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
 
 								if (m_settings::TurretTurningFlag) {
 									if (turret_entity->wasTurning()) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Turning"), Color::White(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Turning"), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -1359,7 +1359,7 @@ void Visuals::RenderEntities()
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12.f;
 									UnityEngine::DDraw().Line(muzzlePos, Vector3(muzzlePos + (aimDir * sightRange)), Color::Red(), 0.2f, true, false);
 								}
@@ -1388,7 +1388,7 @@ void Visuals::RenderEntities()
 													char str[128];
 													sprintf(str, XS("[%dm]"), (int)distance);
 													player_name = player_name + " " + str;*/
-													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize);
+													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 													yoffset += 12.f;
 												}
 											}
@@ -1419,16 +1419,16 @@ void Visuals::RenderEntities()
 								player_name = player_name + " " + str;
 								auto flags = hackablecrate_entity->flags();
 								auto hackSeconds = hackablecrate->hackSeconds();
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								if (m_settings::HackableCrateFlags) {
 									if (flags & 256) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Hacked"), Color::White(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Hacked"), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 									else if (flags & 128) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Hacking.."), Color::White(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Hacking.."), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -1442,7 +1442,7 @@ void Visuals::RenderEntities()
 
 									if (flags & 256) {}
 									else {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -1468,10 +1468,10 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 								auto flags = crate_entity->flags();
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 								if (flags & 4)
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 							}
 						}
@@ -1489,10 +1489,10 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 								auto flags = crate_entity->flags();
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 								if (flags & 4)
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 							}
 						}
@@ -1514,7 +1514,7 @@ void Visuals::RenderEntities()
 								char str[128];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 							}
 						}

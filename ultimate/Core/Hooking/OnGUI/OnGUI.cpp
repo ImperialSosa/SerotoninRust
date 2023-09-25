@@ -542,6 +542,100 @@ void SetupBundles()
 			}
 		}
 	}
+	if (m_settings::LoadExplosionEffect) {
+		if (!ExplosionAsset)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/explosion.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						ExplosionAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+
+						LOG(XS("[DEBUG] ExplosionAsset Bundle Loaded"));
+						send_time2 = current_time2;
+					}
+				}
+
+				send_time = current_time;
+			}
+		}
+
+		if (ExplosionAsset)
+		{
+			if (!ExplosionPrefab)
+			{
+				ExplosionPrefab = ExplosionAsset->LoadAsset<UnityEngine::GameObject>(XS("bigexplosioneffect.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+			}
+		}
+	}
+	if (m_settings::LoadGhostEffect) {
+		if (!GhostAsset)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/ghost.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						GhostAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+
+						LOG(XS("[DEBUG] GhostAsset Bundle Loaded"));
+						send_time2 = current_time2;
+					}
+				}
+
+				send_time = current_time;
+			}
+		}
+
+		if (GhostAsset)
+		{
+			if (!GhostPrefab)
+			{
+				GhostPrefab = GhostAsset->LoadAsset<UnityEngine::GameObject>(XS("cfxr2 souls escape.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+			}
+		}
+	}
 }
 
 
@@ -629,7 +723,6 @@ void drawMisc()
 						bulletTPPos = targetPos;
 					}
 
-
 					Vector2 w2sPos;
 					if (UnityEngine::WorldToScreen(bulletTPPos, w2sPos))
 					{
@@ -655,7 +748,7 @@ void drawMisc()
 
 					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
 					{
-						UnityEngine::GL().TextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize);
+						UnityEngine::GL().TextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					}
 				}
 			}
@@ -684,7 +777,7 @@ void drawMisc()
 				sprintf(str, XS("[%dm]"), (int)distance);
 				player_name = player_name + " " + str;
 
-				UnityEngine::GL().TextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize);
+				UnityEngine::GL().TextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 			}
 		}
 	}
@@ -1128,9 +1221,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		SetupStyles();
 
-		//if (!WireFrameBundle)
-		//	WireFrameBundle = UnityEngine::AssetBundle::LoadFromFile_Internal(XS("C:\\WireFrame.unity3d"), 0, 0);
-
 		MenuDraw().RenderMenu();
 
 		if (is_menu_open) {
@@ -1247,6 +1337,41 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					AmongusPrefab = nullptr;
 				}
 			}
+
+			if (ExplosionAsset)
+			{
+				ExplosionAsset->Unload(true);
+				ExplosionAsset = nullptr;
+
+				if (ExplosionPrefab)
+				{
+					ExplosionPrefab = nullptr;
+				}
+			}
+
+			if (GhostAsset)
+			{
+				GhostAsset->Unload(true);
+				GhostAsset = nullptr;
+
+				if (GhostPrefab)
+				{
+					GhostPrefab = nullptr;
+				}
+			}
+
+			if (TestAsset)
+			{
+				TestAsset->Unload(true);
+				TestAsset = nullptr;
+
+				if (TestPrefab)
+				{
+					TestPrefab = nullptr;
+				}
+			}
+
+
 
 			if (GalaxyBundle)
 			{

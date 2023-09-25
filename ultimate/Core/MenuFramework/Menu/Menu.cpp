@@ -6,7 +6,7 @@ inline bool bullet_tpe_open;
 inline bool config_type_open;
 inline bool hitmat_open;
 inline bool wchams_type_opens;
-
+inline bool killeffect_type_open;
 inline bool aim_type_opene2;
 #include "../../Configs/Configs.hpp"
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
@@ -456,6 +456,12 @@ void MenuDraw::RenderMenu()
 				if (m_settings::WeaponSpammer) {
 					Menu().Slider(XS(L"WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
 				}
+
+				Menu().CheckBox(XS(L"KillEffects"), m_settings::KillEffects);
+				Menu().Dropdown(XS("Effect Type"), { XS("Explosion"), XS("Ghosts") }, m_settings::SelectedKillEffect, killeffect_type_open);
+
+		
+
 				Menu().CheckBox(XS(L"WeaponChams"), m_settings::WeaponChams);
 				Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame") }, m_settings::WeaponSelectedChams, wchams_type_opens);
 
@@ -463,6 +469,11 @@ void MenuDraw::RenderMenu()
 				Menu().CheckBox(XS(L"LoadGeometric"), m_settings::LoadGeometric);
 				Menu().CheckBox(XS(L"LoadGalaxy"), m_settings::LoadGalaxy);
 				Menu().CheckBox(XS(L"LoadWireFrame"), m_settings::LoadWireFrame);
+
+				Menu().CheckBox(XS(L"LoadExplosionEffect"), m_settings::LoadExplosionEffect);
+				Menu().CheckBox(XS(L"LoadGhostEffect"), m_settings::LoadGhostEffect);
+
+
 			}
 			break;
 		case 4:
@@ -473,6 +484,20 @@ void MenuDraw::RenderMenu()
 
 			Menu().BeginChild(XS(L"Configs"), { 285,45 }, { 220,290 });
 			{
+				Menu().CheckBox(XS(L"OutlinedText"), m_settings::OutlinedText);
+				if (m_settings::OutlinedText)
+					m_settings::ShadedText = false;
+				Menu().CheckBox(XS(L"ShadedText"), m_settings::ShadedText);
+				if (m_settings::ShadedText)
+					m_settings::OutlinedText = false;
+
+				Menu().CheckBox(XS(L"WorldOutlinedText"), m_settings::WorldOutlinedText);
+				if (m_settings::WorldOutlinedText)
+					m_settings::WorldShadedText = false;
+				Menu().CheckBox(XS(L"WorldShadedText"), m_settings::WorldShadedText);
+				if (m_settings::WorldShadedText)
+					m_settings::WorldOutlinedText = false;
+
 				Menu().Button(XS("Save Config"), Configs::SaveConfig);
 				Menu().Button(XS("Load Config"), Configs::LoadConfig);
 				Menu().Spacer(30);

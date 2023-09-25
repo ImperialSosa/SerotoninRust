@@ -16,32 +16,66 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 
 	if (instance->IsPlayer())
 	{
-		/*if (hitinfo->DidHit()) {
-			if (ExplosionAsset)
-			{
-				if (hitinfo->Initiator() == AssemblyCSharp::LocalPlayer::get_Entity() && UnityEngine::Time::get_realtimeSinceStartup() - instance->lastHeadshotSoundTime() > 0.01f)
-				{
-					auto camera = UnityEngine::Camera::get_main();
-					if (IsAddressValid(camera)) {
-						auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
-						if (IsAddressValid(m_target.m_player))
+		if (m_settings::KillEffects) {
+			if (hitinfo->DidHit()) {
+				int selectedKillEffect = m_settings::SelectedKillEffect;
+
+				switch (selectedKillEffect) {
+				case 0:
+					if (ExplosionAsset)
+					{
+						if (hitinfo->Initiator() == AssemblyCSharp::LocalPlayer::get_Entity() && UnityEngine::Time::get_realtimeSinceStartup() - instance->lastHeadshotSoundTime() > 0.01f)
 						{
-							ExplosionAsset->set_active(true);
-							UnityEngine::GameObject().Instantiate(ExplosionAsset, m_target.m_position, m_target.m_player->eyes()->get_rotation());
+							auto camera = UnityEngine::Camera::get_main();
+							if (IsAddressValid(camera)) {
+								auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+								if (IsAddressValid(m_target.m_player))
+								{
+									ExplosionPrefab->set_active(true);
+									UnityEngine::GameObject().Instantiate(ExplosionPrefab, m_target.m_position, m_target.m_player->eyes()->get_rotation());
+								}
+								else
+								{
+									ExplosionPrefab->set_active(false);
+								}
+							}
+							else {
+								ExplosionPrefab->set_active(false);
+							}
+							instance->lastHeadshotSoundTime() = UnityEngine::Time::get_realtimeSinceStartup();
 						}
-						else
+
+					}
+				break;
+				case 1:
+					if (GhostAsset)
+					{
+						if (hitinfo->Initiator() == AssemblyCSharp::LocalPlayer::get_Entity() && UnityEngine::Time::get_realtimeSinceStartup() - instance->lastHeadshotSoundTime() > 0.01f)
 						{
-							ExplosionAsset->set_active(false);
+							auto camera = UnityEngine::Camera::get_main();
+							if (IsAddressValid(camera)) {
+								auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+								if (IsAddressValid(m_target.m_player))
+								{
+									GhostPrefab->set_active(true);
+									UnityEngine::GameObject().Instantiate(GhostPrefab, m_target.m_position, m_target.m_player->eyes()->get_rotation());
+								}
+								else
+								{
+									GhostPrefab->set_active(false);
+								}
+							}
+							else {
+								GhostPrefab->set_active(false);
+							}
+							instance->lastHeadshotSoundTime() = UnityEngine::Time::get_realtimeSinceStartup();
 						}
+
 					}
-					else {
-						ExplosionAsset->set_active(false);
-					}
-					instance->lastHeadshotSoundTime() = UnityEngine::Time::get_realtimeSinceStartup();
+				break;
 				}
-				
 			}
-		}*/
+		}
 
 
 		if (m_settings::CustomHitSounds)

@@ -61,7 +61,21 @@ void ConnectionManager::ResetPlayerCache()
 			AmongusPrefab = nullptr;
 		}
 
+		if (ExplosionPrefab)
+		{
+			ExplosionPrefab = nullptr;
+		}
 
+		if (GhostPrefab)
+		{
+			GhostPrefab = nullptr;
+		}
+
+		if (TestPrefab)
+		{
+			TestPrefab = nullptr;
+		}
+	
 		if (GalaxyBundle)
 		{
 			GalaxyShader = nullptr;

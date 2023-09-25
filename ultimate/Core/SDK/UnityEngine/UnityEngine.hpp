@@ -3,6 +3,7 @@
 #include "../System/System.hpp"
 #include "../RustStructs.h"
 #include "../../CRT/math.hpp"
+#include "../../Includes/settings.hpp"
 
 
 #define powFFFFFFFFFFFFFFFFFFFFFF(n) (n)*(n)
@@ -2808,14 +2809,18 @@ namespace UnityEngine {
 		Color outlineColor;
 		Il2CppString* text;
 		bool centered;
+		bool draw_outlined;
+		bool draw_shaded;
 
 		textcmd_t() = default;
-		textcmd_t(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt) {
+		textcmd_t(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt, bool e, bool f) {
 			outline = a;
 			pos = b;
 			clr = c;
 			outlineColor = d;
 			text = txt;
+			draw_outlined = e;
+			draw_shaded = f;
 		}
 	};
 
@@ -3025,7 +3030,7 @@ namespace UnityEngine {
 			icon_buffer.emplace_back(cmd);
 		}
 
-		static void TextOutline(const Vector2& pos, const Color& color, Color outlineColor, const char* text, bool centered, int size = 11)
+		static void TextOutline(const Vector2& pos, const Color& color, Color outlineColor, const char* text, bool centered, int size = 10, bool outlined = true, bool shaded = false)
 		{
 			textcmd_t* cmd = new textcmd_t;
 			cmd->outline = outlineColor.m_alpha > 0;
@@ -3035,14 +3040,15 @@ namespace UnityEngine {
 			cmd->pos = pos;
 			cmd->centered = centered;
 			//gui_style->SetFontSize(size);
-
+			cmd->draw_outlined = outlined;
+			cmd->draw_shaded = shaded;
 
 			text_buffer.emplace_back(cmd);
 		}
 
-		static void TextCenter(const Vector2& centerPos, const char* str, Color color, Color outlineColor, int size)
+		static void TextCenter(const Vector2& centerPos, const char* str, Color color, Color outlineColor, int size, bool outlined = true, bool shaded = false)
 		{
-			return TextOutline(centerPos, color, outlineColor, str, true, size);
+			return TextOutline(centerPos, color, outlineColor, str, true, size, outlined, shaded);
 		}
 
 		static std::list<textcmd_t*>& get_text_buffer() {
@@ -3080,23 +3086,35 @@ namespace UnityEngine {
 				else
 					UnityEngine::GUIStyle::SetAlignment(gui_style, 0x0);
 
-				UnityEngine::GUI::SetColor(entry->outlineColor);
+				if (entry->draw_outlined) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
 
-				//UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y), entry->text, gui_style);
-				//UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y), entry->text, gui_style);
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y + 1), entry->text, gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y - 1), entry->text, gui_style);
 
-				//UnityLabel(Vector2(entry->pos.x, entry->pos.y - 1), entry->text, gui_style);
-				//UnityLabel(Vector2(entry->pos.x, entry->pos.y + 1), entry->text, gui_style);
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y - 1), entry->text, gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, gui_style);
 
-				UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y + 1), entry->text, gui_style);
-				UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y - 1), entry->text, gui_style);
 
-				UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y - 1), entry->text, gui_style);
-				UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, gui_style);
+					UnityEngine::GUI::SetColor(entry->clr);
 
-				UnityEngine::GUI::SetColor(entry->clr);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+				}
+				else if (entry->draw_shaded) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, gui_style);
 
-				UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+					UnityEngine::GUI::SetColor(entry->clr);
+
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+				}
+				else {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+
+					UnityEngine::GUI::SetColor(entry->clr);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
+				}
 
 				it = text_buffer.erase(it);
 			}
