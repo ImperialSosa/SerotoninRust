@@ -308,6 +308,16 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 
+	if (CalledLaunchFromHook)
+	{
+		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 0"), nullptr);
+	}
+	else
+	{
+		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 1"), nullptr);
+	}
+
+
 	if (m_settings::BulletTP)
 	{
 		Features().Instance()->FindBulletTPAngles(num6);
