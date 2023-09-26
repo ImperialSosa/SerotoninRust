@@ -66,6 +66,9 @@ namespace m_settings {
 	inline bool Target_Indicator = false;
 	inline bool NormalFastBullet = false;
 	inline bool NoWeaponBob = false;
+	inline bool VelocityAimbot = false;
+	inline bool ValidVelocity = true;
+	inline float VelocityScale = 70.f;
 	inline bool WeaponSpammer;
 	inline float WeaponSpamDelay = 10.f;
 	inline RustStructs::KeyCode InteractiveKey = RustStructs::KeyCode::F;
@@ -121,6 +124,7 @@ namespace m_settings {
 	inline bool removefriend2 = false;
 	inline bool removefriend3 = false;
 	inline bool ForceAutomatic = false;
+	inline bool DoVelocityPrediction = false;
 
 	inline bool LoadGalaxy = false;
 	inline bool LoadLightning = false;

@@ -67,6 +67,7 @@ void MenuDraw::RenderMenu()
 					{
 						Menu().CheckBox(XS("Memory Aimbot"), m_settings::MemoryAimbot);
 						Menu().CheckBox(XS("Silent Aimbot"), m_settings::SilentAim);
+						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
 						//Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
 						//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
@@ -74,6 +75,7 @@ void MenuDraw::RenderMenu()
 						//{
 						//	Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
 						//}
+						Menu().Slider(XS("Velocity Scale"), m_settings::VelocityScale, 0, 100);
 						Menu().Slider(XS("Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 						Menu().Slider(XS("Fov Slider"), m_settings::AimbotFOV, 0, 1000);
 						Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);

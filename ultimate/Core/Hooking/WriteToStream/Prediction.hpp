@@ -13,6 +13,159 @@ inline AssemblyCSharp::Projectile* LaunchedProjectilesArray[256];
 inline size_t LaunchedProjectileSize;
 inline bool InstantHitReady = false;
 
+inline void SimulateProjectile(BasePlayer* target,
+	Vector3 rpc_position,
+	Vector3 target_pos,
+	Vector3& aimbot_velocity,
+	Vector3& _aimdir,
+	float& travel_t,
+	Projectile* p,
+	BaseProjectile* heldEntity,
+	ItemModProjectile* mod,
+	Vector3 average_velo) {
+
+	Vector3 gravity = UnityEngine::Physics::get_gravity();
+	float deltatime = UnityEngine::Time::get_deltaTime();
+	float timescale = UnityEngine::Time::get_timeScale();
+	float drag = p->drag();
+	float grav = p->gravityModifier();
+	float stepSize = 0.98f;
+
+	Vector3 targetPosition = target_pos;
+	Vector3 offset = Vector3(0, 0, 0);
+
+	Vector3 closestPoint(FLT_MAX, FLT_MAX, FLT_MAX);
+	Vector3 player_velocity = Vector3(0, 0, 0);
+	std::vector<Vector3> path;
+	int simulations = 0;
+
+	while (simulations < 50) {
+		travel_t = 0.f;
+		Vector3 pos = rpc_position;
+		Vector3 origin = pos;
+		float num = deltatime * timescale;
+		float num3 = 8.f / num;
+
+		_aimdir = (targetPosition - rpc_position).Normalized() * stepSize;
+		Vector3 velocity = _aimdir.Normalized() * mod->GetRandomVelocity() * 1.49f * heldEntity->GetProjectileVelocityScale(false);
+
+		for (size_t i = 0; i < num3; i++) {
+			origin = pos;
+			pos += velocity * num;
+			velocity += gravity * grav * num;
+			velocity -= velocity * drag * num;
+			travel_t += num;
+
+			Vector3 line = (origin - pos);
+			float len = line.UnityMagnitude();
+			line.UnityNormalize();
+			Vector3 v = target_pos - pos;
+			float d = line.Dot(v);
+
+			d = CLAMP(d, 0.f, len);
+			Vector3 nearestPoint = pos + line * d;
+
+			if (nearestPoint.Distance(target_pos) < 0.01f) {
+				aimbot_velocity = _aimdir.Normalized() * mod->GetRandomVelocity() * 1.49f * heldEntity->GetProjectileVelocityScale(false);
+				aimbot_velocity += gravity * grav * num;
+				aimbot_velocity -= velocity * drag * num;
+				break;
+			}
+			else if (nearestPoint.Distance(target_pos) < closestPoint.Distance(target_pos)) {
+				closestPoint = nearestPoint;
+				offset = target_pos - nearestPoint;
+			}
+		}
+		targetPosition += offset;
+		simulations++;
+		if (!aimbot_velocity.IsZero())
+			break;
+	}
+
+	if (!average_velo.IsZero() && travel_t > 0.f && target) {
+		float num = deltatime * timescale;
+		int num3 = static_cast<int>(8.f / num);
+
+		std::vector<Vector3> velocity_list = {};
+		float last_frame = 0.f;
+		float next_frame = last_frame + UnityEngine::Time::get_deltaTime();
+		if (UnityEngine::Time::get_fixedTime() > next_frame)
+		{
+			//new frame, record velocity, record frame
+			last_frame = UnityEngine::Time::get_fixedTime();
+			if (velocity_list.size() < 30) //0.03125 * 30 = 0.9 seconds
+				velocity_list.push_back(average_velo);
+			else
+			{
+				velocity_list.pop_back();
+				velocity_list.insert(velocity_list.begin(), 1, average_velo);
+			}
+			float avgx = 0.f;
+			float avgy = 0.f;
+			float avgz = 0.f;
+			int count = 0;
+			for (auto v : velocity_list)
+			{
+				if (v.IsZero()) break;
+				avgx += v.x;
+				avgy += v.y;
+				avgz += v.z;
+				count += 1;
+			}
+			avgx /= count; avgy /= count; avgz /= count;
+
+			average_velo = Vector3().Lerp(average_velo, Vector3(avgx, avgy, avgz), 0.1f);
+		}
+
+		Vector3 final_vel = average_velo * travel_t;
+		Vector3 actual = target_pos + final_vel;
+
+		Vector3 closestPoint(FLT_MAX, FLT_MAX, FLT_MAX);
+
+		while (simulations < 50) {
+			travel_t = 0.f;
+			Vector3 pos = rpc_position;
+			Vector3 origin = pos;
+
+			_aimdir = (targetPosition - rpc_position).Normalized() * stepSize;
+			Vector3 velocity = _aimdir.Normalized() * mod->GetRandomVelocity() * 1.49f * heldEntity->GetProjectileVelocityScale(false);
+
+			for (size_t i = 0; i < num3; i++) {
+				origin = pos;
+				pos += velocity * num;
+				velocity += gravity * grav * num;
+				velocity -= velocity * drag * num;
+				travel_t += num;
+
+				Vector3 line = (origin - pos);
+				float len = line.UnityMagnitude();
+				line.UnityNormalize();
+				Vector3 v = actual - pos;
+				float d = line.Dot(v);
+
+				d = CLAMP(d, 0.f, len);
+				Vector3 nearestPoint = pos + line * d;
+
+				if (nearestPoint.Distance(actual) < 0.01f) {
+					aimbot_velocity = _aimdir.Normalized() * mod->GetRandomVelocity() * 1.49f * heldEntity->GetProjectileVelocityScale(false);
+					aimbot_velocity += gravity * grav * num;
+					aimbot_velocity -= velocity * drag * num;
+					break;
+				}
+				else if (nearestPoint.Distance(actual) < closestPoint.Distance(actual)) {
+					closestPoint = nearestPoint;
+					offset = actual - nearestPoint;
+				}
+			}
+			targetPosition += offset;
+			simulations++;
+			if (!aimbot_velocity.IsZero())
+				break;
+		}
+	}
+}
+
+
 inline Vector3 GetAimDirectionToTarget(BasePlayer* Local, BaseProjectile* Projectile, Vector3 TargetPosition, Vector3 TargetVelocity, ItemModProjectile* mod, Vector3 EyesPosition)
 {
 	if (!InGame)
