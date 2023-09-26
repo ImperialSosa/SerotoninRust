@@ -198,6 +198,30 @@ inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSha
 	return w->ProcessAttack((AssemblyCSharp::HitTest*)g_hit_test);
 }
 
+void VelocityChecks(Vector3 LocalPos, Vector3 AimbotTarget) {
+	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+	if (IsAddressValid(LocalPlayer)) {
+		auto ActiveItem = LocalPlayer->ActiveItem();
+		auto HeldItem = ActiveItem->GetHeldEntity();
+		auto PrefabID = HeldItem->prefabID();
+		if (IsAddressValid(ActiveItem)) {
+			if (PrefabID == 2836331625 || PrefabID == 4279856314) //bow / Nailgun
+			{
+				if (!AssemblyCSharp::IsVisible(LocalPos, AimbotTarget)) {
+					m_settings::ValidVelocity = false;
+					LOG(XS("[DEBUG] No Valid Velocity"));
+				}
+				else
+					m_settings::ValidVelocity = true;
+			}
+			else
+				m_settings::ValidVelocity = true;
+		}
+		else
+			m_settings::ValidVelocity = true;
+	}
+}
+
 inline bool FirstInit = false;
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
@@ -693,8 +717,30 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 			}
 
-			//fastbullet
-			if (m_settings::NormalFastBullet) {
+			if (m_settings::VelocityAimbot) {
+				auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+				if (IsAddressValid(LocalPlayer)) {
+					auto camera = UnityEngine::Camera::get_main();
+					if (IsAddressValid(camera)) {
+						auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+						if (IsAddressValid(AimbotTarget.m_player)) {
+							auto LocalPos = LocalPlayer->get_bone_transform(48)->get_position();
+
+							VelocityChecks(LocalPos, Features().BulletTPAngle);
+						}
+						else
+							m_settings::ValidVelocity = true;
+					}
+					else
+						m_settings::ValidVelocity = true;
+				}
+				else
+					m_settings::ValidVelocity = true;
+			}
+			else
+				m_settings::ValidVelocity = true;
+
+			if (m_settings::NormalFastBullet && !m_settings::VelocityAimbot) {
 				auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 				auto ActiveItem = LocalPlayer->ActiveItem();
 				auto HeldItem = ActiveItem->GetHeldEntity();
@@ -736,6 +782,50 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					}
 
 					BaseProjectile->projectileVelocityScale() = orig[0] + 0.39f;
+				}
+			}
+			else {
+				auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+				auto ActiveItem = LocalPlayer->ActiveItem();
+				auto HeldItem = ActiveItem->GetHeldEntity();
+				auto PrefabID = HeldItem->prefabID();
+
+				if (ActiveItem) {
+					static float orig[10];
+
+					if (PrefabID == 1978739833 || PrefabID == 1537401592 || PrefabID == 3474489095 || PrefabID == 3243900999 || //ak, compound, doublebarrel, tommy
+						PrefabID == 2696589892 || PrefabID == 1877401463 || PrefabID == 4231282088 || PrefabID == 563371667 || //waterpipe, spas-12, semi-rifle, semi-pistol
+						PrefabID == 2477536592 || PrefabID == 554582418 || PrefabID == 3305012504 || PrefabID == 636374895 ||  //revolver, pump, python, prototype-17
+						PrefabID == 4279856314 || PrefabID == 2293870814 || PrefabID == 844375121 || PrefabID == 2836331625 || //nailgun, m92-pistol, lr-300, hunting-bow
+						PrefabID == 2176761593) { //eoka
+						orig[0] = 1.f;
+					}
+					else if (PrefabID == 2545523575 || PrefabID == 3759841439) { //mp4a5, custom-smg
+						orig[0] = 0.8f;
+					}
+					else if (PrefabID == 3459133190) { //hmlmg
+						orig[0] = 1.2f;
+					}
+					else if (PrefabID == 1440914039) {//m249
+						orig[0] = 1.3f;
+					}
+					else if (PrefabID == 1517089664) { //m39 rifle
+						orig[0] = 1.25f;
+					}
+					else if (PrefabID == 2620171289) {//l96
+						orig[0] = 3.f;
+					}
+					else if (PrefabID == 1665481300) { //bolty
+						orig[0] = 1.75f;
+					}
+					else if (PrefabID == 2727391082) { //crossbow
+						orig[0] = 1.5f;
+					}
+					else {
+						orig[0] = 1.f;
+					}
+
+					BaseProjectile->projectileVelocityScale() = orig[0];
 				}
 			}
 
@@ -875,13 +965,20 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								StoreOrig = true;
 							}
 
-							const float amount = m_settings::recoilPercent / 100;
-							newRecoilOverride->recoilYawMin() = orig[0] * amount;
-							newRecoilOverride->recoilYawMax() = orig[1] * amount;
-							newRecoilOverride->recoilPitchMin() = orig[2] * amount;
-							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
-							newRecoilOverride->ADSScale() = orig[4] * amount;
-							newRecoilOverride->movementPenalty() = orig[5] * amount;
+							//const float amount = m_settings::recoilPercent / 100;
+							//newRecoilOverride->recoilYawMin() = orig[0] * amount;
+							//newRecoilOverride->recoilYawMax() = orig[1] * amount;
+							//newRecoilOverride->recoilPitchMin() = orig[2] * amount;
+							//newRecoilOverride->recoilPitchMax() = orig[3] * amount;
+							//newRecoilOverride->ADSScale() = orig[4] * amount;
+							//newRecoilOverride->movementPenalty() = orig[5] * amount;
+
+							newRecoilOverride->recoilYawMin() = 0;
+							newRecoilOverride->recoilYawMax() = 0;
+							newRecoilOverride->recoilPitchMin() = 0;
+							newRecoilOverride->recoilPitchMax() = 0;
+							newRecoilOverride->ADSScale() = 0;
+							newRecoilOverride->movementPenalty() = 0;
 						}
 					}
 				}

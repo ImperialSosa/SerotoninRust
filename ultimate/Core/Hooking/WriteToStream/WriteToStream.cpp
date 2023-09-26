@@ -1,6 +1,176 @@
 #include "Prediction.hpp"
 #include "../../Features/Features/Features.hpp"
 
+void VelocityAimbot(AssemblyCSharp::BaseProjectile* BaseProjectile)
+{
+	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+	auto ActiveItem = LocalPlayer->ActiveItem();
+	auto HeldItem = ActiveItem->GetHeldEntity();
+	auto PrefabID = HeldItem->prefabID();
+
+	auto camera = UnityEngine::Camera::get_main();
+	if (IsAddressValid(camera)) {
+		auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
+		if (IsAddressValid(m_target.m_player)) {
+			if (m_settings::VelocityAimbot)
+			{
+				if (IsAddressValid(ActiveItem)) {
+					if (PrefabID == 2836331625 || PrefabID == 4279856314) //bow / Nailgun
+					{
+						if (AssemblyCSharp::IsVisible(LocalPlayer->get_bone_transform(48)->get_position(), Features().BulletTPAngle))
+						{
+							BaseProjectile->projectileVelocityScale() = 1.f;
+							m_settings::DoVelocityPrediction = false;
+						}
+						else {
+
+							m_settings::DoVelocityPrediction = true;
+							auto TotalHeight = Features().BulletTPAngle.y;
+
+							if (m_target.m_distance <= 95)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.41;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.46;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.36;
+							}
+							else if (m_target.m_distance > 95 && m_target.m_distance <= 120)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.46;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.51;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.41;
+							}
+							else if (m_target.m_distance > 120 && m_target.m_distance <= 140)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.51;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.56;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.46; //0.455
+							}
+							else if (m_target.m_distance > 140 && m_target.m_distance <= 180)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.56;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.61;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.51;
+							}
+							else if (m_target.m_distance > 180 && m_target.m_distance <= 220)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.61;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.65;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.56;
+							}
+							else if (m_target.m_distance > 220 && m_target.m_distance <= 275)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.65;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.71;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.61;
+							}
+							else if (m_target.m_distance > 275 && m_target.m_distance <= 300)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.71;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.76;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.66;
+							}
+							else if (m_target.m_distance > 300 && m_target.m_distance <= 335)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.76;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.81;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.71;
+							}
+							else if (m_target.m_distance > 335 && m_target.m_distance <= 360)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.81;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.86;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.76;
+							}
+							else if (m_target.m_distance > 360 && m_target.m_distance <= 380)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.86;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.91;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.81;
+							}
+							else if (m_target.m_distance > 380 && m_target.m_distance <= 400)
+							{
+								if (TotalHeight > 25 && TotalHeight <= 50)
+									BaseProjectile->projectileVelocityScale() = 0.91;
+								else if (TotalHeight > 50)
+									BaseProjectile->projectileVelocityScale() = 0.96;
+								else
+									BaseProjectile->projectileVelocityScale() = 0.86;
+							}
+						}
+					}
+					else {
+						m_settings::DoVelocityPrediction = false;
+
+						static float orig[10];
+
+						if (PrefabID == 1978739833 || PrefabID == 1537401592 || PrefabID == 3474489095 || PrefabID == 3243900999 || //ak, compound, doublebarrel, tommy
+							PrefabID == 2696589892 || PrefabID == 1877401463 || PrefabID == 4231282088 || PrefabID == 563371667 || //waterpipe, spas-12, semi-rifle, semi-pistol
+							PrefabID == 2477536592 || PrefabID == 554582418 || PrefabID == 3305012504 || PrefabID == 636374895 ||  //revolver, pump, python, prototype-17
+							PrefabID == 2293870814 || PrefabID == 844375121  || PrefabID == 2176761593) {  //m92-pistol, lr-300, eoka
+							orig[0] = 1.f;
+						}
+						else if (PrefabID == 2545523575 || PrefabID == 3759841439) { //mp4a5, custom-smg
+							orig[0] = 0.8f;
+						}
+						else if (PrefabID == 3459133190) { //hmlmg
+							orig[0] = 1.2f;
+						}
+						else if (PrefabID == 1440914039) {//m249
+							orig[0] = 1.3f;
+						}
+						else if (PrefabID == 1517089664) { //m39 rifle
+							orig[0] = 1.25f;
+						}
+						else if (PrefabID == 2620171289) {//l96
+							orig[0] = 3.f;
+						}
+						else if (PrefabID == 1665481300) { //bolty
+							orig[0] = 1.75f;
+						}
+						else if (PrefabID == 2727391082) { //crossbow
+							orig[0] = 1.5f;
+						}
+						else {
+							orig[0] = 1.f;
+						}
+
+						BaseProjectile->projectileVelocityScale() = orig[0];
+					}
+				}
+			}
+		}
+	}
+}
 
 void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stream* Stream)
 {
@@ -78,6 +248,22 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 	bool visible = false;
 	bool manipulated = false;
 
+	//Velocity Bow/Nailgun
+	if (m_settings::VelocityAimbot) {
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		auto ActiveItem = LocalPlayer->ActiveItem();
+		auto HeldItem = ActiveItem->GetHeldEntity();
+		auto PrefabID = HeldItem->prefabID();
+
+		if (ActiveItem) {
+			VelocityAimbot(Features().BaseProjectile);
+		}
+		else
+			m_settings::DoVelocityPrediction = false;
+	}
+	else
+		m_settings::DoVelocityPrediction = false;
+
 	for (std::int32_t index = 0; index < projectile_shoot_size; index++)
 	{
 		auto c_projectile = projectile_shoot_items->m_Items[index];
@@ -144,8 +330,15 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		}
 		else
 		{
-			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
-			m_aim_angle = (aim_angle).Normalized() * OriginalVelocity.Length();
+			if (m_settings::DoVelocityPrediction) {
+				Vector3 a;
+				float travel_time = 0.f;
+				SimulateProjectile(AimbotTarget.m_player, StartPosition, Features().BulletTPAngle, m_aim_angle, a, travel_time, c_projectile, Features().BaseProjectile, itemModProjectile, AimbotTarget.m_velocity);
+			}
+			else {
+				Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
+				m_aim_angle = (aim_angle).Normalized() * OriginalVelocity.Length();
+			}
 		}
 	}
 

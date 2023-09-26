@@ -38,7 +38,7 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 	else
 		_This->thickness() = 0.1f;
 
-	if (!m_settings::BulletTP)
+	if (!m_settings::BulletTP || !m_settings::ValidVelocity)
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
 
 
