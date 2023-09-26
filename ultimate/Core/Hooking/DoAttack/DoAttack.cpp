@@ -100,10 +100,7 @@ void LaunchRecreation()
 	{
 		if (auto projectile = LaunchedProjectilesArray[i])
 		{
-			if (projectile->integrity() <= 0)
-			{
-				ProjectileLaunch(projectile);
-			}
+			ProjectileLaunch(projectile);
 		}
 	}
 }
