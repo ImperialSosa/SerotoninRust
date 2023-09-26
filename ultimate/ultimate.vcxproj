@@ -158,6 +158,7 @@
     <ClCompile Include="Core\Hooking\BlockSprint\BlockSprint.cpp" />
     <ClCompile Include="Core\Hooking\LateUpdate\LateUpdate.cpp" />
     <ClCompile Include="Core\Hooking\OnAttacked\OnAttacked.cpp" />
+    <ClCompile Include="Core\Hooking\OnInput\OnInput.cpp" />
     <ClCompile Include="Core\Hooking\OnNetworkMessage\OnNetworkMessage.cpp" />
     <ClCompile Include="Core\Hooking\PlayerProjectileAttack\PlayerProjectileAttack.cpp" />
     <ClCompile Include="Core\Hooking\DoAttack\DoAttack.cpp" />

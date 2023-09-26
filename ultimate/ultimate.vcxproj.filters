@@ -45,6 +45,7 @@
     <ClCompile Include="Core\Hooking\LateUpdate\LateUpdate.cpp" />
     <ClCompile Include="Core\Hooking\BlockSprint\BlockSprint.cpp" />
     <ClCompile Include="Core\Hooking\OnNetworkMessage\OnNetworkMessage.cpp" />
+    <ClCompile Include="Core\Hooking\OnInput\OnInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />

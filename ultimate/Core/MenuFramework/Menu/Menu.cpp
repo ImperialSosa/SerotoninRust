@@ -68,7 +68,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Memory Aimbot"), m_settings::MemoryAimbot);
 						Menu().CheckBox(XS("Silent Aimbot"), m_settings::SilentAim);
 						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
-						//Menu().CheckBox(XS(L"Melee Aimbot"), m_settings::MeleeAimbot);
+						Menu().CheckBox(XS("Melee Aimbot"), m_settings::MeleeAimbot);
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
 						//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
 						////if (m_settings::HeliAimbot)
@@ -503,8 +503,8 @@ void MenuDraw::RenderMenu()
 			{
 				Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
 				{
-					//			Menu().Button(XS("Reset PlayerModels"), reset_player_model);
-					//			Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
+					Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+					Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 				}
 
 				Menu().BeginChild(XS("Configs"), { 285,45 }, { 220,290 });

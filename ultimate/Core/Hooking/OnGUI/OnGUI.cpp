@@ -1695,6 +1695,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::BlockSprinthk.Unhook();
 		Hooks::LateUpdatehk.Unhook();
 		Hooks::OnNetworkMessagehk.Unhook();
+		Hooks::OnInputhk.Unhook();
 	}
 	
 	return;

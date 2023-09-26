@@ -235,10 +235,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		return Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
 	if (!IsAddressValid(ToAddress(Hooks::ProjectileShootHookhk.get_original<void*>()))
+		|| !IsAddressValid(ToAddress(Hooks::OnInputhk.get_original<void*>()))
 		|| !IsAddressValid(ToAddress(Hooks::PPA_WriteToStreamhk.get_original<void*>())))
 	{
 		Hooks::ProjectileShootHookhk.VirtualFunctionHook(XS("ProjectileShoot"), HASH("WriteToStream"), &Hooks::ProjectileShootHook, XS("ProtoBuf"), 1);
 		Hooks::PPA_WriteToStreamhk.VirtualFunctionHook(XS("PlayerProjectileAttack"), HASH("WriteToStream"), &Hooks::PPA_WriteToStream, XS("ProtoBuf"), 1);
+		Hooks::OnInputhk.VirtualFunctionHook(XS("BaseMelee"), HASH("OnInput"), &Hooks::OnInput, XS(""), 0);
 	}
 
 	if (!FirstInit)
