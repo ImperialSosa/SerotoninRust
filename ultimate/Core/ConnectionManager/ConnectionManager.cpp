@@ -6,6 +6,9 @@
 
 void ConnectionManager::ResetPlayerCache()
 {
+
+	
+
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;
 	Features().Instance()->BaseProjectile = nullptr;
@@ -152,6 +155,17 @@ bool ConnectionManager::IsConnected()
 		return false;
 	}
 
+
+	if (!LocalPlayer->IsAlive())
+	{
+		if (IsAddressValid(Features().Instance()->LocalPlayer))
+		{
+			if (IsAddressValid(Features().Instance()->LocalPlayer->GetBaseMovement()))
+			{
+				Features().Instance()->LocalPlayer->GetBaseMovement()->adminCheat() = false;
+			}
+		}
+	}
 
 	return LocalPlayer->IsAlive() && !LocalPlayer->IsSleeping();
 }

@@ -243,7 +243,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				//LocalPlayer->input()->bodyAngles() = angle_to;
 				Vector2 AimPos;
 				if (UnityEngine::WorldToScreen(TargetBone, AimPos))
-					mouse_event(MOUSEEVENTF_MOVE, AimPos.x, AimPos.y, 0, 0);
+					LI_FN(mouse_event)(MOUSEEVENTF_MOVE, AimPos.x, AimPos.y, 0, 0);
 				
 			
 			}
