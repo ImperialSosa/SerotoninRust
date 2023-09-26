@@ -75,7 +75,6 @@ void MenuDraw::RenderMenu()
 						//{
 						//	Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
 						//}
-						Menu().Slider(XS("Velocity Scale"), m_settings::VelocityScale, 0, 100);
 						Menu().Slider(XS("Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 						Menu().Slider(XS("Fov Slider"), m_settings::AimbotFOV, 0, 1000);
 						Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);

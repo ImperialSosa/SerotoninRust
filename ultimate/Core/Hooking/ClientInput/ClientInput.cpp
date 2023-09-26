@@ -205,11 +205,10 @@ void VelocityChecks(Vector3 LocalPos, Vector3 AimbotTarget) {
 		auto HeldItem = ActiveItem->GetHeldEntity();
 		auto PrefabID = HeldItem->prefabID();
 		if (IsAddressValid(ActiveItem)) {
-			if (PrefabID == 2836331625 || PrefabID == 4279856314) //bow / Nailgun
+			if (PrefabID == 2836331625 || PrefabID == 4279856314 || PrefabID == 2545523575 || PrefabID == 3759841439) //bow  Nailgun mp4a5 custom-smg
 			{
 				if (!AssemblyCSharp::IsVisible(LocalPos, AimbotTarget)) {
 					m_settings::ValidVelocity = false;
-					LOG(XS("[DEBUG] No Valid Velocity"));
 				}
 				else
 					m_settings::ValidVelocity = true;
