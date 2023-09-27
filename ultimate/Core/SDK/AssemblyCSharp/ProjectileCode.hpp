@@ -552,7 +552,7 @@ public:
 		AssemblyCSharp::BasePlayer* ow = this->owner();
 		safe_write(ht + 0x80, (DWORD64)ow, DWORD64); //IgnoreEntity
 		safe_write(ht + 0x2C, 0, float); //Radius
-		safe_write(ht + 0x30, 0.2f, float); //Forgiveness                                        FAT BULLET
+		safe_write(ht + 0x30, 0.5f, float); //Forgiveness                                        FAT BULLET
 		if (!pr->owner() || ow->userID() == pr->owner()->userID()) {
 			safe_write(ht + 0x10, 0x2, int); //Type
 		}
