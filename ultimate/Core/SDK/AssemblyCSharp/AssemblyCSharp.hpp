@@ -2790,6 +2790,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, cachedProtectedMinutes);
 		IL2CPP_FIELD(float, cachedUpkeepPeriodMinutes);
 		IL2CPP_FIELD(float, cachedUpkeepCostFraction);
+		IL2CPP_FIELD(FPSystem::List<ProtoBuf::PlayerNameID*>*, authorizedPlayers);
 
 		float CalculateUpkeepCostFraction() {
 			if (!this) return 0.f;

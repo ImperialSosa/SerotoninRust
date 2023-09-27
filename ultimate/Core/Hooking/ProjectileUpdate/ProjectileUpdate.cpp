@@ -60,7 +60,10 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 
 	auto OriginalOriginalDistance = _This->initialDistance();
 
-	_This->initialDistance() = InitialDistanceDebug;
+	if (m_settings::InstantBullet)
+	{
+		_This->initialDistance() = InitialDistanceDebug;
+	}
 
 	UnityEngine::Transform* transform = _This->get_transform();
 

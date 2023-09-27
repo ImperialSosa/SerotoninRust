@@ -67,7 +67,6 @@ void Configs::LoadConfig()
     m_settings::NormalThickBulletThickness = config.value(XS("NormalThickBulletThickness"), m_settings::NormalThickBulletThickness);
     m_settings::AimbotNPC = config.value(XS("AimbotNPC"), m_settings::AimbotNPC);
     m_settings::HeliAimbot = config.value(XS("HeliAimbot"), m_settings::HeliAimbot);
-    m_settings::ManipPoints = config.value(XS("ManipPoints"), m_settings::ManipPoints);
     m_settings::HitMaterial = config.value(XS("HitMaterial"), m_settings::HitMaterial);
     m_settings::InstantEoka = config.value(XS("InstantEoka"), m_settings::InstantEoka);
     m_settings::TargetWounded = config.value(XS("TargetWounded"), m_settings::TargetWounded);
@@ -184,8 +183,8 @@ void Configs::LoadConfig()
     m_settings::LoadGeometric = config[XS("LoadGeometric")];
     m_settings::AutoshootKey = static_cast<RustStructs::KeyCode>(config[XS("AutoshootKey")]);
     m_settings::IncludeFatBullet = config[XS("IncludeFatBullet")];
-    m_settings::recoilPercent = config[XS("recoilPercent")];
-    m_settings::RecoilPercentY = config[XS("RecoilPercentY")];
+   // m_settings::recoilPercent = config[XS("recoilPercent")];
+   // m_settings::RecoilPercentY = config[XS("RecoilPercentY")];
     m_settings::AdminFlags = config[XS("AdminFlags")];
     m_settings::AdminCheat = config[XS("AdminCheat")];
     m_settings::AdminCheatKey = static_cast<RustStructs::KeyCode>(config[XS("AdminCheatKey")]);
@@ -761,7 +760,6 @@ void Configs::SaveConfig()
     config[XS("NormalThickBulletThickness")] = static_cast<int>(m_settings::NormalThickBulletThickness);
     config[XS("AimbotNPC")] = m_settings::AimbotNPC;
     config[XS("HeliAimbot")] = m_settings::HeliAimbot;
-    config[XS("ManipPoints")] = m_settings::ManipPoints;
     config[XS("InstantEoka")] = m_settings::InstantEoka;
     config[XS("HitMaterial")] = m_settings::HitMaterial;
 
@@ -893,8 +891,8 @@ void Configs::SaveConfig()
     config[XS("LoadGeometric")] = m_settings::LoadGeometric;
     config[XS("AutoshootKey")] = static_cast<int>(m_settings::AutoshootKey);
     config[XS("IncludeFatBullet")] = m_settings::IncludeFatBullet;
-    config[XS("recoilPercent")] = m_settings::recoilPercent;
-    config[XS("RecoilPercentY")] = m_settings::RecoilPercentY;
+   // config[XS("recoilPercent")] = m_settings::recoilPercent;
+   // config[XS("RecoilPercentY")] = m_settings::RecoilPercentY;
     config[XS("AdminFlags")] = m_settings::AdminFlags;
     config[XS("AdminCheat")] = m_settings::AdminCheat;
     config[XS("AdminCheatKey")] = static_cast<int>(m_settings::AdminCheatKey);

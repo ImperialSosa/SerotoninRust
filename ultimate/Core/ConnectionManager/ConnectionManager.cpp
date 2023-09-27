@@ -156,7 +156,7 @@ bool ConnectionManager::IsConnected()
 	}
 
 
-	if (!LocalPlayer->IsAlive())
+	/*if (!LocalPlayer->IsAlive())
 	{
 		if (IsAddressValid(Features().Instance()->LocalPlayer))
 		{
@@ -165,7 +165,7 @@ bool ConnectionManager::IsConnected()
 				Features().Instance()->LocalPlayer->GetBaseMovement()->adminCheat() = false;
 			}
 		}
-	}
+	}*/
 
 	return LocalPlayer->IsAlive() && !LocalPlayer->IsSleeping();
 }

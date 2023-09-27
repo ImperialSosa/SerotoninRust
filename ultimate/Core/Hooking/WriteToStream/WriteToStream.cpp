@@ -390,6 +390,10 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
 
+
+		itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
+		itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
+
 		if (AimbotTarget.m_heli && m_settings::HeliAimbot)
 		{
 			Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, AimbotTarget.m_position, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
@@ -430,6 +434,8 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		auto c_projectile = *(Projectile**)((uintptr_t)created_projectiles_ + 0x20 + index * 0x8);
 		if (!c_projectile) 
 			continue;
+
+
 
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
 		{

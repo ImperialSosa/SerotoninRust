@@ -13,7 +13,11 @@ namespace m_settings {
 	inline bool DrawInventory = false;
 	inline bool DrawInventoryIcons = false;
 	inline bool DrawClothing = false;
+	inline bool TC_Health = false;
+	inline bool AuthorizedPlayers = false;
 	inline bool DrawClothingIcons = false;
+	inline float AuthorizedPlayersDistance = 100.f;
+	inline float SilentSpread = 100.f;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
 	inline bool RaidESP = false;
@@ -203,6 +207,7 @@ namespace m_settings {
 	inline bool Corn = false;
 	inline bool Potato = false;
 	inline bool FoodIcons = false;
+	inline bool cupboard = false;
 
 	inline bool Bear = false;
 	inline bool Wolf = false;

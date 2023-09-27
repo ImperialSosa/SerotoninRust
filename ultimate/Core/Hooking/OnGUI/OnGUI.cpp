@@ -781,7 +781,7 @@ void drawMisc()
 				auto distance = CurrentPos.Distance(SavedWorldPos);
 
 				std::string player_name = "SavedPos";
-				char str[128];
+				char str[256];
 				sprintf(str, XS("[%dm]"), (int)distance);
 				player_name = player_name + " " + str;
 
@@ -1115,17 +1115,20 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 												auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 												if (IsAddressValid(m_target.m_player))
 												{
-													std::string ItemName = "";
-													char str[128];
-													sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
-													ItemName = str;
+													if (IsAddressValid(name))
+													{
+														std::string ItemName = "";
+														char str[256];
+														sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
+														ItemName = str;
 
-													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
-														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
-															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize);
+														if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
+															if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
+																UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize);
+														}
+														else
+															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 													}
-													else
-														UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 												}
 											}
 										}
@@ -1288,7 +1291,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 											auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 
 											std::string ItemName = "";
-											char str[128];
+											char str[256];
 											sprintf(str, XS("%s"), name->string_safe().c_str());
 											ItemName = str;
 

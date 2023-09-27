@@ -92,6 +92,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Target Wounded"), m_settings::TargetWounded);
 						//Menu().CheckBox(XS(L"Target FriendList"), m_settings::TargetFriendList);
 
+						Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
 					}
 					break;
 				case 1:
@@ -314,9 +315,14 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBox(XS("Show C4"), m_settings::ShowC4);
 							Menu().CheckBox(XS("Show Satchel"), m_settings::ShowSatchel);
 							Menu().CheckBox(XS("Show ExploAmmo"), m_settings::ShowExplosiveAmmo);
+						}
 
-
-							Menu().Slider(XS("Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
+						Menu().CheckBox(XS("Cupboard"), m_settings::cupboard);
+						if (m_settings::cupboard)
+						{
+							Menu().CheckBox(XS("TC Health"), m_settings::TC_Health);
+							Menu().CheckBox(XS("AuthorizedPlayers"), m_settings::AuthorizedPlayers);
+							
 
 						}
 					}
@@ -328,6 +334,8 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("APC Distance"), m_settings::MaxAPCDistance, 0, 3000);
 
 						Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
+						Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
+						Menu().Slider(XS("Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
 
 					}
 					break;
@@ -459,6 +467,7 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("Recoil Percent"), m_settings::recoilPercent, 0, 100);
 					//	Menu().Slider(XS("Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
 					}
+
 					Menu().CheckBox(XS("Thickness Modifier"), m_settings::NormalThickBullet);
 					if (m_settings::NormalThickBullet) {
 						Menu().Slider(XS("Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);

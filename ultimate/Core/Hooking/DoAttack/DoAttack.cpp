@@ -34,8 +34,10 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 
 
 	auto OriginalDistance = _This->initialDistance();
-
-	_This->initialDistance() = InitialDistanceDebug;
+	if (m_settings::InstantBullet)
+	{
+		_This->initialDistance() = InitialDistanceDebug;
+	}
 
 	UnityEngine::Transform* transform = _This->get_transform();
 
