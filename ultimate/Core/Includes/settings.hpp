@@ -71,6 +71,9 @@ namespace m_settings {
 	inline bool NormalFastBullet = false;
 	inline bool NoWeaponBob = false;
 	inline bool VelocityAimbot = false;
+	inline bool RotationAimbot = false;
+	inline RustStructs::KeyCode RotationKey = RustStructs::KeyCode::Mouse1;
+
 	inline bool ValidVelocity = true;
 	inline float VelocityScale = 70.f;
 	inline bool WeaponSpammer;

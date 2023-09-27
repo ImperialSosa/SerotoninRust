@@ -65,10 +65,32 @@ void MenuDraw::RenderMenu()
 				case 0:
 					Menu().BeginChild(XS("Aimbot"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("Memory Aimbot"), m_settings::MemoryAimbot);
+						//Menu().CheckBox(XS("Memory Aimbot"), m_settings::MemoryAimbot);
 						Menu().CheckBox(XS("Silent Aimbot"), m_settings::SilentAim);
 						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
+						//Menu().CheckBox(XS("Rotation Aimbot"), m_settings::RotationAimbot);
+						if (m_settings::SilentAim)
+						{
+							m_settings::RotationAimbot = false;
+						}
+
+						if (m_settings::VelocityAimbot)
+						{
+							m_settings::RotationAimbot = false;
+						}
+
 						Menu().CheckBox(XS("Melee Aimbot"), m_settings::MeleeAimbot);
+						Menu().CheckBoxKeyBind(XS("Legit Aimbot"), m_settings::RotationAimbot, m_settings::RotationKey);
+						if (m_settings::RotationAimbot)
+						{
+							m_settings::SilentAim = false;
+							m_settings::VelocityAimbot = false;
+							m_settings::Manipulation = false;
+							m_settings::BulletTP = false;
+							m_settings::InstantBullet = false;
+							m_settings::InstantKill = false;
+
+						}
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
 						//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
 						////if (m_settings::HeliAimbot)

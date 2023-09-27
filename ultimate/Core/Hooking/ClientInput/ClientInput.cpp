@@ -1254,6 +1254,54 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+	if (m_settings::RotationAimbot)
+	{
+		if (UnityEngine::Input::GetKey(m_settings::RotationKey))
+		{
+			auto camera = UnityEngine::Camera::get_main();
+			if (IsAddressValid(camera)) {
+				auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+				if (IsAddressValid(m_target.m_player)) {
+					auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+					if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
+					{
+						if (AssemblyCSharp::IsVisible(Features().LocalPlayer->eyes()->get_position(), m_target.m_position))
+						{
+							auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+							if (IsAddressValid(PrimaryMagazine))
+							{
+								auto AmmoType = PrimaryMagazine->ammoType();
+								if (IsAddressValid(AmmoType))
+								{
+									AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
+									if (IsAddressValid(itemModProjectile))
+									{
+										itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
+										itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
+
+										Vector3 Local = a1->get_bone_transform(RustStructs::bones::head)->get_position();
+
+										Vector3 aim_angle = GetAimDirectionToTarget(a1, BaseProjectile, m_target.m_position, m_target.m_velocity, itemModProjectile, Local);
+
+										auto posnormal = (aim_angle - Local).Normalized();
+										Vector4 toQuat = Vector4::QuaternionLookRotation(posnormal, Vector3(0, 1, 0));
+										a1->eyes()->SetBodyRotation(toQuat);
+
+
+									}
+									
+								}
+								
+							}
+							
+						}
+					}
+				}
+
+			}
+		}
+	}
+
 	if (m_settings::InstantRevive && UnityEngine::Input::GetKey(m_settings::InstantReviveKey))
 	{
 		auto camera = UnityEngine::Camera::get_main();
