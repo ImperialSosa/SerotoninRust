@@ -36,11 +36,11 @@ std::vector<Vector3> GenerateCircle(float radius, int points, bool BulletTP = fa
 }
 
 
-inline void GenerateBulletTPAngles(std::vector<Vector3>& re, float radius = 2.4f)
+inline void GenerateBulletTPAngles(std::vector<Vector3>& re, float radius = 2.3f)
 {
 	const int points = 3;
 	const float step = 1.57079632679489661923f / points;
-	const float radiusY = 2.4f;
+	const float radiusY = 2.3f;
 	const float halfRadiusY = radiusY;
 
 	for (float y = -halfRadiusY; y < halfRadiusY; y += 0.3f)
@@ -74,11 +74,11 @@ inline void GenerateBulletTPAngles(std::vector<Vector3>& re, float radius = 2.4f
 }
 
 
-inline void BulletTPAnglesHarvey1(std::vector<Vector3>& re, float radius = 2.4f)
+inline void BulletTPAnglesHarvey1(std::vector<Vector3>& re, float radius = 2.3f)
 {
 	const int points = 3;
 	const float step = 1.57079632679489661923f / points;
-	const float radiusY = 2.4f;
+	const float radiusY = 2.3f;
 	const float halfRadiusY = radiusY;
 
 	for (float y = -halfRadiusY; y < halfRadiusY; y += 0.3f)
@@ -199,7 +199,7 @@ inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 
 inline void BulletTPAnglesModeCrazy(std::vector<Vector3>& re, float step = 0.4)
 {
 	for (float x = -2.2; x <= 2.2; x += step) {
-		for (float y = -2.4; y <= 2.4; y += step) {
+		for (float y = -2.3f; y <= 2.3f; y += step) {
 			for (float z = -2.2; z <= 2.2; z += step) {
 				re.emplace_back(x, y, z);
 			}
@@ -526,7 +526,7 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	}
 
 
-	float maxDist = 2.4f;
+	float maxDist = 2.3f;
 
 	std::vector<Vector3> arrz;
 	if (m_settings::BulletTPIntensity == 0)
@@ -544,6 +544,7 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	{
 		Vector3 point = targetPosition + s;
 		this->BTPSeperator = targetPosition + s;
+
 		if (AssemblyCSharp::IsVisible(LocalPlayer->eyes()->get_position() + this->ManipulationAngle, point) &&
 			EyeHack().ValidateEyePos(AimbotTarget.m_player, point, true))
 		{

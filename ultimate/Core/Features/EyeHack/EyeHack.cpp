@@ -9,7 +9,7 @@ float EyeHack::NoClipRadius(float margin)
 
 bool EyeHack::TestNoClippingNew(Vector3 oldPos, Vector3 newPos, float radius, float backtracking, bool sphereCast, UnityEngine::Collider*& collider, bool vehicleLayer, AssemblyCSharp::BaseEntity* ignoreEntity)
 {
-	int num = 429990145;
+	int num = 1537286401;
 	if (!vehicleLayer)
 	{
 		num &= -8193;
