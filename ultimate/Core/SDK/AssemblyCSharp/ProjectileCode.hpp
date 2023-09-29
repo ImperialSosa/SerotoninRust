@@ -285,34 +285,7 @@ public:
 		}
 
 
-		/*Vector3 hitPositionWorld = HitPointWorld;
-		Vector3 position3 = Visuals::m_local_player->eyes()->get_position();
-		Vector3 vector4 = Visuals::m_local_player->PivotPoint();
-
-		int num15 = 2162688;
-		num15 |= 8388608;
-		num15 |= 134217728;
-
-
-		float projectile_losforgiveness = 0.2f;
-
-		bool flag11 = AssemblyCSharp::GamePhysics::LineOfSightRadius(hitPositionWorld, ClosestPointOnLine, num15, 0.f, projectile_losforgiveness, nullptr) && AssemblyCSharp::GamePhysics::LineOfSightRadius(ClosestPointOnLine, hitPositionWorld, num15, projectile_losforgiveness, 0.f, nullptr);
-		if (!flag11)
-		{
-			flag11 = (AssemblyCSharp::GamePhysics::LineOfSightRadius(hitPositionWorld, OriginalClosestPointOnLine, num15, 0.f, projectile_losforgiveness, nullptr) && AssemblyCSharp::GamePhysics::LineOfSightRadius(OriginalClosestPointOnLine, hitPositionWorld, num15, projectile_losforgiveness, 0.f, nullptr));
-		}
-
-		if (!flag11)
-			return false;*/
-
-			//UnityEngine::DDraw().Sphere(sentPosition(), 0.5f, Color::Green(), 20, false);
-
-		/*	if (!AssemblyCSharp::IsVisible_2(sentPosition(), ClosestPointOnLine, 10551296, 0.f))
-			{
-				return false;
-			}
-	*/
-
+		
 		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, 10551296, 0.f) ||
 			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, 10551296, 0.f))
 		{
