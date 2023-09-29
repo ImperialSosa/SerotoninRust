@@ -46,6 +46,8 @@
     <ClCompile Include="Core\Hooking\BlockSprint\BlockSprint.cpp" />
     <ClCompile Include="Core\Hooking\OnNetworkMessage\OnNetworkMessage.cpp" />
     <ClCompile Include="Core\Hooking\OnInput\OnInput.cpp" />
+    <ClCompile Include="Core\Hooking\DoBowAttack\DoBowAttack.cpp" />
+    <ClCompile Include="Core\Hooking\FlintStrikeWeaponAttack\FlintStrikeWeaponDoAttack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />

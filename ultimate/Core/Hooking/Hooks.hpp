@@ -33,5 +33,7 @@ private:
 	HOOK(void, LateUpdate, (AssemblyCSharp::TOD_Sky* TOD_Sky))
 	HOOK(void, BlockSprint, (AssemblyCSharp::BasePlayer* instance, float duration))
 	HOOK(void, OnNetworkMessage, (AssemblyCSharp::Client* _This, Network::Message* packet))
-	HOOK(void, OnInput, (AssemblyCSharp::BaseMelee* _This))
+	HOOK(void, OnInput, (AssemblyCSharp::BaseMelee* _This))	
+	HOOK(void, DoAttackBow, (AssemblyCSharp::BowWeapon* _This))
+	HOOK(void, FlintStrikeWeaponDoAttack, (AssemblyCSharp::FlintStrikeWeapon* _This))
 };

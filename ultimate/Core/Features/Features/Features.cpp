@@ -164,36 +164,81 @@ inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 
 		re.emplace_back(x, y, z);
 		re.emplace_back(-x, -y, -z);
 		re.emplace_back(x, 0.f, z);
-		re.emplace_back(-x, 0.f, 0.f);
-		re.emplace_back(x, 0.f, 0.f);
 
-		re.emplace_back(0.f, 0.f, z);
-		re.emplace_back(0.f, 0.f, -z);
-
-		/*
-		
-		re.emplace_back(x, y, z);
-		re.emplace_back(-x, -y, -z);
-
-		re.emplace_back(0.f, y, z);
-		re.emplace_back(x, 0.f, z);
-		re.emplace_back(x, y, 0.f);
-
-		re.emplace_back(0.f, -y, -z);
-		re.emplace_back(-x, 0.f,- z);
-		re.emplace_back(-x, -y, 0.f);
-
-		re.emplace_back(x, 0.f, 0.f);
 		re.emplace_back(0.f, y, 0.f);
-		re.emplace_back(0.f, 0.f, z);
+		re.emplace_back(0.f, -y, 0.f);
 
 		re.emplace_back(-x, 0.f, 0.f);
-		re.emplace_back(0.f, -y, 0.f);
+		re.emplace_back(x, 0.f, 0.f);
+
+		re.emplace_back(0.f, 0.f, z);
 		re.emplace_back(0.f, 0.f, -z);
-		
-		*/
 
 	}
+}
+
+
+inline void DynamicManipAngles(std::vector<Vector3>& re, float max = 1.5f, float maxy = 1.5f, int numPoints = 100)
+{
+	float radius = max; // Radius of the sphere
+
+	for (int i = 0; i < numPoints; ++i) {
+		float theta = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * 2 * M_PI; // Random angle
+		float phi = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * M_PI;     // Random inclination angle
+
+		float x = radius * Math::sinf(phi) * Math::cosf(theta);
+		float y = maxy * Math::sinf(phi) * Math::sinf(theta);
+		float z = radius * Math::cosf(phi);
+
+		re.emplace_back(x, y, z);
+		re.emplace_back(-x, -y, -z);
+		re.emplace_back(x, 0.f, z);
+
+		re.emplace_back(0.f, y, 0.f);
+		re.emplace_back(0.f, -y, 0.f);
+
+		re.emplace_back(-x, 0.f, 0.f);
+		re.emplace_back(x, 0.f, 0.f);
+
+		re.emplace_back(0.f, 0.f, z);
+		re.emplace_back(0.f, 0.f, -z);
+	}
+}
+
+std::vector<Vector3> generatePointsInNonUniformSphere(float radiusX, float radiusY, float radiusZ, int baseNumPoints) {
+	std::vector<Vector3> points;
+
+
+	// Calculate the volume of the ellipsoid
+	float volume = (4.0f / 3.0f) * M_PI * radiusX * radiusY * radiusZ;
+
+	// Adjust the number of points based on the ellipsoid's volume
+	int numPoints = static_cast<int>(baseNumPoints * (volume / (4.0f / 3.0f * M_PI * radiusX * radiusY * radiusZ))); // Adjust for a reference ellipsoid
+
+	for (int i = 0; i < numPoints; i++) {
+		float theta = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * 2 * M_PI; // Random angle
+		float phi = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * M_PI;     // Random inclination angle
+
+
+		float x = radiusX * Math::sinf(phi) * Math::cosf(theta);
+		float y = radiusY * Math::sinf(phi) * Math::sinf(theta);
+		float z = radiusZ * Math::cosf(phi);
+
+		points.push_back(Vector3(x, y, z));
+		points.push_back(Vector3(-x, -y, -z));
+		points.push_back(Vector3(x, 0.f, z));
+
+		points.push_back(Vector3(0.f, y, 0.f));
+		points.push_back(Vector3(0.f, -y, 0.f));
+	
+		points.push_back(Vector3(-x, 0.f, 0.f));
+		points.push_back(Vector3(x, 0.f, 0.f));
+	
+		points.push_back(Vector3(0.f, 0.f, z));
+		points.push_back(Vector3(0.f, 0.f, -z));
+	}
+
+	return points;
 }
 
 inline void BulletTPAnglesModeCrazy(std::vector<Vector3>& re, float step = 0.4)
@@ -239,7 +284,6 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			if (!AssemblyCSharp::IsVisible(p, re_p))
 				return false;
 
-
 			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, p))
 				return false;
 
@@ -254,32 +298,52 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			return true;
 		};
 
+		if (m_settings::ManipMode == 0) {
 
+			for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
+				int points = m_settings::ManipPoints;
+				float step = (M_PI_2) / points;
+				float x, z, current = 0;
+				for (size_t i = 0; i < points; i++)
+				{
+					x = Math::sinf(current) * mm_eye;
+					z = Math::cosf(current) * mm_eye;
 
-		for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
-			int points = 5;
-			float step = (M_PI_2) / points;
-			float x, z, current = 0;
-			for (size_t i = 0; i < points; i++)
-			{
-				x = Math::sinf(current) * mm_eye;
-				z = Math::cosf(current) * mm_eye;
+					Vector3 p1 = Vector3(x, y, z);
+					Vector3 p2 = Vector3(-x, y, z);
+					Vector3 p3 = Vector3(x, y, -z);
+					Vector3 p4 = Vector3(-x, y, -z);
 
-				Vector3 p1 = Vector3(x, y, z);
-				Vector3 p2 = Vector3(-x, y, z);
-				Vector3 p3 = Vector3(x, y, -z);
-				Vector3 p4 = Vector3(-x, y, -z);
+					Vector3 re_p = ply->eyes()->get_position();
 
-				Vector3 re_p = ply->eyes()->get_position();
+					Vector3 p = re_p + p1;
 
-				Vector3 p = re_p + p1;
+					if (do_check(p1)) return true;
+					if (do_check(p2)) return true;
+					if (do_check(p3)) return true;
+					if (do_check(p4)) return true;
 
-				if (do_check(p1)) return true;
-				if (do_check(p2)) return true;
-				if (do_check(p3)) return true;
-				if (do_check(p4)) return true;
+					current += step;
+				}
+			}
+		}
+		else if (m_settings::ManipMode == 1) {
+			std::vector<Vector3> generatedPoints;
+			DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
 
-				current += step;
+			for (const Vector3& point : generatedPoints) {
+				if (do_check(point)) {
+					return true;
+				}
+			}
+		}
+		else if (m_settings::ManipMode == 2) {
+			std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
+
+			for (const Vector3& point : generatedPoints) {
+				if (do_check(point)) {
+					return true;
+				}
 			}
 		}
 
@@ -305,7 +369,7 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, p))
 				return false;
 
-			//UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
+			UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
 
 			auto tick_time = Features().LocalPlayer->lastSentTickTime();
 			float desyncTime = (UnityEngine::Time::get_realtimeSinceStartup() - tick_time) - 0.03125 * 3;
@@ -320,125 +384,126 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 				auto _forward = Features().LocalPlayer->eyes()->HeadForward();
 
 				Vector3 z = pos;
-				std::array < Vector3, 41 >positions = {
-				z + Vector3(0.f, (v_mm_max_eye / 5), 0.f), // small up
+				if (m_settings::ManipMode == 0 || m_settings::ManipMode == 1 || m_settings::ManipMode == 2) {
+					std::array < Vector3, 41 >positions = {
+					z + Vector3(0.f, (v_mm_max_eye / 5), 0.f), // small up
 
-				z + Vector3(0.f, v_mm_max_eye / 2, 0.f), // medium up
+					z + Vector3(0.f, v_mm_max_eye / 2, 0.f), // medium up
 
-				z + Vector3(0.f, v_mm_max_eye, 0.f), // big up
+					z + Vector3(0.f, v_mm_max_eye, 0.f), // big up
 
-				z + Vector3(0.f, -(1.4f / 2), 0.f), // small down
+					z + Vector3(0.f, -(1.4f / 2), 0.f), // small down
 
-				z + Vector3(0.f, -1.4f, 0.f), // big down
+					z + Vector3(0.f, -1.4f, 0.f), // big down
 
-				z + Vector3(right.x * (mm_max_eye / 2), 0.f, right.z * (mm_max_eye / 2)), // small right
+					z + Vector3(right.x * (mm_max_eye / 2), 0.f, right.z * (mm_max_eye / 2)), // small right
 
-				z + Vector3(right.x * mm_max_eye, 0.f, right.z * mm_max_eye), // big right
+					z + Vector3(right.x * mm_max_eye, 0.f, right.z * mm_max_eye), // big right
 
-				z + Vector3(right.x * (mm_max_eye / 2), (1.4f / 2), right.z * (mm_max_eye / 2)), // small right up
+					z + Vector3(right.x * (mm_max_eye / 2), (1.4f / 2), right.z * (mm_max_eye / 2)), // small right up
 
-				z + Vector3(right.x * mm_max_eye, 1.4f, right.z * mm_max_eye), // big right up
+					z + Vector3(right.x * mm_max_eye, 1.4f, right.z * mm_max_eye), // big right up
 
-				z + Vector3(right.x * (mm_max_eye / 2), -(1.4f / 2), right.z * (4.f / 2)), // small right down
+					z + Vector3(right.x * (mm_max_eye / 2), -(1.4f / 2), right.z * (4.f / 2)), // small right down
 
-				z + Vector3(right.x * mm_max_eye, -1.4f, right.z * mm_max_eye), // big right down
+					z + Vector3(right.x * mm_max_eye, -1.4f, right.z * mm_max_eye), // big right down
 
-				z + Vector3(-(right.x * (mm_max_eye / 2)), 0.f, -(right.z * (mm_max_eye / 2))), // small left
+					z + Vector3(-(right.x * (mm_max_eye / 2)), 0.f, -(right.z * (mm_max_eye / 2))), // small left
 
-				z + Vector3(-(right.x * mm_max_eye), 0.f, -(right.z * mm_max_eye)), // big left
+					z + Vector3(-(right.x * mm_max_eye), 0.f, -(right.z * mm_max_eye)), // big left
 
-				z + Vector3(-(right.x * (mm_max_eye / 2)), (1.4f / 2), -(right.z * (mm_max_eye / 2))), // small left up
+					z + Vector3(-(right.x * (mm_max_eye / 2)), (1.4f / 2), -(right.z * (mm_max_eye / 2))), // small left up
 
-				z + Vector3(-(right.x * mm_max_eye), 1.4f, -(right.z * mm_max_eye)), // big left up
+					z + Vector3(-(right.x * mm_max_eye), 1.4f, -(right.z * mm_max_eye)), // big left up
 
-				z + Vector3(-(right.x * (mm_max_eye / 2)), -(1.4f / 2), -(right.z * (mm_max_eye / 2))), // small left down
+					z + Vector3(-(right.x * (mm_max_eye / 2)), -(1.4f / 2), -(right.z * (mm_max_eye / 2))), // small left down
 
-				z + Vector3(-(right.x * mm_max_eye), -1.4f, -(right.z * mm_max_eye)), // big left down 
+					z + Vector3(-(right.x * mm_max_eye), -1.4f, -(right.z * mm_max_eye)), // big left down 
 
-				z + Vector3(forward.x * (mm_max_eye / 2), 0.f, forward.z * (mm_max_eye / 2)),// small forward
+					z + Vector3(forward.x * (mm_max_eye / 2), 0.f, forward.z * (mm_max_eye / 2)),// small forward
 
-				z + Vector3(forward.x * mm_max_eye, 0.f, forward.z * mm_max_eye), // big forward
+					z + Vector3(forward.x * mm_max_eye, 0.f, forward.z * mm_max_eye), // big forward
 
-				z + Vector3(-(forward.x * (mm_max_eye / 2)), 0.f, -(forward.z * (mm_max_eye / 2))), // small backward
+					z + Vector3(-(forward.x * (mm_max_eye / 2)), 0.f, -(forward.z * (mm_max_eye / 2))), // small backward
 
-				z + Vector3(-(forward.x * mm_max_eye), 0.f, -(forward.z * mm_max_eye)), // big backward
+					z + Vector3(-(forward.x * mm_max_eye), 0.f, -(forward.z * mm_max_eye)), // big backward
 
-				z + Vector3(forward.x * (mm_max_eye / 2), (1.4f / 2), forward.z * (mm_max_eye / 2)),// small forward up
+					z + Vector3(forward.x * (mm_max_eye / 2), (1.4f / 2), forward.z * (mm_max_eye / 2)),// small forward up
 
-				z + Vector3(forward.x * mm_max_eye, 1.4f, forward.z * mm_max_eye), // big forward up
+					z + Vector3(forward.x * mm_max_eye, 1.4f, forward.z * mm_max_eye), // big forward up
 
-				z + Vector3(forward.x * (mm_max_eye / 2), -(1.4f / 2), forward.z * (mm_max_eye / 2)),// small forward down
+					z + Vector3(forward.x * (mm_max_eye / 2), -(1.4f / 2), forward.z * (mm_max_eye / 2)),// small forward down
 
-				z + Vector3(forward.x * mm_max_eye, -1.4f, forward.z * mm_max_eye), // big forward down
+					z + Vector3(forward.x * mm_max_eye, -1.4f, forward.z * mm_max_eye), // big forward down
 
-				z + Vector3(-(forward.x * (mm_max_eye / 2)), 0.f, -(forward.z * (mm_max_eye / 2))),// small reverse
+					z + Vector3(-(forward.x * (mm_max_eye / 2)), 0.f, -(forward.z * (mm_max_eye / 2))),// small reverse
 
-				z + Vector3(-(forward.x * mm_max_eye), 0.f, -(forward.z * mm_max_eye)), // big reverse 
+					z + Vector3(-(forward.x * mm_max_eye), 0.f, -(forward.z * mm_max_eye)), // big reverse 
 
-				z + Vector3(-(forward.x * (mm_max_eye / 2)), (1.4f / 2), -(forward.z * (mm_max_eye / 2))),// small reverse up
+					z + Vector3(-(forward.x * (mm_max_eye / 2)), (1.4f / 2), -(forward.z * (mm_max_eye / 2))),// small reverse up
 
-				z + Vector3(-(forward.x * 4.f), 1.4f, -(forward.z * 4.f)), // big reverse up
+					z + Vector3(-(forward.x * 4.f), 1.4f, -(forward.z * 4.f)), // big reverse up
 
-				z + Vector3(-(forward.x * (mm_max_eye / 2)), -(1.4f / 2), -(forward.z * (mm_max_eye / 2))),// small reverse down
+					z + Vector3(-(forward.x * (mm_max_eye / 2)), -(1.4f / 2), -(forward.z * (mm_max_eye / 2))),// small reverse down
 
-				z + Vector3(-(forward.x * mm_max_eye), -1.4f, -(forward.z * mm_max_eye)), // big reverse down
+					z + Vector3(-(forward.x * mm_max_eye), -1.4f, -(forward.z * mm_max_eye)), // big reverse down
 
-				z + Vector3(right.x * mm_max_eye, v_mm_max_eye, right.z * (mm_max_eye)) * 0.9f, // big diag-up-right
+					z + Vector3(right.x * mm_max_eye, v_mm_max_eye, right.z * (mm_max_eye)) * 0.9f, // big diag-up-right
 
-				z + Vector3(-right.x * (mm_max_eye), (v_mm_max_eye), -right.z * (mm_max_eye)) * 0.9f, // big diag-up-left
+					z + Vector3(-right.x * (mm_max_eye), (v_mm_max_eye), -right.z * (mm_max_eye)) * 0.9f, // big diag-up-left
 
-				z + Vector3(right.x * mm_max_eye, -v_mm_max_eye, right.z * (mm_max_eye)) * 0.9f, // big diag-down-right
+					z + Vector3(right.x * mm_max_eye, -v_mm_max_eye, right.z * (mm_max_eye)) * 0.9f, // big diag-down-right
 
-				z + Vector3(-right.x * (mm_max_eye), (-v_mm_max_eye), -right.z * (mm_max_eye)) * 0.9f, // big diag-up-left
+					z + Vector3(-right.x * (mm_max_eye), (-v_mm_max_eye), -right.z * (mm_max_eye)) * 0.9f, // big diag-up-left
 
-				z + Vector3((right.x / 2) * mm_max_eye, v_mm_max_eye, (right.z / 2) * (mm_max_eye)), // big diag-up-right
+					z + Vector3((right.x / 2) * mm_max_eye, v_mm_max_eye, (right.z / 2) * (mm_max_eye)), // big diag-up-right
 
-				z + Vector3(-(right.x / 2) * (mm_max_eye), (v_mm_max_eye), -(right.z / 2) * (mm_max_eye)), // big diag-up-left
+					z + Vector3(-(right.x / 2) * (mm_max_eye), (v_mm_max_eye), -(right.z / 2) * (mm_max_eye)), // big diag-up-left
 
-				z + Vector3((right.x / 2) * mm_max_eye, -v_mm_max_eye, (right.z / 2) * (mm_max_eye)), // big diag-down-right
+					z + Vector3((right.x / 2) * mm_max_eye, -v_mm_max_eye, (right.z / 2) * (mm_max_eye)), // big diag-down-right
 
-				z + Vector3(-(right.x / 2) * (mm_max_eye), (-v_mm_max_eye), -(right.z / 2) * (mm_max_eye)), // big diag-up-left
+					z + Vector3(-(right.x / 2) * (mm_max_eye), (-v_mm_max_eye), -(right.z / 2) * (mm_max_eye)), // big diag-up-left
 
-				z + Vector3((forward.x / 2) * (mm_max_eye / 2), (v_mm_max_eye / 1), (forward.z / 2) * (mm_max_eye / 2)), // big diag-up-forward
+					z + Vector3((forward.x / 2) * (mm_max_eye / 2), (v_mm_max_eye / 1), (forward.z / 2) * (mm_max_eye / 2)), // big diag-up-forward
 
-				z + Vector3(-((forward.x / 2) * (mm_max_eye / 2)), (v_mm_max_eye / 1), -((forward.z / 2) * mm_max_eye / 2)), // big diag-up-backward
-				};
+					z + Vector3(-((forward.x / 2) * (mm_max_eye / 2)), (v_mm_max_eye / 1), -((forward.z / 2) * mm_max_eye / 2)), // big diag-up-backward
+					};
+
+					for (auto v : positions) {
+
+						if (v.y > 1.5f)
+							continue;
+
+						if (v.y > -1.5f)
+							continue;
+
+						if (v.x > 9.f)
+							continue;
+
+						if (v.x > -9.f)
+							continue;
+
+						if (v.z > 9.f)
+							continue;
+
+						if (v.z > -9.f)
+							continue;
 
 
-				for (auto v : positions) {
-
-					if (v.y > 1.3f)
-						continue;
-
-					if (v.y > -1.3f)
-						continue;
-
-					if (v.x > 9.f)
-						continue;
-
-					if (v.x > -9.f)
-						continue;
-
-					if (v.z > 9.f)
-						continue;
-
-					if (v.z > -9.f)
-						continue;
-
-
-					if (!EyeHack().ValidateEyePos(Features().LocalPlayer, v))
-						break;
-
-					if (!EyeHack().ValidateEyePos(Features().LocalPlayer, z))
-						break;
-
-					if (AssemblyCSharp::IsVisible(p, v)) {
-						if (AssemblyCSharp::IsVisible(z, v)) {
-							t = true;
+						if (!EyeHack().ValidateEyePos(Features().LocalPlayer, v))
 							break;
-						}
-					}
 
+						if (!EyeHack().ValidateEyePos(Features().LocalPlayer, z))
+							break;
+
+						if (AssemblyCSharp::IsVisible(p, v)) {
+							if (AssemblyCSharp::IsVisible(z, v)) {
+								t = true;
+								break;
+							}
+						}
+
+					}
 				}
 
 				if (!t) return false;
@@ -447,32 +512,52 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			return true;
 		};
 
+		if (m_settings::ManipMode == 0) {
 
+			for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
+				int points = m_settings::ManipPoints;
+				float step = (M_PI_2) / points;
+				float x, z, current = 0;
+				for (size_t i = 0; i < points; i++)
+				{
+					x = Math::sinf(current) * mm_eye;
+					z = Math::cosf(current) * mm_eye;
 
-		for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
-			int points = m_settings::ManipPoints;
-			float step = (M_PI_2) / points;
-			float x, z, current = 0;
-			for (size_t i = 0; i < points; i++)
-			{
-				x = Math::sinf(current) * mm_eye;
-				z = Math::cosf(current) * mm_eye;
+					Vector3 p1 = Vector3(x, y, z);
+					Vector3 p2 = Vector3(-x, y, z);
+					Vector3 p3 = Vector3(x, y, -z);
+					Vector3 p4 = Vector3(-x, y, -z);
 
-				Vector3 p1 = Vector3(x, y, z);
-				Vector3 p2 = Vector3(-x, y, z);
-				Vector3 p3 = Vector3(x, y, -z);
-				Vector3 p4 = Vector3(-x, y, -z);
+					Vector3 re_p = ply->eyes()->get_position();
 
-				Vector3 re_p = ply->eyes()->get_position();
+					Vector3 p = re_p + p1;
 
-				Vector3 p = re_p + p1;
+					if (do_check(p1)) return true;
+					if (do_check(p2)) return true;
+					if (do_check(p3)) return true;
+					if (do_check(p4)) return true;
 
-				if (do_check(p1)) return true;
-				if (do_check(p2)) return true;
-				if (do_check(p3)) return true;
-				if (do_check(p4)) return true;
+					current += step;
+				}
+			}
+		}
+		else if (m_settings::ManipMode == 1) {
+			std::vector<Vector3> generatedPoints;
+			DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
 
-				current += step;
+			for (const Vector3& point : generatedPoints) {
+				if (do_check(point)) {
+					return true;
+				}
+			}
+		}
+		else if (m_settings::ManipMode == 2) {
+			std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
+
+			for (const Vector3& point : generatedPoints) {
+				if (do_check(point)) {
+					return true;
+				}
 			}
 		}
 
@@ -539,6 +624,9 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 		BulletTPAnglesModeIntense(arrz, 100);
 	else if (m_settings::BulletTPIntensity == 4)
 		BulletTPAnglesModeIntense(arrz, 250);
+	else if (m_settings::BulletTPIntensity == 5)
+		arrz = generatePointsInNonUniformSphere(2.2, 2.2, 2.2, 100);
+
 
 	for (const auto& s : arrz)
 	{

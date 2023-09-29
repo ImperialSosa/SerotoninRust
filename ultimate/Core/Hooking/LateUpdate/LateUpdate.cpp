@@ -50,6 +50,60 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 
 			}
 		}
+
+		if (_This->Night())
+		{
+			auto Night = _This->Night();
+
+			if (m_settings::Brightnight) {
+				Night->LightIntensity() = 20.f;
+				Night->AmbientMultiplier() = 4.f;
+				Night->ReflectionMultiplier() = 1.f;
+			}
+
+			if (m_settings::BrightAmbient) {
+				auto Ambient = Night->AmbientColor();
+				uintptr_t AmbientColor = *(uintptr_t*)(Ambient + 0x10);
+				*(Vector4*)(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
+			}
+
+			if (m_settings::SkyColorNight) {
+				auto Sky = Night->SkyColor();
+				uintptr_t SkyColor = *(uintptr_t*)(Sky + 0x10);
+				*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+			}
+
+			if (m_settings::SharpClouds) {
+				auto Clouds = Night->CloudColor();
+				uintptr_t CloudColor = *(uintptr_t*)(Clouds + 0x10);
+				*(Color*)(CloudColor) = Color(255.f, 255.f, 255.f, 255.f).GetUnityColor();
+			}
+		}
+
+		if (_This->Day())
+		{
+			auto Day = _This->Day();
+
+			if (m_settings::SkyColorDay) {
+				auto Sky = Day->SkyColor();
+				uintptr_t SkyColor = *(uintptr_t*)(Sky + 0x10);
+				*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+			}
+
+			if (m_settings::BrightCave) {
+				Day->AmbientMultiplier() = 1.f;
+				Day->ReflectionMultiplier() = 1.f;
+			}
+		}
+
+		if (_This->Stars())
+		{
+			auto Stars = _This->Stars();
+
+			if (m_settings::Stars) {
+				Stars->Brightness() = 150.f;
+			}
+		}
 	}
 
 	return Hooks::LateUpdatehk.get_original< decltype(&LateUpdate)>()(_This);

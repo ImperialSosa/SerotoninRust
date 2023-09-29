@@ -87,6 +87,7 @@ namespace m_settings {
 	inline bool BulletTracers = false;
 	inline int SelectedHitbox = 0;
 	inline int BulletTPIntensity = 2;
+	inline int ManipMode = 0;
 	inline bool AutoReload = false;
 	inline bool HeliHitboxOverride = false;
 	inline bool Aimline = false;
@@ -306,8 +307,12 @@ namespace m_settings {
 
 	inline bool Brightnight = false;
 	inline bool CustomSky = false;
+	inline bool BrightAmbient = false;
 	inline bool Stars = false;
+	inline bool SkyColorDay = false;
+	inline bool SkyColorNight = false;
 	inline bool BrightCave = false;
+	inline bool SharpClouds = false;
 	inline bool TimeChanger = false;
 	inline float GameTime = 12.f;
 	inline bool RemoveUnderwaterEffects = false;

@@ -7,6 +7,7 @@ inline bool config_type_open;
 inline bool hitmat_open;
 inline bool wchams_type_opens;
 inline bool killeffect_type_open;
+inline bool manip_type_openm;
 inline bool aim_type_opene2;
 #include "../../Configs/Configs.hpp"
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
@@ -152,8 +153,11 @@ void MenuDraw::RenderMenu()
 							Menu().Dropdown(XS("Hitbox"), { XS("Head"), XS("Chest"), XS("Random") }, m_settings::SelectedHitbox, aim_type_opene2);
 						}
 
+						if (m_settings::Manipulation)
+							Menu().Dropdown(XS("Manip Mode"), { XS("Static Points"), XS("Dynamic Points"), XS("Enhanced Points") }, m_settings::ManipMode, manip_type_openm);
+
 						if (m_settings::BulletTP)
-							Menu().Dropdown(XS("BTP Mode"), { XS("Lowest"), XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)")}, m_settings::BulletTPIntensity, bullet_tpe_open);
+							Menu().Dropdown(XS("BTP Mode"), { XS("Lowest"), XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)"), XS("Enhanced")}, m_settings::BulletTPIntensity, bullet_tpe_open);
 
 						if (m_settings::Manipulation)
 						{
@@ -432,10 +436,15 @@ void MenuDraw::RenderMenu()
 
 					Menu().BeginChild(XS("World"), { 285,45 }, { 220,290 });
 					{
-						//Menu().CheckBox(XS("Brightnight"), m_settings::Brightnight);
-						//Menu().CheckBox(XS("CustomSky"), m_settings::CustomSky);
-						//Menu().CheckBox(XS("Stars"), m_settings::Stars);
-						//Menu().CheckBox(XS("BrightCave"), m_settings::BrightCave);
+						Menu().CheckBox(XS("BrightNight"), m_settings::Brightnight);
+						Menu().CheckBox(XS("BrightAmbient"), m_settings::BrightAmbient);
+						Menu().CheckBox(XS("Stars"), m_settings::Stars);
+						Menu().CheckBox(XS("SkyColor (Day)"), m_settings::SkyColorDay);
+						Menu().CheckBox(XS("SkyColor (Night)"), m_settings::SkyColorNight);
+						Menu().CheckBox(XS("SharpClouds"), m_settings::SharpClouds);
+						Menu().CheckBox(XS("BrightCave"), m_settings::BrightCave);
+						//Menu().CheckBox(XS("CustomSky"), m_settings::CustomSky);					
+						
 						Menu().CheckBox(XS("TimeChanger"), m_settings::TimeChanger);
 						if (m_settings::TimeChanger) {
 							Menu().Slider(XS("GameTime: "), m_settings::GameTime, 0, 24);
@@ -499,7 +508,7 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS("NoSpread"), m_settings::NoSpread);
 					Menu().CheckBox(XS("NoWeaponBob"), m_settings::NoWeaponBob);
 					Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
-					//Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
+					Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 					Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
 				}
 
