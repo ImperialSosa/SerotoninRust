@@ -768,6 +768,49 @@ void Visuals::DrawPlayers()
 	}
 }
 
+
+inline void DoMeleeAttack(AssemblyCSharp::BasePlayer* target, AssemblyCSharp::BaseMelee* baseprojectile, bool is_player = false) {
+	if (!IsAddressValid(target))
+		return;
+
+	Vector3 local_position = UnityEngine::Camera::get_main()->get_positionz();
+
+	if (baseprojectile->nextAttackTime() <= UnityEngine::Time::get_time())
+	{
+		if (baseprojectile->timeSinceDeploy() > baseprojectile->deployDelay())
+		{
+			auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+			auto g_hit_test = CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
+
+			if (IsAddressValid(g_hit_test))
+			{
+				auto hit_test = (AssemblyCSharp::HitTest*)g_hit_test;
+				if (IsAddressValid(hit_test))
+				{
+					UnityEngine::Ray ray = UnityEngine::Ray(local_position, (target->get_bone_transform(47)->get_position() - local_position).Normalized());
+
+					UnityEngine::Transform* trans = is_player ? target->get_bone_transform(47) : target->get_transform();
+					if (!trans)
+						return;
+
+					hit_test->MaxDistance() = 1000;
+					hit_test->HitTransform() = trans;
+					hit_test->AttackRay() = ray;
+					hit_test->DidHit() = true;
+					hit_test->HitEntity() = target;
+					hit_test->HitPoint() = trans->InverseTransformPoint(target->get_bone_transform(47)->get_position());
+					hit_test->HitNormal() = Vector3(0, 0, 0);
+					hit_test->damageProperties() = baseprojectile->damageProperties();
+
+					baseprojectile->StartAttackCooldown(baseprojectile->repeatDelay());
+					return baseprojectile->ProcessAttack(hit_test);
+				}
+			}
+
+		}
+	}
+};
+
 void Visuals::CachePlayers()
 {
 	if (!InGame)
@@ -792,6 +835,37 @@ void Visuals::CachePlayers()
 		auto BasePlayer = buffer->m_Items[index];
 		if (!IsAddressValid(BasePlayer))
 			continue;
+
+		if (BasePlayer->IsLocalPlayer())
+			continue;
+
+		if (m_settings::SilentMelee)
+		{
+			auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+
+			if (IsAddressValid(BaseProjectile))
+			{
+
+
+				if (BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass())
+					|| BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass())
+					&& !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()))
+				{
+					
+					if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position(), BasePlayer->get_bone_transform(48)->get_position()))
+					{
+						auto world_position = BasePlayer->get_bone_transform(48)->get_position();
+						auto local = AssemblyCSharp::LocalPlayer::get_Entity()->ClosestPoint(world_position);
+						auto camera = AssemblyCSharp::LocalPlayer::get_Entity()->get_bone_transform(48)->get_position();
+
+						if (camera.get_3d_dist(world_position) <= 4.5f)
+						{
+							DoMeleeAttack(BasePlayer, (AssemblyCSharp::BaseMelee*)BaseProjectile, true);
+						}
+					}
+				}
+			}
+		}
 	
 		VisualsArrayTemp.push_back(VisualsVector(BasePlayer));
 	}

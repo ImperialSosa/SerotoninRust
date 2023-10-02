@@ -27,7 +27,7 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 		if (IsAddressValid(LocalPlayer)) {
 			auto eyes = LocalPlayer->eyes();
 			if (IsAddressValid(eyes)) {
-				if (AssemblyCSharp::IsVisible(eyes->get_position() + spoofed_eye_pos, Features().BulletTPAngle))
+				if (AssemblyCSharp::IsVisible(eyes->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
 				{
 					_This->attackReady() = false;
 					if (_This->primaryMagazine()->contents() <= 0)
@@ -48,7 +48,7 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 
 					AssemblyCSharp::ItemModProjectile* component = ammoType->GetComponent<AssemblyCSharp::ItemModProjectile>(FPSystem::Type::ItemModProjectile());
 
-					_This->LaunchProjectileClientside(ammoType, component->numProjectiles(), 0.f);
+					_This->LaunchProjectileClientside(ammoType, component->numProjectiles(), m_settings::SilentSpread / 100.f);
 
 					_This->TryReload();
 					_This->UpdateAmmoDisplay();

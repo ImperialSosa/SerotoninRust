@@ -8,5 +8,6 @@ void Hooks::BeginHooks()
 	Hooks::DoAttackBowhk.VirtualFunctionHook(XS("BowWeapon"), HASH("DoAttack"), &Hooks::DoAttackBow, XS(""), 0);
 	Hooks::OnNetworkMessagehk.VirtualFunctionHook(XS("Client"), HASH("OnNetworkMessage"), &Hooks::OnNetworkMessage, XS(""), 1);
 	Hooks::FlintStrikeWeaponDoAttackhk.VirtualFunctionHook(XS("FlintStrikeWeapon"), HASH("DoAttack"), &Hooks::FlintStrikeWeaponDoAttack, XS(""), 0);
+	Hooks::DoAttackMeleehk.VirtualFunctionHook(XS("BaseMelee"), HASH("DoAttack"), &Hooks::DoAttackMelee, XS(""), 0);
 
 }

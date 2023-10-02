@@ -1367,7 +1367,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
 	if (m_settings::Spinbot)

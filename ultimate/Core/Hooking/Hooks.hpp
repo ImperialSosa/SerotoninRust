@@ -36,4 +36,6 @@ private:
 	HOOK(void, OnInput, (AssemblyCSharp::BaseMelee* _This))	
 	HOOK(void, DoAttackBow, (AssemblyCSharp::BowWeapon* _This))
 	HOOK(void, FlintStrikeWeaponDoAttack, (AssemblyCSharp::FlintStrikeWeapon* _This))
+		HOOK(void, DoAttackMelee, (AssemblyCSharp::BaseMelee* _This))
+
 };

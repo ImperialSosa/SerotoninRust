@@ -571,6 +571,8 @@ namespace AssemblyCSharp {
 		IL2CPP_CLASS("BaseMelee");
 
 		IL2CPP_FIELD(float, maxDistance);
+		IL2CPP_FIELD(float, attackRadius);
+
 		IL2CPP_FIELD(DamageProperties*, damageProperties);
 		IL2CPP_FIELD(ResourceDispenserGatherProperties*, gathering);
 		IL2CPP_FIELD(bool, canThrowAsProjectile);

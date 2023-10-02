@@ -17,6 +17,7 @@ namespace m_settings {
 	inline bool AuthorizedPlayers = false;
 	inline bool DrawClothingIcons = false;
 	inline float AuthorizedPlayersDistance = 100.f;
+	inline bool LongMelee = false;
 	inline float SilentSpread = 100.f;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;

@@ -86,7 +86,18 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 		delta_time *= UnityEngine::Time::get_timeScale();
 
 
-	
+		if (m_settings::BulletTracers)
+		{
+			Vector3 a = _This->currentVelocity() * delta_time;
+			float magnitude = a.Length();
+			float num2 = 1 / magnitude;
+			Vector3 vec2 = a * num2;
+			bool flag = false;
+
+			Vector3 vec3 = _This->currentPosition() + vec2 * magnitude;
+
+			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Color::Red(), 5.f, false, false);
+		}
 
 
 		auto project_ = (Projectile_c*)_This;

@@ -48,6 +48,7 @@
     <ClCompile Include="Core\Hooking\OnInput\OnInput.cpp" />
     <ClCompile Include="Core\Hooking\DoBowAttack\DoBowAttack.cpp" />
     <ClCompile Include="Core\Hooking\FlintStrikeWeaponAttack\FlintStrikeWeaponDoAttack.cpp" />
+    <ClCompile Include="Core\Hooking\DoAttackBaseMelee\DoAttackBaseMelee.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />

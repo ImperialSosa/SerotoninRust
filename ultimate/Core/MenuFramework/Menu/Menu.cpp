@@ -141,6 +141,9 @@ void MenuDraw::RenderMenu()
 
 						Menu().CheckBox(XS("Instant Hit"), m_settings::InstantBullet);
 						Menu().CheckBox(XS("WaitForInstantHit"), m_settings::WaitForInstantHit);
+
+						Menu().CheckBox(XS("Silent Melee"), m_settings::SilentMelee);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -510,6 +513,8 @@ void MenuDraw::RenderMenu()
 					Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 					Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 					Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
+					Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
+
 				}
 
 				Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
