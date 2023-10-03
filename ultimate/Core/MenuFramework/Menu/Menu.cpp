@@ -143,7 +143,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("WaitForInstantHit"), m_settings::WaitForInstantHit);
 
 						Menu().CheckBox(XS("Silent Melee"), m_settings::SilentMelee);
-
+						Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

@@ -1369,6 +1369,18 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
+
+	if (m_settings::FloorHugger)
+	{
+		auto modelstate = a1->modelState();
+
+		if (modelstate)
+		{
+			modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
+			modelstate->flags() |= 32768;
+		}
+	}
+
 	if (m_settings::Spinbot)
 	{
 		Vector3 remain;
