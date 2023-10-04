@@ -313,6 +313,14 @@ void MenuDraw::RenderMenu()
 						}
 						Menu().CheckBox(XS("Bradley Crate"), m_settings::BradleyCrate);
 						Menu().CheckBox(XS("Heli Crate"), m_settings::HeliCrate);
+
+						Menu().CheckBox(XS("Basic Crate"), m_settings::BasicCrate);
+						Menu().CheckBox(XS("Normal Crate"), m_settings::NormalCrate);
+						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
+						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
+						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
+						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

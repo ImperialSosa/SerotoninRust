@@ -327,6 +327,15 @@ namespace m_settings {
 	inline bool Thickbullet_Indicator = false;
 	inline bool Thickbullet_AutoShoot = false;
 
+	inline bool horseEsp = false;
+	inline bool BasicCrate = false;
+	inline bool NormalCrate = false;
+	inline bool MilitaryCrate = false;
+	inline bool EliteCrate = false;
+	inline bool SupplyDrop = false;
+	inline bool LootBarrel = false;
+	inline bool OilBarrel = false;
+
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;

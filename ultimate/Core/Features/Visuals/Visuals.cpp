@@ -1168,6 +1168,89 @@ void Visuals::RenderEntities()
 					}
 				}
 
+				if (distance <= m_settings::MaxCrateDistance)
+				{
+					if (m_settings::BasicCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_basic") == Hash(name, false))
+							{
+								std::string player_name = XS("Basic Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::NormalCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_normal_2") == Hash(name, false) || HASH("crate_normal_2_food") == Hash(name, false) || HASH("crate_normal_2_medical") == Hash(name, false))
+							{
+								std::string player_name = XS("Normal Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::MilitaryCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_normal") == Hash(name, false))
+							{
+								std::string player_name = XS("Military Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::EliteCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_elite") == Hash(name, false))
+							{
+								std::string player_name = XS("Elite Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+				
+
+				if (m_settings::SupplyDrop)
+				{
+					if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+					{
+						if (HASH("supply_drop") == Hash(name, false))
+						{
+							std::string player_name = XS("Airdrop");
+							char str[256];
+							sprintf(str, XS("[%dm]"), (int)distance);
+							player_name = player_name + " " + str;
+
+							UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+						}
+					}
+				}
 
 				if (BaseEntity->IsA(AssemblyCSharp::CollectibleEntity::StaticClass()))
 				{
@@ -1802,6 +1885,17 @@ void Visuals::CacheEntities()
 
 							const auto patrol_heli = 3029415845;
 							const auto cupboard_deployed = 2476970476;
+							const auto crate_basic = 1603759333;
+							const auto crate_normal_2 = 1546200557;
+							const auto crate_normal_2_food = 2066926276;
+							const auto crate_normal_2_medical = 1791916628;
+							const auto crate_normal = 2857304752;
+							const auto crate_elite = 3286607235;
+							const auto supply_drop = 3632568684;
+							const auto loot_barrel = 966676416;
+							const auto oil_barrel = 3438187947;
+							const auto horse = 2421623959;
+
 							//const auto timedexplosive = 1915331115;
 							//const auto timedexplosive_deployed = 3898309212;
 
@@ -1810,7 +1904,43 @@ void Visuals::CacheEntities()
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
 
-							if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
+							if (EntityID == horse && m_settings::horseEsp)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == oil_barrel && m_settings::OilBarrel)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_basic && m_settings::BasicCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_elite && m_settings::EliteCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == supply_drop && m_settings::SupplyDrop)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == loot_barrel && m_settings::LootBarrel)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
