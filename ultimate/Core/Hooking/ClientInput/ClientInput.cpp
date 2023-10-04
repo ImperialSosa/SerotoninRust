@@ -1381,6 +1381,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+
+
 	if (m_settings::Spinbot)
 	{
 		Vector3 remain;
