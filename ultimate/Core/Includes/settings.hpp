@@ -28,7 +28,8 @@ namespace m_settings {
 	inline bool ShowExplosiveAmmo = false;
 	inline bool DisableHitSounds = false;
 	inline bool CustomHitSounds = false;
-
+	inline bool OnlyGloves = false;
+	inline bool OnlyHands = false;
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
 	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;

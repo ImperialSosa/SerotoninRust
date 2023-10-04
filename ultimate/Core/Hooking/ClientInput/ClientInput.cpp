@@ -390,7 +390,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						|| material->get_name()->Contains(XS("c4charge"))
 						|| material->get_name()->Contains(XS("pfx_smoke_rocket"))
 						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
-						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("holosight.georeticle (Instance)"))
+						|| material->get_name()->Contains(XS("vfx_embers (Instance)"))
+						|| material->get_name()->Contains(XS("pfx_smoke_whispy_1_white  (Instance)"))
+						|| material->get_name()->Contains(XS("flame-mlrs-cone (Instance)"))
+						|| material->get_name()->Contains(XS("vfx_heatshimmer (Instance)"))
+						|| material->get_name()->Contains(XS("lasersight (Instance)"))
+
 						|| material->get_name()->Contains(XS("muzzle_fumes1"))
 						|| material->get_name()->Contains(XS("muzzle_fumes2"))
 						|| material->get_name()->Contains(XS("muzzle_fumes3"))
@@ -400,6 +406,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						|| material->get_name()->Contains(XS("muzzle_flash-cross"))
 						|| material->get_name()->Contains(XS("muzzle_flash-side-1x4")))
 						continue;
+
+
+					
+
+					//if ( Material->name( )->Contains( L"Hand" ) || Material->name( )->Contains( L"Arm" ) || Material->name( )->Contains( L"Glove" ) )
+
+					//LOG("[DEBUG] matz - %ls", material->get_name()->c_str());
 
 					int selectedChams = m_settings::WeaponSelectedChams;
 
