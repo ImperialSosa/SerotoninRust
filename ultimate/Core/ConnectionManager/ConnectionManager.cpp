@@ -8,7 +8,7 @@ void ConnectionManager::ResetPlayerCache()
 {
 
 	
-
+	DoNoclip = false;
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;
 	Features().Instance()->BaseProjectile = nullptr;

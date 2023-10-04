@@ -31,3 +31,5 @@ public:
 	static inline AssemblyCSharp::BaseProjectile* BaseProjectile;
 
 };
+
+static inline bool DoNoclip = false;
