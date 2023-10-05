@@ -352,34 +352,22 @@ namespace m_settings {
 	inline bool Thickbullet_Indicator = false;
 	inline bool Thickbullet_AutoShoot = false;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> aaeb0baedbe9d9de8dff0efcb8a56ca2f3f03030
 	inline bool horseEsp = false;
 	inline bool BasicCrate = false;
 	inline bool NormalCrate = false;
 	inline bool MinicopterEsp = false;
-<<<<<<< HEAD
-=======
 
 	inline bool OnlyGloves = false;
 	inline bool OnlyHands = false;
-
->>>>>>> aaeb0baedbe9d9de8dff0efcb8a56ca2f3f03030
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
 	inline bool LootBarrel = false;
-<<<<<<< HEAD
-=======
 
->>>>>>> aaeb0baedbe9d9de8dff0efcb8a56ca2f3f03030
 	inline bool OilBarrel = false;
 	inline bool ThugBoat = false;
 
-	inline bool OnlyGloves = false;
-	inline bool OnlyHands = false;
+
 
 };
 
