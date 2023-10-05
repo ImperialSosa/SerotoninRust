@@ -284,6 +284,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Hooks::OnInputhk.VirtualFunctionHook(XS("BaseMelee"), HASH("OnInput"), &Hooks::OnInput, XS(""), 0);
 	}
 
+
 	if (!FirstInit)
 	{
 		Hooks::TryToMovehk.VirtualFunctionHook(XS("ItemIcon"), HASH("TryToMove"), &Hooks::TryToMove, XS(""), 0);
@@ -1643,16 +1644,16 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
 
-	if (m_settings::FloorHugger)
-	{
-		auto modelstate = a1->modelState();
+	//if (m_settings::FloorHugger)
+	//{
+	//	auto modelstate = a1->modelState();
 
-		if (IsAddressValid(modelstate))
-		{
-			modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
-			modelstate->flags() |= 32768;
-		}
-	}
+	//	if (IsAddressValid(modelstate))
+	//	{
+	//		modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
+	//		modelstate->flags() |= 32768;
+	//	}
+	//}
 
 
 	if (m_settings::Spinbot)
