@@ -258,7 +258,9 @@ public:
 		}
 
 
-
+		int num15 = 2162688;
+		num15 |= 8388608;
+		num15 |= 134217728;
 
 		if (Distance > 1.2f)
 		{
@@ -267,7 +269,7 @@ public:
 			auto direction = HitPointWorld - ClosestPointOnLine;
 			auto newPosition = ClosestPointOnLine + (direction * amountNeeded);
 
-			if (ClosestPointOnLine.Distance(newPosition) > 1.f || !AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, 10551296, 0.f))
+			if (newPosition.Distance(ClosestPointOnLine) > 1.f || ClosestPointOnLine.Distance(newPosition) > 1.f || !AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, num15, 0.f))
 				return false;
 
 			ClosestPointOnLine = newPosition;
@@ -281,13 +283,17 @@ public:
 			auto direction = HitPointWorld - ClosestPointOnLine;
 			auto newPosition = ClosestPointOnLine + (direction * amountNeeded);
 
+			if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, num15, 0.f))
+				return false;
+
 			HitPointWorld = newPosition;
 		}
 
 
-		
-		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, 10551296, 0.f) ||
-			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, 10551296, 0.f))
+
+
+		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, num15, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, num15, 0.f) ||
+			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, num15, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, num15, 0.f))
 		{
 			return false;
 		}
@@ -336,6 +342,12 @@ public:
 			}
 		}
 
+
+		if (HitPointWorld.Distance(m_target.m_position) > 1.f)
+			return false;
+
+		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, m_target.m_position, num15, 0.f))
+			return false;
 
 
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
