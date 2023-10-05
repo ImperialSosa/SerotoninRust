@@ -360,6 +360,7 @@ namespace m_settings {
 
 	inline bool OnlyGloves = false;
 	inline bool OnlyHands = false;
+	inline bool OnlyWeapon = false;
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
@@ -369,7 +370,7 @@ namespace m_settings {
 	inline bool ThugBoat = false;
 
 
-
+	inline bool IgnoreArms = false;
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;

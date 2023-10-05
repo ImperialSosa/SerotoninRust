@@ -628,6 +628,8 @@ void MenuDraw::RenderMenu()
 
 						Menu().CheckBox(XS("WeaponChams"), m_settings::WeaponChams);
 						if (m_settings::WeaponChams) {
+							Menu().CheckBox(XS("IgnoreArms"), m_settings::IgnoreArms);
+
 							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame") }, m_settings::WeaponSelectedChams, wchams_type_opens);
 							Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_chams_load);
 
