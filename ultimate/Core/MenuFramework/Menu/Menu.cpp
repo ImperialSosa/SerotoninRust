@@ -233,7 +233,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Cached Indicator"), m_settings::ShowCachedLOS);
 						Menu().CheckBox(XS("Cached Point"), m_settings::ShowCachedPoint);
 
-						//Menu().CheckBox(XS("SnickerBullet"), m_settings::SnickerBullet);
+						Menu().CheckBox(XS("SnickerBullet"), m_settings::SnickerBullet);
 					}
 					break;
 				}
@@ -374,7 +374,10 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
 						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
 						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
+<<<<<<< HEAD
 						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+=======
+>>>>>>> aaeb0baedbe9d9de8dff0efcb8a56ca2f3f03030
 						//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
 
 					}
@@ -420,8 +423,6 @@ void MenuDraw::RenderMenu()
 							
 
 						}
-						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
-
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -433,7 +434,6 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
 						Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
 						Menu().Slider(XS("Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
-						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
 
 					}
 					break;
@@ -465,7 +465,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoMovementReduction"), m_settings::NoMovementRestrictions);
 						Menu().CheckBox(XS("NoCollision (Trees)"), m_settings::IgnoreTrees);
 						Menu().CheckBox(XS("NoCollision (Players)"), m_settings::IgnorePlayers);
-						Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
+						//Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
 
 					}
 
@@ -587,16 +587,23 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
+<<<<<<< HEAD
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 
 						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
 						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
 
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
+=======
+
+>>>>>>> aaeb0baedbe9d9de8dff0efcb8a56ca2f3f03030
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
+						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
+						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 						Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
 						if (m_settings::WeaponSpammer) {
 							Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);

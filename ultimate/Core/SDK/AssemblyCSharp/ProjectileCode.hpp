@@ -317,7 +317,7 @@ public:
 
 			if (m_settings::Thickbullet_Arrows)
 			{
-				UnityEngine::DDraw().Arrow(instance->previousPosition(), instance->currentPosition(), 0.1f, Color(0.f, 1.f, 0.f, 1.f), 30.f);
+				UnityEngine::DDraw().Arrow(instance->previousPosition(), instance->currentPosition(), 0.1f, Color(0.f, 1.f, 0.f, 1.f), 15.f);
 			}
 		}
 
@@ -338,7 +338,7 @@ public:
 
 			if (m_settings::Thickbullet_Arrows)
 			{
-				UnityEngine::DDraw().Arrow(instance->previousPosition(), instance->currentPosition(), 0.1f, Color(1.f, 0.f, 0.f, 1.f), 30.f);
+				UnityEngine::DDraw().Arrow(instance->previousPosition(), instance->currentPosition(), 0.1f, Color(1.f, 0.f, 0.f, 1.f), 15.f);
 			}
 		}
 
@@ -376,8 +376,8 @@ public:
 
 		if (m_settings::Thickbullet_Arrows)
 		{
-			UnityEngine::DDraw().Arrow(instance->currentPosition(), HitPointWorld, 0.1f, Color(0.f, 0.f, 1.f, 1.f), 30.f);
-			UnityEngine::DDraw().Arrow(HitPointWorld, m_target.m_player->ClosestPoint(HitPointWorld), 0.1f, Color(1.f, 1.f, 0.f, 1.f), 30.f);
+			UnityEngine::DDraw().Arrow(instance->currentPosition(), HitPointWorld, 0.1f, Color(0.f, 0.f, 1.f, 1.f), 15.f);
+			UnityEngine::DDraw().Arrow(HitPointWorld, m_target.m_player->ClosestPoint(HitPointWorld), 0.1f, Color(1.f, 1.f, 0.f, 1.f), 15.f);
 		}
 
 		instance->DoHit(hTest, hTest->HitPoint(), hTest->HitNormal()); //hTest->HitNormal()
