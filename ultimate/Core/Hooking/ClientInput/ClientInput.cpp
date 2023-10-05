@@ -1074,6 +1074,35 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
 							newRecoilOverride->ADSScale() = orig[4] * amount;
 							newRecoilOverride->movementPenalty() = orig[5] * amount;
+
+							/*	newRecoilOverride->recoilYawMin() = 0;
+								newRecoilOverride->recoilYawMax() = 0;
+								newRecoilOverride->recoilPitchMin() = 0;
+								newRecoilOverride->recoilPitchMax() = 0;
+								newRecoilOverride->ADSScale() = 0;
+								newRecoilOverride->movementPenalty() = 0;*/
+						}
+						else
+						{
+							if (!StoreOrig)
+							{
+								orig[0] = newRecoilOverride->recoilYawMin();
+								orig[1] = newRecoilOverride->recoilYawMax();
+								orig[2] = newRecoilOverride->recoilPitchMin();
+								orig[3] = newRecoilOverride->recoilPitchMax();
+								orig[4] = newRecoilOverride->ADSScale();
+								orig[5] = newRecoilOverride->movementPenalty();
+
+								StoreOrig = true;
+							}
+
+							const float amount = m_settings::recoilPercent / 100;
+							newRecoilOverride->recoilYawMin() = orig[0] * amount;
+							newRecoilOverride->recoilYawMax() = orig[1] * amount;
+							newRecoilOverride->recoilPitchMin() = orig[2] * amount;
+							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
+							newRecoilOverride->ADSScale() = orig[4] * amount;
+							newRecoilOverride->movementPenalty() = orig[5] * amount;
 						}
 					}
 				}
@@ -1131,8 +1160,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					if (!IsAddressValid(material))
 						continue;
 
-					LOG(XS("[DEBUG] Material: %ls"), material->get_name()->c_str());
-
 					if (material->get_name()->Contains(XS("sparks2"))
 						|| material->get_name()->Contains(XS("puff-3"))
 						|| material->get_name()->Contains(XS("c4_smoke_01"))
@@ -1145,7 +1172,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						|| material->get_name()->Contains(XS("c4charge"))
 						|| material->get_name()->Contains(XS("pfx_smoke_rocket"))
 						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
-						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("holosight.georeticle (Instance)"))
+						|| material->get_name()->Contains(XS("vfx_embers (Instance)"))
+						|| material->get_name()->Contains(XS("pfx_smoke_whispy_1_white  (Instance)"))
+						|| material->get_name()->Contains(XS("flame-mlrs-cone (Instance)"))
+						|| material->get_name()->Contains(XS("vfx_heatshimmer (Instance)"))
+						|| material->get_name()->Contains(XS("lasersight (Instance)"))
+
 						|| material->get_name()->Contains(XS("muzzle_fumes1"))
 						|| material->get_name()->Contains(XS("muzzle_fumes2"))
 						|| material->get_name()->Contains(XS("muzzle_fumes3"))
@@ -1155,6 +1188,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						|| material->get_name()->Contains(XS("muzzle_flash-cross"))
 						|| material->get_name()->Contains(XS("muzzle_flash-side-1x4")))
 						continue;
+
+					//if ( Material->name( )->Contains( L"Hand" ) || Material->name( )->Contains( L"Arm" ) || Material->name( )->Contains( L"Glove" ) )
+
+					//LOG("[DEBUG] matz - %ls", material->get_name()->c_str());
 
 					int selectedChams = m_settings::WeaponSelectedChams;
 
@@ -1391,7 +1428,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		a1->playerFlags() |= RustStructs::PlayerFlags::IsAdmin;
 	}
 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 	if (m_settings::AdminCheat)
 	{
 		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey) && !DoNoclip)
@@ -1595,6 +1635,19 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
+
+
+	if (m_settings::FloorHugger)
+	{
+		auto modelstate = a1->modelState();
+
+		if (IsAddressValid(modelstate))
+		{
+			modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
+			modelstate->flags() |= 32768;
+		}
+	}
+
 
 	if (m_settings::Spinbot)
 	{

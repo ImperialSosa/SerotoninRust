@@ -105,7 +105,7 @@ void MenuDraw::RenderMenu()
 
 						}
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
-						//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
+						Menu().CheckBox(XS("Silent Melee"), m_settings::SilentMelee);
 						////if (m_settings::HeliAimbot)
 						//{
 						//	Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
@@ -374,13 +374,18 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
 						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
 						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
+<<<<<<< HEAD
 						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+=======
+						//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
 						Menu().Slider(XS("Crates Distance"), m_settings::MaxCrateDistance, 0, 500);
+						Menu().Slider(XS("Airdrop Distance"), m_settings::MaxSupplyDropDistance, 0, 500);
 					}
 					break;
 
@@ -399,7 +404,8 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBox(XS("TurretRange"), m_settings::TurretRange);
 						}
 						Menu().CheckBox(XS("Patrol Helicopter"), m_settings::PatrolHelicopter);
-
+						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
+						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
 						Menu().CheckBox(XS("Raid ESP"), m_settings::RaidESP);
 						if (m_settings::RaidESP)
 						{
@@ -462,14 +468,13 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoMovementReduction"), m_settings::NoMovementRestrictions);
 						Menu().CheckBox(XS("NoCollision (Trees)"), m_settings::IgnoreTrees);
 						Menu().CheckBox(XS("NoCollision (Players)"), m_settings::IgnorePlayers);
-						Menu().CheckBox(XS("NameSpoofer"), m_settings::NameSpoofer);
-						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
-						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+						Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
 
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
+						Menu().CheckBox(XS("NameSpoofer"), m_settings::NameSpoofer);
 						Menu().CheckBox(XS("Instant Loot"), m_settings::InstantLoot);
 						Menu().CheckBox(XS("Instant Heal"), m_settings::InstantHeal);
 						Menu().CheckBox(XS("Adjust NoClipSpeed"), m_settings::AdjustNoClipSpeed);
@@ -585,8 +590,15 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
+<<<<<<< HEAD
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 
+=======
+						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
+						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+
+						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

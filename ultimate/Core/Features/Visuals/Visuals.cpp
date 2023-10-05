@@ -1205,8 +1205,6 @@ void Visuals::RenderEntities()
 					}
 				}
 
-
-
 				if (distance <= m_settings::MaxCrateDistance)
 				{
 					if (m_settings::BasicCrate)
@@ -1274,19 +1272,21 @@ void Visuals::RenderEntities()
 					}
 				}
 				
-
-				if (m_settings::SupplyDrop)
+				if (distance <= m_settings::MaxSupplyDropDistance)
 				{
-					if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+					if (m_settings::SupplyDrop)
 					{
-						if (HASH("supply_drop") == Hash(name, false))
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
 						{
-							std::string player_name = XS("Airdrop");
-							char str[256];
-							sprintf(str, XS("[%dm]"), (int)distance);
-							player_name = player_name + " " + str;
+							if (HASH("supply_drop") == Hash(name, false))
+							{
+								std::string player_name = XS("Airdrop");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
 
-							UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
 						}
 					}
 				}
@@ -2064,16 +2064,16 @@ void Visuals::CacheEntities()
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
 
-							if (EntityID == horse && m_settings::horseEsp)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
+							///*if (EntityID == horse && m_settings::horseEsp)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//}
 
-							else if (EntityID == oil_barrel && m_settings::OilBarrel)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
-							else if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
+							//else if (EntityID == oil_barrel && m_settings::OilBarrel)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//*/}
+							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2101,10 +2101,10 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == loot_barrel && m_settings::LootBarrel)
+	/*						else if (EntityID == loot_barrel && m_settings::LootBarrel)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
+							}*/
 							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
