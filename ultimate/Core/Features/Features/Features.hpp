@@ -3,7 +3,6 @@
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 
 #define M_PI_2 1.57079632679489661923
-static bool DoNoclip = false;
 
 class Features {
 public:

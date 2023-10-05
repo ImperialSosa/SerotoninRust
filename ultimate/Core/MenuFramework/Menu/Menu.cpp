@@ -374,11 +374,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
 						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
 						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
-<<<<<<< HEAD
 						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
-=======
 						//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
->>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 
 					}
 
@@ -590,15 +587,12 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
-<<<<<<< HEAD
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 
-=======
 						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
 						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
 
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
->>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

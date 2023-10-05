@@ -119,7 +119,6 @@ namespace m_settings {
 	inline bool InstantLoot = false;
 	inline float Fov_Color[4] = { 255.f, 255.f, 255.f, 255.f };
 	inline float Crosshair_Color[4] = { 255.f, 255.f, 255.f, 255.f };
-	inline float BradleyColor[4] = { 255.f, 255.f, 255.f, 255.f };
 	inline float AimbotAccuracy = 100.f;
 	inline bool ChangeRecoil = false;
 	inline bool Thickbullet_Arrows = false;
@@ -128,7 +127,6 @@ namespace m_settings {
 	inline bool StopPlayer = false;
 	inline bool ManipFlags = false;
 	inline bool SnickerBullet = false;
-	inline bool LongMelee = false;
 	inline bool BulletTPFlags = false;
 	inline bool BlockServerCommands = true;
 	inline bool Autoshoot = false;
@@ -354,31 +352,20 @@ namespace m_settings {
 	inline bool Thickbullet_Indicator = false;
 	inline bool Thickbullet_AutoShoot = false;
 
-<<<<<<< HEAD
-
 	inline bool horseEsp = false;
 	inline bool BasicCrate = false;
 	inline bool NormalCrate = false;
 	inline bool MinicopterEsp = false;
-=======
-	inline bool OnlyGloves = false;
-	inline bool OnlyHands = false;
-	inline bool BradleyAPC = false;
-	inline bool ThugBoat = false;
-	inline bool BasicCrate = false;
-	inline bool NormalCrate = false;
->>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
 	inline bool LootBarrel = false;
-<<<<<<< HEAD
 	inline bool OilBarrel = false;
 	inline bool ThugBoat = false;
 
+	inline bool OnlyGloves = false;
+	inline bool OnlyHands = false;
 
-=======
->>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;
