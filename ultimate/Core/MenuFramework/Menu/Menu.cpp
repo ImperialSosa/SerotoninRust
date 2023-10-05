@@ -152,6 +152,9 @@ void MenuDraw::RenderMenu()
 						if (m_settings::BulletTP && m_settings::Manipulation) {
 							Menu().CheckBox(XS("BehindWall (FPS)"), m_settings::BehindWall);
 						}
+						else
+							m_settings::BehindWall = false;
+
 						Menu().CheckBox(XS("AutoStop"), m_settings::StopPlayer);
 
 						Menu().CheckBox(XS("PierceMaterials"), m_settings::PierceMaterials);
