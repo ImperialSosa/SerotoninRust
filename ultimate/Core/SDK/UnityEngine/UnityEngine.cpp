@@ -1150,10 +1150,10 @@ namespace UnityEngine
 		}
 	}
 
-	GUISkin* DDraw::Arrow(Vector3 vPos, Vector3 vPosB, float headSize, Color color, float fDuration)
+	GUISkin* DDraw::Arrow(Vector3 vPos, Vector3 vPosB, float headSize, Color color, float fDuration, bool distanceFade, bool zTest)
 	{
-		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Arrow"), 5)));
-		return Call<GUISkin*>(ToAddress(get_skin), vPos, vPosB, headSize, color, fDuration);
+		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Arrow"), 7)));
+		return Call<GUISkin*>(ToAddress(get_skin), vPos, vPosB, headSize, color, fDuration, distanceFade, zTest);
 	}
 
 	void DDraw::Sphere(Vector3 vPos, float fRadius, Color color, float fDuration, bool distanceFade)

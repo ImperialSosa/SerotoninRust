@@ -2746,7 +2746,7 @@ namespace UnityEngine {
 	struct DDraw : Il2CppObject {
 		IL2CPP_CLASS("DDraw");
 
-		static GUISkin* Arrow(Vector3 vPos, Vector3 vPosB, float headSize, Color color, float fDuration);
+		static GUISkin* Arrow(Vector3 vPos, Vector3 vPosB, float headSize, Color color, float fDuration, bool distanceFade, bool zTest);
 		static void Sphere(Vector3 vPos, float fRadius, Color color, float fDuration, bool distanceFade);
 		static void Line(Vector3 vPos, Vector3 vPosB, Color color, float fDuration, bool fade, bool ztest);
 		static void Capsule(Vector3 pos, Vector4 rotation, float fRadius, float fHeight, Color color, float fDuration = 0.5, bool distanceFade = true);

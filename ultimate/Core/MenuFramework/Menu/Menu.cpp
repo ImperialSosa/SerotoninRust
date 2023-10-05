@@ -461,7 +461,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoMovementReduction"), m_settings::NoMovementRestrictions);
 						Menu().CheckBox(XS("NoCollision (Trees)"), m_settings::IgnoreTrees);
 						Menu().CheckBox(XS("NoCollision (Players)"), m_settings::IgnorePlayers);
-						Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
+						//Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
 
 					}
 
@@ -583,14 +583,14 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
-						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
-						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
 
-						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
+						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
+						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 						Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
 						if (m_settings::WeaponSpammer) {
 							Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
