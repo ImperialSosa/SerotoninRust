@@ -1391,7 +1391,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		a1->playerFlags() |= RustStructs::PlayerFlags::IsAdmin;
 	}
 
-	static bool DoNoclip = false;
+	
 	if (m_settings::AdminCheat)
 	{
 		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey) && !DoNoclip)

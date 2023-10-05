@@ -34,8 +34,6 @@ BOOL DllMain(HINSTANCE instance, DWORD reason, void* reserved)
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
-unsigned char _TAG[] = { 0xFF, 0xAC, 0x32, 0x4D, 0xAB, 0xAB, 0x88, 0x69 };
-
 BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintptr_t reserved) {
     static bool thread_inited = false;
     auto EPIC_EXPORT_AVOIDANCE = reinterpret_cast<eac_info*>(_TAG);

@@ -233,7 +233,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Cached Indicator"), m_settings::ShowCachedLOS);
 						Menu().CheckBox(XS("Cached Point"), m_settings::ShowCachedPoint);
 
-						Menu().CheckBox(XS("SnickerBullet"), m_settings::SnickerBullet);
+						//Menu().CheckBox(XS("SnickerBullet"), m_settings::SnickerBullet);
 					}
 					break;
 				}
@@ -369,6 +369,13 @@ void MenuDraw::RenderMenu()
 						}
 						Menu().CheckBox(XS("Bradley Crate"), m_settings::BradleyCrate);
 						Menu().CheckBox(XS("Heli Crate"), m_settings::HeliCrate);
+						Menu().CheckBox(XS("Basic Crate"), m_settings::BasicCrate);
+						Menu().CheckBox(XS("Normal Crate"), m_settings::NormalCrate);
+						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
+						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
+						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
+						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -410,6 +417,8 @@ void MenuDraw::RenderMenu()
 							
 
 						}
+						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -421,6 +430,7 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
 						Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
 						Menu().Slider(XS("Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
+						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
 
 					}
 					break;
@@ -575,6 +585,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
+						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
