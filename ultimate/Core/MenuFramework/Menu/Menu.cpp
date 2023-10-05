@@ -344,6 +344,7 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBox(XS("TurretRange"), m_settings::TurretRange);
 						}
 						Menu().CheckBox(XS("Patrol Helicopter"), m_settings::PatrolHelicopter);
+						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
 
 						Menu().CheckBox(XS("Raid ESP"), m_settings::RaidESP);
 						if (m_settings::RaidESP)
@@ -359,8 +360,6 @@ void MenuDraw::RenderMenu()
 						{
 							Menu().CheckBox(XS("TC Health"), m_settings::TC_Health);
 							Menu().CheckBox(XS("AuthorizedPlayers"), m_settings::AuthorizedPlayers);
-							
-
 						}
 					}
 
@@ -373,6 +372,8 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
 						Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
 						Menu().Slider(XS("Raid Timer"), m_settings::MaxRaidTimer, 0, 300);
+
+						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
 
 					}
 					break;

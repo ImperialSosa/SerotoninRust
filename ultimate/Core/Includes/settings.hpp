@@ -206,6 +206,7 @@ namespace m_settings {
 	inline bool OreIcons = false;
 	inline float MaxOreDistance = 100.f;
 	inline float MaxCollectableDistance = 50.f;
+
 	inline float IconsScale = 24.f;
 
 	inline bool Mushroom = false;
@@ -238,6 +239,7 @@ namespace m_settings {
 	inline bool HackableCrate = false;
 	inline bool BradleyCrate = false;
 	inline bool HeliCrate = false;
+	inline bool BradleyAPC = false;
 	inline bool TurretRange = false;
 	inline bool TurretAuthorizedPlayers = false;
 	inline bool TurretTurningFlag = false;
@@ -246,6 +248,8 @@ namespace m_settings {
 	inline float TurretColor[4] = { 238.f, 0.f, 0.f, 255.f };
 	inline float CrateColor[4] = { 0.f, 255.f, 255.f, 255.f };
 	inline float HeliColor[4] = { 255.f, 0.f, 0.f, 255.f };
+	inline float BradleyColor[4] = { 255.f, 0.f, 0.f, 255.f };
+
 	//esp
 	inline bool SavePos = false;
 	inline RustStructs::KeyCode SavePosKey = RustStructs::KeyCode::F;
@@ -260,6 +264,8 @@ namespace m_settings {
 	inline float SwastikaSize = 15.f;
 	inline bool CornerBox = false;
 	inline bool healthBar = false;
+	inline bool BradleyhealthBar = false;
+
 	inline bool Skeleton = false;
 	inline bool helditem = false;
 	inline bool ammoESP = false;
@@ -330,11 +336,13 @@ namespace m_settings {
 	inline bool horseEsp = false;
 	inline bool BasicCrate = false;
 	inline bool NormalCrate = false;
+	inline bool MinicopterEsp = false;
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
 	inline bool LootBarrel = false;
 	inline bool OilBarrel = false;
+	inline bool ThugBoat = false;
 
 };
 

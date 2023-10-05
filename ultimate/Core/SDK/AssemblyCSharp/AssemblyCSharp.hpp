@@ -201,6 +201,28 @@ namespace AssemblyCSharp {
 		void OnSignal(RustStructs::Signal a, char* str);
 		auto GetWorldVelocity() -> Vector3;
 
+		bool IsOnFire()
+		{
+			if (!this) return false;
+			static uintptr_t procedure = 0;
+			if (!IsAddressValid(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("IsOnFire"), 0);
+				if (IsAddressValid(method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if (IsAddressValid(procedure))
+			{
+				return Call<bool>(procedure, this);
+			}
+
+
+			return false;
+		}
+
 		Vector3 GetInheritedThrowVelocity(Vector3 dir)
 		{
 			if (!this)return Vector3();
@@ -1435,6 +1457,11 @@ namespace AssemblyCSharp {
 
 	struct Chainsaw : BaseMelee {
 		IL2CPP_CLASS("Chainsaw");
+
+	};
+
+	struct Tugboat : BaseCombatEntity {
+		IL2CPP_CLASS("Tugboat");
 
 	};
 
