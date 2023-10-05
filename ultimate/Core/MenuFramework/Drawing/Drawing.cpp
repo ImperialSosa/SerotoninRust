@@ -1,5 +1,4 @@
 #include "Drawing.hpp"
-#pragma optimize( "", on )
 
 
 inline const char* GetKey(RustStructs::KeyCode iKey)

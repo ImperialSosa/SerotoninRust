@@ -3,6 +3,10 @@
 
 void cheat_main()
 {
+#ifndef DEBUG_MODE
+fix_relocations();
+#endif
+
 	Core().Instance()->Init();
 }
 
@@ -30,27 +34,32 @@ BOOL DllMain(HINSTANCE instance, DWORD reason, void* reserved)
 //#define TOKEN {0x21, 0x11, 0x15, 0xCD, 0x32, 0x64, 0xFA, 0x6C, 0x78, 0x3A, 0x97, 0x9A, 0xCC, 0xFF, 0x32, 0x64, 0x42, 0xBB, 0xDA, 0xB2, 0xDD, 0xAA, 0x24, 0x25, 0xCC, 0xCA, 0xFA, 0xD8, 0x16, 0xC3, 0x57, 0xD2, 0xA2 }
 #endif
 
-extern "C" IMAGE_DOS_HEADER __ImageBase;
-
 BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintptr_t reserved) {
-	if (call_reason == DLL_PROCESS_ATTACH) {
+    static bool thread_inited = false;
+    auto EPIC_EXPORT_AVOIDANCE = reinterpret_cast<eac_info*>(_TAG);
+   // LI_FN(OutputDebugStringA)("[REAPS] hello game\n");
+    if (call_reason == DLL_PROCESS_ATTACH)
+    {
+        eac_data.cheat_base = EPIC_EXPORT_AVOIDANCE->cheat_base;
+        eac_data.entry = EPIC_EXPORT_AVOIDANCE->entry;
 
-		static bool thread_inited = false;
-		const auto NtHeader = (PIMAGE_NT_HEADERS)(((PUINT8)&__ImageBase) + __ImageBase.e_lfanew);
-		const auto EacBase = (PUINT8)mod;
-		const auto EOS_Entry = &EacBase[NtHeader->OptionalHeader.AddressOfEntryPoint];
+        eac::base = mod;
+        eac::entry = (mod + eac_data.entry);
 
-		if (!thread_inited) {
-			LI_FN(DisableThreadLibraryCalls)((HINSTANCE)mod);
-			LI_FN(CreateThread).cached()(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&cheat_main), 0, 0, 0);
-			thread_inited = true;
-		}
+        if (!thread_inited)
+        {
+           // LI_FN(OutputDebugStringA)("[REAPS] hello game 2\n");
+            LI_FN(CreateThread)(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(cheat_main), nullptr, 0, nullptr);
+            thread_inited = true;
+        }
 
-		auto EacMain = (decltype(&DllMain))(EOS_Entry);
-		return EacMain(mod, call_reason, reserved);
+        const auto eac_dll_fn =
+            reinterpret_cast<decltype(&DllMain)>(mod + eac_data.entry);
 
-	}
+        const auto result = eac_dll_fn(mod, call_reason, reserved);
+        return result;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 #endif

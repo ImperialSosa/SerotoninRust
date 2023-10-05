@@ -24,7 +24,7 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 
 	if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
-		if (IsAddressValid(LocalPlayer)) {
+		if (IsAddressValid(LocalPlayer) && IsAddressValid(_This)) {
 			auto eyes = LocalPlayer->eyes();
 			if (IsAddressValid(eyes)) {
 				if (AssemblyCSharp::IsVisible(eyes->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
@@ -53,6 +53,10 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 					_This->TryReload();
 					_This->UpdateAmmoDisplay();
 					_This->DidAttackClientside();
+				}
+				else
+				{
+					return Hooks::DoAttackBowhk.get_original< decltype(&DoAttackBow)>()(_This);
 				}
 			}
 		}
