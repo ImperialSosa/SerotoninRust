@@ -369,11 +369,19 @@ void MenuDraw::RenderMenu()
 						}
 						Menu().CheckBox(XS("Bradley Crate"), m_settings::BradleyCrate);
 						Menu().CheckBox(XS("Heli Crate"), m_settings::HeliCrate);
+						Menu().CheckBox(XS("Basic Crate"), m_settings::BasicCrate);
+						Menu().CheckBox(XS("Normal Crate"), m_settings::NormalCrate);
+						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
+						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
+						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
+						//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
 						Menu().Slider(XS("Crates Distance"), m_settings::MaxCrateDistance, 0, 500);
+						Menu().Slider(XS("Airdrop Distance"), m_settings::MaxSupplyDropDistance, 0, 500);
 					}
 					break;
 
@@ -392,7 +400,8 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBox(XS("TurretRange"), m_settings::TurretRange);
 						}
 						Menu().CheckBox(XS("Patrol Helicopter"), m_settings::PatrolHelicopter);
-
+						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
+						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
 						Menu().CheckBox(XS("Raid ESP"), m_settings::RaidESP);
 						if (m_settings::RaidESP)
 						{
@@ -452,14 +461,13 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoMovementReduction"), m_settings::NoMovementRestrictions);
 						Menu().CheckBox(XS("NoCollision (Trees)"), m_settings::IgnoreTrees);
 						Menu().CheckBox(XS("NoCollision (Players)"), m_settings::IgnorePlayers);
-						Menu().CheckBox(XS("NameSpoofer"), m_settings::NameSpoofer);
-						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
-						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+						Menu().CheckBox(XS("FloorHugger"), m_settings::FloorHugger);
 
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
+						Menu().CheckBox(XS("NameSpoofer"), m_settings::NameSpoofer);
 						Menu().CheckBox(XS("Instant Loot"), m_settings::InstantLoot);
 						Menu().CheckBox(XS("Instant Heal"), m_settings::InstantHeal);
 						Menu().CheckBox(XS("Adjust NoClipSpeed"), m_settings::AdjustNoClipSpeed);
@@ -575,6 +583,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
+						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
+						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

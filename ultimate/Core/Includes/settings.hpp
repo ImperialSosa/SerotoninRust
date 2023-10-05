@@ -212,6 +212,7 @@ namespace m_settings {
 	inline float MaxDroppedDistance = 50.f;
 	inline float MaxTrapsDistance = 50.f;
 	inline float MaxCrateDistance = 50.f;
+	inline float MaxSupplyDropDistance = 500.f;
 	inline float MaxFoodDistance = 50.f;
 	inline float MaxAPCDistance = 1500.f;
 	inline float MaxPlayerDropsDistance = 50.f;
@@ -346,6 +347,16 @@ namespace m_settings {
 	inline bool Thickbullet_Indicator = false;
 	inline bool Thickbullet_AutoShoot = false;
 
+	inline bool OnlyGloves = false;
+	inline bool OnlyHands = false;
+	inline bool BradleyAPC = false;
+	inline bool ThugBoat = false;
+	inline bool BasicCrate = false;
+	inline bool NormalCrate = false;
+	inline bool MilitaryCrate = false;
+	inline bool EliteCrate = false;
+	inline bool SupplyDrop = false;
+	inline bool LootBarrel = false;
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;
