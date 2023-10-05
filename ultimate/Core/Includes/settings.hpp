@@ -18,6 +18,7 @@ namespace m_settings {
 	inline bool DrawClothingIcons = false;
 	inline float AuthorizedPlayersDistance = 100.f;
 	inline float SilentSpread = 100.f;
+	inline bool DrawManipPoints = false;
 	inline float NormalThickBulletThickness = 4.4f;
 	inline bool AimbotNPC = false;
 	inline bool RaidESP = false;
@@ -27,6 +28,11 @@ namespace m_settings {
 	inline bool ShowExplosiveAmmo = false;
 	inline bool DisableHitSounds = false;
 	inline bool CustomHitSounds = false;
+	inline float LOSCheckAmount = 1000;
+	inline bool CacheBulletTP = false;
+	inline bool AdvancedChecks = false;
+	inline bool ShowCachedLOS = false;
+	inline bool ShowCachedPoint = false;
 
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
@@ -50,6 +56,15 @@ namespace m_settings {
 	inline bool TargetWounded = false;
 	inline bool ShowUsers = false;
 	inline bool NameSpoofer = false;
+	inline int SelectedBoxESP = 0;
+	inline int HeldItemType = 0;
+	inline int SelectedHealthBar = 0;
+	inline int SelectedHotbar = 0;
+	inline int SelectedClothing = 0;
+	inline int SelectedOutsideType = 0;
+	inline int HealthBar = 0;
+	inline int VisCheckType = 0;
+
 	inline int SelectedAimbone = 0;
 	inline bool MeleeAimbot = false;
 	inline bool FloorHugger = false;
@@ -86,7 +101,7 @@ namespace m_settings {
 	inline bool BaseCheck = false;
 	inline bool BulletTracers = false;
 	inline int SelectedHitbox = 0;
-	inline int BulletTPIntensity = 2;
+	inline int BulletTPIntensity = 0;
 	inline int ManipMode = 0;
 	inline bool AutoReload = false;
 	inline bool HeliHitboxOverride = false;
@@ -108,11 +123,13 @@ namespace m_settings {
 	inline bool Manipulation = false;
 	inline bool StopPlayer = false;
 	inline bool ManipFlags = false;
+	inline bool SnickerBullet = false;
 	inline bool BulletTPFlags = false;
 	inline bool BlockServerCommands = true;
 	inline bool Autoshoot = false;
 	inline bool AlwaysAutoshoot = false;
 	inline bool NoSpread = false;
+	inline bool ChangeSpread = false;
 	inline bool NoSway = false;
 	inline bool OnHalfDesync = false;
 	inline bool FastBullets = false;
@@ -229,6 +246,10 @@ namespace m_settings {
 	inline bool Corpse = false;
 	inline bool BackPack = false;
 
+
+	inline static std::vector<bool> LoadChams{ 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> LoadHitEffects{ 0, 0, 0, 0, 0, 0, 0 };
+
 	inline float CorpseColor[4] = { 201.f, 235.f, 168.f, 255.f };
 	inline float BackPackColor[4] = { 238.f, 238.f, 238.f, 255.f };
 
@@ -251,15 +272,15 @@ namespace m_settings {
 	inline float MaxExplosionDistance = 5000.f;
 	inline float MaxRaidTimer = 120.f;
 
-	inline bool nameEsp = false;
+	inline bool nameEsp = true;
 	inline bool BoxEsp = false;
 	inline bool Swastika = false;
 	inline float SwastikaSpeed = 1.f;
 	inline float SwastikaSize = 15.f;
 	inline bool CornerBox = false;
-	inline bool healthBar = false;
-	inline bool Skeleton = false;
-	inline bool helditem = false;
+	inline bool healthBar = true;
+	inline bool Skeleton = true;
+	inline bool helditem = true;
 	inline bool ammoESP = false;
 	inline bool EspVisCheck = false;
 	inline float DrawBox_Color[4] = { 205.f, 5.0f, 2.0f, 255.f };

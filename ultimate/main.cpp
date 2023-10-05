@@ -1,8 +1,10 @@
 #include "Core/Core.hpp"
 
-
 void cheat_main()
 {
+#ifndef DEBUG_MODE
+    fix_relocations();
+#endif
 	Core().Instance()->Init();
 }
 
@@ -32,25 +34,32 @@ BOOL DllMain(HINSTANCE instance, DWORD reason, void* reserved)
 
 extern "C" IMAGE_DOS_HEADER __ImageBase;
 
+unsigned char _TAG[] = { 0xFF, 0xAC, 0x32, 0x4D, 0xAB, 0xAB, 0x88, 0x69 };
+
 BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintptr_t reserved) {
-	if (call_reason == DLL_PROCESS_ATTACH) {
+    static bool thread_inited = false;
+    auto EPIC_EXPORT_AVOIDANCE = reinterpret_cast<eac_info*>(_TAG);
+    if (call_reason == DLL_PROCESS_ATTACH)
+    {
+        eac_data.cheat_base = EPIC_EXPORT_AVOIDANCE->cheat_base;
+        eac_data.entry = EPIC_EXPORT_AVOIDANCE->entry;
 
-		static bool thread_inited = false;
-		const auto NtHeader = (PIMAGE_NT_HEADERS)(((PUINT8)&__ImageBase) + __ImageBase.e_lfanew);
-		const auto EacBase = (PUINT8)mod;
-		const auto EOS_Entry = &EacBase[NtHeader->OptionalHeader.AddressOfEntryPoint];
+        eac::base = mod;
+        eac::entry = (mod + eac_data.entry);
 
-		if (!thread_inited) {
-			LI_FN(DisableThreadLibraryCalls)((HINSTANCE)mod);
-			LI_FN(CreateThread).cached()(NULL, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&cheat_main), 0, 0, 0);
-			thread_inited = true;
-		}
+        if (!thread_inited)
+        {
+            LI_FN(CreateThread)(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(cheat_main), nullptr, 0, nullptr);
+            thread_inited = true;
+        }
 
-		auto EacMain = (decltype(&DllMain))(EOS_Entry);
-		return EacMain(mod, call_reason, reserved);
+        const auto eac_dll_fn =
+            reinterpret_cast<decltype(&DllMain)>(mod + eac_data.entry);
 
-	}
+        const auto result = eac_dll_fn(mod, call_reason, reserved);
+        return result;
+    }
 
-	return TRUE;
+    return TRUE;
 }
 #endif

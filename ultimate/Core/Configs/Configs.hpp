@@ -12,4 +12,5 @@ public:
 class Buttons {
 public:
 	static void ClearRaidCache();
+	static void ClearLOSPoints();
 };

@@ -172,7 +172,7 @@ ULONG_PTR GET_MALLOC_SIZE( PVOID ptr )
 	if ( header->Magic != MALLOC_MAGIC )
 	{
 		__debugbreak();
-		RtlRaiseException( nullptr );
+		LI_FN(RtlRaiseException)( nullptr );
 	}
 
 	return header->Size;
@@ -183,7 +183,7 @@ void* __cdecl malloc( size_t size )
 	PMALLOC_HEADER mhdr = NULL;
 	const size_t new_size = size + sizeof( MALLOC_HEADER );
 
-	mhdr = ( PMALLOC_HEADER )RtlAllocateHeap( NtCurrentPeb()->ProcessHeap, HEAP_ZERO_MEMORY, new_size );
+	mhdr = ( PMALLOC_HEADER )LI_FN(RtlAllocateHeap)( NtCurrentPeb()->ProcessHeap, HEAP_ZERO_MEMORY, new_size );
 	if ( mhdr )
 	{
 		mhdr->Magic = MALLOC_MAGIC;
@@ -203,9 +203,9 @@ void __cdecl free( void* ptr )
 		if ( mhdr->Magic != MALLOC_MAGIC )
 		{
 			__debugbreak();
-			return RtlRaiseException( nullptr );
+			return LI_FN(RtlRaiseException)( nullptr );
 		}
-		RtlFreeHeap( NtCurrentPeb()->ProcessHeap, NULL, mhdr );
+		LI_FN(RtlFreeHeap)( NtCurrentPeb()->ProcessHeap, NULL, mhdr );
 	}
 }
 
@@ -285,7 +285,7 @@ void _initterm( _PVFV* pfbegin, _PVFV* pfend )
 int __cdecl _cinit( void )
 {
 	_cinitfs();
-	RtlInitializeSListHead( &__onexithead );
+	LI_FN(RtlInitializeSListHead)( &__onexithead );
 
 	/*
 	* do C++ initializations
@@ -303,7 +303,7 @@ _PVFV _onexit( _PVFV lpfn )
 		return NULL;
 
 	_Entry->func = lpfn;
-	RtlInterlockedPushEntrySList( &__onexithead, &_Entry->Entry );
+	LI_FN(RtlInterlockedPushEntrySList)( &__onexithead, &_Entry->Entry );
 	return lpfn;
 }
 
@@ -351,7 +351,7 @@ void __cdecl _wassert( wchar_t const* _Message, wchar_t const* _File, unsigned _
 	_Line;
 
 	__debugbreak();
-	RtlRaiseException( nullptr );
+	LI_FN(RtlRaiseException)( nullptr );
 }
 
 void* __cdecl operator new( size_t size )

@@ -741,6 +741,12 @@ void drawMisc()
 		}
 	}
 
+	if (m_settings::ShowCachedLOS) {
+		if (Features().ConstantLOSCheck == true)
+			UnityEngine::GL().TextCenter(Vector2(center_x, center_y - 400), XS("Cached Visible"), Color::Red(), Color::Black(), m_settings::fontsize);
+
+	}
+
 	if (m_settings::AimMarker)
 	{
 		auto camera = UnityEngine::Camera::get_main();
@@ -1044,7 +1050,7 @@ inline Vector2 hotbar_pos;
 inline Vector2 window_size2;
 inline bool sex2 = false;
 inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, const Vector2& window_size) {
-	if (m_settings::DrawInventory || m_settings::DrawInventoryIcons)
+	if (m_settings::SelectedHotbar == 1 || m_settings::SelectedHotbar == 2)
 	{
 		if (!sex2) {
 			hotbar_pos = pos;
@@ -1085,7 +1091,7 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 				auto inventory = AimbotTarget.m_player->inventory();
 				if (IsAddressValid(inventory))
 				{
-					if (m_settings::DrawInventory) {
+					if (m_settings::SelectedHotbar == 1) {
 						auto containerBelt = inventory->containerBelt();
 						if (IsAddressValid(containerBelt))
 						{
@@ -1141,7 +1147,7 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 							}
 						}
 					}
-					if (m_settings::DrawInventoryIcons) {
+					if (m_settings::SelectedHotbar == 2) {
 						auto containerBelt = inventory->containerBelt();
 						if (IsAddressValid(containerBelt))
 						{
@@ -1223,7 +1229,7 @@ inline Vector2 window_size2_c;
 inline bool sex2_c = false;
 
 inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, const Vector2& window_size) {
-	if (m_settings::DrawClothing || m_settings::DrawInventoryIcons)
+	if (m_settings::SelectedClothing == 1 || m_settings::SelectedClothing == 2)
 	{
 		if (!sex2_c) {
 			hotbar_pos_c = pos;
@@ -1264,7 +1270,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 				auto inventory = AimbotTarget.m_player->inventory();
 				if (IsAddressValid(inventory))
 				{
-					if (m_settings::DrawClothing) {
+					if (m_settings::SelectedClothing == 1) {
 						auto containerWear = inventory->containerWear();
 						if (IsAddressValid(containerWear))
 						{
@@ -1308,7 +1314,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 							}
 						}
 					}
-					if (m_settings::DrawClothingIcons) {
+					if (m_settings::SelectedClothing == 2) {
 						auto containerBelt = inventory->containerWear();
 						if (IsAddressValid(containerBelt))
 						{
@@ -1497,32 +1503,32 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					float YPos = (UnityEngine::screen_size.y / 8);
 					int YOffset = 40;
 
-					if (m_settings::DrawInventoryIcons && m_settings::DrawClothingIcons) {
+					if (m_settings::SelectedHotbar == 2 && m_settings::SelectedClothing == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
 						YOffset += 5.f;
 					}
-					else if (m_settings::DrawInventory) {
+					else if (m_settings::SelectedHotbar == 1) {
 						Vector2 WindowSize = Vector2(50, 50);
 
 						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
 						YOffset += 25.f;
 					}
-					else if (m_settings::DrawInventoryIcons) {
+					else if (m_settings::SelectedHotbar == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
 						YOffset += 25.f;
 					}
 
-					if (m_settings::DrawClothing) {
+					if (m_settings::SelectedClothing == 1) {
 						Vector2 WindowSize = Vector2(50, 50);
 
 						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
 						YOffset += 25.f;
 					}
-					else if (m_settings::DrawClothingIcons) {
+					else if (m_settings::SelectedClothing == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);

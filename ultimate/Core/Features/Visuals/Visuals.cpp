@@ -239,12 +239,12 @@ void Visuals::DrawPlayers()
 			else
 				BoxColor = m_settings::EspVisCheck ? VisCheckColor : DrawBox_Color;
 
-			if (m_settings::BoxEsp)
+			if (m_settings::SelectedBoxESP == 1)
 			{
 				UnityEngine::GL::Rectangle(Vector2(bo.left, bo.top), Vector2(bo.right, bo.bottom), BoxColor.GetUnityColor());
 			}
 
-			if (m_settings::CornerBox)
+			if (m_settings::SelectedBoxESP == 2)
 			{
 				DrawCornerBox(bo.left, bo.top, bo.right, bo.bottom, BoxColor.GetUnityColor());
 			}
@@ -369,7 +369,7 @@ void Visuals::DrawPlayers()
 				}
 			}
 			
-			if (m_settings::healthBar)
+			if (m_settings::SelectedHealthBar == 1)
 			{
 				float bar_health = 0;
 				auto health = BasePlayer->_health();
@@ -399,14 +399,47 @@ void Visuals::DrawPlayers()
 					bar_color = Color::Red();
 				}
 
-				//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-				//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
-				//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-
 				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 3.f), Color::Black());
 				UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2((footPos.x - (bar_width / 2)) + bar_health, bo.bottom + yoffset + 3.f), bar_color);
 				UnityEngine::GL::Rectangle(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 4.f), Color::Black());
 				yoffset += 13;
+			}
+
+			if (m_settings::SelectedHealthBar == 2) {
+				float bar_health = 0;
+				auto health = BasePlayer->_health();
+				//auto max_health = base_player->_maxHealth();
+				float max_health = 100.f;
+				float draw_health = health;
+
+				if (health > max_health)
+				{
+					draw_health = max_health;
+				}
+
+				bar_health = (box_height / max_health) * draw_health;
+
+				auto bar_color = Color::Green();
+				if (health > 50.f)
+				{
+					bar_color = Color::Green();
+				}
+				else if (health > 20.f && health < 40.f)
+				{
+					bar_color = Color::Orange();
+				}
+				else if (health < 20.f)
+				{
+					bar_color = Color::Red();
+				}
+
+				//fill_box_({ bo.left - 5.0f, bo.top , 2.f, box_height }, Color::Black());
+				//fill_box_({ bo.left - 5.0f, bo.bottom , 2.f, -current_health_y }, Color::Green());
+
+				int width = 2.f;
+				UnityEngine::GL::RectangleFilled(Vector2(bo.left - 5.0f, bo.top), Vector2(bo.left - 5.0f + width, bo.top + box_height), Color::Black());
+				UnityEngine::GL::RectangleFilled(Vector2(bo.left - 5.0f, bo.bottom), Vector2(bo.left - 5.0f + width, bo.bottom + -bar_health), bar_color);
+				UnityEngine::GL::Rectangle(Vector2(bo.left - 5.0f, bo.top), Vector2(bo.left - 5.0f + width, bo.top + box_height), Color::Black());
 			}
 
 			if (m_settings::nameEsp)
@@ -464,7 +497,7 @@ void Visuals::DrawPlayers()
 				}
 			}
 
-			if (m_settings::helditem)
+			if (m_settings::HeldItemType == 1 || m_settings::HeldItemType == 3)
 			{
 
 				const auto item = BasePlayer->ActiveItem();
@@ -575,24 +608,27 @@ void Visuals::DrawPlayers()
 				}
 			}
 
-			if (m_settings::BaseCheck)
+			if (m_settings::SelectedOutsideType == 1 || m_settings::SelectedOutsideType == 2 || m_settings::SelectedOutsideType == 3)
 			{
 				Vector3 position = BasePlayer->get_bone_transform(47)->get_position() + Vector3(0.f, 500.f, 0.f);
 				UnityEngine::RaycastHit hitInfo;
 				if (AssemblyCSharp::GamePhysics::Trace(UnityEngine::Ray(BasePlayer->get_bone_transform(47)->get_position(), position), 0.f, hitInfo, 500.f, 2097152, RustStructs::QueryTriggerInteraction::Ignore, nullptr))
 				{
-					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-					yoffset += 13;
+					if (m_settings::SelectedOutsideType == 2 || m_settings::SelectedOutsideType == 3) {
+						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+						yoffset += 13;
+					}
 				}
 				else
 				{
-					UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-					yoffset += 13;
+					if (m_settings::SelectedOutsideType == 1 || m_settings::SelectedOutsideType == 3) {
+						UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+						yoffset += 13;
+					}
 				}
-
 			}
 
-			if (m_settings::HeldItemIcon)
+			if (m_settings::HeldItemType == 2 || m_settings::HeldItemType == 3)
 			{
 
 				const auto item = BasePlayer->ActiveItem();
@@ -644,7 +680,7 @@ void Visuals::DrawPlayers()
 											int selectedChams = m_settings::SelectedChams;
 
 											switch (selectedChams) {
-											case 0:
+											case 1:
 												if (FireBundleA) {
 													if (!FireShaderA) //Blue Fire
 														FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -659,7 +695,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 1:
+											case 2:
 												if (FireBundleB) {
 													if (!FireShaderB) //Red Fire
 														FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -674,7 +710,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 2:
+											case 3:
 												if (LightningBundle) {
 													if (!LightningShader) //Lightning
 														LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -689,7 +725,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 3:
+											case 4:
 												if (GeometricBundle) {
 													if (!GeometricShader) //Geometric Disolve
 														GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -704,7 +740,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 4:
+											case 5:
 												if (GalaxyBundle) {
 													if (!GalaxyShader) //Galaxy
 														GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -719,7 +755,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 5:
+											case 6:
 												if (WireFrameBundle) {
 													if (!WireFrameShader) //Galaxy
 														WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
@@ -735,7 +771,7 @@ void Visuals::DrawPlayers()
 													}
 												}
 												break;
-											case 6:
+											case 7:
 												if (ColorBundle) {
 													if (!ColorShader) //Galaxy
 														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));

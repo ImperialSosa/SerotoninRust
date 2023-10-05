@@ -26,8 +26,25 @@ public:
 public:
 	static inline AssemblyCSharp::BasePlayer* LocalPlayer;
 	static inline Vector3 ManipulationAngle;
+	static inline bool PointVisible = false;
+	static inline Vector3 TempCachedPoint;
+	static inline Vector3 CachedManipPoint;
+	static inline uint64_t TargetID;
 	static inline Vector3 BulletTPAngle;
+	static inline bool PositionVisible = false;
 	static inline Vector3 BTPSeperator;
 	static inline AssemblyCSharp::BaseProjectile* BaseProjectile;
 
+	//bullettp
+
+	static inline Vector3 CachedBulletTPPosition;
+	static inline bool BulletTPPointVisible = false;
+
+
+	//magic cache
+	static inline bool GeneratedPoints = false;
+	static inline bool ConstantLOSCheck = false;
+	static inline bool VerifiedLOSPoint = false;
+	static inline Vector3 LOSPoint;
+	static inline uint64_t LOSTargetID;
 };

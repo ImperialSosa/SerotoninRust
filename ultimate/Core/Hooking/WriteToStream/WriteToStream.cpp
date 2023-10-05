@@ -140,7 +140,7 @@ void VelocityAimbot(AssemblyCSharp::BaseProjectile* BaseProjectile)
 							auto TotalHeight = Features().BulletTPAngle.y;
 
 							float Testing = 0.f;
-							if (!AssemblyCSharp::IsVisible(LocalPlayer->get_bone_transform(48)->get_position(), Features().BulletTPAngle) && TotalHeight > 10)
+							if (!AssemblyCSharp::IsVisible(LocalPlayer->get_bone_transform(48)->get_position(), Features().CachedBulletTPPosition) && TotalHeight > 10)
 								Testing += 0.2f;
 							else
 								Testing = 0.f;
@@ -344,12 +344,13 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 		{
+			Vector3 re_p = Features().LocalPlayer->eyes()->get_position();
 			auto rpcposv2 = StartPosition;
 			if (Features().ManipulationAngle != Vector3(0, 0, 0))
 			{
-				StartPosition += (Features().ManipulationAngle);
+				StartPosition += (Features().CachedManipPoint - re_p);
 
-				visible = AssemblyCSharp::IsVisible(StartPosition, Features().BulletTPAngle, 0.2f);
+				visible = AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition, 0.2f);
 
 				if (StartPosition != rpcposv2)
 				{
@@ -404,7 +405,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 			if (m_settings::DoVelocityPrediction) {
 				Vector3 a;
 				float travel_time = 0.f;
-				SimulateProjectile(AimbotTarget.m_player, StartPosition, Features().BulletTPAngle, m_aim_angle, a, travel_time, c_projectile, Features().BaseProjectile, itemModProjectile, AimbotTarget.m_velocity);
+				SimulateProjectile(AimbotTarget.m_player, StartPosition, AimbotTarget.m_position, m_aim_angle, a, travel_time, c_projectile, Features().BaseProjectile, itemModProjectile, AimbotTarget.m_velocity);
 			}
 			else {
 				Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
@@ -448,7 +449,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 		{
 			//visible = AssemblyCSharp::IsVisible(StartPosition, m_target.m_position);
-			visible = AssemblyCSharp::IsVisible(StartPosition, Features().BulletTPAngle);
+			visible = AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition, 0.2f);
 
 
 			if (visible)

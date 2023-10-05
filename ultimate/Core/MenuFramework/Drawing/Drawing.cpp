@@ -423,6 +423,13 @@ void Menu::Tab(const wchar_t* name, int id, Vector2 tab_size) {
 		hover_element = true;
 	}
 
+	static int CachedSubTab = 0;
+	static int CachedTab = 0;
+	if (activetab != CachedTab) {
+		activesubtab = 0;
+		CachedTab = activetab;
+	}
+
 	bool isHovered = is_mouse_in_box({ next_tab_pos.x + spacer, next_tab_pos.y - 25 }, { next_tab_pos.x + spacer + 45 ,next_tab_pos.y + tab_size.y - 15 });
 	bool isActive = activetab == id;
 	if (menu_event == RustStructs::EventType::Repaint)
@@ -495,6 +502,9 @@ void Menu::SubTab(const char* name, int id, Vector2 tab_size) {
 			//UnityEngine::GL::Line(Vector2{ next_subtab_pos.x, next_subtab_pos.y + tab_size.y }, Vector2{ next_subtab_pos.x + tab_size.x - 1 , next_subtab_pos.y + tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 			//outline_box(Vector2{ next_subtab_pos.x, next_subtab_pos.y + tab_size.y }, Vector2{ next_subtab_pos.x + tab_size.x - 1 , next_subtab_pos.y + tab_size.y }, Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 			//UnityEngine::GL().MenuText(UnityEngine::gui_style, next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2, tab_size.x, tab_size.y, (name), Active.GetUnityColor(), true, true);
+
+			UnityEngine::GL().Line(Vector2(next_subtab_pos.x, next_subtab_pos.y + tab_size.y), Vector2(next_subtab_pos.x + tab_size.x, next_subtab_pos.y + tab_size.y), Color::White());
+
 			UnityEngine::GL().MenuText(Vector2(next_subtab_pos.x + 5 + tab_size.x / 2 - 5, next_subtab_pos.y + tab_size.y / 2), Active.GetUnityColor(), Color::Black(), name, true);
 		}
 	}
@@ -842,7 +852,7 @@ void Menu::CheckBoxKeyBind(const char* szTitle, bool& bValue, RustStructs::KeyCo
 
 	bool bHovered = false;
 
-	if (is_mouse_in_box(Vector2(next_item_pos.x + keybindwidthpos, (next_item_pos.y - 3) + keybindheightpos), Vector2(next_item_pos.x + keybindwidth + keybindwidthpos, (next_item_pos.y - 15) + keybindheightpos + 25)))
+	if (is_mouse_in_box(Vector2(next_item_pos.x + keybindwidthpos, (next_item_pos.y + 3) + keybindheightpos), Vector2(next_item_pos.x + keybindwidth + keybindwidthpos, (next_item_pos.y - 15) + keybindheightpos + 25)))
 	{
 		iCurrentSelectedKeybind = Hash(szTitle, false);
 		bHovered = true;
@@ -1105,16 +1115,16 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 	if (!is_menu_open)
 		return;
 
-	float left = 70.f;
+	float left = 85.f;
 	float leveling = 0.f;
-	float width = 120;
+	float width = 100;
 	const auto wstring = std::string(title.begin(), title.end());
 	
-	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 }) && mouse_state) {
+	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 15 }) && mouse_state) {
 		IsInteractingWidthObject = true;
 	}
 	
-	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 15 }) && mouse_state && !old_mouse_state && !interacting) {
+	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 15 }) && mouse_state && !old_mouse_state && !interacting) {
 		is_open = true;
 		interacting = true;
 		IsComboOpen = true;
@@ -1125,7 +1135,7 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 	
 		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 3, next_item_pos.y), Color::White(), Color::Black(), wstring.c_str(), false);
 	
-		if (is_open && !is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
+		if (is_open && !is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
 			is_open = false;
 			interacting = false;
 			IsComboOpen = false;
@@ -1147,7 +1157,7 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 					UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + (i * 15) + leveling + 15), Color(accent_color_[0], accent_color_[1], accent_color_[2], 255.f).GetUnityColor());
 				}
 	
-				if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + 1 + 13 + (i * 15) + leveling }, { next_item_pos.x + width , next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 }))
+				if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + 1 + 13 + (i * 15) + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 }))
 				{
 					if (mouse_state)
 					{
@@ -1169,8 +1179,8 @@ void Menu::Dropdown(const std::string& title, const std::vector<std::string> ite
 			next_item_pos.y += items.size() * 15.f;
 		}
 		else {
-			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling) + 15, Color(34, 34, 34, 255.f).GetUnityColor());
-			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling) + 15, Color(0, 0, 0, 255.f).GetUnityColor());
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 15), Color(34, 34, 34, 255.f).GetUnityColor());
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 15), Color(0, 0, 0, 255.f).GetUnityColor());
 	
 			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling), Color::White(), Color::Black(), str.c_str(), false);
 		}
@@ -1183,97 +1193,103 @@ void Menu::MultiDropdown(const std::string& title, const std::vector<std::string
 	if (!is_menu_open)
 		return;
 
-	//const auto wstring = std::wstring(title.begin(), title.end());
-	//
-	//if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 15 + 16 }) && mouse_state && !old_mouse_state && !interacting) {
-	//	is_open = true;
-	//	interacting = true;
-	//}
-	//
-	//if (is_open)
-	//{
-	//	for (size_t i{ 0 }; i < items.size(); i++)
-	//	{
-	//		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 }) && mouse_state) {
-	//			IsInteractingWidthObject = true;
-	//		}
-	//
-	//		if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 1 + 13 + (i * 15) + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 23 + (i * 15) + 10 + 16 - 2 })) {
-	//			if (mouse_state && !old_mouse_state)
-	//			{
-	//				value[i] = !value[i];
-	//			}
-	//		}
-	//	}
-	//}
-	//
-	//if (menu_event == RustStructs::EventType::Repaint)
-	//{
-	//	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
-	//		IsInteractingWidthObject = true;
-	//	}
-	//
-	//	UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y, 300, 50, wstring.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-	//
-	//	if (is_open && !is_mouse_in_box({ next_item_pos.x, next_item_pos.y + 16 }, { next_item_pos.x + 140, next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
-	//		is_open = false;
-	//		interacting = false;
-	//	}
-	//
-	//	std::wstring str;
-	//
-	//	for (size_t i{ 0 }; i < items.size(); i++) {
-	//		if (value[i]) {
-	//			auto wstr = std::wstring(items.at(i).begin(), items.at(i).end());
-	//
-	//			if (str.length() + wstr.length() <= 15) {
-	//				if (!str.empty()) {
-	//					str.append(XS(L", "));
-	//				}
-	//				str.append(wstr);
-	//			}
-	//			else {
-	//				str.append(XS(L"..."));
-	//				break;
-	//			}
-	//		}
-	//	}
-	//
-	//	if (is_open)
-	//	{
-	//		fill_box({ next_item_pos.x, next_item_pos.y + 16 + 1, 140, 15 }, Color(61, 61, 61, 255.f));
-	//		fill_box({ next_item_pos.x, next_item_pos.y + 1 + 14 + 16, 140, items.size() * 15.f }, Color(27, 27, 27, 255.f));
-	//
-	//		for (size_t i{ 0 }; i < items.size(); i++) {
-	//
-	//			const auto cur = std::wstring(items.at(i).begin(), items.at(i).end());
-	//
-	//			if (value[i])
-	//			{
-	//				fill_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16, 140, 15 }, Color(171, 171, 171, 255.f));
-	//			}
-	//
-	//			Color clrr = value[i] ? Color::Red() : Color::White();
-	//
-	//			outline_box({ next_item_pos.x , next_item_pos.y + 1 + 14 + (i * 15) + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-	//
-	//			UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 + 15 + (i * 15) - 2 + 16, 300, 50, cur.c_str(), clrr, false, false, 12);
-	//		}
-	//
-	//		outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-	//
-	//
-	//		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-	//	}
-	//	else {
-	//		fill_box({ next_item_pos.x , next_item_pos.y + 1 + 16, 140, 15 }, Color(61, 61, 61, 255.f));
-	//		outline_box({ next_item_pos.x , next_item_pos.y + 16 }, { 140, 15 }, Color(52, 52, 52, 255.f));
-	//
-	//		UnityEngine::GL().MenuText(UnityEngine::gui_style, next_item_pos.x + 2.f, next_item_pos.y + 1 - 1 + 16 - 2.f, 300, 50, str.empty() ? XS(L"none") : str.c_str(), Color(255, 255, 255, 255.f), false, false, 12);
-	//	}
-	//}
+	float left = 85.f;
+	float leveling = 0.f;
+	float width = 100;
+	const auto wstring = std::string(title.begin(), title.end());
+	
+	if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 15 }) && mouse_state && !old_mouse_state && !interacting) {
+		is_open = true;
+		interacting = true;
+	}
+	
+	if (is_open)
+	{
+		for (size_t i{ 0 }; i < items.size(); i++)
+		{
+			if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + 1 + 13 + (i * 15) + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 13 + (i * 15) + leveling + 15 }) && mouse_state) {
+				IsInteractingWidthObject = true;
+			}
+	
+			if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + 1 + 13 + (i * 15) + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 13 + (i * 15) + leveling + 15 })) {
+				if (mouse_state && !old_mouse_state)
+				{
+					value[i] = !value[i];
+				}
+			}
+		}
+	}
+	
+	if (menu_event == RustStructs::EventType::Repaint)
+	{ //
+		if (is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
+			IsInteractingWidthObject = true;
+		}
+	
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 2.f, next_item_pos.y), Color::White(), Color::Black(), wstring.c_str(), false);
+	
+		if (is_open && !is_mouse_in_box({ next_item_pos.x + left, next_item_pos.y + leveling }, { next_item_pos.x + left + width , next_item_pos.y + 1 + 13 + items.size() * 15 + 16 }) && mouse_state) {
+			is_open = false;
+			interacting = false;
+		}
+	
+		std::string str;
+	
+		for (size_t i{ 0 }; i < items.size(); i++) {
+			if (value[i]) {
+				auto wstr = std::string(items.at(i).begin(), items.at(i).end());
+	
+				if (str.length() + wstr.length() <= 15) {
+					if (!str.empty()) {
+						str.append(XS(", "));
+					}
+					str.append(wstr);
+				}
+				else {
+					str.append(XS("..."));
+					break;
+				}
+			}
+		}
+	
+		if (is_open)
+		{
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + leveling + 1), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 1 + 15), Color(34, 34, 34, 255.f).GetUnityColor());
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + leveling + items.size() * 15.f), Color(27, 27, 27, 255.f).GetUnityColor());
 
-	next_item_pos.y += 40;
+			for (size_t i{ 0 }; i < items.size(); i++) {
+	
+				const auto cur = std::string(items.at(i).begin(), items.at(i).end());
+	
+				if (value[i])
+				{
+				//	UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 1 + 14 + (i * 15) + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 1 + 14 + (i * 15) + 16 + 15), Color(171, 171, 171, 255.f).GetUnityColor());
+					UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + (i * 15) + leveling + 15), Color(255, 255, 255, 255.f).GetUnityColor());
+
+				}
+	
+				Color clrr = value[i] ? Color::Red() : Color::White();
+
+				UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + 14 + (i * 15) + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + 14 + (i * 15) + leveling + 15), Color(0, 0, 0, 255.f).GetUnityColor());
+
+				UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y + 15 + (i * 15) - 2 + leveling), Color::White(), Color::Black(), cur.c_str(), false);
+			}
+	
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + leveling + 15), Color::Black());
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling), Color::White(), Color::Black(), str.empty() ? XS("None") : str.c_str(), false);
+
+			next_item_pos.y += items.size() * 15.f;
+		}
+		else {
+
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling + 15), Color(34, 34, 34, 255.f).GetUnityColor());
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x + left, next_item_pos.y + 1 + leveling), Vector2(next_item_pos.x + left + width, next_item_pos.y + 1 + leveling + 15), Color(0, 0, 0, 255.f).GetUnityColor());
+
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + left + 3.f, next_item_pos.y - 1 + leveling), Color::White(), Color::Black(), str.empty() ? XS("None") : str.c_str(), false);
+		}
+	}
+
+	next_item_pos.y += 20;
 }
 
 

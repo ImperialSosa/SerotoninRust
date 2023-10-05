@@ -5,10 +5,22 @@ inline bool chams_type_opened;
 inline bool bullet_tpe_open;
 inline bool config_type_open;
 inline bool hitmat_open;
+inline bool esp_type_open;
 inline bool wchams_type_opens;
+inline bool heldi_type_open;
+inline bool hotbar_type_opne;
+inline bool clothing_type_open;
+inline bool vischeck_type_openm;
+inline bool healthbar_tpype_oepn;
 inline bool killeffect_type_open;
+inline bool inside_Tyope_opem;
 inline bool manip_type_openm;
 inline bool aim_type_opene2;
+
+inline bool multi_type_test_open;
+inline bool multi_chams_load;
+inline bool multi_effect_load;
+
 #include "../../Configs/Configs.hpp"
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 
@@ -81,7 +93,7 @@ void MenuDraw::RenderMenu()
 						}
 
 						Menu().CheckBox(XS("Melee Aimbot"), m_settings::MeleeAimbot);
-						Menu().CheckBoxKeyBind(XS("Legit Aimbot"), m_settings::RotationAimbot, m_settings::RotationKey);
+						Menu().CheckBoxKeyBind(XS("Rotation Aimbot"), m_settings::RotationAimbot, m_settings::RotationKey);
 						if (m_settings::RotationAimbot)
 						{
 							m_settings::SilentAim = false;
@@ -100,11 +112,6 @@ void MenuDraw::RenderMenu()
 						//}
 						Menu().Slider(XS("Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 						Menu().Slider(XS("Fov Slider"), m_settings::AimbotFOV, 0, 1000);
-						Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
-						
-						//Menu().Spacer(50);
-
-						Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water")}, m_settings::HitMaterial, hitmat_open);
 
 					}
 
@@ -115,7 +122,12 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Target Wounded"), m_settings::TargetWounded);
 						//Menu().CheckBox(XS(L"Target FriendList"), m_settings::TargetFriendList);
 
-						Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
+						Menu().Dropdown(XS("Aimbone"), { XS("Head"), XS("Neck"), XS("Chest"), XS("Random"), XS("Closest To Crosshair") }, m_settings::SelectedAimbone, aim_type_opened);
+
+						//Menu().Spacer(50);
+
+						Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water") }, m_settings::HitMaterial, hitmat_open);
+				
 					}
 					break;
 				case 1:
@@ -130,6 +142,13 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBoxKeyBind(XS("Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
 
 						Menu().CheckBox(XS("BulletTp"), m_settings::BulletTP);
+						if (m_settings::BulletTP) {
+							Menu().CheckBox(XS("Cache LOS (Saves FPS)"), m_settings::CacheBulletTP);
+							if (m_settings::CacheBulletTP)
+							{
+								Menu().CheckBox(XS("AdvancedCaching (Saves FPS)"), m_settings::AdvancedChecks);
+							}
+						}
 						Menu().CheckBox(XS("AutoStop"), m_settings::StopPlayer);
 
 						Menu().CheckBox(XS("PierceMaterials"), m_settings::PierceMaterials);
@@ -154,15 +173,28 @@ void MenuDraw::RenderMenu()
 						}
 
 						if (m_settings::Manipulation)
-							Menu().Dropdown(XS("Manip Mode"), { XS("Static Points"), XS("Dynamic Points"), XS("Enhanced Points") }, m_settings::ManipMode, manip_type_openm);
+							Menu().Dropdown(XS("Manip-Mode"), { XS("Static Points"), XS("Dynamic Points"), XS("Enhanced Points") }, m_settings::ManipMode, manip_type_openm);
 
 						if (m_settings::BulletTP)
-							Menu().Dropdown(XS("BTP Mode"), { XS("Lowest"), XS("Low"), XS("Medium"), XS("High"), XS("Intense (FPS)"), XS("Enhanced")}, m_settings::BulletTPIntensity, bullet_tpe_open);
+							Menu().Dropdown(XS("BTP-Mode"), { XS("Static Angles"), XS("Dynamic Angles"), XS("Enhanced Angles")/*, XS("Cached Angles")*/}, m_settings::BulletTPIntensity, bullet_tpe_open);
+
+						if (m_settings::BulletTPIntensity == 3) {
+							m_settings::CacheBulletTP = true;
+						//	m_settings::AdvancedChecks = true;
+						}
 
 						if (m_settings::Manipulation)
 						{
-							Menu().Slider(XS("ManipAngles"), m_settings::ManipPoints, 5, 100);
+							Menu().Slider(XS("ManipAngles"), m_settings::ManipPoints, 0, 100);
+							if (m_settings::ManipPoints < 5)
+								m_settings::ManipPoints = 5;
 							//m_settings::ManipPoints
+						}
+
+						if (m_settings::CacheBulletTP) {
+							Menu().Slider(XS("LOS Checks Amount"), m_settings::LOSCheckAmount, 0, 2000);
+							if (m_settings::LOSCheckAmount < 500)
+								m_settings::LOSCheckAmount = 500;
 						}
 					}
 					break;
@@ -187,17 +219,21 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Target Marker"), m_settings::AimMarker);
 						Menu().CheckBox(XS("Target Indicator"), m_settings::Target_Indicator);
 						Menu().CheckBox(XS("Bullet Tracers"), m_settings::BulletTracers);
-						//Simulate Projectile
-						Menu().CheckBox(XS("Manipulation Indicator"), m_settings::ManipFlags);
-						Menu().CheckBox(XS("BulletTP Indicator"), m_settings::BulletTPFlags);
-						Menu().CheckBox(XS("BulletTP Arrows"), m_settings::Thickbullet_Arrows);
-						Menu().CheckBox(XS("BulletTP Angle"), m_settings::ShowBulletTPAngle);
 
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
-						//				//Menu().Button(XS("dees nuts"), &test);
+						//Simulate Projectile
+						Menu().CheckBox(XS("Manipulation Indicator"), m_settings::ManipFlags);
+						Menu().CheckBox(XS("Manip Angle"), m_settings::DrawManipPoints);
+						Menu().CheckBox(XS("BulletTP Indicator"), m_settings::BulletTPFlags);
+						Menu().CheckBox(XS("BulletTP Arrows"), m_settings::Thickbullet_Arrows);
+						Menu().CheckBox(XS("BulletTP Angle"), m_settings::ShowBulletTPAngle);
+						Menu().CheckBox(XS("Cached Indicator"), m_settings::ShowCachedLOS);
+						Menu().CheckBox(XS("Cached Point"), m_settings::ShowCachedPoint);
+
+						Menu().CheckBox(XS("SnickerBullet"), m_settings::SnickerBullet);
 					}
 					break;
 				}
@@ -216,44 +252,72 @@ void MenuDraw::RenderMenu()
 				case 0:
 					Menu().BeginChild(XS("Visuals"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("Username"), m_settings::nameEsp);
-						Menu().CheckBox(XS("Box"), m_settings::BoxEsp);
-						if (m_settings::BoxEsp)
-							m_settings::CornerBox = false;
-						Menu().CheckBox(XS("CornerBox"), m_settings::CornerBox);
-						if (m_settings::CornerBox)
-							m_settings::BoxEsp = false;
-						Menu().CheckBox(XS("Skeleton"), m_settings::Skeleton);
-						Menu().CheckBox(XS("Healthbar"), m_settings::healthBar);
-						Menu().CheckBox(XS("Helditem"), m_settings::helditem);
-						Menu().CheckBox(XS("HeldItem (icons)"), m_settings::HeldItemIcon);
-						//Menu().CheckBox(XS("AmmoType"), m_settings::ammoESP);
-						Menu().CheckBox(XS("isOutside"), m_settings::BaseCheck);
-						Menu().CheckBox(XS("Inventory"), m_settings::DrawInventory);
-						if (m_settings::DrawInventory)
-							m_settings::DrawInventoryIcons = false;
-						Menu().CheckBox(XS("Inventory (icons)"), m_settings::DrawInventoryIcons);
-						if (m_settings::DrawInventoryIcons)
-							m_settings::DrawInventory = false;
-						Menu().CheckBox(XS("Clothing"), m_settings::DrawClothing);
-						if (m_settings::DrawClothing)
-							m_settings::DrawClothingIcons = false;
-						Menu().CheckBox(XS("Clothing (icons)"), m_settings::DrawClothingIcons);
-						if (m_settings::DrawClothingIcons)
-							m_settings::DrawClothing = false;
-						Menu().CheckBox(XS("PlayerChams"), m_settings::PlayerChams);
-						Menu().CheckBox(XS("Corpse"), m_settings::Corpse);
-						Menu().CheckBox(XS("Backpack"), m_settings::BackPack);
-						//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
-						Menu().CheckBoxKeyBind(XS("Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
-						Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color") }, m_settings::SelectedChams, chams_type_opened);
 
+						Menu().CheckBox(XS("Username"), m_settings::nameEsp);
+						Menu().CheckBox(XS("Skeleton"), m_settings::Skeleton);
+						//Menu().CheckBox(XS("AmmoType"), m_settings::ammoESP);
+
+						Menu().Dropdown(XS("BoxType"), { XS("None"), XS("Box"), XS("CornerBox") }, m_settings::SelectedBoxESP, esp_type_open);
+						Menu().Dropdown(XS("HeldItem"), { XS("None"), XS("Text"), XS("Icons"), XS("Both") }, m_settings::HeldItemType, heldi_type_open);
+						Menu().Dropdown(XS("HealthBar"), { XS("None"), XS("Bottom"), XS("Left") }, m_settings::SelectedHealthBar, healthbar_tpype_oepn);
+						Menu().Dropdown(XS("Inventory"), { XS("None"), XS("Text"), XS("Icons") }, m_settings::SelectedHotbar, hotbar_type_opne);
+						Menu().Dropdown(XS("Clothing"), { XS("None"), XS("Text"), XS("Icons") }, m_settings::SelectedClothing, clothing_type_open);
+						Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
+						Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
+						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color")}, m_settings::SelectedChams, chams_type_opened);
+						Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_type_test_open);
+
+						if (m_settings::SelectedChams == 0)
+							m_settings::PlayerChams = false;
+						else
+							m_settings::PlayerChams = true;
+
+						if (m_settings::VisCheckType == 0) {
+							m_settings::EspVisCheck = false;
+							m_settings::TagsVisCheck = false;
+						}
+						else if (m_settings::VisCheckType == 1) {
+							m_settings::EspVisCheck = true;
+							m_settings::TagsVisCheck = false;
+						}
+						else if (m_settings::VisCheckType == 2) {
+							m_settings::EspVisCheck = false;
+							m_settings::TagsVisCheck = true;
+						}
+						else if (m_settings::VisCheckType == 3) {
+							m_settings::EspVisCheck = true;
+							m_settings::TagsVisCheck = true;
+						}
+
+						
+						if (m_settings::LoadChams[0]) {
+							static bool HasLoaded = false;
+							if (!HasLoaded)
+								m_settings::LoadLightning = true;
+						}
+						if (m_settings::LoadChams[1]) {
+							static bool HasLoaded = false;
+							if (!HasLoaded)
+								m_settings::LoadGeometric = true;
+						}
+						if (m_settings::LoadChams[2]) {
+							static bool HasLoaded = false;
+							if (!HasLoaded)
+								m_settings::LoadGalaxy = true;
+						}
+						if (m_settings::LoadChams[3]) {
+							static bool HasLoaded = false;
+							if (!HasLoaded)
+								m_settings::LoadWireFrame = true;
+						}
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("Vischeck"), m_settings::EspVisCheck);
-						Menu().CheckBox(XS("Tags Vischeck"), m_settings::TagsVisCheck);
+						Menu().CheckBox(XS("Corpse"), m_settings::Corpse);
+						Menu().CheckBox(XS("Backpack"), m_settings::BackPack);
+						//Menu().CheckBox(XS(L"OOFOV"), m_settings::OOFIndicators);
+						Menu().CheckBoxKeyBind(XS("Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
 						Menu().CheckBox(XS("Show Target"), m_settings::DrawTarget);
 						Menu().CheckBox(XS("Wounded"), m_settings::DrawWounded);
 						Menu().CheckBox(XS("Safezone"), m_settings::DrawSafezone);
@@ -265,11 +329,6 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("PlayerDistance"), m_settings::PlayerESPDistance, 0, 500);
 						Menu().Slider(XS("NPC Distance"), m_settings::NPCDistance, 0, 500);
 						Menu().Slider(XS("Drops Distance"), m_settings::MaxPlayerDropsDistance, 0, 500);
-
-						Menu().CheckBox(XS("LoadLightning"), m_settings::LoadLightning);
-						Menu().CheckBox(XS("LoadGeometric"), m_settings::LoadGeometric);
-						Menu().CheckBox(XS("LoadGalaxy"), m_settings::LoadGalaxy);
-						Menu().CheckBox(XS("LoadWireFrame"), m_settings::LoadWireFrame);
 					}
 					break;
 				case 1:
@@ -490,84 +549,128 @@ void MenuDraw::RenderMenu()
 			}
 			case 3:
 			{
-				Menu().BeginChild(XS("Weapon"), { 60,45 }, { 220,290 });
+				Menu().SubTab(XS("Weapon"), 0, Vector2(156, 35)); //468
+				switch (activesubtab)
 				{
-					Menu().CheckBox(XS("No Attack Restrictions"), m_settings::NoAttackRestrictions);
-					Menu().CheckBox(XS("Recoil Modifier"), m_settings::ChangeRecoil);
-					if (m_settings::ChangeRecoil) {
-						Menu().Slider(XS("Recoil Percent"), m_settings::recoilPercent, 0, 100);
-					//	Menu().Slider(XS("Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+				case 0:
+					Menu().BeginChild(XS("Weapon"), { 60,45 }, { 220,290 });
+					{
+						Menu().CheckBox(XS("No Attack Restrictions"), m_settings::NoAttackRestrictions);
+						Menu().CheckBox(XS("Recoil Modifier"), m_settings::ChangeRecoil);
+						if (m_settings::ChangeRecoil) {
+							Menu().Slider(XS("Recoil Percent"), m_settings::recoilPercent, 0, 100);
+							//	Menu().Slider(XS("Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+						}
+
+						Menu().CheckBox(XS("Thickness Modifier"), m_settings::NormalThickBullet);
+						if (m_settings::NormalThickBullet) {
+							Menu().Slider(XS("Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
+						}
+						Menu().CheckBox(XS("Fast Bullet"), m_settings::NormalFastBullet);
+						Menu().CheckBox(XS("Force Automatic"), m_settings::ForceAutomatic);
+						Menu().CheckBox(XS("NoSpread"), m_settings::ChangeSpread);
+						if (m_settings::ChangeSpread)
+							Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
+						Menu().CheckBox(XS("NoWeaponBob"), m_settings::NoWeaponBob);
+						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
+						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
+						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
 					}
 
-					Menu().CheckBox(XS("Thickness Modifier"), m_settings::NormalThickBullet);
-					if (m_settings::NormalThickBullet) {
-						Menu().Slider(XS("Bullet Thickness"), m_settings::NormalThickBulletThickness, 0, 4.5);
+					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
+					{
+						Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
+						if (m_settings::WeaponSpammer) {
+							Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
+						}
+
+						Menu().CheckBox(XS("KillEffects"), m_settings::KillEffects);
+						if (m_settings::KillEffects) {
+							Menu().Dropdown(XS("Effect Type"), { XS("Explosion"), XS("Ghosts") }, m_settings::SelectedKillEffect, killeffect_type_open);
+							Menu().MultiDropdown(XS("Load Effects"), { XS("Explosion"), XS("Ghosts") }, m_settings::LoadHitEffects, multi_effect_load);
+
+							if (m_settings::LoadHitEffects[0]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadExplosionEffect = true;
+							}
+							if (m_settings::LoadHitEffects[1]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadGhostEffect = true;
+							}
+						}
+
+
+						Menu().CheckBox(XS("WeaponChams"), m_settings::WeaponChams);
+						if (m_settings::WeaponChams) {
+							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame") }, m_settings::WeaponSelectedChams, wchams_type_opens);
+							Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_chams_load);
+
+							if (m_settings::LoadChams[0]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadLightning = true;
+							}
+							if (m_settings::LoadChams[1]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadGeometric = true;
+							}
+							if (m_settings::LoadChams[2]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadGalaxy = true;
+							}
+							if (m_settings::LoadChams[3]) {
+								static bool HasLoaded = false;
+								if (!HasLoaded)
+									m_settings::LoadWireFrame = true;
+							}
+						}
+
 					}
-					Menu().CheckBox(XS("Fast Bullet"), m_settings::NormalFastBullet);
-					Menu().CheckBox(XS("Force Automatic"), m_settings::ForceAutomatic);
-					Menu().CheckBox(XS("NoSpread"), m_settings::NoSpread);
-					Menu().CheckBox(XS("NoWeaponBob"), m_settings::NoWeaponBob);
-					Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
-					Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
-					Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
-				}
-
-				Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
-				{
-					Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
-					if (m_settings::WeaponSpammer) {
-						Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
-					}
-
-					Menu().CheckBox(XS("KillEffects"), m_settings::KillEffects);
-					Menu().Dropdown(XS("Effect Type"), { XS("Explosion"), XS("Ghosts") }, m_settings::SelectedKillEffect, killeffect_type_open);
-
-					
-
-					Menu().CheckBox(XS("WeaponChams"), m_settings::WeaponChams);
-					Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame") }, m_settings::WeaponSelectedChams, wchams_type_opens);
-
-					Menu().CheckBox(XS("LoadLightning"), m_settings::LoadLightning);
-					Menu().CheckBox(XS("LoadGeometric"), m_settings::LoadGeometric);
-					Menu().CheckBox(XS("LoadGalaxy"), m_settings::LoadGalaxy);
-					Menu().CheckBox(XS("LoadWireFrame"), m_settings::LoadWireFrame);
-
-					Menu().CheckBox(XS("LoadExplosionEffect"), m_settings::LoadExplosionEffect);
-					Menu().CheckBox(XS("LoadGhostEffect"), m_settings::LoadGhostEffect);
-
-
+					break;
 				}
 				break;
 			}
 			case 4:
 			{
-				Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
+				Menu().SubTab(XS("Settings"), 0, Vector2(156, 35)); //468
+
+				switch (activesubtab)
 				{
-					Menu().Button(XS("Reset PlayerModels"), reset_player_model);
-					Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
-				}
+				case 0:
+					Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
+					{
+						Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+						Menu().Button(XS("Reset LOS Points"), Buttons::ClearRaidCache);
+						Menu().Button(XS("Clear RaidCache"), Buttons::ClearLOSPoints);
+					}
 
-				Menu().BeginChild(XS("Configs"), { 285,45 }, { 220,290 });
-				{
-					Menu().CheckBox(XS("OutlinedText"), m_settings::OutlinedText);
-					if (m_settings::OutlinedText)
-						m_settings::ShadedText = false;
-					Menu().CheckBox(XS("ShadowedText"), m_settings::ShadedText);
-					if (m_settings::ShadedText)
-						m_settings::OutlinedText = false;
+					Menu().BeginChild(XS("Configs"), { 285,45 }, { 220,290 });
+					{
+						Menu().CheckBox(XS("OutlinedText"), m_settings::OutlinedText);
+						if (m_settings::OutlinedText)
+							m_settings::ShadedText = false;
+						Menu().CheckBox(XS("ShadowedText"), m_settings::ShadedText);
+						if (m_settings::ShadedText)
+							m_settings::OutlinedText = false;
 
-					Menu().CheckBox(XS("WorldOutlinedText"), m_settings::WorldOutlinedText);
-					if (m_settings::WorldOutlinedText)
-						m_settings::WorldShadedText = false;
-					Menu().CheckBox(XS("WorldShadedText"), m_settings::WorldShadedText);
-					if (m_settings::WorldShadedText)
-						m_settings::WorldOutlinedText = false;
+						Menu().CheckBox(XS("WorldOutlinedText"), m_settings::WorldOutlinedText);
+						if (m_settings::WorldOutlinedText)
+							m_settings::WorldShadedText = false;
+						Menu().CheckBox(XS("WorldShadedText"), m_settings::WorldShadedText);
+						if (m_settings::WorldShadedText)
+							m_settings::WorldOutlinedText = false;
 
-					Menu().Button(XS("Save Config"), Configs::SaveConfig);
-					Menu().Button(XS("Load Config"), Configs::LoadConfig);
-					Menu().Spacer(30);
-					
-					Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
+						Menu().Button(XS("Save Config"), Configs::SaveConfig);
+						Menu().Button(XS("Load Config"), Configs::LoadConfig);
+						Menu().Spacer(30);
+
+						Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
+					}
+					break;
 				}
 				break;
 			}

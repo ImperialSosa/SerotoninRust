@@ -35,119 +35,6 @@ std::vector<Vector3> GenerateCircle(float radius, int points, bool BulletTP = fa
 	return result;
 }
 
-
-inline void GenerateBulletTPAngles(std::vector<Vector3>& re, float radius = 2.3f)
-{
-	const int points = 3;
-	const float step = 1.57079632679489661923f / points;
-	const float radiusY = 2.3f;
-	const float halfRadiusY = radiusY;
-
-	for (float y = -halfRadiusY; y < halfRadiusY; y += 0.3f)
-	{
-		const float sinY = Math::sinf(y);
-		const float cosY = Math::cosf(y);
-
-		float current = 0;
-
-		for (size_t i = 0; i < points; i++)
-		{
-			const float sinCurrent = Math::sinf(current);
-			const float cosCurrent = Math::cosf(current);
-			const float x = sinCurrent * radius;
-			const float z = cosCurrent * radius;
-
-			re.emplace_back(0, y, 0);
-			re.emplace_back(x, 0.f, z);
-			re.emplace_back(-x, 0.f, z);
-			re.emplace_back(x, 0.f, -z);
-			re.emplace_back(-x, 0.f, -z);
-			re.emplace_back(x, y, z);
-			re.emplace_back(-x, y, -z);
-			re.emplace_back(-x, -y, -z);
-			re.emplace_back(x, -y, z);
-			re.emplace_back(0.f, -y, z);
-			re.emplace_back(0.f, -y, -z);
-			current += step;
-		}
-	}
-}
-
-
-inline void BulletTPAnglesHarvey1(std::vector<Vector3>& re, float radius = 2.3f)
-{
-	const int points = 3;
-	const float step = 1.57079632679489661923f / points;
-	const float radiusY = 2.3f;
-	const float halfRadiusY = radiusY;
-
-	for (float y = -halfRadiusY; y < halfRadiusY; y += 0.3f)
-	{
-		const float sinY = Math::sinf(y);
-		const float cosY = Math::cosf(y);
-
-		float current = 0;
-
-		for (size_t i = 0; i < points; i++)
-		{
-			const float sinCurrent = Math::sinf(current);
-			const float cosCurrent = Math::cosf(current);
-			const float x = sinCurrent * radius;
-			const float z = cosCurrent * radius;
-
-			re.emplace_back(0, y, 0); //2.4m
-			re.emplace_back(x, 0.f, z);
-			re.emplace_back(-x, 0.f, z);
-			re.emplace_back(x, 0.f, -z);
-			re.emplace_back(-x, 0.f, -z);
-			re.emplace_back(x, y, z);
-			re.emplace_back(-x, y, -z);
-			re.emplace_back(-x, -y, -z);
-			re.emplace_back(x, -y, z);
-			re.emplace_back(0.f, -y, z);
-			re.emplace_back(0.f, -y, -z);
-
-			re.emplace_back(0, y / 1.1, 0); //2.2m
-			re.emplace_back(x / 1.1, 0.f, z / 1.1);
-			re.emplace_back(-x / 1.1, 0.f, z / 1.1);
-			re.emplace_back(x / 1.1, 0.f, -z / 1.1);
-			re.emplace_back(-x / 1.1, 0.f, -z / 1.1);
-			re.emplace_back(x / 1.1, y / 1.1, z / 1.1);
-			re.emplace_back(-x / 1.1, y / 1.1, -z / 1.1);
-			re.emplace_back(-x / 1.1, -y / 1.1, -z / 1.1);
-			re.emplace_back(x / 1.1, -y / 1.1, z / 1.1);
-			re.emplace_back(0.f, -y / 1.1, z / 1.1);
-			re.emplace_back(0.f, -y / 1.1, -z / 1.1);
-
-			re.emplace_back(0, y / 1.2, 0); //2.0m
-			re.emplace_back(x / 1.2, 0.f, z / 1.2);
-			re.emplace_back(-x / 1.2, 0.f, z / 1.2);
-			re.emplace_back(x / 1.2, 0.f, -z / 1.2);
-			re.emplace_back(-x / 1.2, 0.f, -z / 1.2);
-			re.emplace_back(x / 1.2, y / 1.2, z / 1.2);
-			re.emplace_back(-x / 1.2, y / 1.2, -z / 1.2);
-			re.emplace_back(-x / 1.2, -y / 1.2, -z / 1.2);
-			re.emplace_back(x / 1.2, -y / 1.2, z / 1.2);
-			re.emplace_back(0.f, -y / 1.2, z / 1.2);
-			re.emplace_back(0.f, -y / 1.2, -z / 1.2);
-
-			re.emplace_back(0, y / 1.3, 0); //1.8m
-			re.emplace_back(x / 1.3, 0.f, z / 1.3);
-			re.emplace_back(-x / 1.3, 0.f, z / 1.3);
-			re.emplace_back(x / 1.3, 0.f, -z / 1.3);
-			re.emplace_back(-x / 1.3, 0.f, -z / 1.3);
-			re.emplace_back(x / 1.3, y / 1.3, z / 1.3);
-			re.emplace_back(-x / 1.3, y / 1.3, -z / 1.3);
-			re.emplace_back(-x / 1.3, -y / 1.3, -z / 1.3);
-			re.emplace_back(x / 1.3, -y / 1.3, z / 1.3);
-			re.emplace_back(0.f, -y / 1.3, z / 1.3);
-			re.emplace_back(0.f, -y / 1.3, -z / 1.3);
-
-			current += step;
-		}
-	}
-}
-
 inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 100)
 {
 	float radius = 2.2f; // Radius of the sphere
@@ -241,16 +128,16 @@ std::vector<Vector3> generatePointsInNonUniformSphere(float radiusX, float radiu
 	return points;
 }
 
-inline void BulletTPAnglesModeCrazy(std::vector<Vector3>& re, float step = 0.4)
-{
-	for (float x = -2.2; x <= 2.2; x += step) {
-		for (float y = -2.3f; y <= 2.3f; y += step) {
-			for (float z = -2.2; z <= 2.2; z += step) {
-				re.emplace_back(x, y, z);
-			}
-		}
-	}
-}
+//inline void BulletTPAnglesModeCrazy(std::vector<Vector3>& re, float step = 0.4)
+//{
+//	for (float x = -2.2; x <= 2.2; x += step) {
+//		for (float y = -2.3f; y <= 2.3f; y += step) {
+//			for (float z = -2.2; z <= 2.2; z += step) {
+//				re.emplace_back(x, y, z);
+//			}
+//		}
+//	}
+//}
 
 bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye = 7.f) //7m only check rn
 {
@@ -268,18 +155,34 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 	if (AimbotTarget.m_heli)
 		return false;
 
+	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+
 	if (m_settings::BulletTP)
 	{
 		Vector3 re_p = ply->eyes()->get_position();
 
 		if (AssemblyCSharp::IsVisible(re_p, pos)) {
-			Features().ManipulationAngle = Vector3(0, 0, 0);
+			Features().CachedManipPoint = re_p;
+			Features().ManipulationAngle = re_p;
+			Features().PositionVisible = true;
+			LOG(XS("[DEBUG] Check 1 "));
 			return true;
 		}
+		else
+			Features().PositionVisible = false;
 
 		auto do_check = [&](Vector3 a) {
 
-			Vector3 p = re_p + a;
+			Vector3 p;
+			Vector3 ManipAngle;
+			if (Features().PointVisible) {
+				p = a;
+				ManipAngle = a;
+			}
+			else {
+				p = re_p + a;
+				ManipAngle = a;
+			}
 
 			if (!AssemblyCSharp::IsVisible(p, re_p))
 				return false;
@@ -287,67 +190,128 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, p))
 				return false;
 
-			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, re_p + a))
+			//if (!EyeHack().ValidateEyePos(Features().LocalPlayer, re_p + a))
+			//	return false;
+
+			if (!AssemblyCSharp::IsVisible(p, Features().CachedBulletTPPosition))
 				return false;
 
-
-			if (!AssemblyCSharp::IsVisible(p, a + Features().BTPSeperator))
-				return false;
+			if (m_settings::DrawManipPoints)
+				UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
 
 			Features().ManipulationAngle = a;
+			LOG(XS("[DEBUG] Check 2 "));
 			return true;
 		};
 
 		if (m_settings::ManipMode == 0) {
+			if (!Features().BulletTPPointVisible && !Features().PointVisible && !Features().PositionVisible || Features().CachedManipPoint.IsZero()) {
 
-			for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
-				int points = m_settings::ManipPoints;
-				float step = (M_PI_2) / points;
-				float x, z, current = 0;
-				for (size_t i = 0; i < points; i++)
-				{
-					x = Math::sinf(current) * mm_eye;
-					z = Math::cosf(current) * mm_eye;
+				for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
+					int points = m_settings::ManipPoints;
+					float step = (M_PI_2) / points;
+					float x, z, current = 0;
+					for (size_t i = 0; i < points; i++)
+					{
+						x = Math::sinf(current) * mm_eye;
+						z = Math::cosf(current) * mm_eye;
 
-					Vector3 p1 = Vector3(x, y, z);
-					Vector3 p2 = Vector3(-x, y, z);
-					Vector3 p3 = Vector3(x, y, -z);
-					Vector3 p4 = Vector3(-x, y, -z);
+						Vector3 p1 = Vector3(x, y, z);
+						Vector3 p2 = Vector3(-x, y, z);
+						Vector3 p3 = Vector3(x, y, -z);
+						Vector3 p4 = Vector3(-x, y, -z);
 
-					Vector3 re_p = ply->eyes()->get_position();
+						Vector3 re_p = ply->eyes()->get_position();
 
-					Vector3 p = re_p + p1;
+						Vector3 p = re_p + p1;
 
-					if (do_check(p1)) return true;
-					if (do_check(p2)) return true;
-					if (do_check(p3)) return true;
-					if (do_check(p4)) return true;
+						if (do_check(p1)) {
+							Features().CachedManipPoint = p1 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p2)) {
+							Features().CachedManipPoint = p2 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p3)) {
+							Features().CachedManipPoint = p3 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p4)) {
+							Features().CachedManipPoint = p4 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else
+							Features().ManipulationAngle = re_p;
 
-					current += step;
+						current += step;
+					}
 				}
+			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() || Features().CachedManipPoint == re_p) {
+				if (do_check(Features().CachedManipPoint)) {
+					return true;
+				}
+				else
+					Features().ManipulationAngle = re_p;
 			}
 		}
 		else if (m_settings::ManipMode == 1) {
-			std::vector<Vector3> generatedPoints;
-			DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
+			if (!Features().BulletTPPointVisible && !Features().PointVisible && !Features().PositionVisible || Features().CachedManipPoint.IsZero()) {
+				std::vector<Vector3> generatedPoints;
+				DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
 
-			for (const Vector3& point : generatedPoints) {
-				if (do_check(point)) {
+				for (const Vector3& point : generatedPoints) {
+					if (do_check(point)) {
+						Features().CachedManipPoint = point + re_p;
+						Features().PointVisible = true;
+						return true;
+					}
+					else
+						Features().ManipulationAngle = re_p;
+				}
+			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() && !Features().PositionVisible) {
+				if (do_check(Features().CachedManipPoint)) {
 					return true;
 				}
+				else
+					Features().ManipulationAngle = re_p;
+			}
+			else if (Features().PositionVisible) {
+				return true;
 			}
 		}
 		else if (m_settings::ManipMode == 2) {
-			std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
+			if (!Features().BulletTPPointVisible && !Features().PointVisible && !Features().PositionVisible || Features().CachedManipPoint.IsZero()) {
+				std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
 
-			for (const Vector3& point : generatedPoints) {
-				if (do_check(point)) {
-					return true;
+				for (const Vector3& point : generatedPoints) {
+					if (do_check(point)) {
+						Features().CachedManipPoint = point + re_p;
+						Features().PointVisible = true;
+						return true;
+					}
+					else
+						Features().ManipulationAngle = re_p;
 				}
 			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() && !Features().PositionVisible) {
+				if (do_check(Features().CachedManipPoint)) {
+					return true;
+				}
+				else
+					Features().ManipulationAngle = re_p;
+			}
+			else if (Features().PositionVisible)
+				return true;
 		}
 
-		Features().ManipulationAngle = Vector3(0, 0, 0);
+		//Features().ManipulationAngle = Vector3(0, 0, 0);
 		return false;
 	}
 	else
@@ -355,13 +319,23 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 		Vector3 re_p = ply->eyes()->get_position();
 
 		if (AssemblyCSharp::IsVisible(re_p, pos)) {
-			Features().ManipulationAngle = Vector3(0, 0, 0);
+			Features().ManipulationAngle = re_p;
+			Features().CachedManipPoint = re_p;
 			return true;
 		}
 
 		auto do_check = [&](Vector3 a) {
 
-			Vector3 p = re_p + a;
+			Vector3 p;
+			Vector3 ManipAngle;
+			if (Features().PointVisible) {
+				p = a;
+				ManipAngle = a - re_p;
+			}
+			else {
+				p = re_p + a;
+				ManipAngle = a;
+			}
 
 			if (!AssemblyCSharp::IsVisible(p, re_p))
 				return false;
@@ -369,7 +343,8 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			if (!EyeHack().ValidateEyePos(Features().LocalPlayer, p))
 				return false;
 
-			UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
+			if (m_settings::DrawManipPoints)
+				UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
 
 			auto tick_time = Features().LocalPlayer->lastSentTickTime();
 			float desyncTime = (UnityEngine::Time::get_realtimeSinceStartup() - tick_time) - 0.03125 * 3;
@@ -508,60 +483,112 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 
 				if (!t) return false;
 			}
-			Features().ManipulationAngle = a;
+			Features().ManipulationAngle = ManipAngle;
 			return true;
 		};
 
 		if (m_settings::ManipMode == 0) {
+			if (!Features().PointVisible || Features().CachedManipPoint.IsZero()) {
+				for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
+					int points = m_settings::ManipPoints;
+					float step = (M_PI_2) / points;
+					float x, z, current = 0;
+					for (size_t i = 0; i < points; i++)
+					{
+						x = Math::sinf(current) * mm_eye;
+						z = Math::cosf(current) * mm_eye;
 
-			for (float y = 1.5f; y > -1.5f; y -= 0.3f) {
-				int points = m_settings::ManipPoints;
-				float step = (M_PI_2) / points;
-				float x, z, current = 0;
-				for (size_t i = 0; i < points; i++)
-				{
-					x = Math::sinf(current) * mm_eye;
-					z = Math::cosf(current) * mm_eye;
+						Vector3 p1 = Vector3(x, y, z);
+						Vector3 p2 = Vector3(-x, y, z);
+						Vector3 p3 = Vector3(x, y, -z);
+						Vector3 p4 = Vector3(-x, y, -z);
 
-					Vector3 p1 = Vector3(x, y, z);
-					Vector3 p2 = Vector3(-x, y, z);
-					Vector3 p3 = Vector3(x, y, -z);
-					Vector3 p4 = Vector3(-x, y, -z);
+						Vector3 re_p = ply->eyes()->get_position();
 
-					Vector3 re_p = ply->eyes()->get_position();
+						Vector3 p = re_p + p1;
 
-					Vector3 p = re_p + p1;
+						if (do_check(p1)) {
+							Features().CachedManipPoint = p1 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p2)) {
+							Features().CachedManipPoint = p2 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p3)) {
+							Features().CachedManipPoint = p3 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else if (do_check(p4)) {
+							Features().CachedManipPoint = p4 + re_p;
+							Features().PointVisible = true;
+							return true;
+						}
+						else
+							Features().ManipulationAngle = re_p;
 
-					if (do_check(p1)) return true;
-					if (do_check(p2)) return true;
-					if (do_check(p3)) return true;
-					if (do_check(p4)) return true;
-
-					current += step;
+						current += step;
+					}
 				}
+			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() || Features().CachedManipPoint == re_p) {
+				if (do_check(Features().CachedManipPoint)) {
+					return true;
+				}
+				else
+					Features().ManipulationAngle = re_p;
 			}
 		}
 		else if (m_settings::ManipMode == 1) {
-			std::vector<Vector3> generatedPoints;
-			DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
+			if (!Features().PointVisible || Features().CachedManipPoint.IsZero()) {
+				std::vector<Vector3> generatedPoints;
+				DynamicManipAngles(generatedPoints, mm_eye, 1.5, m_settings::ManipPoints);
 
-			for (const Vector3& point : generatedPoints) {
-				if (do_check(point)) {
+				for (const Vector3& point : generatedPoints) {
+					if (do_check(point)) {
+						Features().CachedManipPoint = point + re_p;
+						Features().PointVisible = true;
+						return true;
+					}
+					else
+						Features().ManipulationAngle = re_p;
+				}
+			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() || Features().CachedManipPoint == re_p) {
+				if (do_check(Features().CachedManipPoint)) {
 					return true;
 				}
+				else
+					Features().ManipulationAngle = re_p;
 			}
 		}
 		else if (m_settings::ManipMode == 2) {
-			std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
+			if (!Features().PointVisible || Features().CachedManipPoint.IsZero()) {
+				std::vector<Vector3> generatedPoints = generatePointsInNonUniformSphere(mm_eye, 1.5, mm_eye, m_settings::ManipPoints);
 
-			for (const Vector3& point : generatedPoints) {
-				if (do_check(point)) {
+				for (const Vector3& point : generatedPoints) {
+					if (do_check(point)) {
+						Features().CachedManipPoint = point + re_p;
+						Features().PointVisible = true;
+						return true;
+					}
+					else
+						Features().ManipulationAngle = re_p;
+				}
+			}
+			else if (Features().PointVisible && !Features().CachedManipPoint.IsZero() || Features().CachedManipPoint == re_p) {
+				if (do_check(Features().CachedManipPoint)) {
 					return true;
 				}
+				else
+					Features().ManipulationAngle = re_p;
 			}
 		}
 
-		Features().ManipulationAngle = Vector3(0, 0, 0);
+		//Features().ManipulationAngle = Vector3(0, 0, 0);
 		return false;
 
 	}
@@ -592,8 +619,15 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	if (!IsAddressValid(AimbotTarget.m_player))
 	{
 		this->BulletTPAngle = Vector3();
-		m_settings::StartShooting = false;
+
+		if (m_settings::CacheBulletTP)
+			this->CachedBulletTPPosition = this->LOSPoint;
+		else
+			this->CachedBulletTPPosition = AimbotTarget.m_position;
+
+		m_settings::Thickbullet_AutoShoot = false;
 		m_settings::Thickbullet_Indicator = false;
+		this->BulletTPPointVisible = false;
 		return;
 	}
 
@@ -607,50 +641,103 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 	Vector3 pos = targetPosition;
 	if (AssemblyCSharp::IsVisible(LocalPlayer->eyes()->get_position(), pos)) {
 		this->BulletTPAngle = targetPosition;
+
+		if (m_settings::CacheBulletTP)
+			this->CachedBulletTPPosition = this->LOSPoint;
+		else
+			this->CachedBulletTPPosition = targetPosition;
+
 		return;
 	}
 
-
-	float maxDist = 2.3f;
+	float maxDist = 2.f;
 
 	std::vector<Vector3> arrz;
-	if (m_settings::BulletTPIntensity == 0)
-		BulletTPAnglesModeCrazy(arrz, 0.4f);
-	else if (m_settings::BulletTPIntensity == 1)
-		GenerateBulletTPAngles(arrz, maxDist);
-	else if (m_settings::BulletTPIntensity == 2)
-		BulletTPAnglesHarvey1(arrz, maxDist);
-	else if (m_settings::BulletTPIntensity == 3)
-		BulletTPAnglesModeIntense(arrz, 100);
-	else if (m_settings::BulletTPIntensity == 4)
-		BulletTPAnglesModeIntense(arrz, 250);
-	else if (m_settings::BulletTPIntensity == 5)
-		arrz = generatePointsInNonUniformSphere(2.2, 2.2, 2.2, 100);
 
+	static bool LOS = false;
+	static Vector3 Point;
 
-	for (const auto& s : arrz)
-	{
-		Vector3 point = targetPosition + s;
-		this->BTPSeperator = targetPosition + s;
+	if (!AssemblyCSharp::IsVisible(this->CachedManipPoint, AimbotTarget.m_position))
+		LOS = false;
+	else
+		LOS = true;
 
-		if (AssemblyCSharp::IsVisible(LocalPlayer->eyes()->get_position() + this->ManipulationAngle, point) &&
-			EyeHack().ValidateEyePos(AimbotTarget.m_player, point, true))
-		{
-			if (m_settings::ShowBulletTPAngle)
-			{
-				UnityEngine::DDraw().Sphere(point, 0.1f, Color::Orange(), 0.05f, 0);
-			}
-
-			m_settings::StartShooting = true;
-			m_settings::Thickbullet_Indicator = true;
-			this->BulletTPAngle = targetPosition + s;
-			return;
+	if (m_settings::CacheBulletTP) {
+		if (!AimbotTarget.m_player || this->CachedBulletTPPosition != this->LOSPoint || AimbotTarget.m_player->userID() != Features().TargetID) {
+			//LOG(XS("[DEBUG] VerifiedCachedPoint Invisible 0"));
+			m_settings::Thickbullet_AutoShoot = false;
+			m_settings::Thickbullet_Indicator = false;
+			this->BulletTPAngle = this->LOSPoint;
+			this->CachedBulletTPPosition = this->LOSPoint;
+			this->BulletTPPointVisible = false;
+		}
+	}
+	else {
+		if (!AimbotTarget.m_player || this->CachedBulletTPPosition != Point || AimbotTarget.m_player->userID() != Features().TargetID) {
+			//LOG(XS("[DEBUG] VerifiedCachedPoint Invisible 0"));
+			m_settings::Thickbullet_AutoShoot = false;
+			m_settings::Thickbullet_Indicator = false;
+			this->BulletTPAngle = targetPosition;
+			this->CachedBulletTPPosition = targetPosition;
+			this->BulletTPPointVisible = false;
 		}
 	}
 
-	this->BulletTPAngle = targetPosition;
-	m_settings::StartShooting = false;
-	m_settings::Thickbullet_Indicator = false;
+	if (!AssemblyCSharp::IsVisible(this->CachedManipPoint, this->CachedBulletTPPosition) || this->CachedBulletTPPosition.IsZero() || AimbotTarget.m_player->userID() != Features().TargetID) {
+		//LOG(XS("[DEBUG] VerifiedCachedPoint Invisible 1"));
+		m_settings::Thickbullet_Indicator = false;
+		m_settings::Thickbullet_AutoShoot = false;
+		this->BulletTPPointVisible = false;
+	}
+
+	if (AssemblyCSharp::IsVisible(this->CachedManipPoint, this->CachedBulletTPPosition) &&
+		EyeHack().ValidateEyePos(AimbotTarget.m_player, this->CachedBulletTPPosition, true)) {
+		//LOG(XS("[DEBUG] VerifiedCachedPoint Visible"));
+		this->BulletTPAngle = this->CachedBulletTPPosition;
+		m_settings::Thickbullet_AutoShoot = true;
+		m_settings::Thickbullet_Indicator = true;
+		if (m_settings::ShowBulletTPAngle)
+		{
+			UnityEngine::DDraw().Sphere(this->CachedBulletTPPosition, 0.1f, Color::Blue(), 0.05f, 0);
+		}
+		this->BulletTPPointVisible = true;
+	}
+
+	if (!this->BulletTPPointVisible && !LOS || this->CachedBulletTPPosition.IsZero() && IsAddressValid(AimbotTarget.m_player)) {
+
+		if (m_settings::BulletTPIntensity == 0)
+			BulletTPAnglesModeIntense(arrz, 100);
+		else if (m_settings::BulletTPIntensity == 1)
+			BulletTPAnglesModeIntense(arrz, 250);
+		else if (m_settings::BulletTPIntensity == 2)
+			arrz = generatePointsInNonUniformSphere(2.2, 2.2, 2.2, 100);
+
+		for (const auto& s : arrz)
+		{
+			Point = targetPosition + s;
+			this->BTPSeperator = targetPosition + s;
+
+			if (AssemblyCSharp::IsVisible(this->CachedManipPoint, Point) &&
+				EyeHack().ValidateEyePos(AimbotTarget.m_player, Point, true))
+			{
+				if (m_settings::ShowBulletTPAngle)
+				{
+					UnityEngine::DDraw().Sphere(Point, 0.1f, Color::Orange(), 0.05f, 0);
+				}
+			//	LOG(XS("[DEBUG] VerifiedCachedPoint Visible 2"));
+				this->CachedBulletTPPosition = Point;
+				this->BulletTPPointVisible = false;
+				m_settings::Thickbullet_AutoShoot = true;
+				m_settings::Thickbullet_Indicator = true;
+				this->BulletTPAngle = targetPosition + s;
+				return;
+			}
+		}
+	} 
+
+	//this->BulletTPAngle = targetPosition;
+	//m_settings::StartShooting = false;
+	//m_settings::Thickbullet_Indicator = false;
 }
 
 
@@ -687,9 +774,8 @@ auto Features::FindManipulationAngles(float MaxDesyncValue) -> void
 	auto eyes = LocalPlayer->eyes();
 	if (!IsAddressValid(eyes))
 		return;
-
 	
-	if (can_manipulate(LocalPlayer, targetPosition, m_settings::max_spoofed_eye_distance))
+	if (can_manipulate(LocalPlayer, Features().CachedBulletTPPosition, m_settings::max_spoofed_eye_distance))
 	{
 		m_settings::StartShooting = true;
 		m_settings::Manipulation_Indicator = true;
@@ -859,7 +945,7 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 						if (this->BulletTPAngle.IsZero())
 							this->BulletTPAngle = m_target.m_position;
 
-						if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->ManipulationAngle, this->BulletTPAngle))
+						if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->CachedManipPoint, this->CachedBulletTPPosition))
 						{
 							float maxpacketsperSECOND = 1;
 							if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
@@ -881,11 +967,8 @@ auto Features::BulletQueue(AssemblyCSharp::BaseProjectile* BaseProjectile) -> vo
 								CalledLaunchFromHook = false;
 
 							}
-
 						}
-
 					}
-
 				}
 			}
 		}

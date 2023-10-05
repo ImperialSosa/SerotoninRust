@@ -1221,3 +1221,11 @@ void Buttons::ClearRaidCache() {
     const auto string = std::wstring(XS(L"[Serotonin] Cleared Raid Cache!"));
     notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
 }
+
+void Buttons::ClearLOSPoints() {
+
+    Features().GeneratedPoints = false;
+
+    const auto string = std::wstring(XS(L"[Serotonin] Reset LOS Points!"));
+    notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+}

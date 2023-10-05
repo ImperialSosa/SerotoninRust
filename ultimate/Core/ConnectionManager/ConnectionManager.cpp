@@ -34,6 +34,11 @@ void ConnectionManager::ResetPlayerCache()
 
 	Features().BulletTPAngle = Vector3();
 	Features().ManipulationAngle = Vector3();
+	Features().CachedManipPoint = Vector3();
+	Features().CachedBulletTPPosition = Vector3();
+	Features().BulletTPPointVisible = false;
+	Features().PointVisible = false;
+	Features().PositionVisible = false;
 
 	m_settings::MaxVerticalFlyhack = 0;
 	m_settings::VerticalFlyhack = 0;

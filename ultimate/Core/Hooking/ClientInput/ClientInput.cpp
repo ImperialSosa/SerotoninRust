@@ -3,6 +3,7 @@
 #include "../../Features/Features/Features.hpp"
 #include "../WriteToStream/Prediction.hpp"
 #include "../../Features/Visuals/Visuals.hpp"
+#include "../../Features/EyeHack/EyeHack.hpp"
 
 float flyhackDistanceVertical = 0.f;
 float flyhackDistanceHorizontal = 0.f;
@@ -223,6 +224,46 @@ void VelocityChecks(Vector3 LocalPos, Vector3 AimbotTarget) {
 
 inline bool FirstInit = false;
 
+std::vector<Vector3> cachedPoints;
+
+void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int baseNumPoints) {
+
+	// Adjust the number of points to generate "x" angles
+	int numPoints = baseNumPoints;
+
+	if (cachedPoints.empty()) {
+		for (int i = 0; i < numPoints / 2; i++) {
+			float theta = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * 2 * M_PI; // Random angle
+			float phi = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * M_PI;     // Random inclination angle
+
+			//float x = radiusX * Math::sinf(phi) * Math::cosf(theta);
+			//float y = radiusY * Math::sinf(phi) * Math::sinf(theta);
+			//float z = radiusZ * Math::cosf(phi);
+
+			float rX = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * radiusX;
+			float rY = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * radiusY;
+			float rZ = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * radiusZ;
+
+			float x = rX * Math::sinf(phi) * Math::cosf(theta);
+			float y = rY * Math::sinf(phi) * Math::sinf(theta);
+			float z = rZ * Math::cosf(phi);
+
+			cachedPoints.push_back(Vector3(x, y, z));
+		}
+
+		for (int i = 0; i < numPoints / 2; i++) {
+			float theta = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * 2 * M_PI; // Random angle
+			float phi = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * M_PI;     // Random inclination angle
+
+			float x = radiusX * Math::sinf(phi) * Math::cosf(theta);
+			float y = radiusY * Math::sinf(phi) * Math::sinf(theta);
+			float z = radiusZ * Math::cosf(phi);
+
+			cachedPoints.push_back(Vector3(x, y, z));
+		}
+	}
+}
+
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
 {
 	if(!InGame)
@@ -266,11 +307,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				//angle_to = LocalPlayer->input()->bodyAngles().lerp(angle_to, (1.f - 0.f));
 				
 				//LocalPlayer->input()->bodyAngles() = angle_to;
-				Vector2 AimPos;
-				if (UnityEngine::WorldToScreen(TargetBone, AimPos))
-					LI_FN(mouse_event)(MOUSEEVENTF_MOVE, AimPos.x, AimPos.y, 0, 0);
-				
-			
 			}
 		}
 	}
@@ -320,18 +356,165 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
+	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+	auto camera = UnityEngine::Camera::get_main();
+	if (IsAddressValid(camera)) {
+		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+		if (IsAddressValid(AimbotTarget.m_player)) {
+			Features().TargetID = AimbotTarget.m_player->userID();
+
+			if (m_settings::Manipulation) {
+				auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(Features().CachedManipPoint);
+
+				if (AssemblyCSharp::IsVisible(LocalPlayer->eyes()->get_position(), Features().CachedManipPoint) &&
+					AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition)
+					&& distance < 9
+					&& !Features().CachedManipPoint.IsZero()
+					&& AimbotTarget.m_player->userID() == Features().TargetID
+					&& !AimbotTarget.m_player == NULL) {
+					Features().PointVisible = true;
+				}
+				else {
+					Features().CachedManipPoint = LocalPlayer->eyes()->get_position();
+					Features().PointVisible = false;
+				}
+
+				if (m_settings::DrawManipPoints && Features().CachedManipPoint != LocalPlayer->eyes()->get_position() && Features().PointVisible)
+				{
+					UnityEngine::DDraw().Sphere(Features().CachedManipPoint, 0.1f, Color::Blue(), 0.05f, 0);
+				}
+			}
+			else
+				Features().CachedManipPoint = LocalPlayer->eyes()->get_position();
+		}
+	}
+	
+
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
-		Features().Instance()->FindManipulationAngles(num6);
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				Features().Instance()->FindManipulationAngles(num6);
+			}
+		}
 	}
 	else
 	{
-		Features().ManipulationAngle = Vector3();
+		Features().PointVisible = false;
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		if (IsAddressValid(LocalPlayer)) {
+			Features().CachedManipPoint = LocalPlayer->eyes()->get_position();
+			Features().ManipulationAngle = LocalPlayer->eyes()->get_position();
+		}
+		//Features().ManipulationAngle = Vector3();
 		m_settings::can_manipulate = false;
 		m_settings::StartShooting = false;
 		m_settings::Manipulation_Indicator = false;
 	}
 
+	if (IsAddressValid(camera))
+	{
+		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+		if (IsAddressValid(AimbotTarget.m_player)) {
+			if (m_settings::CacheBulletTP) {
+				{
+					static float CachedGeneratedPoints;
+					static bool Cached = false;
+					if (!Cached) {
+						CachedGeneratedPoints = m_settings::LOSCheckAmount;
+						Cached = true;
+					}
+					if (CachedGeneratedPoints > m_settings::LOSCheckAmount || CachedGeneratedPoints < m_settings::LOSCheckAmount) {
+						Cached = false;
+						Features().GeneratedPoints = false;
+					}
+
+					if (!Features().GeneratedPoints) {
+						GenerateAndCachePoints(2, 2, 2, m_settings::LOSCheckAmount);
+						Features().GeneratedPoints = true;
+					}
+				}
+
+				//Features().ConstantLOSCheck = false;
+
+				if (Features().LOSTargetID != AimbotTarget.m_player->userID() || !AimbotTarget.m_player) {
+					Features().LOSPoint = Vector3::Zero;
+					Features().ConstantLOSCheck = false;
+					Features().VerifiedLOSPoint = false;
+				}
+
+				if (m_settings::AdvancedChecks) {
+					if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint) &&
+						AssemblyCSharp::IsVisible(Features().LOSPoint, AimbotTarget.m_position)) {
+						Features().VerifiedLOSPoint = true;
+						Features().CachedBulletTPPosition = Features().LOSPoint;
+					}
+					else {
+						Features().LOSPoint = Vector3::Zero;
+						Features().VerifiedLOSPoint = false;
+						Features().ConstantLOSCheck = false;
+					}
+				}
+				else {
+					if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint)) {
+						Features().VerifiedLOSPoint = true;
+					}
+					else {
+						Features().LOSPoint = Vector3::Zero;
+						Features().VerifiedLOSPoint = false;
+						Features().ConstantLOSCheck = false;
+					}
+				}
+
+				if (!Features().VerifiedLOSPoint) {
+					for (const Vector3& point : cachedPoints) {
+						//UnityEngine::DDraw().Sphere(AimbotTarget.m_position + point, 0.05f, Color::Red(), 0.05f, 0);
+						if (m_settings::AdvancedChecks) {
+							if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point) &&
+								AssemblyCSharp::IsVisible(AimbotTarget.m_position + point, AimbotTarget.m_position)) {
+								Features().ConstantLOSCheck = true; 
+								Features().VerifiedLOSPoint = true;
+								Features().LOSPoint = AimbotTarget.m_position + point;
+								Features().LOSTargetID = AimbotTarget.m_player->userID();
+								break;  
+							}
+						}
+						else {
+							if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point)) {
+								Features().VerifiedLOSPoint = true;
+								Features().ConstantLOSCheck = true;  
+								Features().LOSPoint = AimbotTarget.m_position + point;
+								break;  
+							}
+						}
+					}
+				}
+
+				//if (Features().VerifiedLOSPoint)
+				//	Features().CachedBulletTPPosition = Features().LOSPoint;
+
+				if (m_settings::ShowCachedPoint) {
+					UnityEngine::DDraw().Sphere(Features().LOSPoint, 0.05f, Color::Green(), 0.05f, 0);
+				}
+			}
+		}
+	}
+
+	if (m_settings::SnickerBullet) {
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		auto EyePos = LocalPlayer->eyes()->get_position();
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				UnityEngine::DDraw().Arrow(EyePos, Features().CachedManipPoint, 0.1f, Color(1.f, 0.f, 0.f, 1.f), 0.02f);
+				UnityEngine::DDraw().Arrow(Features().CachedManipPoint, Features().CachedBulletTPPosition, 0.1f, Color(0.f, 1.f, 0.f, 1.f), 0.02f);
+				UnityEngine::DDraw().Arrow(Features().CachedBulletTPPosition, AimbotTarget.m_position, 0.1f, Color(0.f, 0.f, 1.f, 1.f), 0.02f);
+			}
+		}
+	}
 
 	if (CalledLaunchFromHook)
 	{
@@ -342,165 +525,86 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 1"), nullptr);
 	}
 
+	if (IsAddressValid(camera)) {
+		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+		if (IsAddressValid(AimbotTarget.m_player)) {
+			if (m_settings::BulletTP)
+			{
+				if (m_settings::CacheBulletTP) {
+					if (Features().ConstantLOSCheck) {
+						Features().Instance()->FindBulletTPAngles(num6);
+					}
+					else
+					{
+						Features().CachedBulletTPPosition = AimbotTarget.m_position;
+						Features().BulletTPAngle = Vector3(0, 0, 0);
+						
+						Features().BulletTPPointVisible = false;
+						m_settings::Thickbullet_Indicator = false;
+						m_settings::Thickbullet_AutoShoot = false;
+					}
+				}
+				else
+					Features().Instance()->FindBulletTPAngles(num6);
+			}
+			else if (!Features().BulletTPAngle.IsZero()) {
+				Features().CachedBulletTPPosition = AimbotTarget.m_position;
+				Features().BulletTPAngle = Vector3(0, 0, 0);
+				Features().BulletTPPointVisible = false;
+				m_settings::Thickbullet_Indicator = false;
+				m_settings::Thickbullet_AutoShoot = false;
+			}
+			else
+				Features().CachedBulletTPPosition = AimbotTarget.m_position;
+		}
+		else {
+			m_settings::Thickbullet_AutoShoot = false;
+			m_settings::Thickbullet_Indicator = false;
+		}
+	}
 
 	if (m_settings::BulletTP)
 	{
-		Features().Instance()->FindBulletTPAngles(num6);
-	}
-	else if (!Features().BulletTPAngle.IsZero()) {
-		Features().BulletTPAngle = Vector3(0, 0, 0);
-		m_settings::Thickbullet_Indicator = false;
-		m_settings::Thickbullet_AutoShoot = false;
-	}
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
 
-	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-
-	if (IsAddressValid(BaseProjectile) && a1->IsMelee() || a1->IsWeapon())
-	{
-		if (m_settings::WeaponChams) {
-			if (IsAddressValid(AssemblyCSharp::BaseViewModel::get_ActiveModel()))
-			{
-				AssemblyCSharp::BaseViewModel::get_ActiveModel()->useViewModelCamera() = false;
-			}
-
-			auto g_render = AssemblyCSharp::BaseViewModel::get_ActiveModel()->GetComponentsInChildren(FPSystem::Type::Renderer());
-			if (IsAddressValid(g_render))
-			{
-				auto size = g_render->max_length;
-				for (int i = 0; i < size; i++)
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				if (AimbotTarget.m_player->IsConnected())
 				{
-					auto MainRenderer = g_render->m_Items[i];
-					if (!IsAddressValid(MainRenderer))
-						continue;
-
-					auto material = MainRenderer->material();
-
-					if (!IsAddressValid(material))
-						continue;
-
-					if (material->get_name()->Contains(XS("sparks2"))
-						|| material->get_name()->Contains(XS("puff-3"))
-						|| material->get_name()->Contains(XS("c4_smoke_01"))
-						|| material->get_name()->Contains(XS("HeavyRefract"))
-						|| material->get_name()->Contains(XS("pfx_smoke_whispy_1_white_viewmodel"))
-						|| material->get_name()->Contains(XS("Ak47uIce Specular"))
-						//|| Material->name()->Contains(E(L"ak47_barrel_ice"
-						//|| Material->name()->Contains(E(L"ak47_maggrip_ice"
-						|| material->get_name()->Contains(XS("muzzle_embers"))
-						|| material->get_name()->Contains(XS("c4charge"))
-						|| material->get_name()->Contains(XS("pfx_smoke_rocket"))
-						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
-						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
-						|| material->get_name()->Contains(XS("muzzle_fumes1"))
-						|| material->get_name()->Contains(XS("muzzle_fumes2"))
-						|| material->get_name()->Contains(XS("muzzle_fumes3"))
-						|| material->get_name()->Contains(XS("wispy-2"))
-						|| material->get_name()->Contains(XS("quickblast-1"))
-						|| material->get_name()->Contains(XS("muzzle_flash-front-3x3"))
-						|| material->get_name()->Contains(XS("muzzle_flash-cross"))
-						|| material->get_name()->Contains(XS("muzzle_flash-side-1x4")))
-						continue;
-
-					int selectedChams = m_settings::WeaponSelectedChams;
-
-					switch (selectedChams) {
-					case 0:
-						if (FireBundleA) {
-							if (!FireShaderA) //Blue Fire
-								FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!FireMaterialA)
-								FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != FireShaderA)
-							{
-								MainRenderer->set_material(FireMaterialA);
-								FireMaterialA->set_shader(FireShaderA);
-							}
-						}
-						break;
-					case 1:
-						if (FireBundleB) {
-							if (!FireShaderB) //Red Fire
-								FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!FireMaterialB)
-								FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != FireShaderB)
-							{
-								MainRenderer->set_material(FireMaterialB);
-								FireMaterialB->set_shader(FireShaderB);
-							}
-						}
-						break;
-					case 2:
-						if (LightningBundle) {
-							if (!LightningShader) //Lightning
-								LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!LightningMaterial)
-								LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != LightningShader)
-							{
-								MainRenderer->set_material(LightningMaterial);
-								LightningMaterial->set_shader(LightningShader);
-							}
-						}
-						break;
-					case 3:
-						if (GeometricBundle) {
-							if (!GeometricShader) //Geometric Disolve
-								GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!GeometricMaterial)
-								GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != GeometricShader)
-							{
-								MainRenderer->set_material(GeometricMaterial);
-								GeometricMaterial->set_shader(GeometricShader);
-							}
-						}
-						break;
-					case 4:
-						if (GalaxyBundle) {
-							if (!GalaxyShader) //Galaxy
-								GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!GalaxyMaterial)
-								GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != GalaxyShader)
-							{
-								MainRenderer->set_material(GalaxyMaterial);
-								GalaxyMaterial->set_shader(GalaxyShader);
-							}
-						}
-						break;
-					case 5:
-						if (WireFrameBundle) {
-							if (!WireFrameShader) //Galaxy
-								WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-							if (!WireFrameMaterial)
-								WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-							if (material->shader() != WireFrameShader)
-							{
-								MainRenderer->set_material(WireFrameMaterial);
-								WireFrameMaterial->set_shader(WireFrameShader);
-								//WireFrameMaterial->SetColor("_Color", Color::Red());
-							}
-						}
-						break;
-
-					}
+					AimbotTarget.m_player->get_transform()->set_rotation(Vector4(0.f, 0.f, 0.f, 1.f)); //Fix all player rotations for bullet tp to not have invalids.
 				}
 			}
 		}
 	}
+
+	static bool StartShooting = false;
+
+	if (m_settings::Autoshoot) {
+
+		if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting) {
+			if (m_settings::Manipulation && m_settings::BulletTP) 
+				StartShooting = true;
+			else
+				StartShooting = false;
+		}
+		else if (m_settings::Thickbullet_AutoShoot) {
+			if (m_settings::BulletTP)
+				StartShooting = true;
+			else
+				StartShooting = false;
+		}
+		else if (m_settings::StartShooting) {
+			if (m_settings::Manipulation)
+				StartShooting = true;
+			else
+				StartShooting = false;
+		}
+		else
+			StartShooting = false;
+	}
+
+	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
 
 	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()))
 	{
@@ -526,7 +630,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						{
 							if (InstantHitReady)
 							{
-								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								if (StartShooting)
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
@@ -539,7 +643,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						{
 							if (!m_settings::AlwaysAutoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey))
 							{
-								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								if (StartShooting)
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
@@ -548,18 +652,15 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							}
 							else if (m_settings::AlwaysAutoshoot)
 							{
-								if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+								if (StartShooting)
 								{
 									CalledLaunchFromHook = true;
-									BaseProjectile->DoAttackRecreation();
-									
-
+									BaseProjectile->DoAttackRecreation();								
 								}
 							}
 							CalledLaunchFromHook = false;
 						}
 					}
-
 
 					//bullet queue
 					if (m_settings::InstantKill && AimbotTarget.m_player->IsAlive())
@@ -581,7 +682,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 											if (Features().BulletTPAngle.IsZero())
 												Features().BulletTPAngle = AimbotTarget.m_position;
 
-											if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+											if (StartShooting)
 											{
 
 												float maxpacketsperSECOND = 1;
@@ -609,7 +710,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 											if (Features().BulletTPAngle.IsZero())
 												Features().BulletTPAngle = AimbotTarget.m_position;
 
-											if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+											if (StartShooting)
 											{
 												float maxpacketsperSECOND = 1;
 												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
@@ -655,7 +756,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (Features().BulletTPAngle.IsZero())
 											Features().BulletTPAngle = AimbotTarget.m_position;
 
-										if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+										if (StartShooting)
 										{
 
 											float maxpacketsperSECOND = 1;
@@ -684,7 +785,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (Features().BulletTPAngle.IsZero())
 											Features().BulletTPAngle = AimbotTarget.m_position;
 
-										if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + Features().ManipulationAngle, Features().BulletTPAngle))
+										if (StartShooting)
 										{
 											float maxpacketsperSECOND = 1;
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
@@ -966,20 +1067,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								StoreOrig = true;
 							}
 
-							//const float amount = m_settings::recoilPercent / 100;
-							//newRecoilOverride->recoilYawMin() = orig[0] * amount;
-							//newRecoilOverride->recoilYawMax() = orig[1] * amount;
-							//newRecoilOverride->recoilPitchMin() = orig[2] * amount;
-							//newRecoilOverride->recoilPitchMax() = orig[3] * amount;
-							//newRecoilOverride->ADSScale() = orig[4] * amount;
-							//newRecoilOverride->movementPenalty() = orig[5] * amount;
-
-							newRecoilOverride->recoilYawMin() = 0;
-							newRecoilOverride->recoilYawMax() = 0;
-							newRecoilOverride->recoilPitchMin() = 0;
-							newRecoilOverride->recoilPitchMax() = 0;
-							newRecoilOverride->ADSScale() = 0;
-							newRecoilOverride->movementPenalty() = 0;
+							const float amount = m_settings::recoilPercent / 100;
+							newRecoilOverride->recoilYawMin() = orig[0] * amount;
+							newRecoilOverride->recoilYawMax() = orig[1] * amount;
+							newRecoilOverride->recoilPitchMin() = orig[2] * amount;
+							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
+							newRecoilOverride->ADSScale() = orig[4] * amount;
+							newRecoilOverride->movementPenalty() = orig[5] * amount;
 						}
 					}
 				}
@@ -1013,16 +1107,151 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			}
 		}
 	}
-	if (m_settings::BulletTP)
-	{
-		auto camera = UnityEngine::Camera::get_main();
-		if (IsAddressValid(camera)) {
 
-			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-			if (IsAddressValid(AimbotTarget.m_player)) {
-				if (AimbotTarget.m_player->IsConnected())
+	if (IsAddressValid(BaseProjectile) && a1->IsMelee() || a1->IsWeapon())
+	{
+		if (m_settings::WeaponChams) {
+			if (IsAddressValid(AssemblyCSharp::BaseViewModel::get_ActiveModel()))
+			{
+				AssemblyCSharp::BaseViewModel::get_ActiveModel()->useViewModelCamera() = false;
+			}
+
+			auto g_render = AssemblyCSharp::BaseViewModel::get_ActiveModel()->GetComponentsInChildren(FPSystem::Type::Renderer());
+			if (IsAddressValid(g_render))
+			{
+				auto size = g_render->max_length;
+				for (int i = 0; i < size; i++)
 				{
-					AimbotTarget.m_player->get_transform()->set_rotation(Vector4(0.f, 0.f, 0.f, 1.f)); //Fix all player rotations for bullet tp to not have invalids.
+					auto MainRenderer = g_render->m_Items[i];
+					if (!IsAddressValid(MainRenderer))
+						continue;
+
+					auto material = MainRenderer->material();
+
+					if (!IsAddressValid(material))
+						continue;
+
+					LOG(XS("[DEBUG] Material: %ls"), material->get_name()->c_str());
+
+					if (material->get_name()->Contains(XS("sparks2"))
+						|| material->get_name()->Contains(XS("puff-3"))
+						|| material->get_name()->Contains(XS("c4_smoke_01"))
+						|| material->get_name()->Contains(XS("HeavyRefract"))
+						|| material->get_name()->Contains(XS("pfx_smoke_whispy_1_white_viewmodel"))
+						|| material->get_name()->Contains(XS("Ak47uIce Specular"))
+						//|| Material->name()->Contains(E(L"ak47_barrel_ice"
+						//|| Material->name()->Contains(E(L"ak47_maggrip_ice"
+						|| material->get_name()->Contains(XS("muzzle_embers"))
+						|| material->get_name()->Contains(XS("c4charge"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("pfx_smoke_rocket_thicksoftblend"))
+						|| material->get_name()->Contains(XS("muzzle_fumes1"))
+						|| material->get_name()->Contains(XS("muzzle_fumes2"))
+						|| material->get_name()->Contains(XS("muzzle_fumes3"))
+						|| material->get_name()->Contains(XS("wispy-2"))
+						|| material->get_name()->Contains(XS("quickblast-1"))
+						|| material->get_name()->Contains(XS("muzzle_flash-front-3x3"))
+						|| material->get_name()->Contains(XS("muzzle_flash-cross"))
+						|| material->get_name()->Contains(XS("muzzle_flash-side-1x4")))
+						continue;
+
+					int selectedChams = m_settings::WeaponSelectedChams;
+
+					switch (selectedChams) {
+					case 0:
+						if (FireBundleA) {
+							if (!FireShaderA) //Blue Fire
+								FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!FireMaterialA)
+								FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != FireShaderA)
+							{
+								MainRenderer->set_material(FireMaterialA);
+								FireMaterialA->set_shader(FireShaderA);
+							}
+						}
+						break;
+					case 1:
+						if (FireBundleB) {
+							if (!FireShaderB) //Red Fire
+								FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!FireMaterialB)
+								FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != FireShaderB)
+							{
+								MainRenderer->set_material(FireMaterialB);
+								FireMaterialB->set_shader(FireShaderB);
+							}
+						}
+						break;
+					case 2:
+						if (LightningBundle) {
+							if (!LightningShader) //Lightning
+								LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!LightningMaterial)
+								LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != LightningShader)
+							{
+								MainRenderer->set_material(LightningMaterial);
+								LightningMaterial->set_shader(LightningShader);
+							}
+						}
+						break;
+					case 3:
+						if (GeometricBundle) {
+							if (!GeometricShader) //Geometric Disolve
+								GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!GeometricMaterial)
+								GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != GeometricShader)
+							{
+								MainRenderer->set_material(GeometricMaterial);
+								GeometricMaterial->set_shader(GeometricShader);
+							}
+						}
+						break;
+					case 4:
+						if (GalaxyBundle) {
+							if (!GalaxyShader) //Galaxy
+								GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!GalaxyMaterial)
+								GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != GalaxyShader)
+							{
+								MainRenderer->set_material(GalaxyMaterial);
+								GalaxyMaterial->set_shader(GalaxyShader);
+							}
+						}
+						break;
+					case 5:
+						if (WireFrameBundle) {
+							if (!WireFrameShader) //Galaxy
+								WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!WireFrameMaterial)
+								WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != WireFrameShader)
+							{
+								MainRenderer->set_material(WireFrameMaterial);
+								WireFrameMaterial->set_shader(WireFrameShader);
+								//WireFrameMaterial->SetColor("_Color", Color::Red());
+							}
+						}
+						break;
+
+					}
 				}
 			}
 		}
@@ -1155,7 +1384,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 
-
 	//UnityEngine::RenderSettings::set_skybox(nullptr);
 
 	if (m_settings::AdminFlags)
@@ -1207,7 +1435,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			a1->GetBaseMovement()->set_Grounded(1.f);
 		}
 	}
-
 
 	if (m_settings::PlayerFov || m_settings::Zoom)
 	{
@@ -1366,7 +1593,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			}
 		}
 	}
-
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
