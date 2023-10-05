@@ -6,18 +6,19 @@
 
 struct eac_info
 {
-	uint32_t entry;
-	uint32_t cheat_base;
+    uint32_t entry;
+    uint32_t cheat_base;
 };
 
 namespace eac
 {
-	inline uint64_t base;
-	inline uint64_t entry;
+    inline uint64_t base;
+    inline uint64_t entry;
 };
 
 inline eac_info eac_data;
 
+inline unsigned char _TAG[] = { 0xFF, 0xAC, 0x32, 0x4D, 0xAB, 0xAB, 0x88, 0x69 };
 
 static void fix_relocations()
 {

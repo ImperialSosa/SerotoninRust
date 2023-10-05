@@ -33,6 +33,22 @@ void Prediction(Vector3 local, Vector3& target, Vector3 targetvel, float bullets
 	target.y += drop;
 }
 
+void Prediction2(Vector3 local, Vector3& target, Vector3 targetvel, float bulletspeed, float gravity, float drag) {
+	float Dist = local.get_3d_dist(target);
+	float BulletTime = Dist / bulletspeed;
+
+	Vector3 vel = Vector3(targetvel.x, 0, targetvel.z) * 0.75f;
+	Vector3 PredictVel = vel * BulletTime;
+	target += PredictVel;
+
+	double height = target.y - local.y;
+	Vector3 dir = target - local;
+	float DepthPlayerTarget = Math::sqrtf(Math::powf(dir.x, 2) + Math::powf(dir.z, 2));
+
+	float drop = CalcBulletDrop(height, DepthPlayerTarget, bulletspeed, gravity, drag);
+	target.y += drop;
+}
+
 void Hooks::OnInput(AssemblyCSharp::BaseMelee* _This)
 {
 	if (!InGame)
@@ -95,16 +111,22 @@ void Hooks::OnInput(AssemblyCSharp::BaseMelee* _This)
 		
 		if (IsAddressValid(inputState)) {
 
+			auto fGraviModifier = projectileComponent->gravityModifier();
+			auto vGravity = Vector3(0.f, -9.81f, 0.f);
+			auto vTrueGravity = vGravity * fGraviModifier;
+
+			Vector3 Local = AssemblyCSharp::LocalPlayer::get_Entity()->get_bone_transform(RustStructs::bones::head)->get_position();
+
+			Prediction(Local, Features().BulletTPAngle, m_target.m_velocity, component->projectileVelocity() , projectileComponent->gravityModifier(), projectileComponent->drag());
+			auto posnormal = (Features().BulletTPAngle - Local).Normalized();
+			Vector4 toQuat = Vector4::QuaternionLookRotation(posnormal, Vector3(0, 1, 0));
+
 			if (inputState->IsDown(RustStructs::FIRE_SECONDARY) && inputState->WasJustPressed(RustStructs::FIRE_PRIMARY))
 			{
 				if (!_This->HasAttackCooldown())
 				{
-					Vector3 Local = AssemblyCSharp::LocalPlayer::get_Entity()->get_bone_transform(RustStructs::bones::head)->get_position();
-
-					Prediction(Local, Features().BulletTPAngle, m_target.m_velocity, component->projectileVelocity(), projectileComponent->gravityModifier(), projectileComponent->drag());
-
-					auto posnormal = (Features().BulletTPAngle - Local).Normalized();
-					Vector4 toQuat = Vector4::QuaternionLookRotation(posnormal, Vector3(0, 1, 0));
+					
+					
 					AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->SetBodyRotation(toQuat);
 
 					_This->DoThrow();

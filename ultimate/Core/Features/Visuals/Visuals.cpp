@@ -804,6 +804,49 @@ void Visuals::DrawPlayers()
 	}
 }
 
+
+inline void DoMeleeAttack(AssemblyCSharp::BasePlayer* target, AssemblyCSharp::BaseMelee* baseprojectile, bool is_player = false) {
+	if (!IsAddressValid(target))
+		return;
+
+	Vector3 local_position = UnityEngine::Camera::get_main()->get_positionz();
+
+	if (baseprojectile->nextAttackTime() <= UnityEngine::Time::get_time())
+	{
+		if (baseprojectile->timeSinceDeploy() > baseprojectile->deployDelay())
+		{
+			auto g_hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+			auto g_hit_test = CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
+
+			if (IsAddressValid(g_hit_test))
+			{
+				auto hit_test = (AssemblyCSharp::HitTest*)g_hit_test;
+				if (IsAddressValid(hit_test))
+				{
+					UnityEngine::Ray ray = UnityEngine::Ray(local_position, (target->get_bone_transform(47)->get_position() - local_position).Normalized());
+
+					UnityEngine::Transform* trans = is_player ? target->get_bone_transform(47) : target->get_transform();
+					if (!trans)
+						return;
+
+					hit_test->MaxDistance() = 1000;
+					hit_test->HitTransform() = trans;
+					hit_test->AttackRay() = ray;
+					hit_test->DidHit() = true;
+					hit_test->HitEntity() = target;
+					hit_test->HitPoint() = trans->InverseTransformPoint(target->get_bone_transform(47)->get_position());
+					hit_test->HitNormal() = Vector3(0, 0, 0);
+					hit_test->damageProperties() = baseprojectile->damageProperties();
+
+					baseprojectile->StartAttackCooldown(baseprojectile->repeatDelay());
+					return baseprojectile->ProcessAttack(hit_test);
+				}
+			}
+
+		}
+	}
+};
+
 void Visuals::CachePlayers()
 {
 	if (!InGame)
@@ -828,6 +871,37 @@ void Visuals::CachePlayers()
 		auto BasePlayer = buffer->m_Items[index];
 		if (!IsAddressValid(BasePlayer))
 			continue;
+
+		if (BasePlayer->IsLocalPlayer())
+			continue;
+
+		if (m_settings::SilentMelee)
+		{
+			auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+
+			if (IsAddressValid(BaseProjectile))
+			{
+
+
+				if (BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass())
+					|| BaseProjectile->IsA(AssemblyCSharp::JackHammer::StaticClass())
+					&& !BaseProjectile->IsA(AssemblyCSharp::Planner::StaticClass()))
+				{
+					
+					if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position(), BasePlayer->get_bone_transform(48)->get_position()))
+					{
+						auto world_position = BasePlayer->get_bone_transform(48)->get_position();
+						auto local = AssemblyCSharp::LocalPlayer::get_Entity()->ClosestPoint(world_position);
+						auto camera = AssemblyCSharp::LocalPlayer::get_Entity()->get_bone_transform(48)->get_position();
+
+						if (camera.get_3d_dist(world_position) <= 4.5f)
+						{
+							DoMeleeAttack(BasePlayer, (AssemblyCSharp::BaseMelee*)BaseProjectile, true);
+						}
+					}
+				}
+			}
+		}
 	
 		VisualsArrayTemp.push_back(VisualsVector(BasePlayer));
 	}
@@ -977,6 +1051,7 @@ void Visuals::RenderEntities()
 					}
 				}
 
+			
 				if (BaseEntity->IsA(AssemblyCSharp::CollectibleEntity::StaticClass()))
 				{
 					if (distance <= m_settings::MaxCollectableDistance)
@@ -1130,6 +1205,91 @@ void Visuals::RenderEntities()
 					}
 				}
 
+
+
+				if (distance <= m_settings::MaxCrateDistance)
+				{
+					if (m_settings::BasicCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_basic") == Hash(name, false))
+							{
+								std::string player_name = XS("Basic Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::NormalCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_normal_2") == Hash(name, false) || HASH("crate_normal_2_food") == Hash(name, false) || HASH("crate_normal_2_medical") == Hash(name, false))
+							{
+								std::string player_name = XS("Normal Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::MilitaryCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_normal") == Hash(name, false))
+							{
+								std::string player_name = XS("Military Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+
+					if (m_settings::EliteCrate)
+					{
+						if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+						{
+							if (HASH("crate_elite") == Hash(name, false))
+							{
+								std::string player_name = XS("Elite Crate");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+				
+
+				if (m_settings::SupplyDrop)
+				{
+					if (BaseEntity->IsA(AssemblyCSharp::LootContainer::StaticClass()))
+					{
+						if (HASH("supply_drop") == Hash(name, false))
+						{
+							std::string player_name = XS("Airdrop");
+							char str[256];
+							sprintf(str, XS("[%dm]"), (int)distance);
+							player_name = player_name + " " + str;
+
+							UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+						}
+					}
+				}
 
 				if (BaseEntity->IsA(AssemblyCSharp::CollectibleEntity::StaticClass()))
 				{
@@ -1632,25 +1792,73 @@ void Visuals::RenderEntities()
 					}
 				}
 
-				if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()))
+
+				if (m_settings::ThugBoat)
 				{
-					if (distance <= m_settings::MaxAPCDistance)
+					if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()))
 					{
-						if (m_settings::PatrolHelicopter)
+						if (distance <= m_settings::MaxAPCDistance)
 						{
-							auto base_heli = reinterpret_cast<AssemblyCSharp::PatrolHelicopter*>(BaseEntity);
+							auto thugboat = reinterpret_cast<AssemblyCSharp::Tugboat*>(BaseEntity);
+
+							if (thugboat)
+							{
+								float yoffset = 0;
+								std::string player_name = XS("TugBoat");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								yoffset += 12.f;
+
+								float draw_health = thugboat->_health();
+								float yoffsethealth = 7.f;
+								if (thugboat->_health() > thugboat->_maxHealth()) {
+									draw_health = thugboat->_maxHealth();
+								}
+
+								const auto bar_width = 30;
+								const auto bar_health = (bar_width / thugboat->_maxHealth()) * draw_health;
+								auto bar_color = Color::Green();
+
+								if (thugboat->_health() > 50.f) {
+									bar_color = Color::Green();
+								}
+								else if (thugboat->_health() > 20.f && thugboat->_health() < 40.f) {
+									bar_color = Color::Orange();
+								}
+								else if (thugboat->_health() < 20.f) {
+									bar_color = Color::Red();
+								}
+
+
+								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
+								UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+								yoffset += 8.f;
+							}
+						}
+					}
+				}
+				if (m_settings::PatrolHelicopter)
+				{
+					if (BaseEntity->IsA(AssemblyCSharp::BradleyAPC::StaticClass()))
+					{
+						if (distance <= m_settings::MaxAPCDistance)
+						{
+							auto base_heli = reinterpret_cast<AssemblyCSharp::BradleyAPC*>(BaseEntity);
 							if (base_heli)
 							{
 								float yoffset = 0;
-								auto HeliColor = Color{ m_settings::HeliColor[0], m_settings::HeliColor[1], m_settings::HeliColor[2], m_settings::HeliColor[3] };
-								std::string player_name = XS("Patrol Helicopter");
+								auto HeliColor = Color{ m_settings::BradleyColor[0], m_settings::BradleyColor[1], m_settings::BradleyColor[2], m_settings::BradleyColor[3] };
+								std::string player_name = XS("Bradley");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
-								//if (m_settings::healthBar)
+								//if (m_settings::BradleyhealthBar)
 								//{
 								//	float bar_health = 0;
 								//	auto health = base_heli->_health();
@@ -1689,6 +1897,74 @@ void Visuals::RenderEntities()
 								//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
 								//	yoffset += 13;
 								//}
+							}
+
+						}
+
+					}
+				}
+				
+
+				if (m_settings::PatrolHelicopter)
+				{
+					if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()))
+					{
+						if (distance <= m_settings::MaxAPCDistance)
+						{
+							//if (m_settings::PatrolHelicopter)
+							{
+								auto base_heli = reinterpret_cast<AssemblyCSharp::PatrolHelicopter*>(BaseEntity);
+								if (base_heli)
+								{
+									float yoffset = 0;
+									auto HeliColor = Color{ m_settings::HeliColor[0], m_settings::HeliColor[1], m_settings::HeliColor[2], m_settings::HeliColor[3] };
+									std::string player_name = XS("Patrol Helicopter");
+									char str[256];
+									sprintf(str, XS("[%dm]"), (int)distance);
+									player_name = player_name + " " + str;
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									yoffset += 12.f;
+
+									//if (m_settings::healthBar)
+									//{
+									//	float bar_health = 0;
+									//	auto health = base_heli->_health();
+									//	//auto max_health = base_player->_maxHealth();
+									//	float max_health = 100.f;
+									//	float draw_health = health;
+
+									//	if (health > max_health)
+									//	{
+									//		draw_health = max_health;
+									//	}
+
+									//	const auto bar_width = 30;
+									//	bar_health = (bar_width / max_health) * draw_health;
+
+									//	auto bar_color = Color::Green();
+									//	if (health > 50.f)
+									//	{
+									//		bar_color = Color::Green();
+									//	}
+									//	else if (health > 20.f && health < 40.f)
+									//	{
+									//		bar_color = Color::Orange();
+									//	}
+									//	else if (health < 20.f)
+									//	{
+									//		bar_color = Color::Red();
+									//	}
+
+									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
+									//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+
+									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
+									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
+									//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+									//	yoffset += 13;
+									//}
+								}
 							}
 						}
 					}
@@ -1763,7 +2039,23 @@ void Visuals::CacheEntities()
 							const auto heli_crate = 1314849795;
 
 							const auto patrol_heli = 3029415845;
+							const auto bradley_apc = 1456850188;
+
 							const auto cupboard_deployed = 2476970476;
+							const auto crate_basic = 1603759333;
+							const auto crate_normal_2 = 1546200557;
+							const auto crate_normal_2_food = 2066926276;
+							const auto crate_normal_2_medical = 1791916628;
+							const auto crate_normal = 2857304752;
+							const auto crate_elite = 3286607235;
+							const auto supply_drop = 3632568684;
+							const auto loot_barrel = 966676416;
+							const auto oil_barrel = 3438187947;
+							const auto horse = 2421623959;
+							const auto thugboat = 7995600;
+
+							//const auto Minicopter = 2278499844;
+
 							//const auto timedexplosive = 1915331115;
 							//const auto timedexplosive_deployed = 3898309212;
 
@@ -1772,7 +2064,48 @@ void Visuals::CacheEntities()
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
 
-							if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
+							if (EntityID == horse && m_settings::horseEsp)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+
+							else if (EntityID == oil_barrel && m_settings::OilBarrel)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_basic && m_settings::BasicCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_elite && m_settings::EliteCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == supply_drop && m_settings::SupplyDrop)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == loot_barrel && m_settings::LootBarrel)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -1780,7 +2113,10 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-
+							else if (EntityID == bradley_apc && m_settings::BradleyAPC)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
 							else if (EntityID == bradley_crate && m_settings::BradleyCrate)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));

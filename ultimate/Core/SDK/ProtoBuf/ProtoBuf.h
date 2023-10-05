@@ -187,6 +187,19 @@ namespace ProtoBuf
 
 	};
 
+
+	struct NetworkableId {
+		uint64_t Value; // 0x0
+	};
+
+	struct Minicopter : Il2CppObject
+	{
+		IL2CPP_CLASS("Minicopter");
+
+		IL2CPP_FIELD(float, fuelFraction);
+		IL2CPP_FIELD(NetworkableId*, fuelStorageID);
+
+	};
 	struct PlayerTeam : Il2CppObject
 	{
 		IL2CPP_CLASS("PlayerTeam");

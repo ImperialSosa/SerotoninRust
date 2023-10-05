@@ -66,7 +66,7 @@ class PrefabList {
 public:
 	PrefabList(AssemblyCSharp::BaseNetworkable* _This)
 	{
-		if ((_This))
+		if (IsAddressValid(_This))
 		{
 			this->CachedEntity = _This;
 		}

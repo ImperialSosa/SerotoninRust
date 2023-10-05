@@ -258,7 +258,9 @@ public:
 		}
 
 
-
+		int num15 = 2162688;
+		num15 |= 8388608;
+		num15 |= 134217728;
 
 		if (Distance > 1.2f)
 		{
@@ -267,7 +269,7 @@ public:
 			auto direction = HitPointWorld - ClosestPointOnLine;
 			auto newPosition = ClosestPointOnLine + (direction * amountNeeded);
 
-			if (ClosestPointOnLine.Distance(newPosition) > 1.f || !AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, 10551296, 0.f))
+			if (newPosition.Distance(ClosestPointOnLine) > 1.f || ClosestPointOnLine.Distance(newPosition) > 1.f || !AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, num15, 0.f))
 				return false;
 
 			ClosestPointOnLine = newPosition;
@@ -281,13 +283,17 @@ public:
 			auto direction = HitPointWorld - ClosestPointOnLine;
 			auto newPosition = ClosestPointOnLine + (direction * amountNeeded);
 
+			if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, newPosition, num15, 0.f))
+				return false;
+
 			HitPointWorld = newPosition;
 		}
 
 
-		
-		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, 10551296, 0.f) ||
-			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, 10551296, 0.f))
+
+
+		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, num15, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, num15, 0.f) ||
+			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, num15, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, num15, 0.f))
 		{
 			return false;
 		}
@@ -336,6 +342,12 @@ public:
 			}
 		}
 
+
+		if (HitPointWorld.Distance(m_target.m_position) > 1.f)
+			return false;
+
+		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, m_target.m_position, num15, 0.f))
+			return false;
 
 
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
@@ -519,21 +531,23 @@ public:
 			hitTest() = (AssemblyCSharp::HitTest*)g_hit_test;
 		}
 		UnityEngine::Ray ray = UnityEngine::Ray(currentPosition(), vec2);
-		safe_write(ht + 0x14, ray, UnityEngine::Ray); //AttackRay
-		safe_write(ht + 0x34, magnitude, float); //MaxDistance
-
+		ht->AttackRay() = ray;
+		ht->MaxDistance() = magnitude;
+	
 		AssemblyCSharp::BasePlayer* ow = this->owner();
-		safe_write(ht + 0x80, (DWORD64)ow, DWORD64); //IgnoreEntity
-		safe_write(ht + 0x2C, 0, float); //Radius
-		safe_write(ht + 0x30, 0.5f, float); //Forgiveness                                        FAT BULLET
+		ht->ignoreEntity() = ow;
+		ht->Radius() = 0.f;
+		ht->Forgiveness() = 0.5f;
+
+
 		if (!pr->owner() || ow->userID() == pr->owner()->userID()) {
-			safe_write(ht + 0x10, 0x2, int); //Type
+			ht->type() = 0x2;
 		}
-		else safe_write(ht + 0x10, 0x1, int); //Type	`
+		else ht->type() = 0x1; //Type	`
 
 		if (sourceWeaponPrefab()) {
-			safe_write(ht + 0x65, true, bool); //BestHit
-			safe_write(ht + 0x68, damageProperties(), AssemblyCSharp::DamageProperties*); //DamageProperties
+			ht->BestHit() = true;
+			ht->damageProperties() = damageProperties();
 		}
 	OFFSET:
 		typedef DWORD64(__stdcall* Unknown)(DWORD64);
@@ -576,7 +590,7 @@ public:
 
 
 		ht = hitTest();
-		safe_write(ht + 0x34, 0, float); //AttackEnd == AttackStart
+		ht->MaxDistance() = 0.f;
 
 
 		int size = safe_read(rs + 0x18, int);
