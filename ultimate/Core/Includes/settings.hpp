@@ -116,6 +116,7 @@ namespace m_settings {
 	inline bool InstantLoot = false;
 	inline float Fov_Color[4] = { 255.f, 255.f, 255.f, 255.f };
 	inline float Crosshair_Color[4] = { 255.f, 255.f, 255.f, 255.f };
+	inline float BradleyColor[4] = { 255.f, 255.f, 255.f, 255.f };
 	inline float AimbotAccuracy = 100.f;
 	inline bool ChangeRecoil = false;
 	inline bool Thickbullet_Arrows = false;
@@ -124,6 +125,7 @@ namespace m_settings {
 	inline bool StopPlayer = false;
 	inline bool ManipFlags = false;
 	inline bool SnickerBullet = false;
+	inline bool LongMelee = false;
 	inline bool BulletTPFlags = false;
 	inline bool BlockServerCommands = true;
 	inline bool Autoshoot = false;

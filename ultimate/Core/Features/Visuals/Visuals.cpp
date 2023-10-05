@@ -2064,16 +2064,16 @@ void Visuals::CacheEntities()
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
 
-							if (EntityID == horse && m_settings::horseEsp)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
+							///*if (EntityID == horse && m_settings::horseEsp)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//}
 
-							else if (EntityID == oil_barrel && m_settings::OilBarrel)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
-							else if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
+							//else if (EntityID == oil_barrel && m_settings::OilBarrel)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//*/}
+							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}

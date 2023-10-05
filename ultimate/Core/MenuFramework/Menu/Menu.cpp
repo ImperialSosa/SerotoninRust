@@ -105,7 +105,7 @@ void MenuDraw::RenderMenu()
 
 						}
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
-						//Menu().CheckBox(XS(L"Silent Melee"), m_settings::SilentMelee);
+						Menu().CheckBox(XS("Silent Melee"), m_settings::SilentMelee);
 						////if (m_settings::HeliAimbot)
 						//{
 						//	Menu().CheckBox(XS(L"Heli Override"), m_settings::HeliHitboxOverride);
@@ -585,6 +585,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("RemoveAttackAnimations"), m_settings::RemoveAttackAnimations);
 						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
 						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
+
+						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
