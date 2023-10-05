@@ -343,12 +343,6 @@ public:
 		}
 
 
-		if (HitPointWorld.Distance(m_target.m_position) > 1.f)
-			return false;
-
-		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, m_target.m_position, num15, 0.f))
-			return false;
-
 
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
 		if (!hTest)
