@@ -447,8 +447,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 
 				if (m_settings::AdvancedChecks) {
+					auto distance = AimbotTarget.m_player->get_transform()->get_position().Distance(Features().LOSPoint);
 					if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint) &&
-						AssemblyCSharp::IsVisible(Features().LOSPoint, AimbotTarget.m_position)) {
+						AssemblyCSharp::IsVisible(Features().LOSPoint, AimbotTarget.m_position) &&
+						distance < 2.2) {
 						Features().VerifiedLOSPoint = true;
 						Features().CachedBulletTPPosition = Features().LOSPoint;
 					}

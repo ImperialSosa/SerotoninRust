@@ -165,7 +165,6 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			Features().CachedManipPoint = re_p;
 			Features().ManipulationAngle = re_p;
 			Features().PositionVisible = true;
-			LOG(XS("[DEBUG] Check 1 "));
 			return true;
 		}
 		else
@@ -193,14 +192,13 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			//if (!EyeHack().ValidateEyePos(Features().LocalPlayer, re_p + a))
 			//	return false;
 
-			if (!AssemblyCSharp::IsVisible(p, Features().CachedBulletTPPosition))
-				return false;
+			//if (!AssemblyCSharp::IsVisible(p, Features().CachedBulletTPPosition))
+			//	return false;
 
 			if (m_settings::DrawManipPoints)
 				UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);
 
 			Features().ManipulationAngle = a;
-			LOG(XS("[DEBUG] Check 2 "));
 			return true;
 		};
 
