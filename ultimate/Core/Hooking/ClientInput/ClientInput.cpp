@@ -1428,6 +1428,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		a1->playerFlags() |= RustStructs::PlayerFlags::IsAdmin;
 	}
 
+<<<<<<< HEAD
+	
+=======
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 	if (m_settings::AdminCheat)
 	{
 		if (UnityEngine::Input::GetKeyDown(m_settings::AdminCheatKey) && !DoNoclip)

@@ -50,7 +50,7 @@ public:
 public:
 	AssemblyCSharp::BasePlayer* BasePlayer;
 };
-
+static inline bool DoNoclip = false;
 
 inline std::vector< VisualsVector> VisualsArray;
 inline std::vector< VisualsVector> VisualsArrayTemp;

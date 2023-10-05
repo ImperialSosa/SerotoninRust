@@ -10,10 +10,13 @@ namespace m_settings {
 	inline float AimbotFOV = 200.f;
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
+	inline float BradleyColor[4] = { 255.f, 0.f, 0.f, 255.f };
+
 	inline bool DrawInventory = false;
 	inline bool DrawInventoryIcons = false;
 	inline bool DrawClothing = false;
 	inline bool TC_Health = false;
+	inline bool LongMelee = false;
 	inline bool AuthorizedPlayers = false;
 	inline bool DrawClothingIcons = false;
 	inline float AuthorizedPlayersDistance = 100.f;
@@ -260,6 +263,8 @@ namespace m_settings {
 	inline bool HackableCrate = false;
 	inline bool BradleyCrate = false;
 	inline bool HeliCrate = false;
+	inline bool BradleyAPC = false;
+
 	inline bool TurretRange = false;
 	inline bool TurretAuthorizedPlayers = false;
 	inline bool TurretTurningFlag = false;
@@ -349,16 +354,31 @@ namespace m_settings {
 	inline bool Thickbullet_Indicator = false;
 	inline bool Thickbullet_AutoShoot = false;
 
+<<<<<<< HEAD
+
+	inline bool horseEsp = false;
+	inline bool BasicCrate = false;
+	inline bool NormalCrate = false;
+	inline bool MinicopterEsp = false;
+=======
 	inline bool OnlyGloves = false;
 	inline bool OnlyHands = false;
 	inline bool BradleyAPC = false;
 	inline bool ThugBoat = false;
 	inline bool BasicCrate = false;
 	inline bool NormalCrate = false;
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
 	inline bool LootBarrel = false;
+<<<<<<< HEAD
+	inline bool OilBarrel = false;
+	inline bool ThugBoat = false;
+
+
+=======
+>>>>>>> 106ea80c5224b90737646fe9eb32489d6a7596fe
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;
