@@ -192,8 +192,10 @@ bool can_manipulate(AssemblyCSharp::BasePlayer* ply, Vector3 pos, float mm_eye =
 			//if (!EyeHack().ValidateEyePos(Features().LocalPlayer, re_p + a))
 			//	return false;
 
-			//if (!AssemblyCSharp::IsVisible(p, Features().CachedBulletTPPosition))
-			//	return false;
+			if (!m_settings::BehindWall) {
+				if (!AssemblyCSharp::IsVisible(p, Features().CachedBulletTPPosition))
+					return false;
+			}
 
 			if (m_settings::DrawManipPoints)
 				UnityEngine::DDraw().Sphere(p, 0.05f, Color::Red(), 0.02f, 10);

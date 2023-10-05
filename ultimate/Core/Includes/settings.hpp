@@ -26,6 +26,7 @@ namespace m_settings {
 	inline bool AimbotNPC = false;
 	inline bool RaidESP = false;
 	inline bool ShowRocket = false;
+	inline bool BehindWall = false;
 	inline bool ShowC4 = false;
 	inline bool ShowSatchel = false;
 	inline bool ShowExplosiveAmmo = false;

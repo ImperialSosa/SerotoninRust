@@ -149,6 +149,9 @@ void MenuDraw::RenderMenu()
 								Menu().CheckBox(XS("AdvancedCaching (Saves FPS)"), m_settings::AdvancedChecks);
 							}
 						}
+						if (m_settings::BulletTP && m_settings::Manipulation) {
+							Menu().CheckBox(XS("BehindWall (FPS)"), m_settings::BehindWall);
+						}
 						Menu().CheckBox(XS("AutoStop"), m_settings::StopPlayer);
 
 						Menu().CheckBox(XS("PierceMaterials"), m_settings::PierceMaterials);
