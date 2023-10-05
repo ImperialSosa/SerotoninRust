@@ -1156,11 +1156,13 @@ namespace UnityEngine
 		return Call<GUISkin*>(ToAddress(get_skin), vPos, vPosB, headSize, color, fDuration, false, false);
 	}
 
+
 	void DDraw::Sphere(Vector3 vPos, float fRadius, Color color, float fDuration, bool distanceFade)
 	{
-		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Sphere"), 6)));
+		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Sphere"), 6)));
 		return Call<void>(ToAddress(get_skin), vPos, fRadius, color, fDuration, distanceFade, false);
 	}
+
 
 	void DDraw::Line(Vector3 vPos, Vector3 vPosB, Color color, float fDuration, bool fade, bool ztest)
 	{
