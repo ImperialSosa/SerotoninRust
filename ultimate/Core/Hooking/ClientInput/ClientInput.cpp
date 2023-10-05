@@ -585,8 +585,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	if (m_settings::Autoshoot) {
 
 		if (m_settings::BehindWall) {
-			if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting) {
-				if (m_settings::Manipulation && m_settings::BulletTP)
+			if (m_settings::Manipulation && m_settings::BulletTP) {
+				if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
 					StartShooting = true;
 				else
 					StartShooting = false;
