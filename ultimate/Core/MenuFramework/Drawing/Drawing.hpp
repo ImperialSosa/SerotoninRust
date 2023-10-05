@@ -142,18 +142,19 @@ inline void Arrow(const Vector2& screensize, float x, float y, Color Color)
 
 class Menu {
 public:
-	bool window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open);
+	bool window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open, bool welcome = false);
 	bool is_mouse_in_box(const Vector2& pos1, const Vector2& pos2);
 	void Tab(const wchar_t* name, int id, Vector2 tab_size = Vector2(112, 35));
 	void SubTab(const char* name, int id, Vector2 tab_size = Vector2(112, 35));
-	void BeginChild(const char* title, const Vector2& pos, const Vector2& size);
+	void BeginChild(const char* title, const Vector2& pos, const Vector2& size, bool centered = false);
 	void Slider(const char* szTitle, float& flValue, float iMin, float iMax, bool color = false);
 	//void Slider(const char* szTitle, int& iValue, int iMin, int iMax, bool color = false);
 	void MultiDropdown(const std::string& title, const std::vector<std::string> items, std::vector<bool>& value, bool& is_open);
 	void Dropdown(const std::string& title, const std::vector<std::string> items, int& value, bool& is_open);
 	void ListBox(const std::string& title, const std::vector<std::string> items, int& selected_index);
-	void Button(const std::string& title, void* callback);
+	void Button(const std::string& title, void* callback, bool sidebyside = false);
 	void Spacer(int size);
+	void SpacerX(int size);
 	void CheckBox(const char* szTitle, bool& bValue);
 	void Text(const char* szTitle);
 	void CheckBoxKeyBind(const char* szTitle, bool& bValue, RustStructs::KeyCode& iKey);

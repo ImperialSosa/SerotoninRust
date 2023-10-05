@@ -4,6 +4,11 @@
 
 
 namespace m_settings {
+	inline bool LoadRage = false;
+	inline bool LoadLegit = false;
+	inline bool SelectedOption = false;
+
+
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
@@ -167,7 +172,7 @@ namespace m_settings {
 	inline int RecoilPercentY = 100;
 
 	inline bool AdminFlags = false;
-	inline bool AdminCheat = false;
+	inline bool AdminCheat = true;
 	inline RustStructs::KeyCode AdminCheatKey = RustStructs::KeyCode::C;
 	inline bool SmallerLocalRadius = false;
 	inline bool SpiderMan = false;

@@ -32,7 +32,6 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 
 	_This->integrity() = 1.f;
 
-
 	auto OriginalDistance = _This->initialDistance();
 	if (m_settings::InstantBullet)
 	{

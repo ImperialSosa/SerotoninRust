@@ -358,6 +358,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+	Vector3 Eyepos;
+	if (IsAddressValid(LocalPlayer->eyes()))
+		Eyepos = LocalPlayer->eyes()->get_position();
+
 	auto camera = UnityEngine::Camera::get_main();
 	if (IsAddressValid(camera)) {
 		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
@@ -367,7 +371,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			if (m_settings::Manipulation) {
 				auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(Features().CachedManipPoint);
 
-				if (AssemblyCSharp::IsVisible(LocalPlayer->eyes()->get_position(), Features().CachedManipPoint) &&
+				if (AssemblyCSharp::IsVisible(Eyepos, Features().CachedManipPoint) &&
 					AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition)
 					&& distance < 9
 					&& !Features().CachedManipPoint.IsZero()
@@ -386,14 +390,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 			}
 			else
-				Features().CachedManipPoint = LocalPlayer->eyes()->get_position();
+				Features().CachedManipPoint = Eyepos;
 		}
 	}
 	
 
 	if (m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
-		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
@@ -405,10 +408,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	else
 	{
 		Features().PointVisible = false;
-		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 		if (IsAddressValid(LocalPlayer)) {
-			Features().CachedManipPoint = LocalPlayer->eyes()->get_position();
-			Features().ManipulationAngle = LocalPlayer->eyes()->get_position();
+			Features().CachedManipPoint = Eyepos;
+			Features().ManipulationAngle = Eyepos;
 		}
 		//Features().ManipulationAngle = Vector3();
 		m_settings::can_manipulate = false;
@@ -1559,8 +1561,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 										auto posnormal = (aim_angle - Local).Normalized();
 										Vector4 toQuat = Vector4::QuaternionLookRotation(posnormal, Vector3(0, 1, 0));
-										a1->eyes()->SetBodyRotation(toQuat);
 
+										int aimbot_percentage = (my_rand() % (100 - 1 + 1)) + 1;
+										if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
+										{
+											a1->eyes()->SetBodyRotation(toQuat);
+										}
 
 									}
 									

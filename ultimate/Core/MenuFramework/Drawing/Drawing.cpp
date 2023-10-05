@@ -307,7 +307,7 @@ inline const char* GetKey(RustStructs::KeyCode iKey)
 	return str;
 }
 
-bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open)
+bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open, bool welcome)
 {
 	if (!sex) {
 		window_pos = pos;
@@ -358,16 +358,22 @@ bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos,
 
 	if (menu_event == RustStructs::EventType::Repaint && is_menu_open)
 	{
+		if (!welcome) {
+			/* BackGround */
+			UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos + window_size), Color(22.f, 22.f, 22.f, 255.f).GetUnityColor());
 
-		/* BackGround */
-		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos + window_size), Color(22.f, 22.f, 22.f, 255.f).GetUnityColor());
+			/* Side + Top bar */
+			UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + window_size.x, window_pos.y + 35), Color(28, 28, 28, 255.f).GetUnityColor());
+			UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + 50, window_pos.y + window_size.y), Color(28, 28, 28, 255.f).GetUnityColor());
 
-		/* Side + Top bar */
-		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + window_size.x, window_pos.y + 35), Color(28, 28, 28, 255.f).GetUnityColor());
-		UnityEngine::GL().RectangleFilled(Vector2(window_pos), Vector2(window_pos.x + 50, window_pos.y + window_size.y), Color(28, 28, 28, 255.f).GetUnityColor());
+			/* BackGround Outline */
+			UnityEngine::GL().Rectangle(Vector2(window_pos), Vector2(window_pos + window_size), Color(0, 0, 0, 255.f).GetUnityColor());
+		}
 
-		/* BackGround Outline */
-		UnityEngine::GL().Rectangle(Vector2(window_pos), Vector2(window_pos + window_size), Color(0, 0, 0, 255.f).GetUnityColor());
+		if (welcome) {
+			UnityEngine::GL().RectangleFilled(Vector2(window_pos.x + 40, window_pos.y + 25), Vector2(window_pos.x + window_size.x + 10, window_pos.y + window_size.y + 10), Color(22.f, 22.f, 22.f, 255.f).GetUnityColor());
+
+		}
 	}
 	next_tab_pos = { window_pos.x, window_pos.y + 55 };
 	next_subtab_pos = { window_pos.x + 50, window_pos.y };
@@ -510,7 +516,7 @@ void Menu::SubTab(const char* name, int id, Vector2 tab_size) {
 	next_subtab_pos.x += tab_size.x; //112
 }
 
-void Menu::BeginChild(const char* title, const Vector2& pos, const Vector2& size)
+void Menu::BeginChild(const char* title, const Vector2& pos, const Vector2& size, bool centered)
 {
 	if (!is_menu_open)
 		return;
@@ -522,7 +528,10 @@ void Menu::BeginChild(const char* title, const Vector2& pos, const Vector2& size
 		UnityEngine::GL().RectangleFilled(Vector2(window_pos + pos), Vector2(window_pos + pos + size), Color(28, 28, 28, 255.f).GetUnityColor());
 		UnityEngine::GL().Rectangle(Vector2(window_pos + pos), Vector2(window_pos + pos + size), AccentColor.GetUnityColor());
 
-		UnityEngine::GL().MenuText(Vector2(window_pos.x + pos.x + 15.f, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
+		if (centered)
+			UnityEngine::GL().MenuText(Vector2(window_pos.x + 20.f + size.x / 2, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
+		else
+			UnityEngine::GL().MenuText(Vector2(window_pos.x + pos.x + 15.f, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
 	}
 	next_item_pos = { window_pos.x + pos.x + 10, window_pos.y + pos.y + 15 };
 }
@@ -613,6 +622,14 @@ void Menu::Hotkey(const char* szTitle, RustStructs::KeyCode& iKey)
 	next_item_pos.y += 50;
 }
 
+void Menu::SpacerX(int size)
+{
+	if (!is_menu_open)
+		return;
+
+	next_item_pos.x += size;
+}
+
 void Menu::Spacer(int size)
 {
 	if (!is_menu_open)
@@ -621,7 +638,7 @@ void Menu::Spacer(int size)
 	next_item_pos.y += size;
 }
 
-void Menu::Button(const std::string& title, void* callback) {
+void Menu::Button(const std::string& title, void* callback, bool sidebyside) {
 	if (!is_menu_open)
 		return;
 
@@ -636,15 +653,18 @@ void Menu::Button(const std::string& title, void* callback) {
 
 	const auto wstring = std::string(title.begin(), title.end());
 
-	if (menu_event == RustStructs::EventType::Repaint)
+	if (menu_event == RustStructs::EventType::Repaint) {
 		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), txt.GetUnityColor());
-
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(0, 0, 0, 255.f).GetUnityColor());
+	}
 
 	if (is_mouse_in_box({ next_item_pos.x - 25, next_item_pos.y + 16 }, { next_item_pos.x - 25 + 196, next_item_pos.y + 16 + 20 }) && mouse_state && !old_mouse_state)
 	{
-		if (menu_event == RustStructs::EventType::Repaint)
+		if (menu_event == RustStructs::EventType::Repaint) {
 			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(23, 23, 23, 255.f).GetUnityColor());
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(0, 0, 0, 255.f).GetUnityColor());
 
+		}
 
 		if (callback != 0x0)
 			reinterpret_cast<void(*)(void)>(callback)();
@@ -657,7 +677,11 @@ void Menu::Button(const std::string& title, void* callback) {
 		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 140 / 2, next_item_pos.y + 27), Color::White(), Color::Black(), wstring.c_str(), true);
 	}
 
-	next_item_pos.y += 25;
+	if (sidebyside) {
+		next_item_pos.x += 150;
+	}
+	else
+		next_item_pos.y += 25;
 }
 
 void Menu::ListBox(const std::string& title, const std::vector<std::string> items, int& selected_index)

@@ -1451,7 +1451,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		{
 			TextDrawBegin();
 
-			MenuDraw().RenderMenu();
+			if (!m_settings::SelectedOption)
+				MenuDraw().RenderOptions();
+			else if (m_settings::LoadLegit)
+				MenuDraw().RenderLegitMenu();
+			else if (m_settings::LoadRage)
+				MenuDraw().RenderMenu();
 
 			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{

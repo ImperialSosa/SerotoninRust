@@ -5,4 +5,6 @@ class MenuDraw {
 public:
 
 	void RenderMenu();
+	void RenderLegitMenu();
+	void RenderOptions();
 };
