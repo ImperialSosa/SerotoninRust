@@ -1229,3 +1229,21 @@ void Buttons::ClearLOSPoints() {
     const auto string = std::wstring(XS(L"[Serotonin] Reset LOS Points!"));
     notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
 }
+
+void Buttons::LoadLegitCheat() {
+    m_settings::LoadLegit = true;
+    m_settings::LoadRage = false;
+    m_settings::SelectedOption = true;
+
+    const auto string = std::wstring(XS(L"[Serotonin] Loaded Legit Menu!"));
+    notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+}
+
+void Buttons::LoadRageCheat() {
+    m_settings::LoadLegit = false; 
+    m_settings::LoadRage = true; 
+    m_settings::SelectedOption = true; 
+
+    const auto string = std::wstring(XS(L"[Serotonin] Loaded Rage Menu!"));
+    notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+}

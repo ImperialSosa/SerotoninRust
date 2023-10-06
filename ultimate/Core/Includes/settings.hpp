@@ -4,6 +4,11 @@
 
 
 namespace m_settings {
+	inline bool LoadRage = false;
+	inline bool LoadLegit = false;
+	inline bool SelectedOption = false;
+
+
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
@@ -167,7 +172,7 @@ namespace m_settings {
 	inline int RecoilPercentY = 100;
 
 	inline bool AdminFlags = false;
-	inline bool AdminCheat = false;
+	inline bool AdminCheat = true;
 	inline RustStructs::KeyCode AdminCheatKey = RustStructs::KeyCode::C;
 	inline bool SmallerLocalRadius = false;
 	inline bool SpiderMan = false;
@@ -360,6 +365,7 @@ namespace m_settings {
 
 	inline bool OnlyGloves = false;
 	inline bool OnlyHands = false;
+	inline bool OnlyWeapon = false;
 	inline bool MilitaryCrate = false;
 	inline bool EliteCrate = false;
 	inline bool SupplyDrop = false;
@@ -369,7 +375,7 @@ namespace m_settings {
 	inline bool ThugBoat = false;
 
 
-
+	inline bool IgnoreArms = false;
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;

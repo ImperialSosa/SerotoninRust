@@ -13,4 +13,6 @@ class Buttons {
 public:
 	static void ClearRaidCache();
 	static void ClearLOSPoints();
+	static void LoadLegitCheat();
+	static void LoadRageCheat();
 };

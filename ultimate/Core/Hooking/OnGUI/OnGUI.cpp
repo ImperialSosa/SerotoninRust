@@ -78,7 +78,7 @@ void ConnectorClient()
 				static bool ReceivedFile3 = false;
 				static bool ReceivedFile4 = false;
 				static bool ReceivedFile5 = false;
-
+				static bool ReceivedFile6 = false;
 				//request your uploaded file anytime else
 				if (!ReceivedFile1)
 				{
@@ -94,7 +94,7 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "IconsBundle"; //Value has to be identical to the uploaded name
+					msg.value = "SeroIcon"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent = true;
@@ -105,7 +105,7 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "FireBundleA"; //Value has to be identical to the uploaded name
+					msg.value = "IconsBundle"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent2 = true;
@@ -116,7 +116,7 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "FireBundleB"; //Value has to be identical to the uploaded name
+					msg.value = "FireBundleA"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent3 = true;
@@ -127,10 +127,21 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "ColorBundle"; //Value has to be identical to the uploaded name
+					msg.value = "FireBundleB"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent4 = true;
+				}
+
+				static bool DataSent5 = false;
+				if (ReceivedFile6 && !DataSent5)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "ColorBundle"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent5 = true;
 				}
 
 				net->shared_files_mutex_.lock();
@@ -157,7 +168,7 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							MenuIconBundles = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							SerotoninIconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile3 = true;
 							ReceivedFile2 = false;
@@ -170,7 +181,7 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							FireBundleA = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							MenuIconBundles = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile4 = true;
 							ReceivedFile3 = false;
@@ -183,7 +194,7 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							FireBundleB = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							FireBundleA = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile5 = true;
 							ReceivedFile4 = false;
@@ -196,9 +207,22 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							FireBundleB = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile6 = true;
+							ReceivedFile5 = false;
+						}
+
+						if (ReceivedFile6 && DataSent5)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
 							ColorBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
-							ReceivedFile5 = false;
+							ReceivedFile6 = false;
 						}
 					}
 				}
@@ -1451,7 +1475,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		{
 			TextDrawBegin();
 
-			MenuDraw().RenderMenu();
+			if (!m_settings::SelectedOption)
+				MenuDraw().RenderOptions();
+			else if (m_settings::LoadLegit)
+				MenuDraw().RenderLegitMenu();
+			else if (m_settings::LoadRage)
+				MenuDraw().RenderMenu();
 
 			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{
@@ -1563,6 +1592,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		MenuIconBundles->Unload(true);
 		MenuIconBundles = nullptr;
+
+		SerotoninIconBundle->Unload(true);
+		SerotoninIconBundle = nullptr;
 
 		/* Chams */
 		{
