@@ -56,19 +56,26 @@ void MenuDraw::RenderOptions()
 
 	menu_event = m_Event->Type();
 
-	main_menu_open = Menu().window(m_Event, XS(L"Rust Cheat"), { 50, 50 }, { 517, 343 }, false, true);
+	main_menu_open = Menu().window(m_Event, XS(L"Rust Cheat"), { 50, 50 }, { 520, 350 }, false, true);
+
+	Vector2 IconSize = { 256, 256 };
 
 	if (main_menu_open) {
 
-		Menu().BeginChild(XS("Serotonin"), { 60,45 }, { 450,290 }, true);
+		Menu().BeginChild(XS("Serotonin"), { 60,45 }, { 451,296 }, true);
 		{
-			Menu().Spacer(15);
+			
+			Menu().DrawLogo(Vector2(156, 30), Vector2(IconSize), Color::White(), true);
 
-			Menu().Text(XS("	     Please Select a version you would like to load"));
+			Menu().Spacer(210);
 
-			Menu().SpacerX(65);
-			Menu().Button(XS("LoadLegit"), Buttons::LoadLegitCheat, true);
+			Menu().Text(XS("Please Select a version you would like to load"), true); //	     
+
+			Menu().SpacerX(70);
+			Menu().Button(XS("LoadLegit"), Buttons::LoadLegitCheat, true); //450 / 2 - (spacer: 5)
 			Menu().Button(XS("LoadRage"), Buttons::LoadRageCheat);
+
+			
 		}		
 	}
 
@@ -102,6 +109,7 @@ void MenuDraw::RenderLegitMenu()
 	main_menu_open = Menu().window(m_Event, XS(L"Rust Cheat"), { 50, 50 }, { 517, 343 }, false);
 
 	if (main_menu_open) {
+
 		Menu().Tab(XS(L"Aimbot"), 0, Vector2(112, 35));
 		Menu().Tab(XS(L"Esp"), 1, Vector2(112, 35));
 		Menu().Tab(XS(L"Misc"), 2, Vector2(112, 35));

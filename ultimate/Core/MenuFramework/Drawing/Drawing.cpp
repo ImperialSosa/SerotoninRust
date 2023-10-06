@@ -380,6 +380,24 @@ bool Menu::window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos,
 	return true;
 }
 
+void Menu::DrawLogo(Vector2 pos, Vector2 size, Color col, bool AttachedToMenu) {
+
+	if (!is_menu_open)
+		return;
+
+	if (menu_event == RustStructs::EventType::Repaint)
+	{
+		const char* icon1 = "sero-removebg-preview 1.png";
+
+		auto texture = SerotoninIconBundle->LoadAsset<UnityEngine::Texture2D>(icon1, (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+
+		if (AttachedToMenu)
+			UnityEngine::GL().DrawIcon(Vector2(window_pos.x + pos.x, window_pos.y + pos.y), Vector2(size), texture, col);
+		else
+			UnityEngine::GL().DrawIcon(Vector2(pos), Vector2(size), texture, col);
+	}
+}
+
 void Menu::end_window() {
 	if (!mouse_state) {
 		IsInteractingWidthObject = false;
@@ -529,7 +547,7 @@ void Menu::BeginChild(const char* title, const Vector2& pos, const Vector2& size
 		UnityEngine::GL().Rectangle(Vector2(window_pos + pos), Vector2(window_pos + pos + size), AccentColor.GetUnityColor());
 
 		if (centered)
-			UnityEngine::GL().MenuText(Vector2(window_pos.x + 20.f + size.x / 2, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
+			UnityEngine::GL().MenuText(Vector2(window_pos.x + pos.x + size.x / 2, window_pos.y + pos.y), AccentColor.GetUnityColor(), Color::Black(), title, true);
 		else
 			UnityEngine::GL().MenuText(Vector2(window_pos.x + pos.x + 15.f, window_pos.y + pos.y - 10.f), AccentColor.GetUnityColor(), Color::Black(), title, false);
 	}
@@ -642,11 +660,11 @@ void Menu::Button(const std::string& title, void* callback, bool sidebyside) {
 	if (!is_menu_open)
 		return;
 
-	if (is_mouse_in_box({ next_item_pos.x - 25, next_item_pos.y + 16 }, { next_item_pos.x - 25 + 196, next_item_pos.y + 16 + 20 }) && mouse_state) {
+	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y }, { next_item_pos.x + 140, next_item_pos.y + 20 }) && mouse_state) {
 		IsInteractingWidthObject = true;
 	}
 
-	bool isHovered = is_mouse_in_box({ next_item_pos.x - 25, next_item_pos.y + 16 }, { next_item_pos.x - 25 + 196, next_item_pos.y + 16 + 20 });
+	bool isHovered = is_mouse_in_box({ next_item_pos.x, next_item_pos.y }, { next_item_pos.x + 140, next_item_pos.y + 20 });
 
 	Color txt = isHovered ? Color(23, 23, 23, 255.f) : Color(61, 61, 61, 255.f);
 
@@ -654,15 +672,15 @@ void Menu::Button(const std::string& title, void* callback, bool sidebyside) {
 	const auto wstring = std::string(title.begin(), title.end());
 
 	if (menu_event == RustStructs::EventType::Repaint) {
-		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), txt.GetUnityColor());
-		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(0, 0, 0, 255.f).GetUnityColor());
+		UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y), Vector2(next_item_pos.x + 140, next_item_pos.y + 20), txt.GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y), Vector2(next_item_pos.x + 140, next_item_pos.y + 20), Color(0, 0, 0, 255.f).GetUnityColor());
 	}
 
-	if (is_mouse_in_box({ next_item_pos.x - 25, next_item_pos.y + 16 }, { next_item_pos.x - 25 + 196, next_item_pos.y + 16 + 20 }) && mouse_state && !old_mouse_state)
+	if (is_mouse_in_box({ next_item_pos.x, next_item_pos.y }, { next_item_pos.x + 140, next_item_pos.y + 20 }) && mouse_state && !old_mouse_state)
 	{
 		if (menu_event == RustStructs::EventType::Repaint) {
-			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(23, 23, 23, 255.f).GetUnityColor());
-			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(0, 0, 0, 255.f).GetUnityColor());
+			UnityEngine::GL().RectangleFilled(Vector2(next_item_pos.x, next_item_pos.y), Vector2(next_item_pos.x + 140, next_item_pos.y + 20), Color(23, 23, 23, 255.f).GetUnityColor());
+			UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y), Vector2(next_item_pos.x + 140, next_item_pos.y + 20), Color(0, 0, 0, 255.f).GetUnityColor());
 
 		}
 
@@ -672,9 +690,9 @@ void Menu::Button(const std::string& title, void* callback, bool sidebyside) {
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y + 16), Vector2(next_item_pos.x + 140, next_item_pos.y + 36), Color(52, 52, 52, 255.f).GetUnityColor());
+		UnityEngine::GL().Rectangle(Vector2(next_item_pos.x, next_item_pos.y), Vector2(next_item_pos.x + 140, next_item_pos.y + 20), Color(52, 52, 52, 255.f).GetUnityColor());
 
-		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 140 / 2, next_item_pos.y + 27), Color::White(), Color::Black(), wstring.c_str(), true);
+		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 140 / 2, next_item_pos.y + 11), Color::White(), Color::Black(), wstring.c_str(), true);
 	}
 
 	if (sidebyside) {
@@ -723,7 +741,7 @@ void Menu::ListBox(const std::string& title, const std::vector<std::string> item
 	next_item_pos.y += (items.size() * 18) + 10.f;
 }
 
-void Menu::Text(const char* szTitle) {
+void Menu::Text(const char* szTitle, bool centered) {
 	if (!is_menu_open)
 		return;
 
@@ -740,7 +758,10 @@ void Menu::Text(const char* szTitle) {
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 17, next_item_pos.y - 4), Color::White(), Color::Black(), szTitle, false);
+		if (centered)
+			UnityEngine::GL().MenuText(Vector2(window_pos.x + window_sizemain.x / 2 + 23, next_item_pos.y - 4), Color::White(), Color::Black(), szTitle, true);
+		else
+			UnityEngine::GL().MenuText(Vector2(next_item_pos.x + 17, next_item_pos.y - 4), Color::White(), Color::Black(), szTitle, false);
 	}
 	next_item_pos.y += 15;
 }

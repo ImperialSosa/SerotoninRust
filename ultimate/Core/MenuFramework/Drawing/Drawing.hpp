@@ -143,6 +143,7 @@ inline void Arrow(const Vector2& screensize, float x, float y, Color Color)
 class Menu {
 public:
 	bool window(UnityEngine::Event* event, wchar_t* title, const Vector2& pos, const Vector2& window_size, bool always_open, bool welcome = false);
+	void DrawLogo(Vector2 pos, Vector2 size, Color selectedColor, bool AttachedToMenu = false);
 	bool is_mouse_in_box(const Vector2& pos1, const Vector2& pos2);
 	void Tab(const wchar_t* name, int id, Vector2 tab_size = Vector2(112, 35));
 	void SubTab(const char* name, int id, Vector2 tab_size = Vector2(112, 35));
@@ -156,7 +157,7 @@ public:
 	void Spacer(int size);
 	void SpacerX(int size);
 	void CheckBox(const char* szTitle, bool& bValue);
-	void Text(const char* szTitle);
+	void Text(const char* szTitle, bool centered = false);
 	void CheckBoxKeyBind(const char* szTitle, bool& bValue, RustStructs::KeyCode& iKey);
 	void ColorPicker(const wchar_t* name, Color selectedColor);
 	void Hotkey(const char* szTitle, RustStructs::KeyCode& iKey);

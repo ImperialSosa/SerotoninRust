@@ -3517,3 +3517,4 @@ namespace UnityEngineNetworking {
 }
 
 inline UnityEngine::AssetBundle* MenuIconBundles = nullptr;
+inline UnityEngine::AssetBundle* SerotoninIconBundle = nullptr;
