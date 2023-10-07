@@ -1093,23 +1093,23 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						{
 							if (!StoreOrig)
 							{
-								orig[0] = newRecoilOverride->recoilYawMin();
-								orig[1] = newRecoilOverride->recoilYawMax();
-								orig[2] = newRecoilOverride->recoilPitchMin();
-								orig[3] = newRecoilOverride->recoilPitchMax();
-								orig[4] = newRecoilOverride->ADSScale();
-								orig[5] = newRecoilOverride->movementPenalty();
+								orig[0] = RecoilProperties->recoilYawMin();
+								orig[1] = RecoilProperties->recoilYawMax();
+								orig[2] = RecoilProperties->recoilPitchMin();
+								orig[3] = RecoilProperties->recoilPitchMax();
+								orig[4] = RecoilProperties->ADSScale();
+								orig[5] = RecoilProperties->movementPenalty();
 
 								StoreOrig = true;
 							}
 
 							const float amount = m_settings::recoilPercent / 100;
-							newRecoilOverride->recoilYawMin() = orig[0] * amount;
-							newRecoilOverride->recoilYawMax() = orig[1] * amount;
-							newRecoilOverride->recoilPitchMin() = orig[2] * amount;
-							newRecoilOverride->recoilPitchMax() = orig[3] * amount;
-							newRecoilOverride->ADSScale() = orig[4] * amount;
-							newRecoilOverride->movementPenalty() = orig[5] * amount;
+							RecoilProperties->recoilYawMin() = orig[0] * amount;
+							RecoilProperties->recoilYawMax() = orig[1] * amount;
+							RecoilProperties->recoilPitchMin() = orig[2] * amount;
+							RecoilProperties->recoilPitchMax() = orig[3] * amount;
+							RecoilProperties->ADSScale() = orig[4] * amount;
+							RecoilProperties->movementPenalty() = orig[5] * amount;
 						}
 					}
 				}
