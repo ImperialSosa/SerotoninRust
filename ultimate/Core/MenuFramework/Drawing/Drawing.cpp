@@ -387,7 +387,7 @@ void Menu::DrawLogo(Vector2 pos, Vector2 size, Color col, bool AttachedToMenu) {
 
 	if (menu_event == RustStructs::EventType::Repaint)
 	{
-		const char* icon1 = "sero-removebg-preview 1.png";
+		const char* icon1 = XS("sero-removebg-preview 1.png");
 
 		auto texture = SerotoninIconBundle->LoadAsset<UnityEngine::Texture2D>(icon1, (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
 
