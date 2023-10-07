@@ -109,6 +109,8 @@ public:
 	IL2CPP_FIELD(float, penetrationPower);
 	IL2CPP_FIELD(int, seed);
 	IL2CPP_FIELD(float, flybySoundDistance);
+	IL2CPP_FIELD(float, swimRandom);
+	IL2CPP_FIELD(Vector3, swimSpeed);
 
 	IL2CPP_FIELD(int, projectileID);
 	IL2CPP_FIELD(float, initialDistance);
@@ -497,6 +499,19 @@ public:
 
 		if (!pr->isAuthoritative())
 			return false;
+
+
+		if (pr->swimScale() != Vector3(0.f,0.f,0.f))
+		{
+			if (pr->swimRandom() == 0.f)
+			{
+				pr->swimRandom() = UnityEngine::Random::Range(0.f, 20.f);
+			}
+			float num = UnityEngine::Time::get_time() + pr->swimRandom();
+			Vector3 vector = Vector3(Math::sinf(num * pr->swimSpeed().x) * pr->swimScale().x, Math::cosf(num * pr->swimSpeed().y) * pr->swimScale().y, Math::cosf(num * pr->swimSpeed().z) * pr->swimScale().z);
+			vector = pr->get_transform()->InverseTransformDirection(vector);
+			pr->currentVelocity() += vector;
+		}
 
 		Vector3 a = currentVelocity() * deltaTime;
 		float magnitude = a.Length();

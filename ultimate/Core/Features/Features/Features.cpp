@@ -1152,7 +1152,7 @@ auto Features::AutoShoot(AssemblyCSharp::BaseProjectile* BaseProjectile) -> void
 			}
 			else if (m_settings::AlwaysAutoshoot)
 			{
-				if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->ManipulationAngle, this->BulletTPAngle))
+				if (AssemblyCSharp::IsVisible(AssemblyCSharp::LocalPlayer::get_Entity()->eyes()->get_position() + this->CachedManipPoint, this->CachedBulletTPPosition))
 				{
 					CalledLaunchFromHook = true;
 					BaseProjectile->DoAttackRecreation();

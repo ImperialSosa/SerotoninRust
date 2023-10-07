@@ -97,7 +97,7 @@ void Configs::LoadConfig()
     m_settings::BaseCheck = config.value(XS("BaseCheck"), m_settings::BaseCheck);
     m_settings::BulletTracers = config.value(XS("BulletTracers"), m_settings::BulletTracers);
     m_settings::SelectedHitbox = config.value(XS("SelectedHitbox"), m_settings::SelectedHitbox);
-    m_settings::BulletTPIntensity = config.value(XS("BulletTPIntensity"), m_settings::BulletTPIntensity);
+  //  m_settings::BulletTPIntensity = config.value(XS("BulletTPIntensity"), m_settings::BulletTPIntensity);
     m_settings::AutoReload = config.value(XS("AutoReload"), m_settings::AutoReload);
     m_settings::HeliHitboxOverride = config.value(XS("HeliHitboxOverride"), m_settings::HeliHitboxOverride);
     m_settings::Aimline = config.value(XS("Aimline"), m_settings::Aimline);
@@ -791,7 +791,7 @@ void Configs::SaveConfig()
     config[XS("BaseCheck")] = m_settings::BaseCheck;
     config[XS("BulletTracers")] = m_settings::BulletTracers;
     config[XS("SelectedHitbox")] = m_settings::SelectedHitbox;
-    config[XS("BulletTPIntensity")] = m_settings::BulletTPIntensity;
+   // config[XS("BulletTPIntensity")] = m_settings::BulletTPIntensity;
     config[XS("AutoReload")] = m_settings::AutoReload;
     config[XS("HeliHitboxOverride")] = m_settings::HeliHitboxOverride;
     config[XS("Aimline")] = m_settings::Aimline;

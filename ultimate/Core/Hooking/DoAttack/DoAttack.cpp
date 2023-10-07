@@ -43,6 +43,7 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 	while (_This->IsAlive() && (_This->traveledDistance() < _This->initialDistance() || _This->traveledTime() < 0.1f))
 	{
 
+
 		Vector3 previous_position = _This->previousPosition();
 		if (_This->traveledTime() != 0.f)
 			_This->previousPosition() = _This->currentPosition();

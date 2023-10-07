@@ -243,6 +243,39 @@ namespace CIl2Cpp {
 	}
 
 
+
+	inline const MethodInfo* FindMethodWithName(const Il2CppClass* object, std::uint64_t name_hash, std::uint8_t params_count /* = 0 */, const char* param_name)
+	{
+		auto super = object;
+
+		while (IsAddressValid(super))
+		{
+			auto iterator = static_cast<void*>(nullptr);
+			auto method = il2cpp_class_get_methods(const_cast<Il2CppClass*>(super), &iterator);
+
+			while (IsAddressValid(method))
+			{
+				if (Hash(method->name, true) == name_hash)
+				{
+					if (method->parameters_count == params_count)
+					{
+						if (method->parameters->name == param_name)
+						{
+							return method;
+						}
+						
+					}
+				}
+
+				method = il2cpp_class_get_methods(const_cast<Il2CppClass*>(super), &iterator);
+			}
+
+			super = super->parent;
+		}
+
+		return nullptr;
+	}
+
 	inline const MethodInfo* FindMethod(const Il2CppClass* object, std::uint64_t name_hash, std::uint8_t params_count /* = 0 */)
 	{
 		auto super = object;

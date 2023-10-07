@@ -666,6 +666,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(uint64_t, HitBone);
 		IL2CPP_FIELD(uint64_t, ProjectileID);
 		IL2CPP_FIELD(BaseEntity*, Initiator);
+		IL2CPP_FIELD(BaseEntity*, HitEntity);
 
 		IL2CPP_FIELD(Vector3, HitPositionWorld);
 

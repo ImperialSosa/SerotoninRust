@@ -1197,9 +1197,6 @@ void MenuDraw::RenderMenu()
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("DisableHitSounds"), m_settings::DisableHitSounds);
-						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
-						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
 						Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
 						if (m_settings::WeaponSpammer) {
 							Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
