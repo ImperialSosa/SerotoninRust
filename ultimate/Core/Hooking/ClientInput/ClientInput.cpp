@@ -521,14 +521,19 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-	if (CalledLaunchFromHook)
+	//if (m_settings::SnickerBullet)
+	//{
+	//	//AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 0"), nullptr);
+	//}
+
+	/*if (CalledLaunchFromHook)
 	{
 		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 0"), nullptr);
 	}
 	else
 	{
 		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.prediction 1"), nullptr);
-	}
+	}*/
 
 	if (IsAddressValid(camera)) {
 		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
@@ -583,10 +588,36 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+
 	static bool StartShooting = false;
 
 	if (m_settings::Autoshoot) {
 
+		if (m_settings::BehindWall) {
+			if (m_settings::Manipulation && m_settings::BulletTP) {
+				if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
+					StartShooting = true;
+				else
+					StartShooting = false;
+			}
+		}
+		else if (m_settings::Thickbullet_AutoShoot) {
+			if (m_settings::BulletTP)
+				StartShooting = true;
+			else
+				StartShooting = false;
+		}
+		else if (m_settings::StartShooting) {
+			if (m_settings::Manipulation)
+				StartShooting = true;
+			else
+				StartShooting = false;
+		}
+		else
+			StartShooting = false;
+	}
+	else if (m_settings::InstantKill)
+	{
 		if (m_settings::BehindWall) {
 			if (m_settings::Manipulation && m_settings::BulletTP) {
 				if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)

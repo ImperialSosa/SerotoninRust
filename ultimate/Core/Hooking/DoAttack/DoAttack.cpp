@@ -22,6 +22,7 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 		return;
 
 
+
 	float Thickness = m_settings::NormalThickBulletThickness / 10;
 	if (m_settings::NormalThickBullet)
 		_This->thickness() = Thickness;
@@ -79,7 +80,7 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 		transform->set_rotation(Vector4::QuaternionLookRotation(_This->currentVelocity(), { 0.f, 1.f, 0.f }));
 	}
 
-	if (_This->integrity() <= 0.01f || _This->maxDistance() <= _This->traveledDistance() || _This->traveledTime() > 8.f)
+	if (_This->integrity() < 0.01f || _This->maxDistance() <= _This->traveledDistance() || _This->traveledTime() > 8.f)
 		_This->Retire();
 
 

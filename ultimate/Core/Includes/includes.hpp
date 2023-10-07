@@ -130,7 +130,7 @@ inline uintptr_t m_steam_api;
 inline uintptr_t m_steam_client;
 
 inline bool InGame = false;
-
+inline bool ToBeCalled = false;
 #include "../Il2Cpp/il2cpp-api.hpp"
 #include "../Il2Cpp/il2cpp-api-types.hpp"
 #include "../Il2Cpp/il2cpp-blob.hpp"

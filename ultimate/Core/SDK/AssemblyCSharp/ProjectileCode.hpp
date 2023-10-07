@@ -663,13 +663,14 @@ public:
 			}
 		}
 
-		if (this->IsAlive())
+		if (this->integrity() > 0.001 && this->maxDistance() > this->traveledDistance())
 		{
 			if (flag && traveledTime() < num3)
 			{
 				DoMovement(num3 - traveledTime(), this);
 				return false;
 			}
+
 
 			if (!flag && this->IsAlive()) {
 				float magnitude3 = (vec3 - currentPosition()).Length();

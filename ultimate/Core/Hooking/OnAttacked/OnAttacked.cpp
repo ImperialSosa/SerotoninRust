@@ -100,11 +100,13 @@ void Hooks::OnAttacked(AssemblyCSharp::BasePlayer* instance, AssemblyCSharp::Hit
 
 	if (m_settings::HitboxOverride)
 	{
+	//	LOG("[DEBUG] HITBONE - %d", hitinfo->HitBone());
 		int selectedHitbox = m_settings::SelectedHitbox;
 
 		if (selectedHitbox == 0)
 		{
-			hitinfo->HitBone() = AssemblyCSharp::StringPool::Get(XS("Head"));
+			hitinfo->HitBone() = 698017942;
+			//head: 698017942
 		}
 	}
 
