@@ -338,8 +338,6 @@ public:
 			}
 		}
 
-
-
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
 		if (!hTest)
 		{
