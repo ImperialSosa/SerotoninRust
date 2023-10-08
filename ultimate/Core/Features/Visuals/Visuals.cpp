@@ -983,6 +983,9 @@ void Visuals::RenderEntities()
 	if (!InGame)
 		return;
 
+	if (!IsAddressValid(Features().LocalPlayer))
+		return;
+
 	for (auto CachedEntity : PrefabVectorList)
 	{
 		auto BaseEntity = CachedEntity.CachedEntity;
@@ -2202,6 +2205,59 @@ void Visuals::CacheEntities()
 							}
 							else
 							{
+								if (m_settings::DoorSpammer)
+								{
+									if (BaseEntity->IsA(AssemblyCSharp::Door::StaticClass()))
+									{
+										auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
+
+										auto ent = reinterpret_cast<AssemblyCSharp::Door*>(BaseEntity);
+
+										if (IsAddressValid(ent) && distance <= 3.f)
+										{
+											if (RPC_Counter.Calculate() <= 5)
+											{
+												ent->KnockDoor(Features().LocalPlayer);
+												RPC_Counter.Increment();
+											}
+										}
+
+									}
+								}
+
+								if (m_settings::AutoUpgrade)
+								{
+									if (BaseEntity->IsA(AssemblyCSharp::BuildingBlock::StaticClass()))
+									{
+										auto block = reinterpret_cast<AssemblyCSharp::BuildingBlock*>(BaseEntity);
+
+										if (block)
+										{
+											auto entity_pos = block->get_positionz();
+
+											if (RPC_Counter.Calculate() >= 5)
+											{
+												continue;
+											}
+
+
+											Vector3 local = Features().LocalPlayer->ClosestPoint(entity_pos);
+											if (local.get_3d_dist(entity_pos) <= 5.5f)
+											{
+												float LastGrade = 0.f;
+												if (Features().LocalPlayer->lastSentTickTime() > LastGrade + 0.35f
+													&& block->CanAffordUpgrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer)
+													&& block->CanChangeToGrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer)
+													&& !block->IsUpgradeBlocked()) {
+													block->UpgradeToGrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer);
+													RPC_Counter.Increment();
+													LastGrade = Features().LocalPlayer->lastSentTickTime();
+												}
+											}
+
+										}
+									}
+								}
 								continue;
 							}
 						}

@@ -8,7 +8,7 @@ namespace m_settings {
 	inline bool LoadLegit = false;
 	inline bool SelectedOption = false;
 
-
+	inline int BuildingGrade = 0;
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
@@ -16,9 +16,10 @@ namespace m_settings {
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
 	inline float BradleyColor[4] = { 255.f, 0.f, 0.f, 255.f };
-
+	inline bool AutoUpgrade = false;
 	inline bool DrawInventory = false;
 	inline bool DrawInventoryIcons = false;
+	inline bool DoorSpammer = false;
 	inline bool DrawClothing = false;
 	inline bool TC_Health = false;
 	inline bool LongMelee = false;

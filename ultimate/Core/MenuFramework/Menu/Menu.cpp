@@ -5,6 +5,8 @@ inline bool chams_type_opened;
 inline bool bullet_tpe_open;
 inline bool config_type_open;
 inline bool hitmat_open;
+inline bool upgrade_open;
+
 inline bool esp_type_open;
 inline bool wchams_type_opens;
 inline bool heldi_type_open;
@@ -756,10 +758,10 @@ void MenuDraw::RenderMenu()
 
 						Menu().CheckBox(XS("PierceMaterials"), m_settings::PierceMaterials);
 						Menu().CheckBox(XS("Bullet Queue"), m_settings::InstantKill);
-						if (m_settings::InstantKill)
+					/*	if (m_settings::InstantKill)
 						{
 							Menu().CheckBox(XS("WaitForBulletTP"), m_settings::WaitForBulletTP);
-						}
+						}*/
 
 						Menu().CheckBox(XS("Instant Hit"), m_settings::InstantBullet);
 						Menu().CheckBox(XS("WaitForInstantHit"), m_settings::WaitForInstantHit);
@@ -1102,6 +1104,12 @@ void MenuDraw::RenderMenu()
 						
 						Menu().CheckBox(XS("AutoFarmTree"), m_settings::AutoFarmTree);
 						Menu().CheckBox(XS("AutoFarmOre"), m_settings::AutoFarmOre);
+						Menu().CheckBox(XS("AutoUpgrade"), m_settings::AutoUpgrade);
+						if (m_settings::AutoUpgrade)
+						{
+							Menu().Dropdown(XS("BuildingGrade"), { XS("Twigs"), XS("Wood"), XS("Stone"), XS("Metal"), XS("HQM") }, m_settings::BuildingGrade, upgrade_open);
+						}
+						Menu().CheckBox(XS("DoorSpammer"), m_settings::DoorSpammer);
 
 					}
 

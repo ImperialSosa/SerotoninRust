@@ -668,7 +668,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						{
 							if (InstantHitReady)
 							{
-								if (StartShooting)
+								if (StartShooting && Features().PointVisible)
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
@@ -681,7 +681,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						{
 							if (!m_settings::AlwaysAutoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey))
 							{
-								if (StartShooting)
+								if (StartShooting && Features().PointVisible)
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
@@ -690,7 +690,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							}
 							else if (m_settings::AlwaysAutoshoot)
 							{
-								if (StartShooting)
+								if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition))
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();								
@@ -712,69 +712,33 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 									if (BaseProjectile->primaryMagazine()->contents() > 0)
 									{
 
-										if (m_settings::WaitForBulletTP)
+										Vector3 pos = AimbotTarget.m_position;
+
+										if (Features().BulletTPAngle.IsZero())
+											Features().BulletTPAngle = AimbotTarget.m_position;
+
+										if (StartShooting && Features().PointVisible)
 										{
 
-											Vector3 pos = AimbotTarget.m_position;
-
-											if (Features().BulletTPAngle.IsZero())
-												Features().BulletTPAngle = AimbotTarget.m_position;
-
-											if (StartShooting)
+											float maxpacketsperSECOND = 1;
+											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 											{
-
-												float maxpacketsperSECOND = 1;
-												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
+												CalledLaunchFromHook = true;
+												for (int i = 0; i < 5; i++)
 												{
-													CalledLaunchFromHook = true;
-													for (int i = 0; i < 5; i++)
-													{
-														BaseProjectile->primaryMagazine()->contents()--;
+													BaseProjectile->primaryMagazine()->contents()--;
 
-														BaseProjectile->LaunchProjectile();
-														BaseProjectile->UpdateAmmoDisplay();
-														BaseProjectile->ShotFired();
-														BaseProjectile->DidAttackClientside();
-														break;
-													}
-													//a1->SendClientTick();
-													RPC_Counter3.Increment();
-													CalledLaunchFromHook = false;
+													BaseProjectile->LaunchProjectile();
+													BaseProjectile->UpdateAmmoDisplay();
+													BaseProjectile->ShotFired();
+													BaseProjectile->DidAttackClientside();
+													break;
 												}
+												//a1->SendClientTick();
+												RPC_Counter3.Increment();
+												CalledLaunchFromHook = false;
 											}
 										}
-										else
-										{
-											if (Features().BulletTPAngle.IsZero())
-												Features().BulletTPAngle = AimbotTarget.m_position;
-
-											if (StartShooting)
-											{
-												float maxpacketsperSECOND = 1;
-												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
-												{
-													CalledLaunchFromHook = true;
-
-													int magazineContents = BaseProjectile->primaryMagazine()->contents();
-													for (int i = 0; i < 5; i++)
-													{
-														BaseProjectile->primaryMagazine()->contents()--;
-
-														BaseProjectile->LaunchProjectile();
-														BaseProjectile->UpdateAmmoDisplay();
-														BaseProjectile->ShotFired();
-														BaseProjectile->DidAttackClientside();
-														break;
-													}
-													RPC_Counter3.Increment();
-													CalledLaunchFromHook = false;
-
-												}
-
-											}
-
-										}
-
 									}
 								}
 							}
@@ -794,7 +758,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (Features().BulletTPAngle.IsZero())
 											Features().BulletTPAngle = AimbotTarget.m_position;
 
-										if (StartShooting)
+										if (StartShooting && Features().PointVisible)
 										{
 
 											float maxpacketsperSECOND = 1;
@@ -823,7 +787,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (Features().BulletTPAngle.IsZero())
 											Features().BulletTPAngle = AimbotTarget.m_position;
 
-										if (StartShooting)
+										if (StartShooting && Features().PointVisible)
 										{
 											float maxpacketsperSECOND = 1;
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
