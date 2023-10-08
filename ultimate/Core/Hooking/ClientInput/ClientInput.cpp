@@ -727,7 +727,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 												if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 												{
 													CalledLaunchFromHook = true;
-													for (int i = 0; i < 4; i++)
+													for (int i = 0; i < 5; i++)
 													{
 														BaseProjectile->primaryMagazine()->contents()--;
 
@@ -756,7 +756,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 													CalledLaunchFromHook = true;
 
 													int magazineContents = BaseProjectile->primaryMagazine()->contents();
-													for (int i = 0; i < 4; i++)
+													for (int i = 0; i < 5; i++)
 													{
 														BaseProjectile->primaryMagazine()->contents()--;
 
@@ -801,7 +801,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 											{
 												CalledLaunchFromHook = true;
-												for (int i = 0; i < 4; i++)
+												for (int i = 0; i < 5; i++)
 												{
 													BaseProjectile->primaryMagazine()->contents()--;
 
@@ -831,7 +831,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 												CalledLaunchFromHook = true;
 
 												int magazineContents = BaseProjectile->primaryMagazine()->contents();
-												for (int i = 0; i < 4; i++)
+												for (int i = 0; i < 5; i++)
 												{
 													BaseProjectile->primaryMagazine()->contents()--;
 
@@ -1464,7 +1464,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-
 	//UnityEngine::RenderSettings::set_skybox(nullptr);
 
 	if (m_settings::AdminFlags)
@@ -1680,6 +1679,21 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
+
+	//auto modelstate = a1->modelState();
+
+	//if (IsAddressValid(modelstate))
+	//{
+	//	modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
+	//	modelstate->flags() |= 32768;
+	////	modelstate->waterLevel() = 0.8;
+
+	//	a1->playerFlags() &= ~2;
+
+	//	
+	//	a1->movement()->swimming() = true;
+	//	
+	//}
 
 	//if (m_settings::FloorHugger)
 	//{

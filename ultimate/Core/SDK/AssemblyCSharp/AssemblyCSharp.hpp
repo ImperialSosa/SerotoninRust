@@ -2150,7 +2150,9 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(bool, swimming);
 		IL2CPP_FIELD(bool, jumping);
 		IL2CPP_FIELD(bool, sprintForced);
-
+		IL2CPP_FIELD(float, WaterLevelHead);
+		IL2CPP_FIELD(float, WaterLevelNeck);
+	
 		IL2CPP_FIELD(float, capsuleHeight);
 		IL2CPP_FIELD(float, capsuleCenter);
 		IL2CPP_FIELD(float, capsuleHeightDucked);
@@ -2159,7 +2161,6 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, capsuleCenterCrawling);
 
 
-		IL2CPP_FIELD(float, WaterLevelHead);
 
 		IL2CPP_FIELD(bool, grounded);
 
