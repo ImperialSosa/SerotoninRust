@@ -558,7 +558,7 @@ public:
 			goto OFFSET;
 		}
 
-		Unknown get_list = (Unknown)(m_game_assembly + 18733296);//Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() MethodAddress
+		Unknown get_list = (Unknown)(m_game_assembly + 18733264);//Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() MethodAddress
 		if (!get_list)
 		{
 			goto OFFSET;

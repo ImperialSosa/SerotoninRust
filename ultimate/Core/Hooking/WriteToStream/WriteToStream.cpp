@@ -471,7 +471,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		}
 	}
 
-	created_projectiles->Clear();
+	//created_projectiles->Clear();
 
 	return Hooks::ProjectileShootHookhk.get_original< decltype(&ProjectileShootHook)>()(_This, Stream);
 }

@@ -1184,8 +1184,8 @@ namespace UnityEngine
 
 	void DDraw::Text(const char* text, Vector3 vPos, Color color, float fDuration)
 	{
-		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Text"), 5)));
-		return Call<void>(ToAddress(get_skin), CIl2Cpp::il2cpp_string_new(text), vPos, color, fDuration, 1.f);
+		const auto get_skin = reinterpret_cast<GUISkin * (*)()>(*reinterpret_cast<uintptr_t*>((uintptr_t)CIl2Cpp::FindMethod(CIl2Cpp::FindClass(XS("UnityEngine"), XS("DDraw")), HASH("Text"), 6)));
+		return Call<void>(ToAddress(get_skin), CIl2Cpp::il2cpp_string_new(text), vPos, color, fDuration, 1.f, false);
 	}
 
 	void DDraw::SphereGizmo(Vector3 vPos, float fRadius, Color color, float fDuration, bool distanceFade, bool ztest)
