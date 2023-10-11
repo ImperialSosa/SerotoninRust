@@ -39,11 +39,9 @@ BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintp
     auto EPIC_EXPORT_AVOIDANCE = reinterpret_cast<eac_info*>(_TAG);
     if (call_reason == DLL_PROCESS_ATTACH)
     {
-        eac_data.cheat_base = EPIC_EXPORT_AVOIDANCE->cheat_base;
-        eac_data.entry = EPIC_EXPORT_AVOIDANCE->entry;
-
-        eac::base = mod;
-        eac::entry = (mod + eac_data.entry);
+        const auto NtHeader = (PIMAGE_NT_HEADERS)(((PUINT8)&__ImageBase) + __ImageBase.e_lfanew);
+        const auto EacBase = (PUINT8)mod;
+        const auto EOS_Entry = &EacBase[NtHeader->OptionalHeader.AddressOfEntryPoint];
 
         if (!thread_inited)
         {
@@ -52,7 +50,7 @@ BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintp
         }
 
         const auto eac_dll_fn =
-            reinterpret_cast<decltype(&DllMain)>(mod + eac_data.entry);
+            reinterpret_cast<decltype(&DllMain)>(EOS_Entry);
 
         const auto result = eac_dll_fn(mod, call_reason, reserved);
         return result;
