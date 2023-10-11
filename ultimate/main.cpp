@@ -3,7 +3,7 @@
 void cheat_main()
 {
 #ifndef DEBUG_MODE
-    fix_relocations();
+    //fix_relocations();
 #endif
 	Core().Instance()->Init();
 }
@@ -36,7 +36,7 @@ extern "C" IMAGE_DOS_HEADER __ImageBase;
 
 BOOL __stdcall DllMain(std::uintptr_t mod, std::uint32_t call_reason, std::uintptr_t reserved) {
     static bool thread_inited = false;
-    auto EPIC_EXPORT_AVOIDANCE = reinterpret_cast<eac_info*>(_TAG);
+
     if (call_reason == DLL_PROCESS_ATTACH)
     {
         const auto NtHeader = (PIMAGE_NT_HEADERS)(((PUINT8)&__ImageBase) + __ImageBase.e_lfanew);
