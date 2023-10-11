@@ -779,13 +779,13 @@ void Visuals::DrawPlayers()
 													if (material->shader() != ColorShader)
 													{
 														material->set_shader(ColorShader);
-														material->SetColor("_ColorVisible", VisibleColor.GetUnityColor());
-														material->SetColor("_ColorBehind", BoxColor.GetUnityColor());
+														material->SetColor(XS("_ColorVisible"), VisibleColor.GetUnityColor());
+														material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
 
 														if (npc)
 														{
-															material->SetColor("_ColorVisible", BoxColor.GetUnityColor());
-															material->SetColor("_ColorBehind", BoxColor.GetUnityColor());
+															material->SetColor(XS("_ColorVisible"), BoxColor.GetUnityColor());
+															material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
 														}
 													}
 												}
