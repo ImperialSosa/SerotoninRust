@@ -1507,7 +1507,7 @@ void Visuals::RenderEntities()
 							if (HASH("item_drop_backpack") == Hash(name, false))
 							{
 								auto BackpackColor = Color{ m_settings::BackPackColor[0], m_settings::BackPackColor[1], m_settings::BackPackColor[2], m_settings::BackPackColor[3] };
-								std::string player_name = XS("BackPack");
+								std::string player_name = XS("Backpack");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
