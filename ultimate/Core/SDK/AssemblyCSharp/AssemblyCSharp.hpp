@@ -335,11 +335,19 @@ namespace AssemblyCSharp {
 	};
 
 
-
+	struct BearTrap : BaseEntity
+	{
+		IL2CPP_CLASS("BearTrap");
+	};
 
 	struct FlameTurret : BaseEntity
 	{
 		IL2CPP_CLASS("FlameTurret");
+	};
+
+	struct Landmine : BaseEntity
+	{
+		IL2CPP_CLASS("Landmine");
 	};
 
 	struct SamSite : BaseEntity
@@ -1464,6 +1472,14 @@ namespace AssemblyCSharp {
 	struct Tugboat : BaseCombatEntity {
 		IL2CPP_CLASS("Tugboat");
 
+	};
+
+	struct MiniCopter : BaseCombatEntity {
+		IL2CPP_CLASS("MiniCopter");
+	};
+
+	struct AttackHelicopter : BaseCombatEntity {
+		IL2CPP_CLASS("AttackHelicopter");
 	};
 
 	struct MedicalTool : AttackEntity {
@@ -3096,6 +3112,11 @@ namespace AssemblyCSharp {
 	struct DecayEntity : BaseCombatEntity
 	{
 		IL2CPP_CLASS("DecayEntity");
+	};
+
+	struct Barricade : BaseEntity
+	{
+		IL2CPP_CLASS("Barricade");
 	};
 
 	struct StabilityEntity : DecayEntity

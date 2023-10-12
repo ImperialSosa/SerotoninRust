@@ -374,9 +374,6 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		if (!c_projectile)
 			continue;
 
-
-
-
 		LaunchedProjectileSize = created_projectiles_size;
 
 		if (m_settings::BulletTP)
@@ -422,8 +419,10 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
 		{
-			if (AimbotTarget.m_player || manipulated) {
-				c_projectile->startVel() = m_aim_angle;
+			if (UnityEngine::Input::GetKey(m_settings::AimbotKey) || UnityEngine::Input::GetKey(m_settings::AutoshootKey)) {
+				if (AimbotTarget.m_player || manipulated) {
+					c_projectile->startVel() = m_aim_angle;
+				}
 			}
 		}
 	}
@@ -440,9 +439,11 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
 		{
-			if (AimbotTarget.m_player || manipulated) {
-				c_projectile->initialVelocity() = m_aim_angle;
-				c_projectile->currentVelocity() = m_aim_angle;
+			if (UnityEngine::Input::GetKey(m_settings::AimbotKey) || UnityEngine::Input::GetKey(m_settings::AutoshootKey)) {
+				if (AimbotTarget.m_player || manipulated) {
+					c_projectile->initialVelocity() = m_aim_angle;
+					c_projectile->currentVelocity() = m_aim_angle;
+				}
 			}
 		}
 

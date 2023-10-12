@@ -22,6 +22,16 @@ inline bool aim_type_opene2;
 inline bool multi_type_test_open;
 inline bool multi_chams_load;
 inline bool multi_effect_load;
+inline bool multi_food_option;
+inline bool multi_ore_options;
+inline bool multi_collectable_options;
+inline bool multi_crate_options;
+inline bool multi_turret_options;
+inline bool multi_traps_options;
+inline bool multi_vehicle_options;
+inline bool multi_raid_options;
+inline bool multi_cupboard_options;
+inline bool multi_deployable_options;
 
 #include "../../Configs/Configs.hpp"
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
@@ -131,7 +141,7 @@ void MenuDraw::RenderLegitMenu()
 				Menu().BeginChild(XS("Aimbot"), { 60,45 }, { 220,290 });
 				{
 
-					Menu().CheckBoxKeyBind(XS("Rotation Aimbot"), m_settings::RotationAimbot, m_settings::RotationKey);
+					Menu().CheckBoxKeyBind(XS("Silent Aimbot (Legit)"), m_settings::RotationAimbot, m_settings::RotationKey);
 					if (m_settings::RotationAimbot)
 					{
 						m_settings::SilentAim = false;
@@ -230,8 +240,8 @@ void MenuDraw::RenderLegitMenu()
 					Menu().Dropdown(XS("Clothing"), { XS("None"), XS("Text"), XS("Icons") }, m_settings::SelectedClothing, clothing_type_open);
 					Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
 					Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
-					Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color") }, m_settings::SelectedChams, chams_type_opened);
 					Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_type_test_open);
+					Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color") }, m_settings::SelectedChams, chams_type_opened);
 
 					if (m_settings::SelectedChams == 0)
 						m_settings::PlayerChams = false;
@@ -300,19 +310,69 @@ void MenuDraw::RenderLegitMenu()
 			case 1:
 				Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 				{
-					Menu().CheckBox(XS("StoneOre"), m_settings::StoneOre);
-					Menu().CheckBox(XS("MetalOre"), m_settings::MetalOre);
-					Menu().CheckBox(XS("SulfurOre"), m_settings::SulfurOre);
-					//	Menu().CheckBox(XS("Ore Icon"), m_settings::OreIcons);
+					Menu().MultiDropdown(XS("Ores"), { XS("Stone"), XS("Metal"), XS("Sulfur") }, m_settings::OreOptions, multi_ore_options);
+					{
+						if (m_settings::OreOptions[0])
+							m_settings::StoneOre = true;
+						else
+							m_settings::StoneOre = false;
+						if (m_settings::OreOptions[1])
+							m_settings::MetalOre = true;
+						else
+							m_settings::MetalOre = false;
+						if (m_settings::OreOptions[2])
+							m_settings::SulfurOre = true;
+						else
+							m_settings::SulfurOre = false;
+					}
 
-					Menu().CheckBox(XS("Hemp"), m_settings::Hemp);
-					Menu().CheckBox(XS("Diesel"), m_settings::DieselBarrel);
-					//	Menu().CheckBox(XS("Collectables Icon"), m_settings::CollectablesIcon);
+					Menu().MultiDropdown(XS("Collectables"), { XS("Hemp"), XS("Diesel"), XS("Stone") , XS("Metal") , XS("Sulfur") }, m_settings::CollectableOpions, multi_collectable_options);
+					{
+						if (m_settings::CollectableOpions[0])
+							m_settings::Hemp = true;
+						else
+							m_settings::Hemp = false;
+						if (m_settings::CollectableOpions[1])
+							m_settings::DieselBarrel = true;
+						else
+							m_settings::DieselBarrel = false;
 
-					Menu().CheckBox(XS("Corn"), m_settings::Corn);
-					Menu().CheckBox(XS("Pumpkin"), m_settings::Pumpkin);
-					Menu().CheckBox(XS("Potato"), m_settings::Potato);
-					Menu().CheckBox(XS("Mushroom"), m_settings::Mushroom);
+						if (m_settings::CollectableOpions[2])
+							m_settings::StoneCollectable = true;
+						else
+							m_settings::StoneCollectable = false;
+
+						if (m_settings::CollectableOpions[3])
+							m_settings::MetalCollectable = true;
+						else
+							m_settings::MetalCollectable = false;
+
+						if (m_settings::CollectableOpions[4])
+							m_settings::SulfurCollectable = true;
+						else
+							m_settings::SulfurCollectable = false;
+
+					}
+
+					Menu().MultiDropdown(XS("Food"), { XS("Corn"), XS("Pumpkin"), XS("Potato"), XS("Mushroom") }, m_settings::FoodOptions, multi_food_option);
+					{
+						if (m_settings::FoodOptions[0])
+							m_settings::Corn = true;
+						else
+							m_settings::Corn = false;
+						if (m_settings::FoodOptions[1])
+							m_settings::Pumpkin = true;
+						else
+							m_settings::Pumpkin = false;
+						if (m_settings::FoodOptions[2])
+							m_settings::Potato = true;
+						else
+							m_settings::Potato = false;
+						if (m_settings::FoodOptions[3])
+							m_settings::Mushroom = true;
+						else
+							m_settings::Mushroom = false;
+					}
 				}
 
 				Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -326,22 +386,99 @@ void MenuDraw::RenderLegitMenu()
 			case 2:
 				Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 				{
-					Menu().CheckBox(XS("Stash"), m_settings::Stash);
-					Menu().CheckBox(XS("HackableCrate"), m_settings::HackableCrate);
-					if (m_settings::HackableCrate)
+					Menu().MultiDropdown(XS("Deployables"), { XS("Stash"), XS("Cupboard"), XS("T1 Workbench"), XS("T2 Workbench") , XS("T3 Workbench") }, m_settings::DeployableOptions, multi_deployable_options);
 					{
-						Menu().CheckBox(XS("HackableCrateFlags"), m_settings::HackableCrateFlags);
-						Menu().CheckBox(XS("HackableCrateTimer"), m_settings::HackableCrateTimer);
+						if (m_settings::DeployableOptions[0])
+							m_settings::Stash = true;
+						else
+							m_settings::Stash = false;
+
+						if (m_settings::DeployableOptions[1])
+							m_settings::cupboard = true;
+						else
+							m_settings::cupboard = false;
+
+						if (m_settings::DeployableOptions[2])
+							m_settings::T1Workbench = true;
+						else
+							m_settings::T1Workbench = false;
+
+						if (m_settings::DeployableOptions[3])
+							m_settings::T2Workbench = true;
+						else
+							m_settings::T2Workbench = false;
+
+						if (m_settings::DeployableOptions[4])
+							m_settings::T3Workbench = true;
+						else
+							m_settings::T3Workbench = false;
+
 					}
-					Menu().CheckBox(XS("Bradley Crate"), m_settings::BradleyCrate);
-					Menu().CheckBox(XS("Heli Crate"), m_settings::HeliCrate);
-					Menu().CheckBox(XS("Basic Crate"), m_settings::BasicCrate);
-					Menu().CheckBox(XS("Normal Crate"), m_settings::NormalCrate);
-					Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
-					Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
-					Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
-					Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
-					//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+					if (m_settings::cupboard) {
+						Menu().MultiDropdown(XS("Cupboard"), { XS("TC Health"), XS("Authed Players"), XS("Upkeep") }, m_settings::CupboardOptions, multi_cupboard_options);
+						{
+							if (m_settings::CupboardOptions[0])
+								m_settings::TC_Health = true;
+							else
+								m_settings::TC_Health = false;
+
+							if (m_settings::CupboardOptions[1])
+								m_settings::AuthorizedPlayers = true;
+							else
+								m_settings::AuthorizedPlayers = false;
+
+							if (m_settings::CupboardOptions[2])
+								m_settings::TC_Upkeep = true;
+							else
+								m_settings::TC_Upkeep = false;
+
+						}
+					}
+					Menu().MultiDropdown(XS("Crates"), { XS("Airdrop"), XS("Bradley"), XS("Heli"), XS("Hackable"), XS("Basic"), XS("Normal"), XS("Military"), XS("Elite"), XS("Loot Barrels") }, m_settings::CrateOptions, multi_crate_options);
+					{
+						if (m_settings::CrateOptions[0])
+							m_settings::SupplyDrop = true;
+						else
+							m_settings::SupplyDrop = false;
+						if (m_settings::CrateOptions[1])
+							m_settings::BradleyCrate = true;
+						else
+							m_settings::BradleyCrate = false;
+						if (m_settings::CrateOptions[2])
+							m_settings::HeliCrate = true;
+						else
+							m_settings::HeliCrate = false;
+						if (m_settings::CrateOptions[3])
+							m_settings::HackableCrate = true;
+						else
+							m_settings::HackableCrate = false;
+						if (m_settings::CrateOptions[4])
+							m_settings::BasicCrate = true;
+						else
+							m_settings::BasicCrate = false;
+						if (m_settings::CrateOptions[5])
+							m_settings::NormalCrate = true;
+						else
+							m_settings::NormalCrate = false;
+						if (m_settings::CrateOptions[6])
+							m_settings::MilitaryCrate = true;
+						else
+							m_settings::MilitaryCrate = false;
+						if (m_settings::CrateOptions[7])
+							m_settings::EliteCrate = true;
+						else
+							m_settings::EliteCrate = false;
+						if (m_settings::CrateOptions[8])
+							m_settings::LootBarrel = true;
+						else
+							m_settings::LootBarrel = false;
+
+						if (m_settings::HackableCrate)
+						{
+							m_settings::HackableCrateFlags = true;
+							m_settings::HackableCrateTimer = true;
+						}
+					}
 
 				}
 
@@ -356,36 +493,154 @@ void MenuDraw::RenderLegitMenu()
 				Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 				{
 					Menu().CheckBox(XS("DroppedItems"), m_settings::DroppedItems);
-					Menu().CheckBox(XS("Turret"), m_settings::AutoTurret);
+					Menu().MultiDropdown(XS("Traps"), { XS("Turret"), XS("ShotgunTrap"), XS("FlameTurret"), XS("BearTrap"), XS("SpikesTrap"), XS("LandMine"), XS("SamSite") }, m_settings::TrapsOptions, multi_traps_options);
+					{
+						if (m_settings::TrapsOptions[0])
+							m_settings::AutoTurret = true;
+						else
+							m_settings::AutoTurret = false;
+
+						if (m_settings::TrapsOptions[1])
+							m_settings::ShotgunTrap = true;
+						else
+							m_settings::ShotgunTrap = false;
+
+						if (m_settings::TrapsOptions[2])
+							m_settings::FlameTurret = true;
+						else
+							m_settings::FlameTurret = false;
+
+						if (m_settings::TrapsOptions[3])
+							m_settings::BearTrap = true;
+						else
+							m_settings::BearTrap = false;
+
+						if (m_settings::TrapsOptions[4])
+							m_settings::SpikesTrap = true;
+						else
+							m_settings::SpikesTrap = false;
+
+						if (m_settings::TrapsOptions[5])
+							m_settings::LandMine = true;
+						else
+							m_settings::LandMine = false;
+
+						if (m_settings::TrapsOptions[6])
+							m_settings::SamSite = true;
+						else
+							m_settings::SamSite = false;
+					}
 					if (m_settings::AutoTurret)
 					{
-						Menu().CheckBox(XS("Authorized Players"), m_settings::TurretAuthorizedPlayers);
-						Menu().CheckBox(XS("EquippedFlag"), m_settings::TurretEquippedFlags);
-						Menu().CheckBox(XS("TurretOnFlags"), m_settings::TurretOnFlags);
-						Menu().CheckBox(XS("Turret Health"), m_settings::TurretHealth);
-						Menu().CheckBox(XS("TurningFlag"), m_settings::TurretTurningFlag);
-						Menu().CheckBox(XS("TurretRange"), m_settings::TurretRange);
+						Menu().MultiDropdown(XS("Turret Settings"), { XS("Authed Players"), XS("EquippedFlag"), XS("ShowOnline"), XS("Health"), XS("TurningFlags"), XS("Range"), }, m_settings::TurretOptions, multi_turret_options);
+
+						{
+							if (m_settings::TurretOptions[0])
+								m_settings::TurretAuthorizedPlayers = true;
+							else
+								m_settings::TurretAuthorizedPlayers = false;
+
+							if (m_settings::TurretOptions[1])
+								m_settings::TurretEquippedFlags = true;
+							else
+								m_settings::TurretEquippedFlags = false;
+
+							if (m_settings::TurretOptions[2])
+								m_settings::TurretOnFlags = true;
+							else
+								m_settings::TurretOnFlags = false;
+
+							if (m_settings::TurretOptions[3])
+								m_settings::TurretHealth = true;
+							else
+								m_settings::TurretHealth = false;
+
+							if (m_settings::TurretOptions[4])
+								m_settings::TurretTurningFlag = true;
+							else
+								m_settings::TurretTurningFlag = false;
+
+							if (m_settings::TurretOptions[5])
+								m_settings::TurretRange = true;
+							else
+								m_settings::TurretRange = false;
+
+						}
 					}
-					Menu().CheckBox(XS("Patrol Helicopter"), m_settings::PatrolHelicopter);
-					Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
-					Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
-					Menu().CheckBox(XS("Raid ESP"), m_settings::RaidESP);
-					if (m_settings::RaidESP)
+
+					Menu().MultiDropdown(XS("Vehicles"), { XS("PatrolHeli"), XS("Bradley"), XS("MiniCopter"), XS("ScrapHeli"), XS("AttackHeli"), XS("TugBoat"), XS("RHIB"), XS("RowBoat") }, m_settings::VehicleOptions, multi_vehicle_options);
 					{
-						Menu().CheckBox(XS("Show Rocket"), m_settings::ShowRocket);
-						Menu().CheckBox(XS("Show C4"), m_settings::ShowC4);
-						Menu().CheckBox(XS("Show Satchel"), m_settings::ShowSatchel);
-						Menu().CheckBox(XS("Show ExploAmmo"), m_settings::ShowExplosiveAmmo);
+						if (m_settings::VehicleOptions[0])
+							m_settings::PatrolHelicopter = true;
+						else
+							m_settings::PatrolHelicopter = false;
+
+						if (m_settings::VehicleOptions[1])
+							m_settings::BradleyAPC = true;
+						else
+							m_settings::BradleyAPC = false;
+
+						if (m_settings::VehicleOptions[2])
+							m_settings::Minicopter = true;
+						else
+							m_settings::Minicopter = false;
+
+						if (m_settings::VehicleOptions[3])
+							m_settings::ScrapHeli = true;
+						else
+							m_settings::ScrapHeli = false;
+
+						if (m_settings::VehicleOptions[4])
+							m_settings::AttackHeli = true;
+						else
+							m_settings::AttackHeli = false;
+
+						if (m_settings::VehicleOptions[5])
+							m_settings::TugBoat = true;
+						else
+							m_settings::TugBoat = false;
+
+						if (m_settings::VehicleOptions[6])
+							m_settings::Rhib = true;
+						else
+							m_settings::Rhib = false;
+
+						if (m_settings::VehicleOptions[7])
+							m_settings::Rowboat = true;
+						else
+							m_settings::Rowboat = false;
 					}
 
-					Menu().CheckBox(XS("Cupboard"), m_settings::cupboard);
-					if (m_settings::cupboard)
+
+					Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
 					{
-						Menu().CheckBox(XS("TC Health"), m_settings::TC_Health);
-						Menu().CheckBox(XS("AuthorizedPlayers"), m_settings::AuthorizedPlayers);
+						if (m_settings::RaidOptions[0])
+							m_settings::RaidESP = true;
+						else
+							m_settings::RaidESP = false;
 
+						if (m_settings::RaidOptions[1])
+							m_settings::ShowC4 = true;
+						else
+							m_settings::ShowC4 = false;
 
+						if (m_settings::RaidOptions[2])
+							m_settings::ShowRocket = true;
+						else
+							m_settings::ShowRocket = false;
+
+						if (m_settings::RaidOptions[3])
+							m_settings::ShowSatchel = true;
+						else
+							m_settings::ShowSatchel = false;
+
+						if (m_settings::RaidOptions[4])
+							m_settings::ShowExplosiveAmmo = true;
+						else
+							m_settings::ShowExplosiveAmmo = false;
 					}
+
+
 				}
 
 				Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -393,6 +648,7 @@ void MenuDraw::RenderLegitMenu()
 					Menu().Slider(XS("Dropped Distance"), m_settings::MaxDroppedDistance, 0, 500);
 					Menu().Slider(XS("Traps Distance"), m_settings::MaxTrapsDistance, 0, 500);
 					Menu().Slider(XS("APC Distance"), m_settings::MaxAPCDistance, 0, 3000);
+					Menu().Slider(XS("Vehicle Distance"), m_settings::MaxVehicleDistance, 0, 500);
 
 					Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
 					Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
@@ -678,31 +934,19 @@ void MenuDraw::RenderMenu()
 					Menu().BeginChild(XS("Aimbot"), { 60,45 }, { 220,290 });
 					{
 						//Menu().CheckBox(XS("Memory Aimbot"), m_settings::MemoryAimbot);
-						Menu().CheckBox(XS("Silent Aimbot"), m_settings::SilentAim);
+						Menu().CheckBoxKeyBind(XS("Silent Aimbot"), m_settings::SilentAim, m_settings::AimbotKey);
 						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
-						//Menu().CheckBox(XS("Rotation Aimbot"), m_settings::RotationAimbot);
 						if (m_settings::SilentAim)
 						{
 							m_settings::RotationAimbot = false;
 						}
-
 						if (m_settings::VelocityAimbot)
 						{
 							m_settings::RotationAimbot = false;
 						}
 
 						Menu().CheckBox(XS("Melee Aimbot"), m_settings::MeleeAimbot);
-						Menu().CheckBoxKeyBind(XS("Rotation Aimbot"), m_settings::RotationAimbot, m_settings::RotationKey);
-						if (m_settings::RotationAimbot)
-						{
-							m_settings::SilentAim = false;
-							m_settings::VelocityAimbot = false;
-							m_settings::Manipulation = false;
-							m_settings::BulletTP = false;
-							m_settings::InstantBullet = false;
-							m_settings::InstantKill = false;
 
-						}
 						//Menu().CheckBox(XS(L"Heli Aimbot"), m_settings::HeliAimbot);
 						Menu().CheckBox(XS("Silent Melee"), m_settings::SilentMelee);
 						////if (m_settings::HeliAimbot)
@@ -725,19 +969,25 @@ void MenuDraw::RenderMenu()
 
 						//Menu().Spacer(50);
 
-						Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water") }, m_settings::HitMaterial, hitmat_open);
 				
 					}
 					break;
 				case 1:
 					Menu().BeginChild(XS("Exploits"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBoxKeyBind(XS("AutoShoot"), m_settings::Autoshoot, m_settings::AutoshootKey);
-
-						if (m_settings::Autoshoot)
+						static bool SetDefaults = false;
+						if (!SetDefaults)
 						{
-							Menu().CheckBox(XS("AlwaysAutoshoot"), m_settings::AlwaysAutoshoot);
+							m_settings::CacheBulletTP = true;
+							m_settings::AdvancedChecks = true;
+							SetDefaults = true;
 						}
+
+						Menu().CheckBoxKeyBind(XS("AutoShoot"), m_settings::Autoshoot, m_settings::AutoshootKey);
+						//if (m_settings::Autoshoot)
+						//{
+						//	Menu().CheckBox(XS("AlwaysAutoshoot"), m_settings::AlwaysAutoshoot);
+						//}
 						Menu().CheckBoxKeyBind(XS("Manipulation"), m_settings::Manipulation, m_settings::ManipKey);
 
 						Menu().CheckBox(XS("BulletTp"), m_settings::BulletTP);
@@ -751,18 +1001,17 @@ void MenuDraw::RenderMenu()
 						if (m_settings::BulletTP && m_settings::Manipulation) {
 							Menu().CheckBox(XS("BehindWall (FPS)"), m_settings::BehindWall);
 						}
-						else
+						else {
 							m_settings::BehindWall = false;
+						}
 
 						Menu().CheckBox(XS("AutoStop"), m_settings::StopPlayer);
-
 						Menu().CheckBox(XS("PierceMaterials"), m_settings::PierceMaterials);
 						Menu().CheckBox(XS("Bullet Queue"), m_settings::InstantKill);
-					/*	if (m_settings::InstantKill)
+						/*	if (m_settings::InstantKill)
 						{
 							Menu().CheckBox(XS("WaitForBulletTP"), m_settings::WaitForBulletTP);
 						}*/
-
 						Menu().CheckBox(XS("Instant Hit"), m_settings::InstantBullet);
 						Menu().CheckBox(XS("WaitForInstantHit"), m_settings::WaitForInstantHit);
 					}
@@ -785,7 +1034,7 @@ void MenuDraw::RenderMenu()
 
 						if (m_settings::BulletTPIntensity == 3) {
 							m_settings::CacheBulletTP = true;
-						//	m_settings::AdvancedChecks = true;
+							m_settings::AdvancedChecks = true;
 						}
 
 						if (m_settings::Manipulation)
@@ -824,6 +1073,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("Target Marker"), m_settings::AimMarker);
 						Menu().CheckBox(XS("Target Indicator"), m_settings::Target_Indicator);
 						Menu().CheckBox(XS("Bullet Tracers"), m_settings::BulletTracers);
+						Menu().Dropdown(XS("HitMaterial"), { XS("Flesh"), XS("Glass"), XS("Metal"), XS("Water") }, m_settings::HitMaterial, hitmat_open);
 
 					}
 
@@ -869,8 +1119,8 @@ void MenuDraw::RenderMenu()
 						Menu().Dropdown(XS("Clothing"), { XS("None"), XS("Text"), XS("Icons") }, m_settings::SelectedClothing, clothing_type_open);
 						Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
 						Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
-						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color")}, m_settings::SelectedChams, chams_type_opened);
 						Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_type_test_open);
+						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color")}, m_settings::SelectedChams, chams_type_opened);
 
 						if (m_settings::SelectedChams == 0)
 							m_settings::PlayerChams = false;
@@ -939,19 +1189,69 @@ void MenuDraw::RenderMenu()
 				case 1:
 					Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("StoneOre"), m_settings::StoneOre);
-						Menu().CheckBox(XS("MetalOre"), m_settings::MetalOre);
-						Menu().CheckBox(XS("SulfurOre"), m_settings::SulfurOre);
-						//	Menu().CheckBox(XS("Ore Icon"), m_settings::OreIcons);
+						Menu().MultiDropdown(XS("Ores"), { XS("Stone"), XS("Metal"), XS("Sulfur") }, m_settings::OreOptions, multi_ore_options);
+						{
+							if (m_settings::OreOptions[0])
+								m_settings::StoneOre = true;
+							else
+								m_settings::StoneOre = false;
+							if (m_settings::OreOptions[1])
+								m_settings::MetalOre = true;
+							else
+								m_settings::MetalOre = false;
+							if (m_settings::OreOptions[2])
+								m_settings::SulfurOre = true;
+							else
+								m_settings::SulfurOre = false;
+						}
 
-						Menu().CheckBox(XS("Hemp"), m_settings::Hemp);
-						Menu().CheckBox(XS("Diesel"), m_settings::DieselBarrel);
-						//	Menu().CheckBox(XS("Collectables Icon"), m_settings::CollectablesIcon);
+						Menu().MultiDropdown(XS("Collectables"), { XS("Hemp"), XS("Diesel"), XS("Stone") , XS("Metal") , XS("Sulfur") }, m_settings::CollectableOpions, multi_collectable_options);
+						{
+							if (m_settings::CollectableOpions[0])
+								m_settings::Hemp = true;
+							else
+								m_settings::Hemp = false;
+							if (m_settings::CollectableOpions[1])
+								m_settings::DieselBarrel = true;
+							else
+								m_settings::DieselBarrel = false;
 
-						Menu().CheckBox(XS("Corn"), m_settings::Corn);
-						Menu().CheckBox(XS("Pumpkin"), m_settings::Pumpkin);
-						Menu().CheckBox(XS("Potato"), m_settings::Potato);
-						Menu().CheckBox(XS("Mushroom"), m_settings::Mushroom);
+							if (m_settings::CollectableOpions[2])
+								m_settings::StoneCollectable = true;
+							else
+								m_settings::StoneCollectable = false;
+
+							if (m_settings::CollectableOpions[3])
+								m_settings::MetalCollectable = true;
+							else
+								m_settings::MetalCollectable = false;
+
+							if (m_settings::CollectableOpions[4])
+								m_settings::SulfurCollectable = true;
+							else
+								m_settings::SulfurCollectable = false;
+
+						}
+
+						Menu().MultiDropdown(XS("Food"), { XS("Corn"), XS("Pumpkin"), XS("Potato"), XS("Mushroom") }, m_settings::FoodOptions, multi_food_option);
+						{
+							if (m_settings::FoodOptions[0])
+								m_settings::Corn = true;
+							else
+								m_settings::Corn = false;
+							if (m_settings::FoodOptions[1])
+								m_settings::Pumpkin = true;
+							else
+								m_settings::Pumpkin = false;
+							if (m_settings::FoodOptions[2])
+								m_settings::Potato = true;
+							else
+								m_settings::Potato = false;
+							if (m_settings::FoodOptions[3])
+								m_settings::Mushroom = true;
+							else
+								m_settings::Mushroom = false;
+						}
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -965,22 +1265,99 @@ void MenuDraw::RenderMenu()
 				case 2:
 					Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("Stash"), m_settings::Stash);
-						Menu().CheckBox(XS("HackableCrate"), m_settings::HackableCrate);
-						if (m_settings::HackableCrate)
+						Menu().MultiDropdown(XS("Deployables"), { XS("Stash"), XS("Cupboard"), XS("T1 Workbench"), XS("T2 Workbench") , XS("T3 Workbench") }, m_settings::DeployableOptions, multi_deployable_options);
 						{
-							Menu().CheckBox(XS("HackableCrateFlags"), m_settings::HackableCrateFlags);
-							Menu().CheckBox(XS("HackableCrateTimer"), m_settings::HackableCrateTimer);
+							if (m_settings::DeployableOptions[0])
+								m_settings::Stash = true;
+							else
+								m_settings::Stash = false;
+
+							if (m_settings::DeployableOptions[1])
+								m_settings::cupboard = true;
+							else
+								m_settings::cupboard = false;
+
+							if (m_settings::DeployableOptions[2])
+								m_settings::T1Workbench = true;
+							else
+								m_settings::T1Workbench = false;
+
+							if (m_settings::DeployableOptions[3])
+								m_settings::T2Workbench = true;
+							else
+								m_settings::T2Workbench = false;
+
+							if (m_settings::DeployableOptions[4])
+								m_settings::T3Workbench = true;
+							else
+								m_settings::T3Workbench = false;
+
 						}
-						Menu().CheckBox(XS("Bradley Crate"), m_settings::BradleyCrate);
-						Menu().CheckBox(XS("Heli Crate"), m_settings::HeliCrate);
-						Menu().CheckBox(XS("Basic Crate"), m_settings::BasicCrate);
-						Menu().CheckBox(XS("Normal Crate"), m_settings::NormalCrate);
-						Menu().CheckBox(XS("Military Crate"), m_settings::MilitaryCrate);
-						Menu().CheckBox(XS("Elite Crate"), m_settings::EliteCrate);
-						Menu().CheckBox(XS("Airdrop"), m_settings::SupplyDrop);
-						Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
-						//Menu().CheckBox(XS("Loot Barrels"), m_settings::LootBarrel);
+						if (m_settings::cupboard) {
+							Menu().MultiDropdown(XS("Cupboard"), { XS("TC Health"), XS("Authed Players"), XS("Upkeep")}, m_settings::CupboardOptions, multi_cupboard_options);
+							{
+								if (m_settings::CupboardOptions[0])
+									m_settings::TC_Health = true;
+								else
+									m_settings::TC_Health = false;
+
+								if (m_settings::CupboardOptions[1])
+									m_settings::AuthorizedPlayers = true;
+								else
+									m_settings::AuthorizedPlayers = false;
+
+								if (m_settings::CupboardOptions[2])
+									m_settings::TC_Upkeep = true;
+								else
+									m_settings::TC_Upkeep = false;
+
+							}
+						}
+						Menu().MultiDropdown(XS("Crates"), { XS("Airdrop"), XS("Bradley"), XS("Heli"), XS("Hackable"), XS("Basic"), XS("Normal"), XS("Military"), XS("Elite"), XS("Loot Barrels") }, m_settings::CrateOptions, multi_crate_options);
+						{
+							if (m_settings::CrateOptions[0])
+								m_settings::SupplyDrop = true;
+							else
+								m_settings::SupplyDrop = false;
+							if (m_settings::CrateOptions[1])
+								m_settings::BradleyCrate = true;
+							else
+								m_settings::BradleyCrate = false;
+							if (m_settings::CrateOptions[2])
+								m_settings::HeliCrate = true;
+							else
+								m_settings::HeliCrate = false;
+							if (m_settings::CrateOptions[3])
+								m_settings::HackableCrate = true;
+							else
+								m_settings::HackableCrate = false;
+							if (m_settings::CrateOptions[4])
+								m_settings::BasicCrate = true;
+							else
+								m_settings::BasicCrate = false;
+							if (m_settings::CrateOptions[5])
+								m_settings::NormalCrate = true;
+							else
+								m_settings::NormalCrate = false;
+							if (m_settings::CrateOptions[6])
+								m_settings::MilitaryCrate = true;
+							else
+								m_settings::MilitaryCrate = false;
+							if (m_settings::CrateOptions[7])
+								m_settings::EliteCrate = true;
+							else
+								m_settings::EliteCrate = false;
+							if (m_settings::CrateOptions[8])
+								m_settings::LootBarrel = true;
+							else
+								m_settings::LootBarrel = false;
+
+							if (m_settings::HackableCrate)
+							{
+								m_settings::HackableCrateFlags = true;
+								m_settings::HackableCrateTimer = true;
+							}
+						}
 
 					}
 
@@ -995,36 +1372,154 @@ void MenuDraw::RenderMenu()
 					Menu().BeginChild(XS("World"), { 60,45 }, { 220,290 });
 					{
 						Menu().CheckBox(XS("DroppedItems"), m_settings::DroppedItems);
-						Menu().CheckBox(XS("Turret"), m_settings::AutoTurret);
+						Menu().MultiDropdown(XS("Traps"), { XS("Turret"), XS("ShotgunTrap"), XS("FlameTurret"), XS("BearTrap"), XS("SpikesTrap"), XS("LandMine"), XS("SamSite")}, m_settings::TrapsOptions, multi_traps_options);
+						{
+							if (m_settings::TrapsOptions[0])
+								m_settings::AutoTurret = true;
+							else
+								m_settings::AutoTurret = false;
+
+							if (m_settings::TrapsOptions[1])
+								m_settings::ShotgunTrap = true;
+							else
+								m_settings::ShotgunTrap = false;
+
+							if (m_settings::TrapsOptions[2])
+								m_settings::FlameTurret = true;
+							else
+								m_settings::FlameTurret = false;
+
+							if (m_settings::TrapsOptions[3])
+								m_settings::BearTrap = true;
+							else
+								m_settings::BearTrap = false;
+
+							if (m_settings::TrapsOptions[4])
+								m_settings::SpikesTrap = true;
+							else
+								m_settings::SpikesTrap = false;
+
+							if (m_settings::TrapsOptions[5])
+								m_settings::LandMine = true;
+							else
+								m_settings::LandMine = false;
+
+							if (m_settings::TrapsOptions[6])
+								m_settings::SamSite = true;
+							else
+								m_settings::SamSite = false;
+						}
 						if (m_settings::AutoTurret)
 						{
-							Menu().CheckBox(XS("Authorized Players"), m_settings::TurretAuthorizedPlayers);
-							Menu().CheckBox(XS("EquippedFlag"), m_settings::TurretEquippedFlags);
-							Menu().CheckBox(XS("TurretOnFlags"), m_settings::TurretOnFlags);
-							Menu().CheckBox(XS("Turret Health"), m_settings::TurretHealth);
-							Menu().CheckBox(XS("TurningFlag"), m_settings::TurretTurningFlag);
-							Menu().CheckBox(XS("TurretRange"), m_settings::TurretRange);
-						}
-						Menu().CheckBox(XS("Patrol Helicopter"), m_settings::PatrolHelicopter);
-						Menu().CheckBox(XS("Bradley"), m_settings::BradleyAPC);
-						Menu().CheckBox(XS("TugBoat"), m_settings::ThugBoat);
-						Menu().CheckBox(XS("Raid ESP"), m_settings::RaidESP);
-						if (m_settings::RaidESP)
-						{
-							Menu().CheckBox(XS("Show Rocket"), m_settings::ShowRocket);
-							Menu().CheckBox(XS("Show C4"), m_settings::ShowC4);
-							Menu().CheckBox(XS("Show Satchel"), m_settings::ShowSatchel);
-							Menu().CheckBox(XS("Show ExploAmmo"), m_settings::ShowExplosiveAmmo);
+							Menu().MultiDropdown(XS("Turret Settings"), { XS("Authed Players"), XS("EquippedFlag"), XS("ShowOnline"), XS("Health"), XS("TurningFlags"), XS("Range"), }, m_settings::TurretOptions, multi_turret_options);
+
+							{
+								if (m_settings::TurretOptions[0])
+									m_settings::TurretAuthorizedPlayers = true;
+								else
+									m_settings::TurretAuthorizedPlayers = false;
+
+								if (m_settings::TurretOptions[1])
+									m_settings::TurretEquippedFlags = true;
+								else
+									m_settings::TurretEquippedFlags = false;
+
+								if (m_settings::TurretOptions[2])
+									m_settings::TurretOnFlags = true;
+								else
+									m_settings::TurretOnFlags = false;
+
+								if (m_settings::TurretOptions[3])
+									m_settings::TurretHealth = true;
+								else
+									m_settings::TurretHealth = false;
+
+								if (m_settings::TurretOptions[4])
+									m_settings::TurretTurningFlag = true;
+								else
+									m_settings::TurretTurningFlag = false;
+
+								if (m_settings::TurretOptions[5])
+									m_settings::TurretRange = true;
+								else
+									m_settings::TurretRange = false;
+
+							}
 						}
 
-						Menu().CheckBox(XS("Cupboard"), m_settings::cupboard);
-						if (m_settings::cupboard)
+						Menu().MultiDropdown(XS("Vehicles"), { XS("PatrolHeli"), XS("Bradley"), XS("MiniCopter"), XS("ScrapHeli"), XS("AttackHeli"), XS("TugBoat"), XS("RHIB"), XS("RowBoat") }, m_settings::VehicleOptions, multi_vehicle_options);
 						{
-							Menu().CheckBox(XS("TC Health"), m_settings::TC_Health);
-							Menu().CheckBox(XS("AuthorizedPlayers"), m_settings::AuthorizedPlayers);
-							
+							if (m_settings::VehicleOptions[0])
+								m_settings::PatrolHelicopter = true;
+							else
+								m_settings::PatrolHelicopter = false;
 
+							if (m_settings::VehicleOptions[1])
+								m_settings::BradleyAPC = true;
+							else
+								m_settings::BradleyAPC = false;
+
+							if (m_settings::VehicleOptions[2])
+								m_settings::Minicopter = true;
+							else
+								m_settings::Minicopter = false;
+
+							if (m_settings::VehicleOptions[3])
+								m_settings::ScrapHeli = true;
+							else
+								m_settings::ScrapHeli = false;
+
+							if (m_settings::VehicleOptions[4])
+								m_settings::AttackHeli = true;
+							else
+								m_settings::AttackHeli = false;
+
+							if (m_settings::VehicleOptions[5])
+								m_settings::TugBoat = true;
+							else
+								m_settings::TugBoat = false;
+
+							if (m_settings::VehicleOptions[6])
+								m_settings::Rhib = true;
+							else
+								m_settings::Rhib = false;
+
+							if (m_settings::VehicleOptions[7])
+								m_settings::Rowboat = true;
+							else
+								m_settings::Rowboat = false;
 						}
+
+
+						Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
+						{
+							if (m_settings::RaidOptions[0])
+								m_settings::RaidESP = true;
+							else
+								m_settings::RaidESP = false;
+
+							if (m_settings::RaidOptions[1])
+								m_settings::ShowC4 = true;
+							else
+								m_settings::ShowC4 = false;
+
+							if (m_settings::RaidOptions[2])
+								m_settings::ShowRocket = true;
+							else
+								m_settings::ShowRocket = false;
+
+							if (m_settings::RaidOptions[3])
+								m_settings::ShowSatchel = true;
+							else
+								m_settings::ShowSatchel = false;
+
+							if (m_settings::RaidOptions[4])
+								m_settings::ShowExplosiveAmmo = true;
+							else
+								m_settings::ShowExplosiveAmmo = false;
+						}
+					
+
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
@@ -1032,6 +1527,7 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("Dropped Distance"), m_settings::MaxDroppedDistance, 0, 500);
 						Menu().Slider(XS("Traps Distance"), m_settings::MaxTrapsDistance, 0, 500);
 						Menu().Slider(XS("APC Distance"), m_settings::MaxAPCDistance, 0, 3000);
+						Menu().Slider(XS("Vehicle Distance"), m_settings::MaxVehicleDistance, 0, 500);
 
 						Menu().Slider(XS("Raid Distance"), m_settings::MaxExplosionDistance, 0, 5000);
 						Menu().Slider(XS("AuthDistance"), m_settings::AuthorizedPlayersDistance, 0, 300);
@@ -1107,7 +1603,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("AutoUpgrade"), m_settings::AutoUpgrade);
 						if (m_settings::AutoUpgrade)
 						{
-							Menu().Dropdown(XS("BuildingGrade"), { XS("Twigs"), XS("Wood"), XS("Stone"), XS("Metal"), XS("HQM") }, m_settings::BuildingGrade, upgrade_open);
+							Menu().Dropdown(XS("BuildingGrade"), { XS("Wood"), XS("Stone"), XS("Metal"), XS("HQM") }, m_settings::BuildingGrade, upgrade_open);
 						}
 						Menu().CheckBox(XS("DoorSpammer"), m_settings::DoorSpammer);
 
@@ -1188,9 +1684,7 @@ void MenuDraw::RenderMenu()
 						}
 						Menu().CheckBox(XS("Fast Bullet"), m_settings::NormalFastBullet);
 						Menu().CheckBox(XS("Force Automatic"), m_settings::ForceAutomatic);
-						Menu().CheckBox(XS("NoSpread"), m_settings::ChangeSpread);
-						if (m_settings::ChangeSpread)
-							Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
+						
 						Menu().CheckBox(XS("NoWeaponBob"), m_settings::NoWeaponBob);
 						Menu().CheckBox(XS("NoSway"), m_settings::NoSway);
 						Menu().CheckBox(XS("InstantEoka"), m_settings::InstantEoka);
@@ -1200,6 +1694,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("CustomHitSounds"), m_settings::CustomHitSounds);
 
 						Menu().CheckBox(XS("Long Melee"), m_settings::LongMelee);
+						Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
 
 					}
 

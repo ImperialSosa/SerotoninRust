@@ -588,58 +588,41 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-
-	static bool StartShooting = false;
-
 	if (m_settings::Autoshoot) {
-
-		if (m_settings::BehindWall) {
-			if (m_settings::Manipulation && m_settings::BulletTP) {
-				if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				if (AssemblyCSharp::IsVisible(LocalPlayer->get_bone_transform(47)->get_position(), AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position())) {
+					Features().PointVisible = true;
 					StartShooting = true;
+				}
+				else if (m_settings::BehindWall) {
+					if (m_settings::Manipulation && m_settings::BulletTP) {
+						if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
+							StartShooting = true;
+						else
+							StartShooting = false;
+					}
+				}
+				else if (m_settings::Thickbullet_AutoShoot) {
+					if (m_settings::BulletTP)
+						StartShooting = true;
+					else
+						StartShooting = false;
+				}
+				else if (m_settings::StartShooting) {
+					if (m_settings::Manipulation)
+						StartShooting = true;
+					else
+						StartShooting = false;
+				}
 				else
 					StartShooting = false;
 			}
+		
 		}
-		else if (m_settings::Thickbullet_AutoShoot) {
-			if (m_settings::BulletTP)
-				StartShooting = true;
-			else
-				StartShooting = false;
-		}
-		else if (m_settings::StartShooting) {
-			if (m_settings::Manipulation)
-				StartShooting = true;
-			else
-				StartShooting = false;
-		}
-		else
-			StartShooting = false;
-	}
-	else if (m_settings::InstantKill)
-	{
-		if (m_settings::BehindWall) {
-			if (m_settings::Manipulation && m_settings::BulletTP) {
-				if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
-					StartShooting = true;
-				else
-					StartShooting = false;
-			}
-		}
-		else if (m_settings::Thickbullet_AutoShoot) {
-			if (m_settings::BulletTP)
-				StartShooting = true;
-			else
-				StartShooting = false;
-		}
-		else if (m_settings::StartShooting) {
-			if (m_settings::Manipulation)
-				StartShooting = true;
-			else
-				StartShooting = false;
-		}
-		else
-			StartShooting = false;
+	
 	}
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
@@ -1479,6 +1462,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+	static bool ResetPlayerFov = false;
+	static bool HasResetPlayerFov = false;
 	if (m_settings::PlayerFov || m_settings::Zoom)
 	{
 		auto g_graphics_ = CIl2Cpp::FindClass(XS("ConVar"), XS("Graphics"));
@@ -1496,6 +1481,20 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			*(float*)(instance + 0x18) = m_settings::PlayerFovAmount;
 		else
 			*(float*)(instance + 0x18) = 90.f;
+
+		ResetPlayerFov = true;
+		HasResetPlayerFov = false;
+	}
+	if (ResetPlayerFov && !m_settings::PlayerFov)
+	{
+		auto g_graphics_ = CIl2Cpp::FindClass(XS("ConVar"), XS("Graphics"));
+		auto instance = std::uint64_t(g_graphics_->static_fields);
+
+		if (!HasResetPlayerFov) {
+			*(float*)(instance + 0x18) = 90.f;
+			HasResetPlayerFov = true;
+		}
+		ResetPlayerFov = false;
 	}
 
 	if (const auto LocalMovement = a1->movement())

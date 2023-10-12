@@ -6,7 +6,10 @@
 
 void ConnectionManager::ResetPlayerCache()
 {
-
+	HasSetNightColor = false;
+	HasSetAmbient = false;
+	HasSetSharpCloud = false;
+	HasSetDayColor = false;
 	DoNoclip = false;
 	Visuals().Instance()->VisiblePlayerList = nullptr;
 	Features().Instance()->LocalPlayer = nullptr;

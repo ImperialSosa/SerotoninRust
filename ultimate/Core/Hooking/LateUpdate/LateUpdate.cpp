@@ -21,102 +21,148 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 	}
 
 	if (IsAddressValid(_This)) {
-		if (m_settings::CustomSky) {
-			if (IsAddressValid(_This->Night()))
-			{
-				auto Night = _This->Night();
-				if (IsAddressValid(Night))
-				{
-					Night->LightIntensity() = 20.f;
-					Night->AmbientMultiplier() = 2.f;
-					Night->ReflectionMultiplier() = 1.f;
-				}
-
-				if (IsAddressValid(_This->Ambient()))
-				{
-					_This->Ambient()->Saturation() = 2.f;
-				}
-
-				if (IsAddressValid(_This->Atmosphere()))
-				{
-					_This->Atmosphere()->Brightness() = 5.f;
-					_This->Atmosphere()->Fogginess() = 0.f;
-				}
-				
-				m_settings::GameTime = 6.5f;
-
-				auto Ambient = Night->AmbientColor();
-				if (IsAddressValid(Ambient))
-				{
-					uintptr_t AmbientColor = *reinterpret_cast<uintptr_t*>(Ambient + 0x10);
-					if (IsAddressValid(AmbientColor))
-					{
-						*reinterpret_cast<Vector4*>(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
-					}
-				}
-				//*(Vector4*)(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
-
-				auto Clouds = _This->Clouds();
-				if (IsAddressValid(Clouds))
-				{
-					Clouds->Sharpness() = 1.f;
-				}
-				
-
-				auto CloudColor = Night->CloudColor();
-				if (IsAddressValid(CloudColor))
-				{
-					uintptr_t CloudsColor = *reinterpret_cast<uintptr_t*>(CloudColor + 0x10);
-					*reinterpret_cast<Vector4*>(CloudsColor) = { 1.f, 1.f, 1.f, 1.f };
-					//*(Vector4*)(CloudsColor) = { 1.f, 1.f, 1.f, 1.f };
-				}
-
-				if (IsAddressValid(_This->Stars()))
-				{
-					_This->Stars()->Brightness() = 150.f;
-				}
-			}
-		}
 
 		if (IsAddressValid(_This->Night()))
 		{
 			auto Night = _This->Night();
 
-			if (m_settings::Brightnight) {
-				Night->LightIntensity() = 20.f;
-				Night->AmbientMultiplier() = 4.f;
-				Night->ReflectionMultiplier() = 1.f;
-			}
-
-			if (m_settings::BrightAmbient) {
-				auto Ambient = Night->AmbientColor();
-				if (IsAddressValid(Ambient))
+			if (IsAddressValid(Night)) {
 				{
-					uintptr_t AmbientColor = *reinterpret_cast<uintptr_t*>(Ambient + 0x10);
-					*reinterpret_cast<Vector4*>(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
-				}
-				
-				//*(Vector4*)(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
-			}
+					static float Orig_LightIntensity;
+					static float Orig_AmbientMultiplier;
+					static float Orig_ReflectionMultiplier;
+					static bool ResetBrightnightToDefault = false;
+					if (m_settings::Brightnight) {
 
-			if (m_settings::SkyColorNight) {
-				auto Sky = Night->SkyColor();
-				if (IsAddressValid(Sky))
-				{
-					uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
-					*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
-				}
-				//*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
-			}
+						if (Night->LightIntensity() != 20.f) {
+							Orig_LightIntensity = Night->LightIntensity();
+							Night->LightIntensity() = 20.f;
+						}
 
-			if (m_settings::SharpClouds) {
-				auto Clouds = Night->CloudColor();
-				if (IsAddressValid(Clouds))
-				{
-					uintptr_t CloudColor = *reinterpret_cast<uintptr_t*>(Clouds + 0x10);
-					*reinterpret_cast<Color*>(CloudColor) = Color(255.f, 255.f, 255.f, 255.f).GetUnityColor();
+						if (Night->AmbientMultiplier() != 4.f) {
+							Orig_AmbientMultiplier = Night->AmbientMultiplier();
+							Night->AmbientMultiplier() = 4.f;
+						}
+
+						if (!Night->ReflectionMultiplier() != 1.f) {
+							Orig_ReflectionMultiplier = Night->ReflectionMultiplier();
+							Night->ReflectionMultiplier() = 1.f;
+						}
+						ResetBrightnightToDefault = true;
+					}
+					else {
+						if (!m_settings::Brightnight && ResetBrightnightToDefault)
+						{
+							if (Night->LightIntensity() != Orig_LightIntensity) {
+								Night->LightIntensity() = Orig_LightIntensity;
+							}
+
+							if (Night->AmbientMultiplier() != Orig_AmbientMultiplier) {
+								Night->AmbientMultiplier() = Orig_AmbientMultiplier;
+							}
+
+							if (!Night->ReflectionMultiplier() != Orig_ReflectionMultiplier) {
+								Night->ReflectionMultiplier() = Orig_ReflectionMultiplier;
+							}
+							ResetBrightnightToDefault = false;
+						}
+					}
 				}
-				//*(Color*)(CloudColor) = Color(255.f, 255.f, 255.f, 255.f).GetUnityColor();
+
+				{
+					static Vector4 Orig_AmbientColor;
+					static bool ResetBrightAmbientToDefault;
+
+					if (m_settings::BrightAmbient) {
+						auto Ambient = Night->AmbientColor();
+						if (IsAddressValid(Ambient))
+						{
+							if (!HasSetAmbient) {
+								uintptr_t AmbientColor = *reinterpret_cast<uintptr_t*>(Ambient + 0x10);
+								Orig_AmbientColor = *reinterpret_cast<Vector4*>(AmbientColor);
+								*reinterpret_cast<Vector4*>(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
+								HasSetAmbient = true;
+								ResetBrightAmbientToDefault = true;
+							}
+						}
+
+						//*(Vector4*)(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
+					}
+					else if (!m_settings::BrightAmbient && ResetBrightAmbientToDefault)
+					{
+						auto Ambient = Night->AmbientColor();
+						if (IsAddressValid(Ambient))
+						{
+							uintptr_t AmbientColor = *reinterpret_cast<uintptr_t*>(Ambient + 0x10);
+							*reinterpret_cast<Vector4*>(AmbientColor) = Orig_AmbientColor;
+							ResetBrightAmbientToDefault = false;
+						}
+					}
+					else
+						HasSetAmbient = false;
+				}
+
+				{
+					static Color Orig_SkyColorNight;
+					static bool ResetSkyColorNightToDefault;
+					if (m_settings::SkyColorNight) {
+						auto Sky = Night->SkyColor();
+						if (IsAddressValid(Sky))
+						{
+							if (!HasSetNightColor) {
+								uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
+								Orig_SkyColorNight = *reinterpret_cast<Color*>(SkyColor);
+								*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+								HasSetNightColor = true;
+								ResetSkyColorNightToDefault = true;
+							}
+						}
+						//*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+					}
+					else if (!m_settings::SkyColorNight && ResetSkyColorNightToDefault)
+					{
+						auto Sky = Night->SkyColor();
+						if (IsAddressValid(Sky))
+						{
+							uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
+							*reinterpret_cast<Color*>(SkyColor) = Orig_SkyColorNight;
+							ResetSkyColorNightToDefault = false;
+						}
+					}
+					else
+						HasSetNightColor = false;
+				}
+
+				{
+					static Vector4 Orig_SharpClouds;
+					static bool ResetSharpCloudsToDefault = false;
+					if (m_settings::SharpClouds) {
+						auto Clouds = Night->CloudColor();
+						if (IsAddressValid(Clouds))
+						{
+							if (!HasSetSharpCloud) {
+								uintptr_t CloudColor = *reinterpret_cast<uintptr_t*>(Clouds + 0x10);
+								Orig_SharpClouds = *reinterpret_cast<Vector4*>(CloudColor);
+								*reinterpret_cast<Color*>(CloudColor) = Color(255.f, 255.f, 255.f, 255.f).GetUnityColor();
+								HasSetSharpCloud = true;
+								ResetSharpCloudsToDefault = true;
+							}
+						}
+						//*(Color*)(CloudColor) = Color(255.f, 255.f, 255.f, 255.f).GetUnityColor();
+					}
+					else if (!m_settings::SharpClouds && ResetSharpCloudsToDefault)
+					{
+						auto Clouds = Night->CloudColor();
+						if (IsAddressValid(Clouds))
+						{
+							uintptr_t CloudColor = *reinterpret_cast<uintptr_t*>(Clouds + 0x10);
+							*reinterpret_cast<Vector4*>(CloudColor) = Orig_SharpClouds;
+							ResetSharpCloudsToDefault = false;
+						}
+					}
+					else
+						HasSetSharpCloud = false;
+				}
 			}
 		}
 
@@ -126,19 +172,66 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 
 			if (IsAddressValid(Day))
 			{
-				if (m_settings::SkyColorDay) {
-					auto Sky = Day->SkyColor();
-					if (IsAddressValid(Sky))
-					{
-						uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
-						*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+				{
+					static Vector4 Orig_SkyColorDay;
+					static bool ResetSkyColorDayToDefault;
+					if (m_settings::SkyColorDay) {
+						auto Sky = Day->SkyColor();
+						if (IsAddressValid(Sky))
+						{
+							if (!HasSetDayColor) {
+								uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
+								Orig_SkyColorDay = *reinterpret_cast<Vector4*>(SkyColor);
+								*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+								HasSetDayColor = true;
+								ResetSkyColorDayToDefault = true;
+							}
+						}
+						//*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
 					}
-					//*(Color*)(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+					else if (!m_settings::SkyColorDay && ResetSkyColorDayToDefault)
+					{
+						auto Sky = Day->SkyColor();
+						if (IsAddressValid(Sky))
+						{
+							uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
+							*reinterpret_cast<Vector4*>(SkyColor) = Orig_SkyColorDay;
+							ResetSkyColorDayToDefault = false;
+						}
+					}
+					else
+						HasSetDayColor = false;
 				}
 
-				if (m_settings::BrightCave) {
-					Day->AmbientMultiplier() = 1.f;
-					Day->ReflectionMultiplier() = 1.f;
+				{
+					static float Orig_AmbientMultiplierDay;
+					static float Orig_ReflectionMultiplierDay;
+					static bool ResetBrightCaveToDefault;
+					if (m_settings::BrightCave) {
+						if (Day->AmbientMultiplier() != 1.f) {
+							Orig_AmbientMultiplierDay = Day->AmbientMultiplier();
+							Day->AmbientMultiplier() = 1.f;
+						}
+
+						if (Day->ReflectionMultiplier() != 1.f) {
+							Orig_ReflectionMultiplierDay = Day->ReflectionMultiplier();
+							Day->ReflectionMultiplier() = 1.f;
+						}
+
+						ResetBrightCaveToDefault = true;
+					}
+					else if (!m_settings::BrightCave && ResetBrightCaveToDefault)
+					{
+						if (Day->AmbientMultiplier() != Orig_AmbientMultiplierDay) {
+							Day->AmbientMultiplier() = Orig_AmbientMultiplierDay;
+						}
+
+						if (Day->ReflectionMultiplier() != Orig_ReflectionMultiplierDay) {
+							Day->ReflectionMultiplier() = Orig_ReflectionMultiplierDay;
+						}
+
+						ResetBrightCaveToDefault = false;
+					}
 				}
 			}
 		
@@ -149,8 +242,21 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 			auto Stars = _This->Stars();
 			if (IsAddressValid(Stars))
 			{
+				static float Orig_StarsAmount;
+				static bool ResetStarsToDefault;
 				if (m_settings::Stars) {
-					Stars->Brightness() = 150.f;
+					if (Stars->Brightness() != 150.f) {
+						Orig_StarsAmount = Stars->Brightness();
+						Stars->Brightness() = 150.f;
+					}
+					ResetStarsToDefault = true;
+				}
+				else if (!m_settings::Stars && ResetStarsToDefault)
+				{
+					if (Stars->Brightness() != Orig_StarsAmount) {
+						Stars->Brightness() = Orig_StarsAmount;
+					}
+					ResetStarsToDefault = false;
 				}
 			}
 		}

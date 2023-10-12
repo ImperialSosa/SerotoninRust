@@ -1038,6 +1038,7 @@ void Visuals::RenderEntities()
 								if (item)
 								{
 									auto name = item->GetItemName();
+
 									if (name->c_str())
 									{
 										auto DroppedColor = Color{ m_settings::DroppedItemColor[0], m_settings::DroppedItemColor[1], m_settings::DroppedItemColor[2], m_settings::DroppedItemColor[3] };
@@ -1053,8 +1054,7 @@ void Visuals::RenderEntities()
 						}
 					}
 				}
-
-			
+		
 				if (BaseEntity->IsA(AssemblyCSharp::CollectibleEntity::StaticClass()))
 				{
 					if (distance <= m_settings::MaxCollectableDistance)
@@ -1124,22 +1124,32 @@ void Visuals::RenderEntities()
 						{
 							float yoffset = 0;
 
+							auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+
 							int cachedUpkeepPeriodMinutes = building_priv->UpKeep();
 							int days = cachedUpkeepPeriodMinutes / 1440;
-							int testt = building_priv->CalculateUpkeepCostFraction();
+							int hours = cachedUpkeepPeriodMinutes / 60;
 
 							auto _health = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_health();
 							auto _maxhealth = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_maxHealth();
-
 
 							std::string player_name = XS("Tool Cupboard");
 							char str[256];
 							sprintf(str, XS("[%dm]"), (int)distance);
 							player_name = player_name + " " + str;
 
-							UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							yoffset += 12.f;
 
+							if (m_settings::TC_Upkeep) {
+								std::string upkeep = XS("Upkeep: ");
+								char str2[256];
+								sprintf(str2, XS("[%dh]"), (int)hours);
+								upkeep = upkeep + " " + str2;
+
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), upkeep.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								yoffset += 12;
+							}
 							if (m_settings::TC_Health)
 							{
 								float draw_health = _health;
@@ -1353,7 +1363,6 @@ void Visuals::RenderEntities()
 								}
 							}
 						}
-
 						
 						if (m_settings::Corn)
 						{
@@ -1415,6 +1424,51 @@ void Visuals::RenderEntities()
 							}
 						}
 					}
+
+					if (distance <= m_settings::MaxCollectableDistance) {
+
+						if (m_settings::StoneCollectable)
+						{
+							if (HASH("stone-collectable") == Hash(name, false))
+							{
+								auto StoneColor = Color{ m_settings::StoneColor[0], m_settings::StoneColor[1], m_settings::StoneColor[2], m_settings::StoneColor[3] };
+
+								std::string player_name = XS("Stone Collectable");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						if (m_settings::MetalCollectable)
+						{
+							if (HASH("metal-collectable") == Hash(name, false))
+							{
+								auto MetalColor = Color{ m_settings::MetalColor[0], m_settings::MetalColor[1], m_settings::MetalColor[2], m_settings::MetalColor[3] };
+								std::string player_name = XS("Metal Collectable");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+
+							}
+						}
+
+						if (m_settings::SulfurCollectable)
+						{
+							if (HASH("sulfur-collectable") == Hash(name, false))
+							{
+								auto SulfurColor = Color{ m_settings::SulfurColor[0], m_settings::SulfurColor[1], m_settings::SulfurColor[2], m_settings::SulfurColor[3] };
+								std::string player_name = XS("SulfurOre");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+					}
 				}
 
 				if (BaseEntity->IsA(AssemblyCSharp::ResourceEntity::StaticClass()))
@@ -1423,7 +1477,7 @@ void Visuals::RenderEntities()
 					{
 						if (m_settings::StoneOre)
 						{
-							if (HASH("stone-ore") == Hash(name, false) || HASH("ore_stone") == Hash(name, false) || HASH("stone-collectable.prefab") == Hash(name, false))
+							if (HASH("stone-ore") == Hash(name, false) || HASH("ore_stone") == Hash(name, false))
 							{
 								auto StoneColor = Color{ m_settings::StoneColor[0], m_settings::StoneColor[1], m_settings::StoneColor[2], m_settings::StoneColor[3] };
 
@@ -1448,7 +1502,7 @@ void Visuals::RenderEntities()
 
 						if (m_settings::MetalOre)
 						{
-							if (HASH("metal-ore") == Hash(name, false) || HASH("ore_metal") == Hash(name, false) || HASH("metal-collectable.prefab") == Hash(name, false))
+							if (HASH("metal-ore") == Hash(name, false) || HASH("ore_metal") == Hash(name, false))
 							{
 								auto MetalColor = Color{ m_settings::MetalColor[0], m_settings::MetalColor[1], m_settings::MetalColor[2], m_settings::MetalColor[3] };
 								std::string player_name = XS("MetalOre");
@@ -1473,7 +1527,7 @@ void Visuals::RenderEntities()
 
 						if (m_settings::SulfurOre)
 						{
-							if (HASH("sulfur-ore") == Hash(name, false) || HASH("ore_sulfur") == Hash(name, false) || HASH("sulfur-collectable.prefab") == Hash(name, false))
+							if (HASH("sulfur-ore") == Hash(name, false) || HASH("ore_sulfur") == Hash(name, false))
 							{
 								auto SulfurColor = Color{ m_settings::SulfurColor[0], m_settings::SulfurColor[1], m_settings::SulfurColor[2], m_settings::SulfurColor[3] };
 								std::string player_name = XS("SulfurOre");
@@ -1532,20 +1586,22 @@ void Visuals::RenderEntities()
 
 				if (BaseEntity->IsA(AssemblyCSharp::StashContainer::StaticClass()))
 				{
-					if (m_settings::Stash)
-					{
-						auto entity = static_cast<AssemblyCSharp::BaseEntity*>(BaseEntity);
+					if (distance <= m_settings::MaxCollectableDistance) {
+						if (m_settings::Stash)
 						{
-							auto flags = entity->flags();
-
-							if (flags & 2048)
+							auto entity = static_cast<AssemblyCSharp::BaseEntity*>(BaseEntity);
 							{
-								std::string player_name = XS("Stash");
-								char str[256];
-								sprintf(str, XS("[%dm]"), (int)distance);
-								player_name = player_name + " " + str;
+								auto flags = entity->flags();
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								if (flags & 2048)
+								{
+									std::string player_name = XS("Stash");
+									char str[256];
+									sprintf(str, XS("[%dm]"), (int)distance);
+									player_name = player_name + " " + str;
+
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								}
 							}
 						}
 					}
@@ -1696,6 +1752,120 @@ void Visuals::RenderEntities()
 					}
 				}
 
+				if (BaseEntity->IsA(AssemblyCSharp::BearTrap::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::BearTrap)
+						{
+							if (HASH("beartrap") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("BearTrap");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::GunTrap::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::ShotgunTrap)
+						{
+							if (HASH("guntrap.deployed") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("Shotgun Trap");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::Barricade::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::SpikesTrap)
+						{
+							if (HASH("spikes.floor") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("Spikes Trap");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::FlameTurret::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::FlameTurret)
+						{
+							if (HASH("flameturret.deployed") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("FlameTurret");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::Landmine::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::LandMine)
+						{
+							if (HASH("landmine") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("LandMine");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::SamSite::StaticClass()))
+				{
+					if (distance <= m_settings::MaxTrapsDistance)
+					{
+						if (m_settings::SamSite)
+						{
+							if (HASH("sam_site_turret_deployed") == Hash(name, false))
+							{
+								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								std::string player_name = XS("Samsite");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
 				if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()))
 				{
 					if (distance <= m_settings::MaxCrateDistance)
@@ -1795,23 +1965,23 @@ void Visuals::RenderEntities()
 					}
 				}
 
-
-				if (m_settings::ThugBoat)
+				if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()))
 				{
-					if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()))
+					if (m_settings::TugBoat)
 					{
-						if (distance <= m_settings::MaxAPCDistance)
+						if (distance <= m_settings::MaxVehicleDistance)
 						{
 							auto thugboat = reinterpret_cast<AssemblyCSharp::Tugboat*>(BaseEntity);
 
 							if (thugboat)
 							{
+								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
 								float yoffset = 0;
 								std::string player_name = XS("TugBoat");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								float draw_health = thugboat->_health();
@@ -1843,7 +2013,123 @@ void Visuals::RenderEntities()
 						}
 					}
 				}
-				if (m_settings::PatrolHelicopter)
+
+				if (BaseEntity->IsA(AssemblyCSharp::BaseVehicle::StaticClass()))
+				{
+					if (distance <= m_settings::MaxVehicleDistance)
+					{
+						if (m_settings::Minicopter)
+						{
+							if (HASH("minicopter.entity") == Hash(name, false))
+							{
+								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								std::string player_name = XS("Minicopter");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						if (m_settings::ScrapHeli)
+						{
+							if (HASH("scraptransporthelicopter") == Hash(name, false))
+							{
+								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								std::string player_name = XS("ScrapHeli");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						//if (m_settings::AttackHeli)
+						//{
+						//	if (HASH("attackhelicopter") == Hash(name, false))
+						//	{
+						//		auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+						//		std::string player_name = XS("AttackHeli");
+						//		char str[256];
+						//		sprintf(str, XS("[%dm]"), (int)distance);
+						//		player_name = player_name + " " + str;
+						//		UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+						//	}
+						//}
+
+						if (m_settings::Rowboat)
+						{
+							if (HASH("rowboat") == Hash(name, false))
+							{
+								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								std::string player_name = XS("RowBoat");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						if (m_settings::Rhib)
+						{
+							if (HASH("RHIB") == Hash(name, false))
+							{
+								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								std::string player_name = XS("RHIB");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+
+				if (BaseEntity->IsA(AssemblyCSharp::Workbench::StaticClass()))
+				{
+					if (distance <= m_settings::MaxDeployableDistance)
+					{
+						if (m_settings::T1Workbench)
+						{
+							if (HASH("workbench1.deployed") == Hash(name, false))
+							{
+								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								std::string player_name = XS("T1 Workbench");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						if (m_settings::T2Workbench)
+						{
+							if (HASH("workbench2.deployed") == Hash(name, false))
+							{
+								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								std::string player_name = XS("T2 Workbench");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+
+						if (m_settings::T3Workbench)
+						{
+							if (HASH("workbench3.deployed") == Hash(name, false))
+							{
+								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								std::string player_name = XS("T3 Workbench");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+							}
+						}
+					}
+				}
+				if (m_settings::BradleyAPC)
 				{
 					if (BaseEntity->IsA(AssemblyCSharp::BradleyAPC::StaticClass()))
 					{
@@ -1906,8 +2192,6 @@ void Visuals::RenderEntities()
 
 					}
 				}
-				
-
 				if (m_settings::PatrolHelicopter)
 				{
 					if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()))
@@ -2057,6 +2341,21 @@ void Visuals::CacheEntities()
 							const auto horse = 2421623959;
 							const auto thugboat = 7995600;
 
+							const auto BearTrap = 922529517;
+							const auto GunTrap = 1348746224;
+							const auto FlameTurret = 4075317686;
+							const auto FloorSpikes = 976279966;
+							const auto LandMine = 1463807579;
+							const auto SamSite = 2059775839;
+
+							const auto Minicopter = 2278499844;
+							const auto ScrapHeli = 3484163637;
+							const auto RHIB = 2226588638;
+							const auto Rowboat = 1283317166;
+
+							const auto t1workbench = 2561955800;
+							const auto t2workbench = 601265145;
+							const auto t3workbench = 2764275075;
 							//const auto Minicopter = 2278499844;
 
 							//const auto timedexplosive = 1915331115;
@@ -2076,7 +2375,63 @@ void Visuals::CacheEntities()
 							//{
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//*/}
-							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::ThugBoat)
+							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == t1workbench && m_settings::T1Workbench)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == t2workbench && m_settings::T2Workbench)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == t3workbench && m_settings::T3Workbench)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == Minicopter && m_settings::Minicopter)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == ScrapHeli && m_settings::ScrapHeli)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == RHIB && m_settings::Rhib)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == Rowboat && m_settings::Rowboat)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							//else if (BaseEntity->IsA(AssemblyCSharp::AttackHeli::StaticClass()) && m_settings::AttackHeli)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//}
+							else if (EntityID == BearTrap && m_settings::BearTrap)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == GunTrap && m_settings::ShotgunTrap)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == FlameTurret && m_settings::FlameTurret)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == FloorSpikes && m_settings::SpikesTrap)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == LandMine && m_settings::LandMine)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == SamSite && m_settings::SamSite)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2145,17 +2500,32 @@ void Visuals::CacheEntities()
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StoneCollectable || EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
+							else if (EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == MetalCollectable || EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
+							else if (EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == SulfurCollectable || EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
+							else if (EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+
+							else if (EntityID == StoneCollectable && m_settings::StoneCollectable)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+
+							else if (EntityID == MetalCollectable && m_settings::MetalCollectable)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+
+							else if (EntityID == SulfurCollectable && m_settings::SulfurCollectable)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2245,11 +2615,12 @@ void Visuals::CacheEntities()
 											if (local.get_3d_dist(entity_pos) <= 5.5f)
 											{
 												float LastGrade = 0.f;
+												auto BuildingGrade = m_settings::BuildingGrade + 1;
 												if (Features().LocalPlayer->lastSentTickTime() > LastGrade + 0.35f
-													&& block->CanAffordUpgrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer)
-													&& block->CanChangeToGrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer)
+													&& block->CanAffordUpgrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
+													&& block->CanChangeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
 													&& !block->IsUpgradeBlocked()) {
-													block->UpgradeToGrade((RustStructs::BuildingGrade)m_settings::BuildingGrade, 0, Features().LocalPlayer);
+													block->UpgradeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer);
 													RPC_Counter.Increment();
 													LastGrade = Features().LocalPlayer->lastSentTickTime();
 												}

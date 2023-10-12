@@ -1052,7 +1052,7 @@ auto prefab_spawner() -> void
 
 	if (m_settings::HerbertPrefabSpawn && UnityEngine::Input::GetKeyDown(m_settings::HerbertKey))
 	{
-		if (HerbertPrefab)
+		if (IsAddressValid(HerbertPrefab))
 		{
 			auto lookingatPoint = Features().LocalPlayer->lookingAtPoint();
 			UnityEngine::Object().Instantiate(HerbertPrefab, lookingatPoint, Features().LocalPlayer->eyes()->get_rotation());
@@ -1061,7 +1061,7 @@ auto prefab_spawner() -> void
 
 	if (m_settings::AmongusPrefabSpawn && UnityEngine::Input::GetKeyDown(m_settings::AmongusKey))
 	{
-		if (AmongusPrefab)
+		if (IsAddressValid(AmongusPrefab))
 		{
 			auto lookingatPoint = Features().LocalPlayer->lookingAtPoint();
 			UnityEngine::Object().Instantiate(AmongusPrefab, lookingatPoint, Features().LocalPlayer->eyes()->get_rotation());
@@ -1532,38 +1532,19 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					float YPos = (UnityEngine::screen_size.y / 8);
 					int YOffset = 40;
 
-					if (m_settings::SelectedHotbar == 2 && m_settings::SelectedClothing == 2) {
-						Vector2 WindowSize = Vector2(200, 50);
-
-						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
-						YOffset += 5.f;
-					}
-					else if (m_settings::SelectedHotbar == 1) {
-						Vector2 WindowSize = Vector2(50, 50);
-
-						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
-						YOffset += 25.f;
-					}
-					else if (m_settings::SelectedHotbar == 2) {
+					if (m_settings::SelectedHotbar == 1 || m_settings::SelectedHotbar == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
 						YOffset += 25.f;
 					}
 
-					if (m_settings::SelectedClothing == 1) {
-						Vector2 WindowSize = Vector2(50, 50);
-
-						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
-						YOffset += 25.f;
-					}
-					else if (m_settings::SelectedClothing == 2) {
+					if (m_settings::SelectedClothing == 1 || m_settings::SelectedClothing == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
-						YOffset += 5.f;
+						YOffset += 25.f;
 					}
-
 
 					if (m_settings::HerbertPrefabSpawn || m_settings::AmongusPrefabSpawn)
 						prefab_spawner();

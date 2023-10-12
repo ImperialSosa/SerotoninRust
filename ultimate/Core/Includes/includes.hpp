@@ -106,7 +106,7 @@ inline std::vector<std::string> xCheatsArr;
 inline std::wstring xChetasRecievedKey;
 inline uint32_t xCheatsRecievedSteamID;
 static inline bool HitPlayer = false;
-//#define DEBUG_MODE //comment out for EAC 
+#define DEBUG_MODE //comment out for EAC 
 
 inline char buffer[512];
 
@@ -131,6 +131,12 @@ inline uintptr_t m_steam_client;
 
 inline bool InGame = false;
 inline bool ToBeCalled = false;
+inline static bool HasSetAmbient = false;
+inline static bool HasSetNightColor = false;
+inline static bool HasSetSharpCloud = false;
+inline static bool HasSetDayColor = false;
+inline static bool StartShooting = false;
+
 #include "../Il2Cpp/il2cpp-api.hpp"
 #include "../Il2Cpp/il2cpp-api-types.hpp"
 #include "../Il2Cpp/il2cpp-blob.hpp"

@@ -46,4 +46,6 @@ public:
 	static inline bool VerifiedLOSPoint = false;
 	static inline Vector3 LOSPoint;
 	static inline uint64_t LOSTargetID;
+
+	//static inline bool HasLOS = false;
 };

@@ -22,6 +22,7 @@ namespace m_settings {
 	inline bool DoorSpammer = false;
 	inline bool DrawClothing = false;
 	inline bool TC_Health = false;
+	inline bool TC_Upkeep = false;
 	inline bool LongMelee = false;
 	inline bool AuthorizedPlayers = false;
 	inline bool DrawClothingIcons = false;
@@ -47,6 +48,8 @@ namespace m_settings {
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
 	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;
+
+	inline RustStructs::KeyCode AimbotKey = RustStructs::KeyCode::Mouse0;
 
 	inline bool TeleportMax = false;
 	inline RustStructs::KeyCode TeleportMaxKey = RustStructs::KeyCode::H;
@@ -219,12 +222,17 @@ namespace m_settings {
 	inline float StoneColor[4] = { 238.f, 238.f, 238.f, 255.f };
 	inline float MetalColor[4] = { 100.f, 49.f, 49.f, 255.f };
 	inline float SulfurColor[4] = { 238.f, 238.f, 0.f, 255.f };
+	inline float TrapsColor[4] = { 245, 188, 66, 255.f };
+	inline float VehicleColor[4] = { 66, 245, 167, 255.f };
+	inline float DeployableColor[4] = { 245, 87, 66, 255.f };
 	inline float MaxDroppedDistance = 50.f;
 	inline float MaxTrapsDistance = 50.f;
+	inline float MaxDeployableDistance = 50.f;
 	inline float MaxCrateDistance = 50.f;
 	inline float MaxSupplyDropDistance = 500.f;
 	inline float MaxFoodDistance = 50.f;
 	inline float MaxAPCDistance = 1500.f;
+	inline float MaxVehicleDistance = 100.f;
 	inline float MaxPlayerDropsDistance = 50.f;
 	inline bool StoneOre = false;
 	inline bool MetalOre = false;
@@ -245,6 +253,10 @@ namespace m_settings {
 	inline bool Wolf = false;
 	inline bool Stag = false;
 	inline bool Boar = false;
+	
+	inline bool T1Workbench = false;
+	inline bool T2Workbench = false;
+	inline bool T3Workbench = false;
 
 	inline bool DieselBarrel = false;
 	inline float WorldFontSize = 10.f;
@@ -257,18 +269,37 @@ namespace m_settings {
 	inline bool Corpse = false;
 	inline bool BackPack = false;
 
-
-	inline static std::vector<bool> LoadChams{ 0, 0, 0, 0, 0, 0, 0 };
-	inline static std::vector<bool> LoadHitEffects{ 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> FoodOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> CrateOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> DeployableOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> TurretOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> OreOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> CollectableOpions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> LoadChams{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> LoadHitEffects{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> TrapsOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> VehicleOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> RaidOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	inline static std::vector<bool> CupboardOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 	inline float CorpseColor[4] = { 201.f, 235.f, 168.f, 255.f };
 	inline float BackPackColor[4] = { 238.f, 238.f, 238.f, 255.f };
 
 	inline bool AutoTurret = false;
+	inline bool ShotgunTrap = false;
+	inline bool BearTrap = false;
+	inline bool SpikesTrap = false;
+	inline bool FlameTurret = false;
+	inline bool LandMine = false;
 	inline bool HackableCrate = false;
 	inline bool BradleyCrate = false;
 	inline bool HeliCrate = false;
 	inline bool BradleyAPC = false;
+	inline bool SamSite = false;
+
+	inline bool StoneCollectable = false;
+	inline bool MetalCollectable = false;
+	inline bool SulfurCollectable = false;
 
 	inline bool TurretRange = false;
 	inline bool TurretAuthorizedPlayers = false;
@@ -373,8 +404,12 @@ namespace m_settings {
 	inline bool LootBarrel = false;
 
 	inline bool OilBarrel = false;
-	inline bool ThugBoat = false;
-
+	inline bool TugBoat = false;
+	inline bool Minicopter = false;
+	inline bool ScrapHeli = false;
+	inline bool Rhib = false;
+	inline bool Rowboat = false;
+	inline bool AttackHeli = false;
 
 	inline bool IgnoreArms = false;
 };
