@@ -171,7 +171,11 @@ void MenuDraw::RenderLegitMenu()
 			case 1:
 				Menu().BeginChild(XS("Exploits"), { 60,45 }, { 220,290 });
 				{
-					Menu().Slider(XS("Recoil Percent"), m_settings::recoilPercent, 0, 100);
+					Menu().CheckBox(XS("Recoil Modifier"), m_settings::ChangeRecoil);
+					if (m_settings::ChangeRecoil) {
+						Menu().Slider(XS("Recoil Percent"), m_settings::recoilPercent, 0, 100);
+						//	Menu().Slider(XS("Recoil Percent Y"), m_settings::RecoilPercentY, 0, 100);
+					}
 					Menu().Slider(XS("Spread Percent"), m_settings::SilentSpread, 0, 100);
 					Menu().CheckBox(XS("Thickness Modifier"), m_settings::NormalThickBullet);
 					if (m_settings::NormalThickBullet) {

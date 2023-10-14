@@ -3157,6 +3157,7 @@ namespace UnityEngine {
 					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, gui_style);
 				}
 
+				free(entry);
 				it = text_buffer.erase(it);
 			}
 		}
@@ -3192,6 +3193,7 @@ namespace UnityEngine {
 
 				UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, menu_gui_style);
 
+				free(entry);
 				it = text_buffer.erase(it);
 			}
 		}
@@ -3207,6 +3209,7 @@ namespace UnityEngine {
 				UnityEngine::GUI::SetColor(entry->backgroundColor);
 				UnityEngine::GUI::DrawTexture(rect_t{ entry->pos.x, entry->pos.y, entry->size.x, entry->size.y }, entry->texture);
 
+				free(entry);
 				it = text_buffer.erase(it);
 			}
 		}
