@@ -59,6 +59,7 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 	}
 	else
 	{
-		return Hooks::DoAttackBowhk.get_original< decltype(&DoAttackBow)>()(_This);
+		Hooks::DoAttackBowhk.get_original< decltype(&DoAttackBow)>()(_This);
 	}
+
 }
