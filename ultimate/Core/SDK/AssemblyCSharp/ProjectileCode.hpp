@@ -253,7 +253,7 @@ public:
 		}
 		else
 		{
-			if (Distance > 3.5f)
+			if (Distance > 5.5f)
 			{
 				return false;
 			}

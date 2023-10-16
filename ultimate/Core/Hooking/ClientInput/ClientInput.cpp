@@ -668,7 +668,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								{
 									CalledLaunchFromHook = true;
 									BaseProjectile->DoAttackRecreation();
-									
+									CalledLaunchFromHook = false;
+
 								}
 							}
 							else if (m_settings::AlwaysAutoshoot)
@@ -676,10 +677,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 								if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().CachedBulletTPPosition))
 								{
 									CalledLaunchFromHook = true;
-									BaseProjectile->DoAttackRecreation();								
+									BaseProjectile->DoAttackRecreation();		
+									CalledLaunchFromHook = false;
 								}
 							}
-							CalledLaunchFromHook = false;
 						}
 					}
 
@@ -1643,6 +1644,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
 
+	
 	//auto modelstate = a1->modelState();
 
 	//if (IsAddressValid(modelstate))
@@ -1659,13 +1661,27 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	//}
 
 	//if (m_settings::FloorHugger)
-	//{
+	////{
 	//	auto modelstate = a1->modelState();
 
 	//	if (IsAddressValid(modelstate))
 	//	{
 	//		modelstate->remove_flag(RustStructs::ModelState_Flag::OnGround);
 	//		modelstate->flags() |= 32768;
+
+
+	//		//a1->ServerRPC("RequestParachuteDeploy");
+
+	//		auto playermodel = a1->playerModel();
+	//		if (playermodel)
+	//		{
+	//			auto animator = playermodel->get_animator();
+	//			if (animator)
+	//			{
+	//				animator->SetTriggerID(playermodel->deployParachuteTrigger());
+	//			}
+	//		}
+
 	//	}
 	//}
 

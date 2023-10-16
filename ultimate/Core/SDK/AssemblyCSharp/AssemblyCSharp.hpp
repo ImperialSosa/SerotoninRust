@@ -1970,6 +1970,8 @@ namespace AssemblyCSharp {
 		IL2CPP_STATIC_FIELD(int, nonGroundedTime);
 		IL2CPP_STATIC_FIELD(int, deployParachuteTrigger);
 
+		IL2CPP_PROPERTY(UnityEngine::Animator*, animator);
+
 		bool isNpc();
 
 		static void RebuildAll()
