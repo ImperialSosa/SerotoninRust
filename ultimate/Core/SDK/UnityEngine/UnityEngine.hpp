@@ -1972,6 +1972,9 @@ namespace UnityEngine {
 		}
 	};
 
+	
+
+
 	struct Transform : Component
 	{
 		IL2CPP_CLASS("Transform");
@@ -2127,6 +2130,29 @@ namespace UnityEngine {
 
 	struct Animator : Il2CppObject {
 		IL2CPP_CLASS("Animator");
+
+		void SetTriggerID(int d)
+		{
+			if (!this) return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("SetTriggerID"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this);
+			}
+
+
+			return;
+		}
 
 		void set_speed(float speed)
 		{

@@ -27,7 +27,8 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 		if (IsAddressValid(LocalPlayer)) {
 			auto eyes = LocalPlayer->eyes();
 			if (IsAddressValid(eyes)) {
-				if (AssemblyCSharp::IsVisible(eyes->get_position() + Features().CachedManipPoint, Features().CachedBulletTPPosition))
+
+				if (Features().PointVisible || StartShooting)
 				{
 					_This->attackReady() = false;
 					if (_This->primaryMagazine()->contents() <= 0)
@@ -61,4 +62,5 @@ void Hooks::DoAttackBow(AssemblyCSharp::BowWeapon* _This)
 	{
 		return Hooks::DoAttackBowhk.get_original< decltype(&DoAttackBow)>()(_This);
 	}
+
 }

@@ -943,37 +943,43 @@ namespace UnityEngine
 
 	bool Camera::WorldToScreen(const Vector3& position, Vector2& screen_pos)
 	{
-		if (!(view))
+		if (!IsAddressValid(view))
 		{
 			return false;
 		}
 
-		auto matrix = view->viewMatrix;
+		auto view_matrix = view->viewMatrix;
 
-		if (!matrix.m) {
+		if (position.IsZero())
 			return false;
-		}
 
-		Vector2 out;
-		const auto temp = matrix.transpose();
+		__m128 trans_vec = _mm_set_ps(0.0f, view_matrix.m[2][3], view_matrix.m[1][3], view_matrix.m[0][3]);
+		__m128 right_vec = _mm_set_ps(0.0f, view_matrix.m[2][0], view_matrix.m[1][0], view_matrix.m[0][0]);
+		__m128 up_vec = _mm_set_ps(0.0f, view_matrix.m[2][1], view_matrix.m[1][1], view_matrix.m[0][1]);
 
-		auto translation_vector = Vector3{ temp[3][0], temp[3][1], temp[3][2] };
-		auto up = Vector3{ temp[1][0], temp[1][1], temp[1][2] };
-		auto right = Vector3{ temp[0][0], temp[0][1], temp[0][2] };
+		__m128 element_pos = _mm_set_ps(0.0f, position.z, position.y, position.x);
 
-		float w = translation_vector.Dot(position) + temp[3][3];
+		__m128 dot_trans = _mm_dp_ps(trans_vec, element_pos, 0x71);
+		__m128 dot_right = _mm_dp_ps(right_vec, element_pos, 0x71);
+		__m128 dot_up = _mm_dp_ps(up_vec, element_pos, 0x71);
 
-		if (w < 0.098f) {
+		float result_trans[4];
+		float result_right[4];
+		float result_up[4];
+
+		_mm_store_ps(result_trans, dot_trans);
+		_mm_store_ps(result_right, dot_right);
+		_mm_store_ps(result_up, dot_up);
+
+		float w = result_trans[0] + view_matrix.m[3][3];
+
+		if (w < 0.001f)
 			return false;
-		}
 
-		float x = up.Dot(position) + temp._24;
-		float y = right.Dot(position) + temp._14;
+		float x = result_right[0] + view_matrix.m[3][0];
+		float y = result_up[0] + view_matrix.m[3][1];
 
-		out.x = (static_cast<float>(UnityEngine::Screen::get_width()) / 2) * (1 + y / w);
-		out.y = (static_cast<float>(UnityEngine::Screen::get_height()) / 2) * (1 - x / w);
-
-		screen_pos = out;
+		screen_pos = { (UnityEngine::screen_size.x / 2) * (1.f + x / w), (UnityEngine::screen_size.y / 2) * (1.f - y / w) };
 
 		return true;
 	}
