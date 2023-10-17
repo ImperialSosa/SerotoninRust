@@ -48,4 +48,9 @@ public:
 	static inline uint64_t LOSTargetID;
 
 	//static inline bool HasLOS = false;
+
+	//static
+	inline static std::vector<Vector3> cachedPoints;
 };
+
+static inline Vector3 SavedWorldPos;

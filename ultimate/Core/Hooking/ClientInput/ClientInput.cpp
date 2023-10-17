@@ -47,12 +47,12 @@ bool TestFlying(AssemblyCSharp::BasePlayer* _This, Vector3 oldPos, Vector3 newPo
 				flag = true;
 			}
 			if (flag) {
-				float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
+				float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
 				float num6 = _This->GetJumpHeight() + num5 + 4.f;
 				if (flyhackDistanceVertical > num6) {
 					return true;
 				}
-				float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
+				float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
 				float num8 = 5.f + num7 + 4.f;
 				if (flyhackDistanceHorizontal > num8) {
 					return true;
@@ -95,13 +95,13 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 
 					result = TestFlying(LocalPlayer, oldPos, modelPos);
 
-					float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
+					float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
 					float num6 = _This->GetJumpHeight() + num5 + 4.f;
 
 					m_settings::MaxVerticalFlyhack = num6;
 					m_settings::VerticalFlyhack = flyhackDistanceVertical;
 
-					float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.5, 0.f);
+					float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
 					float num8 = 5.f + num7;
 
 					m_settings::MaxHorisontalFlyhack = num8 + 4.f;
@@ -224,14 +224,12 @@ void VelocityChecks(Vector3 LocalPos, Vector3 AimbotTarget) {
 
 inline bool FirstInit = false;
 
-std::vector<Vector3> cachedPoints;
-
 void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int baseNumPoints) {
 
 	// Adjust the number of points to generate "x" angles
 	int numPoints = baseNumPoints;
 
-	if (cachedPoints.empty()) {
+	if (Features().cachedPoints.empty()) {
 		for (int i = 0; i < numPoints / 2; i++) {
 			float theta = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * 2 * M_PI; // Random angle
 			float phi = static_cast<float>(LI_FN(rand)()) / static_cast<float>(RAND_MAX) * M_PI;     // Random inclination angle
@@ -248,7 +246,7 @@ void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int bas
 			float y = rY * Math::sinf(phi) * Math::sinf(theta);
 			float z = rZ * Math::cosf(phi);
 
-			cachedPoints.push_back(Vector3(x, y, z));
+			Features().cachedPoints.push_back(Vector3(x, y, z));
 		}
 
 		for (int i = 0; i < numPoints / 2; i++) {
@@ -259,9 +257,92 @@ void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int bas
 			float y = radiusY * Math::sinf(phi) * Math::sinf(theta);
 			float z = radiusZ * Math::cosf(phi);
 
-			cachedPoints.push_back(Vector3(x, y, z));
+			Features().cachedPoints.push_back(Vector3(x, y, z));
 		}
 	}
+}
+
+class GrenadePath {
+public:
+	AssemblyCSharp::BasePlayer* ply;
+	AssemblyCSharp::ThrownWeapon* weapon;
+	std::vector<Vector3> positions;
+	Vector3 endposition;
+
+	GrenadePath() : ply(nullptr), weapon(nullptr), positions({}), endposition({}) { ; }
+
+	GrenadePath(BasePlayer* p, AssemblyCSharp::ThrownWeapon* t) : ply(p), weapon(t) {
+			auto eyepos = p->eyes()->get_position();
+		auto dir = p->eyes()->BodyForward().normalizeeee();
+		auto d = 1.f;
+		auto velocity = t->GetInheritedVelocity(p, dir) + dir * t->maxThrowVelocity() * d + p->GetWorldVelocity() * .5f;
+		Vector3 pos = eyepos;
+		Vector3 lp = pos;
+		Vector3 vel = velocity;
+		for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
+		{
+			pos += vel * 0.03125f;
+			if (!AssemblyCSharp::IsVisible(pos, lp, 0))
+				break;
+			vel.y -= 9.81f * 1.f * 0.03125f;
+			vel -= vel * 0.1f * 0.03125f;
+			lp = pos;
+			positions.push_back(pos);
+		}
+		endposition = pos;
+		return;
+	}
+};
+
+template<typename T1, typename T2>
+bool map_contains_key(T1 map, T2 key) {
+	return map.count(key) > 0;
+}
+
+std::map<int32_t, GrenadePath*> grenade_map = {};
+
+static bool SetForward(bool b) {
+
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
+	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
+	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x8);
+	typedef void(*A)(uintptr_t, bool);
+	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
+	return 1;
+}
+static bool SetRight(bool b) {
+	//auto kl = mem::read<uintptr_t>(mem::game_assembly_base + oButtons_TypeInfo);
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
+	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
+	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x20);
+	typedef void(*A)(uintptr_t, bool);
+	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
+	return 1;
+}
+static bool SetLeft(bool b) {
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
+	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
+	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x18);
+	typedef void(*A)(uintptr_t, bool);
+	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
+	return 1;
+}
+static bool SetBackwards(bool b) {
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
+	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
+	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x10);
+	typedef void(*A)(uintptr_t, bool);
+	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
+	return 1;
+}
+
+void SetSelectedSlot(int slot) {
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53484448); //  "Name": "PlayerBelt_TypeInfo",
+	*reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(kl + 0xB8)) = slot;
+}
+int GetSelectedSlot() {
+	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53484448); //  "Name": "PlayerBelt_TypeInfo",
+	return *reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(kl + 0xB8));
 }
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
@@ -294,7 +375,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		FirstInit = true;
 	}
 
-	if (m_settings::MemoryAimbot && UnityEngine::Input::GetKey(RustStructs::KeyCode::F)) {
+	if (m_settings::MemoryAimbot && UnityEngine::Input::GetKey(m_settings::MemoryAimbotKey)) {
 		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
@@ -304,16 +385,388 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				auto TargetBone = AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position();
 				auto CameraPos = camera->get_positionz();
 				
-				//Vector3 angle_to = calculate_angle(LocalPos, TargetBone);
-				//angle_to = LocalPlayer->input()->bodyAngles().lerp(angle_to, (1.f - 0.f));
+				Vector3 va = LocalPlayer->input()->bodyAngles();
+				Vector2 vb = { va.x, va.y };
+
+				auto calc = [&](const Vector3& src, const Vector3& dst) {
+					Vector3 d = src - dst;
+					return Vector2(RAD2DEG(Math::my_asin(d.y / d.length())), RAD2DEG(-Math::my_atan2(d.x, -d.z)));
+				};
+				auto normalize = [&](float& yaw, float& pitch) {
+					if (pitch < -270) pitch = -270;
+					else if (pitch > 180) pitch = 180;
+					if (yaw < -360) yaw = -360;
+					else if (yaw > 360) yaw = 360;
+					};
+				auto step = [&](Vector2& angles) {
+					bool smooth = true;
+					Vector3 v = va;
+					Vector2 va = { v.x, v.y };
+					Vector2 angles_step = angles - va;
+					normalize(angles_step.x, angles_step.y);
+
+					if (smooth) {
+						float factor_pitch = m_settings::AimbotSmoothness;
+						if (angles_step.x < 0.f) {
+							if (factor_pitch > Math::fabsf(angles_step.x)) {
+								factor_pitch = Math::fabsf(angles_step.x);
+							}
+							angles.x = va.x - factor_pitch;
+						}
+						else {
+							if (factor_pitch > angles_step.x) {
+								factor_pitch = angles_step.x;
+							}
+							angles.x = va.x + factor_pitch;
+						}
+					}
+					if (smooth) {
+						float factor_yaw = m_settings::AimbotSmoothness;
+						if (angles_step.y < 0.f) {
+							if (factor_yaw > Math::fabsf(angles_step.y)) {
+								factor_yaw = Math::fabsf(angles_step.y);
+							}
+							angles.y = va.y - factor_yaw;
+						}
+						else {
+							if (factor_yaw > angles_step.y) {
+								factor_yaw = angles_step.y;
+							}
+							angles.y = va.y + factor_yaw;
+						}
+					}
+				};
+
+				auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+				if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
+				{
+					if (AssemblyCSharp::IsVisible(Features().LocalPlayer->eyes()->get_position(), AimbotTarget.m_position))
+					{
+						auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+						if (IsAddressValid(PrimaryMagazine))
+						{
+							auto AmmoType = PrimaryMagazine->ammoType();
+							if (IsAddressValid(AmmoType))
+							{
+								AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
+								if (IsAddressValid(itemModProjectile))
+								{
+									itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
+									itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
+
+									Vector3 Local = a1->get_bone_transform(RustStructs::bones::head)->get_position();
+
+									Vector3 aim_angle = GetAimDirectionToTarget(a1, BaseProjectile, AimbotTarget.m_position, AimbotTarget.m_velocity, itemModProjectile, Local);
 				
-				//LocalPlayer->input()->bodyAngles() = angle_to;
+									Vector2 offset = calc(LocalPos, aim_angle) - vb; //eyes, targetpos
+									Vector2 ai = vb + offset;
+									step(ai);
+									step(ai);
+									normalize(ai.x, ai.y);
+									Vector3 i = { ai.x, ai.y, 0.0f };
+
+									LocalPlayer->input()->bodyAngles() = i;
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	}
 
 	if (m_settings::Flyhack_Indicator)
 		CheckFlyhack(a1, m_settings::AntiFlyKick);
+
+	//if (m_settings::BlockServerCommands)
+	//{
+	//	typedef FPSystem::List<uintptr_t>* (*AAA)();
+	//	FPSystem::List<uintptr_t>* command_list = ((AAA)(m_game_assembly + 15031808))(); //ConsoleSystem.Index$$get_All
+
+	//	if (command_list)
+	//	{
+	//		LOG(XS("[DEBUG] FoundCommandList"));
+	//		auto size = *reinterpret_cast<int*>(command_list + 0x18);
+	//		for (size_t i = 0; i < size; i++)
+	//		{
+	//			auto cmd = *reinterpret_cast<uintptr_t*>(command_list + 0x20 + i * 0x8);
+	//			if (!cmd) continue;
+	//			auto name = (FPSystem::String*)*reinterpret_cast<uintptr_t*>((uintptr_t)cmd + 0x10);
+	//			if (!LI_FN(wcscmp)(name->str, XS(L"noclip")) //||
+	//				//!LI_FN(wcscmp)(name->str, XS(L"debugcamera")) ||
+	//				//!LI_FN(wcscmp)(name->str, XS(L"debug.debugcamera")) ||
+	//				//!LI_FN(wcscmp)(name->str, XS(L"camspeed")) ||
+	//				//!LI_FN(wcscmp)(name->str, XS(L"camlerp"))
+	//				)
+	//			{
+	//				bool r = false;
+
+	//				*reinterpret_cast<bool*>((uintptr_t)cmd + 0x58) = r;
+	//			}
+	//		}
+	//	}
+	//}
+
+	if (m_settings::RocketPrediction)
+	{
+		auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+		if (IsAddressValid(BaseProjectile))
+		{
+			auto Held = a1->ActiveItem();
+
+			if (IsAddressValid(Held))
+			{
+				auto HeldEntity = Held->heldEntity();
+				if (HeldEntity)
+				{
+					auto PrefabID = HeldEntity->prefabID();
+
+					//LOG(XS("[DEBUG] PrefabID: %zu"), PrefabID);
+
+					//[28700] [DEBUG] PrefabID: 601440135
+					if (PrefabID == 601440135)
+					{
+						auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+						if (IsAddressValid(PrimaryMagazine))
+						{
+							auto AmmoType = PrimaryMagazine->ammoType();
+							if (IsAddressValid(AmmoType))
+							{
+								AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
+								if (IsAddressValid(itemModProjectile))
+								{
+									auto normalized = a1->eyes()->BodyForward().normalizeeee();
+
+									Vector3 position = a1->eyes()->get_position(), lastposition = position, velCheck = normalized * (itemModProjectile->projectileVelocity());
+
+									auto stats = BaseProjectile->get_stats(Held->info()->itemid());
+
+									for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
+									{
+										position += velCheck * 0.03125f;
+										if (!AssemblyCSharp::IsVisible(position, lastposition, 0))
+											break;
+										UnityEngine::DDraw::Line(position, lastposition, Color{ 1, 0, 0, 1.f }, 0.02f, false, false);
+										velCheck.y -= 9.81f * stats.gravity_modifier * 0.03125f;
+										velCheck -= velCheck * stats.drag * 0.03125f;
+										lastposition = position;
+									}
+									UnityEngine::DDraw::Sphere(position, 0.5f, Color{ 1, 1, 0, 1.f }, 0.01f, false);
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	//if (m_settings::GrenadePrediction)
+	//{
+	//	auto Held = a1->ActiveItem();
+
+	//	if (IsAddressValid(Held))
+	//	{
+	//		auto HeldEntity = Held->heldEntity();
+	//		if (HeldEntity)
+	//		{
+	//			auto w = ((AssemblyCSharp::ThrownWeapon*)Held);
+	//			auto eyepos = a1->eyes()->get_position();
+	//			auto normalized = a1->eyes()->BodyForward().normalizeeee();
+	//			auto d = 1.f;
+	//			auto velocity = w->GetInheritedVelocity(a1, normalized) + normalized * w->maxThrowVelocity() * d + a1->GetWorldVelocity() * 0.5f;
+
+	//			Vector3 p = eyepos;
+	//			Vector3 lp = p;
+	//			Vector3 vel = velocity;
+
+	//			for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
+	//			{
+	//				p += vel * 0.03125f;
+	//				if (!AssemblyCSharp::IsVisible(p, lp, 0))
+	//				{
+	//					break;
+	//					//bounce?
+	//				}
+	//				UnityEngine::DDraw::Line(p, lp, Color{ 1, 0, 0, 1.f }, 0.01f, false, false);
+	//				vel.y -= 9.81f * 1.f * 0.03125f;
+	//				vel -= vel * 0.1f * 0.03125f;
+	//				lp = p;
+	//			}
+
+	//			auto points = 36;
+	//			float step = M_PI_2 / points;
+	//			float x, z, c = 0;
+	//			lp = { 0, 0, 0 };
+	//			UnityEngine::DDraw::Sphere(p, 0.5f, Color{ 0, 0, 1, 1.f }, 0.01f, false);
+	//		}
+	//	}
+	//}
+
+	if (m_settings::AutoMed)
+	{
+		auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+		if (BaseProjectile) {
+			auto hpleft = 100 - a1->_health();
+			if (hpleft > 20) {
+				auto s = a1->FindFromHotbar(a1, (L"Med"));
+				if (s < 0)
+					s = a1->FindFromHotbar(a1, (L"Bandage"));
+				if (s >= 0)
+				{
+					auto cs = GetSelectedSlot();
+					if (s != cs) {
+						LOG(XS("[DEBUG] CurSlot: %d"), cs);
+						LOG(XS("[DEBUG] MedSlot: %d"), s);
+						SetSelectedSlot(s);
+						a1->Belt()->ChangeSelect(s, false);
+					}
+					if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() < UnityEngine::Time::get_fixedTime()) {
+						BaseProjectile->ServerRPC(XS("UseSelf"));
+					}
+				}
+			}
+		}
+	}
+
+	if (m_settings::GestureSpam)
+	{
+		float last_gesture_rpc = 0.f;
+
+		if (UnityEngine::Time::get_fixedTime() > last_gesture_rpc + 0.35f)
+		{
+			switch (m_settings::gesture) {
+			case 0:
+				break;
+			case 1:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("clap"));
+				break;
+			case 2:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("friendly"));
+				break;
+			case 3:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("thumbsdown"));
+				break;
+			case 4:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("thumbsup"));
+				break;
+			case 5:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("ok"));
+				break;
+			case 6:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("point"));
+				break;
+			case 7:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("shrug"));
+				break;
+			case 8:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("victory"));
+				break;
+			case 9:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("wave"));
+				break;
+			case 10:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("dance.cabbagepatch"));
+				break;
+			case 11:
+				a1->SendSignalBroadcast(RustStructs::Signal::Gesture, XS("dance.twist"));
+				break;
+			}
+			last_gesture_rpc = UnityEngine::Time::get_fixedTime();
+		}
+	}
+
+	if (m_settings::AutoMini)
+	{
+		auto MountedVehicle = a1->GetMountedVehicle();
+		if (MountedVehicle)
+		{
+			auto maxspeed = m_settings::MaxMiniSpeed;
+			auto height = m_settings::HoverHeight;
+			//LOG(XS("[DEBUG] ClassName: %s"), MountedVehicle->class_name());
+			if (!strcmp(MountedVehicle->class_name(), ("Minicopter")))
+			{
+				auto Mini = (AssemblyCSharp::MiniCopter*)MountedVehicle;
+
+
+				//LOG("[DEBUG] get_rotation.x: %.2f\n", a1->get_transform()->get_rotation().x);
+				//LOG("[DEBUG] get_rotation.y: %.2f\n", a1->get_transform()->get_rotation().y);
+				//LOG("[DEBUG] get_rotation.z: %.2f\n", a1->get_transform()->get_rotation().z);
+				//LOG("[DEBUG] get_rotation.w: %.2f\n", a1->get_transform()->get_rotation().w);
+
+				auto cmd = a2->current()->mouseDelta();
+
+				auto levelout = [&]() {
+
+					auto current_pitch = a1->get_transform()->get_rotation().z;
+					auto current_yaw = a1->get_transform()->get_rotation().y;
+					auto current_roll = a1->get_transform()->get_rotation().x;
+
+					//if (current_yaw > 0.2) {
+					//	SetLeft(false);
+					//	SetRight(true);
+					//}
+					//else if (current_yaw < -0.2) {
+					//	SetLeft(true);
+					//	SetRight(false);
+					//}
+					//else {
+					//	SetLeft(false);
+					//	SetRight(false);
+					//}
+
+
+
+					if (current_pitch > 0) //tilt backwards
+						a2->current()->mouseDelta() = Vector3(cmd.x, cmd.y - .3f, cmd.z);
+					else if (current_pitch < 0) //tilt forwards
+						a2->current()->mouseDelta() = Vector3(cmd.x, cmd.y + .3f, cmd.z);
+					else a2->current()->mouseDelta() = Vector3(0, 0, 0);
+
+					if (current_roll > 0) //tilt right
+						a2->current()->mouseDelta() = Vector3(cmd.x - .3f, cmd.y, cmd.z);
+					else if (current_roll < 0) //tilt left
+						a2->current()->mouseDelta() = Vector3(cmd.x + .3f, cmd.y, cmd.z);
+					else a2->current()->mouseDelta() = Vector3(0, 0, 0);
+					
+				};
+
+				if (m_settings::HoverMini)
+				{
+					auto mode = 0;
+					switch (mode) {
+					case 0:
+					{
+						if (Mini->get_transform())
+						{
+							auto mpos = Mini->get_transform()->get_position();
+							auto targetpos = Vector3(mpos.x, m_settings::HoverHeight, mpos.z);
+
+							if (mpos.y < targetpos.y) {
+								SetBackwards(false);
+								SetForward(true);
+							}
+							else {
+								SetForward(false);
+								SetBackwards(true);
+							}
+
+							if (mpos.Distance(targetpos) < 1.f) {
+								SetBackwards(false);
+								SetForward(false);
+							}
+
+							UnityEngine::DDraw::Line(mpos, targetpos, Color{ 1.f, 0.f, 0.f, 1.f }, 0.01f, true, true);
+
+							levelout();
+							break;
+						}
+
+					}
+					}
+				}
+			}
+		}
+	}
 
 	float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().Instance()->LocalPlayer->lastSentTickTime());
 	float last_tick_time = maxx(0.f, minm(timeSinceLastTick, 1.f));
@@ -424,14 +877,13 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		if (IsAddressValid(AimbotTarget.m_player)) {
 			if (m_settings::CacheBulletTP) {
 				{
-					static float CachedGeneratedPoints;
-					static bool Cached = false;
-					if (!Cached) {
+					static float CachedGeneratedPoints;					
+					if (!CachedPointss) {
 						CachedGeneratedPoints = m_settings::LOSCheckAmount;
-						Cached = true;
+						CachedPointss = true;
 					}
 					if (CachedGeneratedPoints > m_settings::LOSCheckAmount || CachedGeneratedPoints < m_settings::LOSCheckAmount) {
-						Cached = false;
+						CachedPointss = false;
 						Features().GeneratedPoints = false;
 					}
 
@@ -475,7 +927,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 
 				if (!Features().VerifiedLOSPoint) {
-					for (const Vector3& point : cachedPoints) {
+					for (const Vector3& point : Features().cachedPoints) {
 						//UnityEngine::DDraw().Sphere(AimbotTarget.m_position + point, 0.05f, Color::Red(), 0.05f, 0);
 						if (m_settings::AdvancedChecks) {
 							if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point) &&
@@ -989,8 +1441,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 											ActiveModel->animator()->set_speed(-1);
 									}
 								}
-							}
-						
+							}					
 						}
 					}
 				}
@@ -1278,7 +1729,21 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							}
 						}
 						break;
+					case 6:
+						if (RPBGalaxyBundle) {
+							if (!RPBGalaxyShader) //Galaxy
+								RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
+							if (!RPBGalaxyMaterial)
+								RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != RPBGalaxyShader)
+							{
+								MainRenderer->set_material(RPBGalaxyMaterial);
+								RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
+							}
+						}
+						break;
 					}
 				}
 			}
@@ -1481,9 +1946,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			*(float*)(instance + 0x18) = m_settings::PlayerFovAmount;
 		else
 			*(float*)(instance + 0x18) = 90.f;
-
-		ResetPlayerFov = true;
-		HasResetPlayerFov = false;
+		 
+		if (m_settings::PlayerFov) {
+			ResetPlayerFov = true;
+			HasResetPlayerFov = false;
+		}
 	}
 	if (ResetPlayerFov && !m_settings::PlayerFov)
 	{

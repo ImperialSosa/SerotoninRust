@@ -359,6 +359,10 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						LightningBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] Loaded LightningBundle"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Lightning!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -396,6 +400,10 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						GeometricBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] Loaded GeometricBundle"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Geometric!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -433,6 +441,51 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						GalaxyBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] Galaxy Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Galaxy!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+						send_time2 = current_time2;
+					}
+				}
+				send_time = current_time;
+			}
+		}
+	}
+	if (m_settings::LoadRBP) {
+		if (!RPBGalaxyBundle)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/rbpgalaxy.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						RPBGalaxyBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+						LOG(XS("[DEBUG] RPBGalaxyBundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded RPBGalaxy!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -470,6 +523,10 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						WireFrameBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] WireFrame Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded WireFrame!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -507,6 +564,10 @@ void SetupBundles()
 						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
 						HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 						LOG(XS("[DEBUG] HerbetAsset Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Herbert!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -553,6 +614,10 @@ void SetupBundles()
 						AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 
 						LOG(XS("[DEBUG] AmongUsAsset Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Amongus!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -600,6 +665,9 @@ void SetupBundles()
 						ExplosionAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 
 						LOG(XS("[DEBUG] ExplosionAsset Bundle Loaded"));
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Explosion!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -647,6 +715,10 @@ void SetupBundles()
 						GhostAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
 
 						LOG(XS("[DEBUG] GhostAsset Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Ghost!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
 						send_time2 = current_time2;
 					}
 				}
@@ -798,7 +870,6 @@ void drawMisc()
 		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 		if (IsAddressValid(LocalPlayer)) {
 			auto CurrentPos = LocalPlayer->get_bone_transform(47)->get_position();
-			static Vector3 SavedWorldPos;
 			static Vector2 SavedPos;
 
 			if (UnityEngine::Input::GetKey(m_settings::SavePosKey))
@@ -1659,6 +1730,14 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				FireBundleA = nullptr;
 				FireShaderA = nullptr;
 				FireMaterialA = nullptr;
+			}
+
+			if (RPBGalaxyBundle)
+			{
+				RPBGalaxyBundle->Unload(true);
+				RPBGalaxyBundle = nullptr;
+				RPBGalaxyShader = nullptr;
+				RPBGalaxyMaterial = nullptr;
 			}
 
 			if (FireBundleB)

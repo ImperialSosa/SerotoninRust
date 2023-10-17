@@ -8,6 +8,231 @@ inline std::array<int, 20> valid_bones = {
 		1, 2, 3, 5, 6, 14, 15, 17, 18, 21, 23, 24, 25, 26, 27, 48, 55, 56, 57, 76
 };
 
+inline float NormalizeAngle(float angle) {
+	while (angle > 360.0f) {
+		angle -= 360.0f;
+	}
+	while (angle < 0.0f) {
+		angle += 360.0f;
+	}
+	return angle;
+}
+
+inline Vector3 NormalizeAngles(Vector3 angles) {
+	angles.x = NormalizeAngle(angles.x);
+	angles.y = NormalizeAngle(angles.y);
+	angles.z = NormalizeAngle(angles.z);
+	return angles;
+}
+
+inline Vector3 EulerAngles(Vector4 q1) {
+	float num = q1.w * q1.w;
+	float num2 = q1.x * q1.x;
+	float num3 = q1.y * q1.y;
+	float num4 = q1.z * q1.z;
+	float num5 = num2 + num3 + num4 + num;
+	float num6 = q1.x * q1.w - q1.y * q1.z;
+	Vector3 vector;
+	if (num6 > 0.4995f * num5) {
+		vector.y = 2.0f * Math::atan2f(q1.y, q1.x);
+		vector.x = 1.57079637f;
+		vector.z = 0.0f;
+		return NormalizeAngles(vector * 57.2958f);
+	}
+	if (num6 < -0.4995f * num5) {
+		vector.y = -2.0f * Math::atan2f(q1.y, q1.x);
+		vector.x = -1.57079637f;
+		vector.z = 0.0f;
+		return NormalizeAngles(vector * 57.2958f);
+	}
+	Vector4 quaternion = Vector4(q1.w, q1.z, q1.x, q1.y);
+	vector.y = Math::atan2f(2.0f * quaternion.x * quaternion.w + 2.0f * quaternion.y * quaternion.z, 1.0f - 2.0f * (quaternion.z * quaternion.z + quaternion.w * quaternion.w));
+	vector.x = Math::asinf(2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y));
+	vector.z = Math::atan2f(2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
+	return NormalizeAngles(vector * 57.2958f);
+}
+
+Vector2 CosTanSinLineH(float flAngle, float range, int x, int y, int LineLength) {
+	float mainAngle = flAngle;
+	mainAngle += 45.f;
+
+	float flYaw = (mainAngle) * (M_PI / 180.0);
+
+	float viewcosyawzzzzzzz = Math::cosf(flYaw);
+	float viewsinyawzzzzzzz = Math::sinf(flYaw);
+
+	float x2 = range * (-viewcosyawzzzzzzz) + range * viewsinyawzzzzzzz;
+	float y2 = range * (-viewcosyawzzzzzzz) - range * viewsinyawzzzzzzz;
+
+	int posonscreenX = x + int(x2 / range * (LineLength));
+	int posonscreenY = y + int(y2 / range * (LineLength));
+
+	return Vector2(posonscreenX, posonscreenY);
+}
+
+void DrawTriangles(Vector2 center) {
+	Color col = Color(1, 1, 1, 1.f);
+	auto pixelsize = 5; auto trianglecount = 5;
+	Vector2 triangleList[5][3] = {
+		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
+		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
+		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
+		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
+		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } }
+	};
+	for (size_t n = 0; n < trianglecount; n++)
+	{
+		std::vector<Vector2> v = {};
+		for (size_t i = 0; i < 3; i++)
+		{
+			triangleList[n][i].x = LI_FN(rand)() % (pixelsize / 2) + 1;
+			triangleList[n][i].y = LI_FN(rand)() % (pixelsize / 2) + 1;
+
+			if (triangleList[n][i].x > triangleList[n][i].y)
+			{
+				float tmp = triangleList[n][i].x;
+				triangleList[n][i].x = triangleList[n][i].y;
+				triangleList[n][i].y = tmp;
+			}
+		}
+	}
+
+
+	auto morphTriangleIdx = new int[pixelsize];
+	auto morphVertexIdx = new int[pixelsize];
+	auto morphDeltaX = new int[pixelsize];
+	auto morphDeltaY = new int[pixelsize];
+	auto setMorphParams = [&]() {
+		for (size_t i = 0; i < 3; i++)
+		{
+			morphTriangleIdx[i] = LI_FN(rand)() % pixelsize + 0;
+			morphVertexIdx[i] = LI_FN(rand)() % 3 + 0;
+			morphDeltaX[i] = 0;
+			morphDeltaY[i] = 0;
+			if ((LI_FN(rand)() % 1 + 0) == 0)
+				morphDeltaX[i] = 1;
+			else
+				morphDeltaX[i] = -1;
+		}
+		};
+
+	if ((LI_FN(rand)() % 10 + 1) == 1)
+		setMorphParams();
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		float x = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = morphDeltaX[i];
+		float y = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = morphDeltaY[i];
+
+		if (x > pixelsize / 2 - 1)
+		{
+			x = pixelsize / 2 - 1;
+			morphDeltaX[i] = -1;
+		}
+		else if (x < 0)
+		{
+			x = 0;
+			morphDeltaX[i] = 1;
+		}
+
+		if (y > pixelsize / 2 - 1)
+		{
+			y = pixelsize / 2 - 1;
+			morphDeltaY[i] = -1;
+		}
+		else if (y < 0)
+		{
+			y = 0;
+			morphDeltaY[i] = 1;
+		}
+
+		if (x > y) {
+			float tmp = x;
+			x = y;
+			y = tmp;
+		}
+
+		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = x;
+		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = y;
+	}
+
+	std::vector<Vector2> v = { };
+	std::vector<Vector2> w = { };
+
+	auto reflect = [&](std::vector<Vector2>& v, std::vector<Vector2>& w, int n, int offset) {
+		for (int i = 0; i < v.size(); i++)
+		{
+			if (n == 0)
+			{
+				w[i].x = v[i].x + offset;
+				w[i].y = v[i].y + offset;
+			}
+			else if (n == 1)
+			{
+				w[i].x = -v[i].x + offset;
+				w[i].y = v[i].y + offset;
+			}
+			else if (n == 2)
+			{
+				w[i].x = v[i].x + offset;
+				w[i].y = -v[i].y + offset;
+			}
+			else if (n == 3)
+			{
+				w[i].x = -v[i].x + offset;
+				w[i].y = -v[i].y + offset;
+			}
+			else if (n == 4)
+			{
+				w[i].x = v[i].y + offset;
+				w[i].y = v[i].x + offset;
+			}
+			else if (n == 5)
+			{
+				w[i].x = -v[i].y + offset;
+				w[i].y = v[i].x + offset;
+			}
+			else if (n == 6)
+			{
+				w[i].x = v[i].y + offset;
+				w[i].y = -v[i].x + offset;
+			}
+			else if (n == 7)
+			{
+				w[i].x = -v[i].y + offset;
+				w[i].y = -v[i].x + offset;
+			}
+		}
+		};
+
+	for (size_t n = 0; n < trianglecount; n++)
+	{
+		for (size_t k = 0; k < 3; k++)
+		{
+			v[k].x = triangleList[n][k].x;
+			v[k].y = triangleList[n][k].y;
+		}
+
+		for (size_t k = 0; k < 3; k++)
+		{
+			reflect(v, w, k, pixelsize / 2);
+
+			for (size_t z = 0; z < trianglecount; z++)
+			{
+				for (size_t ii = 0; ii < 3; ii++)
+				{
+					w[ii].x += center.x;
+					w[ii].y += center.y;
+				}
+
+				UnityEngine::GL().Line(w[0], w[1], col);
+				UnityEngine::GL().Line(w[1], w[2], col);
+				UnityEngine::GL().Line(w[0], w[2], col);
+			}
+		}
+	}
+}
+
 box_bounds Visuals::get_bounds(AssemblyCSharp::BasePlayer* player, float expand) {
 	if (!player)
 		return box_bounds::null();
@@ -651,6 +876,26 @@ void Visuals::DrawPlayers()
 				}
 			}
 
+			//if (m_settings::OOFIndicators)
+			//{
+			//	Vector3 position = BasePlayer->eyes()->get_position();
+			//	Vector3 local = LocalPlayer->eyes()->get_position();
+			//	DrawTriangles(screen_center);
+			//	float num = Math::atan2f(local.x - position.x, local.z - position.z) * 57.29578f - 180.f - EulerAngles(LocalPlayer->eyes()->get_rotation()).y;
+
+			//	if (!(num < -420 || num > -300)) return;
+
+			//	Vector2 tp0 = CosTanSinLineH(num, 5.f, 1920 / 2, 1080 / 2, 150.f);
+			//	Vector2 tp1 = CosTanSinLineH(num + 2.f, 5.f, 1920 / 2, 1080 / 2, 140.f);
+			//	Vector2 tp2 = CosTanSinLineH(num - 2.f, 5.f, 1920 / 2, 1080 / 2, 140.f);
+
+			//	Vector2 p = { tp0.x, tp0.y }, p1 = { tp1.x, tp1.y }, p2 = { tp2.x, tp2.y };
+
+			//	UnityEngine::GL().Line(tp0, tp1, Color(249.f, 130.f, 109.f, 255.f));
+			//	UnityEngine::GL().Line(tp0, tp2, Color(249.f, 130.f, 109.f, 255.f));
+			//	UnityEngine::GL().Line(tp1, tp2, Color(249.f, 130.f, 109.f, 255.f));
+			//}
+
 			if (m_settings::PlayerChams)
 			{
 				auto playerModel = BasePlayer->playerModel();
@@ -787,6 +1032,21 @@ void Visuals::DrawPlayers()
 															material->SetColor(XS("_ColorVisible"), BoxColor.GetUnityColor());
 															material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
 														}
+													}
+												}
+												break;
+											case 8:
+												if (RPBGalaxyBundle) {
+													if (!RPBGalaxyShader) //Galaxy
+														RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!RPBGalaxyMaterial)
+														RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != RPBGalaxyShader)
+													{
+														MainRenderer->set_material(RPBGalaxyMaterial);
+														RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
 													}
 												}
 												break;
@@ -1048,6 +1308,39 @@ void Visuals::RenderEntities()
 										player_name = player_name + " " + str;
 
 										UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DroppedColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+
+										if (m_settings::DroppedItemsChams) {
+											auto ChamsColor = Color{ 168, 166, 50, 255.f };
+											auto g_render = BaseEntity->GetComponentsInChildren(FPSystem::Type::Renderer());
+											if (IsAddressValid(g_render))
+											{
+												auto size = g_render->max_length;
+												for (int i = 0; i < size; i++)
+												{
+													auto main_renderer = g_render->m_Items[i];
+													if (!(main_renderer))
+														continue;
+
+													auto material = main_renderer->material();
+
+													if (!IsAddressValid(material))
+														continue;
+
+													auto g_shader = UnityEngine::Shader::Find(XS("Hidden/Internal-Colored"));
+
+													if (!IsAddressValid(g_shader))
+														continue;
+
+													if (g_shader != material->shader())
+													{
+														material->set_shader(g_shader);
+													}
+													material->SetInt(XS("_ZTest"), 8);
+													material->SetColor(XS("_Color"), ChamsColor.GetUnityColor());
+
+												}
+											}
+										}
 									}
 								}
 							}

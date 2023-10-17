@@ -233,6 +233,7 @@ namespace FPSystem {
 		IL2CPP_CLASS("String");
 		std::int32_t m_stringLength = 0;	// 0x0010
 		wchar_t m_firstChar[1] = { };		// 0x0014
+		wchar_t str[128 + 1];
 
 		bool Contains(const char* str)
 		{

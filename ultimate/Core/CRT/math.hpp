@@ -56,6 +56,9 @@ namespace Math {
 	float floorf(float x);
 	double ceil(double x);
 	float ceilf(float x);
+	float my_asin(float x);
+	float my_atan2(float y, float x);
+	float my_sqrt(float number);
 
 	float roundf(float x);
 

@@ -4,6 +4,59 @@
 #include "../../Includes/settings.hpp"
 #include "../ProtoBuf/ProtoBuf.h"
 
+struct weapon_stats_t {
+	float initial_velocity;
+	float gravity_modifier;
+	float drag;
+	float initial_distance;
+};
+
+enum AmmoType : int32_t {
+	shotgun = -1685290200,
+	shotgun_slug = -727717969,
+	shotgun_fire = -1036635990,
+	shotgun_handmade = 588596902,
+
+	rifle_556 = -1211166256,
+	rifle_556_hv = 1712070256,
+	rifle_556_fire = 605467368,
+	rifle_556_explosive = -1321651331,
+
+	pistol = 785728077,
+	pistol_hv = -1691396643,
+	pistol_fire = 51984655,
+
+	arrow_wooden = -1234735557,
+	arrow_hv = -1023065463,
+	arrow_fire = 14241751,
+	arrow_bone = 215754713,
+
+	nailgun_nails = -2097376851,
+
+	rocket_hv = -1841918730,
+	rocket_incen = 1638322904,
+	rocket_basic = -742865266
+};
+
+enum weapon_types : int32_t {
+	spear_stone = 1602646136,
+	spear_wooden = 1540934679,
+	hatchet = -1252059217,
+	stonehatchet = -1583967946,
+	pickaxe = -1302129395,
+	stonepickaxe = 171931394,
+	salvageaxe = -262590403,
+	cleaver = -1978999529,
+	hammer = -1506397857,
+	icepick = -1780802565,
+	sword = 1326180354,
+	boneknife = 1814288539,
+	butcherknife = -194509282,
+	combatknife = 2040726127,
+	rock = 963906841,
+	snowball = -363689972
+};
+
 namespace Rust {
 	IL2CPP_NAME_SPACE("Rust");
 
@@ -72,7 +125,7 @@ namespace AssemblyCSharp {
 		IL2CPP_CLASS("InputMessage");
 
 		IL2CPP_FIELD(Vector3, aimAngles);
-
+		IL2CPP_FIELD(Vector3, mouseDelta);
 	};
 
 	struct InputState : Il2CppObject
@@ -579,6 +632,7 @@ namespace AssemblyCSharp {
 		bool HasAttackCooldown();
 		auto StartAttackCooldown(float coolDown) -> void;
 	};
+
 	struct ResourceDispenserGatherPropertyEntry : Il2CppObject {
 		IL2CPP_CLASS("ResourceDispenser.GatherPropertyEntry");
 
@@ -1229,6 +1283,255 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(bool, fractionalReload);
 		IL2CPP_FIELD(bool, isCycling);
 
+		weapon_stats_t get_stats(int32_t weapon_id) {
+			const auto primary_magazine = this->primaryMagazine();
+
+			if (!primary_magazine)
+				return weapon_stats_t{ (1000) };
+
+			float velocity = (1000);
+			float gravity_modifier = (1);
+			float drag = (.001f);
+			float distance = (0);
+
+			auto velocity_scale = (1);
+			bool scale_velocity = false;
+
+			const auto ammo_definition = *reinterpret_cast<uintptr_t*>((uintptr_t)primary_magazine + 0x20);
+			//auto ammo_definition = primary_magazine->ammoType();//*reinterpret_cast<uintptr_t*>((uintptr_t)primary_magazine + 0x20);
+			if (ammo_definition) {
+				// itemid
+				//const auto ammo_id = ammo_definition->itemid;//*reinterpret_cast<int32_t*>((uintptr_t)ammo_definition + 0x18);
+				const auto ammo_id = *reinterpret_cast<int32_t*>((uintptr_t)ammo_definition + 0x18);
+
+				if (ammo_id)
+				{
+					switch (ammo_id) {
+					case rocket_basic:
+						drag = (0.1f);
+						gravity_modifier = (10.f);
+						break;
+					case rocket_hv:
+						drag = (0.f);
+						gravity_modifier = (0.f);
+						break;
+						break;
+					case rocket_incen:
+						drag = (0.1f);
+						gravity_modifier = (10.f);
+						break;
+						break;
+					case shotgun:
+						velocity = (225);
+						drag = (1);
+						distance = (3);
+						break;
+					case shotgun_slug:
+						velocity = (225);
+						drag = (1);
+						distance = (10);
+						break;
+					case shotgun_fire:
+						velocity = 100;
+						drag = 1;
+						distance = 3;
+						break;
+					case shotgun_handmade:
+						velocity = 100;
+						drag = 1;
+						distance = 0;
+						break;
+					case rifle_556:
+						velocity = 375;
+						drag = .6;
+						distance = 15;
+						break;
+					case rifle_556_hv:
+						velocity = 450;
+						drag = .6;
+						distance = 15;
+						break;
+					case rifle_556_fire:
+						velocity = 225;
+						drag = .6;
+						distance = 15;
+						break;
+					case rifle_556_explosive:
+						velocity = 225;
+						gravity_modifier = 1.25;
+						drag = .6;
+						distance = 15;
+						break;
+					case pistol:
+						velocity = 300;
+						drag = .7;
+						distance = 15;
+						break;
+					case pistol_hv:
+						velocity = 400;
+						drag = .7;
+						distance = 15;
+						break;
+					case pistol_fire:
+						velocity = 225;
+						drag = .7;
+						distance = 15;
+						break;
+					case arrow_wooden:
+						velocity = 50;
+						gravity_modifier = .75;
+						drag = .005;
+						break;
+					case arrow_hv:
+						velocity = 80;
+						gravity_modifier = .5;
+						drag = .005;
+						break;
+					case arrow_fire:
+						velocity = 40;
+						gravity_modifier = 1;
+						drag = .01;
+						break;
+					case arrow_bone:
+						velocity = 45;
+						gravity_modifier = .75;
+						drag = .01;
+						break;
+					case nailgun_nails:
+						velocity = 50;
+						gravity_modifier = .75;
+						drag = .005;
+						break;
+					}
+				}
+
+				scale_velocity = true;
+				velocity_scale =
+					GetProjectileVelocityScale(false);
+			}
+
+			switch (weapon_id) {
+			case spear_wooden:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case spear_stone:
+				velocity = 30;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case hatchet:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case stonehatchet:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case pickaxe:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case stonepickaxe:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case salvageaxe:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case cleaver:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case hammer:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case icepick:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case sword:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case boneknife:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case butcherknife:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case combatknife:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case rock:
+				velocity = 15;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			case snowball:
+				velocity = 25;
+				scale_velocity = false;
+				gravity_modifier = 2;
+				drag = .1f;
+				distance = .25f;
+				break;
+			}
+
+			if (scale_velocity && (velocity_scale != 0))
+				velocity *= velocity_scale;
+
+			return { velocity, gravity_modifier, drag, distance };
+		}
+
+
 		bool HasReloadCooldown();
 		float GetProjectileVelocityScale(bool max);
 
@@ -1395,7 +1698,11 @@ namespace AssemblyCSharp {
 
 	struct ThrownWeapon : AttackEntity {
 		IL2CPP_CLASS("ThrownWeapon");
+		IL2CPP_FIELD(float, maxThrowVelocity);
+		IL2CPP_FIELD(float, tumbleVelocity);
+		IL2CPP_FIELD(Vector3, overrideAngle);
 
+		Vector3 GetInheritedVelocity(BasePlayer* ply, Vector3 dir);
 	};
 
 	struct FlameThrower : AttackEntity {
@@ -1476,6 +1783,11 @@ namespace AssemblyCSharp {
 
 	struct MiniCopter : BaseCombatEntity {
 		IL2CPP_CLASS("MiniCopter");
+
+		IL2CPP_FIELD(float, rotorSpeed);
+		IL2CPP_FIELD(float, cachedPitch);
+		IL2CPP_FIELD(float, cachedYaw);
+		IL2CPP_FIELD(float, cachedRoll);
 	};
 
 	struct AttackHelicopter : BaseCombatEntity {
@@ -1577,6 +1889,8 @@ namespace AssemblyCSharp {
 		IL2CPP_PROPERTY(UnityEngine::Sprite*, iconSprite);
 
 		FPSystem::String* GetItemName();
+		wchar_t* GetItemName2();
+		wchar_t* get_weapon_name();
 		FPSystem::String* GetItemShortName();
 
 		void SetSkin(uint64_t skin_id);
@@ -2116,7 +2430,7 @@ namespace AssemblyCSharp {
 
 
 		IL2CPP_FIELD(InputState*, state);
-		IL2CPP_FIELD(Vector2, bodyAngles);
+		IL2CPP_FIELD(Vector3, bodyAngles);
 		IL2CPP_FIELD(Vector2, recoilAngles);
 	};
 
@@ -2230,6 +2544,56 @@ namespace AssemblyCSharp {
 		// Fields
 		unsigned long Value; // 0x0
 	};
+
+	struct PlayerBelt
+	{
+		IL2CPP_CLASS("PlayerBelt");
+
+		Item* GetItemInSlot(int slot)
+		{
+
+			if (!this) return 0;
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("GetItemInSlot"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<Item*>(procedure, this, slot);
+			}
+
+
+			return 0;
+		}
+
+		void ChangeSelect(int iSlot, bool allowRunAction)
+		{
+			if (!this)return;
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("ChangeSelect"), 2);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this, iSlot, allowRunAction);
+			}
+
+			return;
+		}
+	};
+
 	struct LocalPlayer;
 	struct BasePlayer : PatrolHelicopter
 	{
@@ -2254,8 +2618,8 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(ItemId, clActiveItem);
 		IL2CPP_FIELD(UnityEngine::Collider*, _lookingAtCollider);
 		IL2CPP_FIELD(UnityEngine::CapsuleCollider*, playerCollider);
-
-
+		IL2CPP_FIELD(FPSystem::List<ProtoBuf::MapNote*>*, ClientCurrentMapNotes);
+		IL2CPP_FIELD(PlayerBelt*, Belt);
 
 		bool IsPlayer() {
 			if (!this) return false;
@@ -2275,6 +2639,26 @@ namespace AssemblyCSharp {
 				!strcmp(this->class_name(), XS("NPCShopkeeper"));
 		}
 
+		auto belt_list() -> FPSystem::List<Item*>*
+		{
+			auto ActiveUid = this->clActiveItem();
+			if (!IsAddressValid(ActiveUid.Value))
+				return { };
+
+			auto inventory = this->inventory();
+			if (!inventory)
+				return { };
+
+			auto belt = inventory->containerBelt();
+			if (!belt)
+				return { };
+
+			auto itemList = belt->itemList();
+			if (!itemList)
+				return { };
+
+			return itemList;
+		}
 
 		auto item() -> Item*
 		{
@@ -2622,6 +3006,29 @@ namespace AssemblyCSharp {
 			return currentTeam() == player->currentTeam();
 		}
 
+		int FindFromHotbar(BasePlayer* lp, std::wstring shortname)
+		{
+			FPSystem::List<Item*>* belt = belt_list();
+			auto Belt = lp->Belt();
+			int id = -1;
+			if (Belt)
+			{
+				auto checkitem = [&](Item* item, int idx) {
+					if (!item) return false;
+					if (std::wstring(item->GetItemName2()).find(shortname.c_str()) != std::wstring::npos) {
+						return true;
+					}
+					return false;
+				};
+
+				for (size_t i = 0; i < 5; i++) {
+					if (checkitem(Belt->GetItemInSlot(i), i)) {
+						id = i;
+					}
+				}
+			}
+			return id;
+		}
 
 		UnityEngine::Bounds GetBounds()
 		{
@@ -2698,6 +3105,7 @@ namespace AssemblyCSharp {
 		ItemId2* GetHeldItemID();
 		auto ActiveItem() -> Item*;
 		Item* GetHeldItemSafe();
+		BaseVehicle* GetMountedVehicle();
 
 		template<typename T>
 		T* GetHeldEntityCast() {

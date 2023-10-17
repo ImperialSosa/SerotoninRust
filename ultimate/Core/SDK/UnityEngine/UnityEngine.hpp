@@ -109,6 +109,15 @@ namespace UnityEngine {
 		float Length() const;
 		float Length2D() const;
 
+		float dot(const Vector3& vector)
+		{
+			return x * vector.x + y * vector.y + z * vector.z;
+		}
+
+		float length()
+		{
+			return Math::my_sqrt(dot(*this));
+		}
 
 		static inline bool IsNaN(float f)
 		{
@@ -211,7 +220,7 @@ namespace UnityEngine {
 
 			if (sqdist == 0 || (maxDistanceDelta >= 0 && sqdist <= maxDistanceDelta * maxDistanceDelta))
 				return target;
-			auto dist = (float)Math::sqrtf(sqdist);
+			auto dist = (float)Math::my_sqrt(sqdist);
 
 			return Vector3(current.x + toVector_x / dist * maxDistanceDelta,
 				current.y + toVector_y / dist * maxDistanceDelta,
@@ -375,6 +384,27 @@ namespace UnityEngine {
 				}
 			}
 			return value;
+		}
+
+		Vector3 normalizeeee()
+		{
+			Vector3 out = *this;
+			auto l = length();
+			if (l == 0)
+				return *this;
+			;
+			out.x /= l;
+			out.y /= l;
+			out.z /= l;
+			return out;
+		}
+
+		float distanceeee(const Vector3& vector)
+		{
+			return Math::my_sqrt(
+				(x - vector.x) * (x - vector.x) +
+				(y - vector.y) * (y - vector.y) +
+				(z - vector.z) * (z - vector.z));
 		}
 
 		static Vector3 Forward;
@@ -1956,6 +1986,7 @@ namespace UnityEngine {
 		IL2CPP_PROPERTY(Vector3, up);
 		IL2CPP_PROPERTY(Vector3, forward);
 		IL2CPP_PROPERTY(Vector3, localScale);
+		IL2CPP_PROPERTY(Vector4, rotation);
 
 		IL2CPP_PROPERTY(Matrix4x4*, localToWorldMatrix);
 

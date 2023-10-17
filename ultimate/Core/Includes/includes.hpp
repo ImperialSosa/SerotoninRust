@@ -102,7 +102,6 @@ inline box_bounds LocalBoxBounds;
 inline std::map<const char*, int> xCheatsMap;
 inline std::vector<std::string> xCheatsArr;
 
-
 inline std::wstring xChetasRecievedKey;
 inline uint32_t xCheatsRecievedSteamID;
 static inline bool HitPlayer = false;

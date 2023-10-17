@@ -269,6 +269,51 @@ namespace AssemblyCSharp {
 		return english;
 	}
 
+	typedef struct Str
+	{
+		char stub[0x10];
+		int len;
+		wchar_t str[1];
+	} *str;
+
+	wchar_t* Item::get_weapon_name() {
+			//const auto item_definition = this->info();
+		const auto item_definition = this->info();
+		if (!item_definition)
+			return {};
+
+		const auto display_name = item_definition->displayName();
+		if (!display_name)
+			return {};
+
+		auto weapon_name = (str)(*reinterpret_cast<uintptr_t*>(display_name + 0x18));
+
+		return weapon_name->str;
+	}
+
+	wchar_t* Item::GetItemName2()
+	{
+		const auto item_definition = this->info();
+		if (!(item_definition))
+		{
+			return { };
+		}
+
+		const auto display_phrase = item_definition->displayName();
+		if (!(display_phrase))
+		{
+			return { };
+		}
+
+		const auto english = display_phrase->english();
+		if (!(english))
+		{
+			return { };
+		}
+
+		return english->m_firstChar;
+	}
+
 	FPSystem::String* Item::GetItemShortName()
 	{
 		const auto definition = info();
@@ -409,6 +454,28 @@ namespace AssemblyCSharp {
 		if ((procedure))
 		{
 			return Call<Item*>(procedure, this);
+		}
+
+
+		return {};
+	}
+
+	BaseVehicle* BasePlayer::GetMountedVehicle()
+	{
+		if (!this) return {};
+		static uintptr_t procedure = 0;
+		if (!(procedure))
+		{
+			const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("GetMountedVehicle"), 0);
+			if ((method))
+			{
+				procedure = ToAddress(method->methodPointer);
+			}
+		}
+
+		if ((procedure))
+		{
+			return Call<BaseVehicle*>(procedure, this);
 		}
 
 
@@ -851,6 +918,29 @@ namespace AssemblyCSharp {
 
 
 		return;
+	}
+
+	Vector3 ThrownWeapon::GetInheritedVelocity(BasePlayer* ply, Vector3 dir)
+	{
+		if (!this) return { 0, 0, 0 };
+
+		static uintptr_t procedure = 0;
+		if (!(procedure))
+		{
+			const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("GetInheritedVelocity"), 2);
+			if ((method))
+			{
+				procedure = ToAddress(method->methodPointer);
+			}
+		}
+
+		if ((procedure))
+		{
+			return Call<Vector3>(procedure, ply, dir);
+		}
+
+
+		return Vector3(0, 0, 0);
 	}
 
 	Vector3 BaseMelee::GetInheritedVelocity(AssemblyCSharp::BasePlayer* player, Vector3 dir)

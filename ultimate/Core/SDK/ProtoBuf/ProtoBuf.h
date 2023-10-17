@@ -93,6 +93,12 @@ namespace ProtoBuf
 		//}
 	};
 
+	struct MapNote : Il2CppObject
+	{
+		IL2CPP_CLASS("MapNote");
+		IL2CPP_FIELD(Vector3, worldPosition);
+	};
+
 	struct Attack : Il2CppObject
 	{
 		IL2CPP_CLASS("Attack");

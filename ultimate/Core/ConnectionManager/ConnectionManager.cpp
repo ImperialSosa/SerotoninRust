@@ -6,6 +6,8 @@
 
 void ConnectionManager::ResetPlayerCache()
 {
+	Features().GeneratedPoints = false;
+	Features().cachedPoints.clear();
 	HasSetNightColor = false;
 	HasSetAmbient = false;
 	HasSetSharpCloud = false;
@@ -98,6 +100,12 @@ void ConnectionManager::ResetPlayerCache()
 		{
 			FireShaderA = nullptr;
 			FireMaterialA = nullptr;
+		}
+
+		if (RPBGalaxyBundle)
+		{
+			RPBGalaxyShader = nullptr;
+			RPBGalaxyMaterial = nullptr;
 		}
 
 		if (FireBundleB)

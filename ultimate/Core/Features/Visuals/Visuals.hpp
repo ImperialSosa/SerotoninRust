@@ -4,6 +4,11 @@
 #include <vector>
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 #include "../Features/Features.hpp"
+inline static bool CachedPointss = false;
+
+inline UnityEngine::AssetBundle* RPBGalaxyBundle;
+inline UnityEngine::Shader* RPBGalaxyShader;
+inline UnityEngine::Material* RPBGalaxyMaterial;
 
 inline UnityEngine::AssetBundle* font_bundle;
 

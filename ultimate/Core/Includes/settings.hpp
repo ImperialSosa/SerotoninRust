@@ -12,6 +12,7 @@ namespace m_settings {
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
+	inline float AimbotSmoothness = 0.5f;
 	inline float AimbotFOV = 200.f;
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
@@ -138,7 +139,7 @@ namespace m_settings {
 	inline bool ManipFlags = false;
 	inline bool SnickerBullet = false;
 	inline bool BulletTPFlags = false;
-	inline bool BlockServerCommands = true;
+	inline bool BlockServerCommands = false;
 	inline bool Autoshoot = false;
 	inline bool AlwaysAutoshoot = false;
 	inline bool NoSpread = false;
@@ -165,6 +166,7 @@ namespace m_settings {
 	inline bool DoVelocityPrediction = false;
 
 	inline bool LoadGalaxy = false;
+	inline bool LoadRBP = false;
 	inline bool LoadLightning = false;
 	inline bool LoadGeometric = false;
 	inline bool LoadWireFrame = false;
@@ -216,6 +218,7 @@ namespace m_settings {
 	inline bool WaitForInstantHit = false;
 	inline bool ShowBulletTPAngle = false;
 	inline bool DroppedItems = false;
+	inline bool DroppedItemsChams = false;
 	inline float DroppedItemColor[4] = { 255.f, 255.f, 255.f, 255.f };
 	inline float HempColor[4] = { 0.f, 176.f, 21.f, 255.f };
 	inline float DieselColor[4] = { 72.f, 72.f, 72.f, 255.f };
@@ -368,7 +371,24 @@ namespace m_settings {
 	inline float MaxHorisontalFlyhack;
 	inline float HorisontalFlyhack;
 
+	inline bool GrenadePrediction = false;
+	inline bool RocketPrediction = false;
+	inline bool WalkToMarker = false;
+
+	inline bool Teleport = false;
+	inline RustStructs::KeyCode TeleportKey = RustStructs::KeyCode::F;
+
+	inline bool AutoMini = false;
+	inline float MaxMiniSpeed = 1.f;
+	inline float HoverHeight = 150.f;
+	inline bool HoverMini = false;
+
+	inline bool GestureSpam = false;
+	inline int gesture = 0;
+	inline bool AutoMed = false;
+
 	inline bool MemoryAimbot = false;
+	inline RustStructs::KeyCode MemoryAimbotKey = RustStructs::KeyCode::F;
 
 	inline bool Brightnight = false;
 	inline bool CustomSky = false;

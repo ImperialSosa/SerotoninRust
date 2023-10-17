@@ -11,17 +11,14 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 	if (!IsAddressValid(_This))
 		return;
 
-	if (!_This->isAuthoritative())
-		return;
-
-
 	if (!IsAddressValid(Features().LocalPlayer))
 		return;
 
 	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return;
 
-
+	if (!_This->isAuthoritative())
+		return;
 
 	float Thickness = m_settings::NormalThickBulletThickness / 10;
 	if (m_settings::NormalThickBullet)
