@@ -3182,7 +3182,7 @@ namespace UnityEngine {
 				else
 					UnityEngine::GUIStyle::SetAlignment(gui_style, 0x0);
 
-				gui_style->SetFontSize(10); //FPS?
+				//gui_style->SetFontSize(10); //FPS?
 
 				if (entry->draw_outlined) {
 					UnityEngine::GUI::SetColor(entry->outlineColor);
@@ -3235,7 +3235,7 @@ namespace UnityEngine {
 				else
 					UnityEngine::GUIStyle::SetAlignment(menu_gui_style, 0x0);
 
-				UnityEngine::menu_gui_style->SetFontSize(12); //FPS?
+				//UnityEngine::menu_gui_style->SetFontSize(12); //FPS?
 
 				UnityEngine::GUI::SetColor(entry->outlineColor);
 

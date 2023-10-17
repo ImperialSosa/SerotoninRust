@@ -940,7 +940,7 @@ void MenuDraw::RenderMenu()
 				case 0:
 					Menu().BeginChild(XS("Aimbot"), { 60,45 }, { 220,290 });
 					{
-						Menu().CheckBoxKeyBind(XS("Memory Aimbot"), m_settings::MemoryAimbot, m_settings::MemoryAimbotKey);
+						//Menu().CheckBoxKeyBind(XS("Memory Aimbot"), m_settings::MemoryAimbot, m_settings::MemoryAimbotKey);
 						//Menu().CheckBox(XS("AutoMed"), m_settings::AutoMed);
 
 						//Menu().CheckBox(XS("WalkToMarker"), m_settings::WalkToMarker);

@@ -29,6 +29,7 @@ void SetupStyles()
 			gui_skin->m_Font() = ToAddress(g_font);
 
 			UnityEngine::gui_style->SetFontSize(10);
+			UnityEngine::menu_gui_style->SetFontSize(12);
 
 			FontLoaded = true;
 		}
