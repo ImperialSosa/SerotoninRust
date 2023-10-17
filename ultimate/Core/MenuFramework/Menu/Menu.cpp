@@ -940,7 +940,7 @@ void MenuDraw::RenderMenu()
 				case 0:
 					Menu().BeginChild(XS("Aimbot"), { 60,45 }, { 220,290 });
 					{
-						//Menu().CheckBoxKeyBind(XS("Memory Aimbot"), m_settings::MemoryAimbot, m_settings::MemoryAimbotKey);
+						Menu().CheckBoxKeyBind(XS("Memory Aimbot"), m_settings::MemoryAimbot, m_settings::MemoryAimbotKey);
 						//Menu().CheckBox(XS("AutoMed"), m_settings::AutoMed);
 
 						//Menu().CheckBox(XS("WalkToMarker"), m_settings::WalkToMarker);
@@ -965,7 +965,7 @@ void MenuDraw::RenderMenu()
 						//}
 						Menu().Slider(XS("Accuracy"), m_settings::AimbotAccuracy, 0, 100);
 						Menu().Slider(XS("Fov Slider"), m_settings::AimbotFOV, 0, 1000);
-
+						Menu().Slider(XS("Smoothing"), m_settings::AimbotSmoothness, 0, 10);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });

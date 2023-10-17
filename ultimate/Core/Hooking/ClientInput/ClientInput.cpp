@@ -406,7 +406,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					normalize(angles_step.x, angles_step.y);
 
 					if (smooth) {
-						float factor_pitch = m_settings::AimbotSmoothness;
+						float factor_pitch = m_settings::AimbotSmoothness / 10;
 						if (angles_step.x < 0.f) {
 							if (factor_pitch > Math::fabsf(angles_step.x)) {
 								factor_pitch = Math::fabsf(angles_step.x);
@@ -421,7 +421,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						}
 					}
 					if (smooth) {
-						float factor_yaw = m_settings::AimbotSmoothness;
+						float factor_yaw = m_settings::AimbotSmoothness / 10;
 						if (angles_step.y < 0.f) {
 							if (factor_yaw > Math::fabsf(angles_step.y)) {
 								factor_yaw = Math::fabsf(angles_step.y);

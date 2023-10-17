@@ -12,7 +12,7 @@ namespace m_settings {
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
-	inline float AimbotSmoothness = 0.5f;
+	inline float AimbotSmoothness = 5.f;
 	inline float AimbotFOV = 200.f;
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
