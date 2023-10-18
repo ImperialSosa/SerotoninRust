@@ -7,7 +7,7 @@ namespace m_settings {
 	inline bool LoadRage = false;
 	inline bool LoadLegit = false;
 	inline bool SelectedOption = false;
-
+	inline bool FontChanger = false;
 	inline int BuildingGrade = 0;
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
@@ -22,6 +22,7 @@ namespace m_settings {
 	inline bool DrawInventoryIcons = false;
 	inline bool DoorSpammer = false;
 	inline bool DrawClothing = false;
+	inline bool AutoReloadIcon = false;
 	inline bool TC_Health = false;
 	inline bool TC_Upkeep = false;
 	inline bool LongMelee = false;
@@ -262,7 +263,7 @@ namespace m_settings {
 	inline bool T3Workbench = false;
 
 	inline bool DieselBarrel = false;
-	inline float WorldFontSize = 10.f;
+	inline float WorldFontSize = 8.f;
 
 	inline float MushRoomColor[4] = { 66.f, 126.f, 51.f, 255.f };
 	inline float PumpkinColor[4] = { 66.f, 126.f, 51.f, 255.f };
@@ -341,6 +342,7 @@ namespace m_settings {
 	inline float Safezone_Color[4] = { 204.f, 88.0f, 202.f, 255.f };
 	inline float Target_Color[4] = { 91, 23, 227, 255.f };
 	inline float fontsize = 10.f;
+	inline float ESPFontsize = 10.f;
 	inline bool TagsVisCheck = false;
 
 	inline bool WorldOutlinedText = true;
@@ -386,6 +388,7 @@ namespace m_settings {
 	inline bool GestureSpam = false;
 	inline int gesture = 0;
 	inline bool AutoMed = false;
+	inline int fonttype = 0;
 
 	inline bool MemoryAimbot = false;
 	inline RustStructs::KeyCode MemoryAimbotKey = RustStructs::KeyCode::F;

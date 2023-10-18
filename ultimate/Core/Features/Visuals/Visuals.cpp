@@ -838,26 +838,6 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-				//if (m_settings::OOFIndicators)
-				//{
-				//	Vector3 position = BasePlayer->eyes()->get_position();
-				//	Vector3 local = LocalPlayer->eyes()->get_position();
-				//	DrawTriangles(screen_center);
-				//	float num = Math::atan2f(local.x - position.x, local.z - position.z) * 57.29578f - 180.f - EulerAngles(LocalPlayer->eyes()->get_rotation()).y;
-
-				//	if (!(num < -420 || num > -300)) return;
-
-				//	Vector2 tp0 = CosTanSinLineH(num, 5.f, 1920 / 2, 1080 / 2, 150.f);
-				//	Vector2 tp1 = CosTanSinLineH(num + 2.f, 5.f, 1920 / 2, 1080 / 2, 140.f);
-				//	Vector2 tp2 = CosTanSinLineH(num - 2.f, 5.f, 1920 / 2, 1080 / 2, 140.f);
-
-				//	Vector2 p = { tp0.x, tp0.y }, p1 = { tp1.x, tp1.y }, p2 = { tp2.x, tp2.y };
-
-				//	UnityEngine::GL().Line(tp0, tp1, Color(249.f, 130.f, 109.f, 255.f));
-				//	UnityEngine::GL().Line(tp0, tp2, Color(249.f, 130.f, 109.f, 255.f));
-				//	UnityEngine::GL().Line(tp1, tp2, Color(249.f, 130.f, 109.f, 255.f));
-				//}
-
 				if (m_settings::SelectedOutsideType == 1 || m_settings::SelectedOutsideType == 2 || m_settings::SelectedOutsideType == 3)
 				{
 					Vector3 position = BasePlayer->get_bone_transform(47)->get_position() + Vector3(0.f, 500.f, 0.f);
@@ -880,19 +860,19 @@ void Visuals::DrawPlayers()
 
 				if (m_settings::HeldItemType == 2 || m_settings::HeldItemType == 3)
 				{
-				
+
 					const auto item = BasePlayer->ActiveItem();
 					if (IsAddressValid(item))
 					{
 						auto info = item->info();
-				
+
 						if (IsAddressValid(info))
 						{
 							auto IconSprite = info->FindIconSprite(info->itemid());
-				
+
 							if (IconSprite) {
 								auto IconTexture = IconSprite->get_texture();
-				
+
 								yoffset += 4;
 								UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
 								yoffset += 24;
@@ -901,163 +881,164 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-				if (m_settings::PlayerChams)
+			if (m_settings::PlayerChams)
+			{
+				auto playerModel = BasePlayer->playerModel();
+				if (IsAddressValid(playerModel))
 				{
-					auto playerModel = BasePlayer->playerModel();
-					if (IsAddressValid(playerModel))
+					auto _multiMesh = playerModel->_multiMesh();
+					if (IsAddressValid(_multiMesh))
 					{
-						auto _multiMesh = playerModel->_multiMesh();
-						if (IsAddressValid(_multiMesh))
+						auto Renderers = _multiMesh->get_Renderers();
+						if (IsAddressValid(Renderers))
 						{
-							auto Renderers = _multiMesh->get_Renderers();
-							if (IsAddressValid(Renderers))
+							auto Renderers_Items = Renderers->_items;
+							if (Renderers_Items)
 							{
-								auto Renderers_Items = Renderers->_items;
-								if (Renderers_Items)
-								{
-									auto Renderers_Size = Renderers->_size;
-									if (Renderers_Size) {
-										for (int i = 0; i < Renderers_Size; i++) {
-											auto MainRenderer = Renderers_Items->m_Items[i];
+								auto Renderers_Size = Renderers->_size;
+								if (Renderers_Size) {
+									for (int i = 0; i < Renderers_Size; i++) {
+										auto MainRenderer = Renderers_Items->m_Items[i];
 
-											if (IsAddressValid(MainRenderer))
-											{
-												auto material = MainRenderer->material();
+										if (IsAddressValid(MainRenderer))
+										{
+											auto material = MainRenderer->material();
 
-												if (!IsAddressValid(material))
-													continue;
+											if (!IsAddressValid(material))
+												continue;
 
-												int selectedChams = m_settings::SelectedChams;
+											int selectedChams = m_settings::SelectedChams;
 
-												switch (selectedChams) {
-												case 1:
-													if (FireBundleA) {
-														if (!FireShaderA) //Blue Fire
-															FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+											switch (selectedChams) {
+											case 1:
+												if (FireBundleA) {
+													if (!FireShaderA) //Blue Fire
+														FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-														if (!FireMaterialA)
-															FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+													if (!FireMaterialA)
+														FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
 
-														if (material->shader() != FireShaderA)
-														{
-															MainRenderer->set_material(FireMaterialA);
-															FireMaterialA->set_shader(FireShaderA);
-														}
+													if (material->shader() != FireShaderA)
+													{
+														MainRenderer->set_material(FireMaterialA);
+														FireMaterialA->set_shader(FireShaderA);
 													}
-													break;
-												case 2:
-													if (FireBundleB) {
-														if (!FireShaderB) //Red Fire
-															FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!FireMaterialB)
-															FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != FireShaderB)
-														{
-															MainRenderer->set_material(FireMaterialB);
-															FireMaterialB->set_shader(FireShaderB);
-														}
-													}
-													break;
-												case 3:
-													if (LightningBundle) {
-														if (!LightningShader) //Lightning
-															LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!LightningMaterial)
-															LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != LightningShader)
-														{
-															MainRenderer->set_material(LightningMaterial);
-															LightningMaterial->set_shader(LightningShader);
-														}
-													}
-													break;
-												case 4:
-													if (GeometricBundle) {
-														if (!GeometricShader) //Geometric Disolve
-															GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!GeometricMaterial)
-															GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != GeometricShader)
-														{
-															MainRenderer->set_material(GeometricMaterial);
-															GeometricMaterial->set_shader(GeometricShader);
-														}
-													}
-													break;
-												case 5:
-													if (GalaxyBundle) {
-														if (!GalaxyShader) //Galaxy
-															GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!GalaxyMaterial)
-															GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != GalaxyShader)
-														{
-															MainRenderer->set_material(GalaxyMaterial);
-															GalaxyMaterial->set_shader(GalaxyShader);
-														}
-													}
-													break;
-												case 6:
-													if (WireFrameBundle) {
-														if (!WireFrameShader) //Galaxy
-															WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!WireFrameMaterial)
-															WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != WireFrameShader)
-														{
-															MainRenderer->set_material(WireFrameMaterial);
-															WireFrameMaterial->set_shader(WireFrameShader);
-															//WireFrameMaterial->SetColor("_Color", Color::Red());
-														}
-													}
-													break;
-												case 7:
-													if (ColorBundle) {
-														if (!ColorShader) //Galaxy
-															ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (material->shader() != ColorShader)
-														{
-															material->set_shader(ColorShader);
-															material->SetColor(XS("_ColorVisible"), VisibleColor.GetUnityColor());
-															material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
-
-															if (npc)
-															{
-																material->SetColor(XS("_ColorVisible"), BoxColor.GetUnityColor());
-																material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
-															}
-														}
-													}
-													break;
-												case 8:
-													if (RPBGalaxyBundle) {
-														if (!RPBGalaxyShader) //Galaxy
-															RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-														if (!RPBGalaxyMaterial)
-															RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-														if (material->shader() != RPBGalaxyShader)
-														{
-															MainRenderer->set_material(RPBGalaxyMaterial);
-															RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
-														}
-													}
-													break;
 												}
-											}								
+												break;
+											case 2:
+												if (FireBundleB) {
+													if (!FireShaderB) //Red Fire
+														FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!FireMaterialB)
+														FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != FireShaderB)
+													{
+														MainRenderer->set_material(FireMaterialB);
+														FireMaterialB->set_shader(FireShaderB);
+													}
+												}
+												break;
+											case 3:
+												if (LightningBundle) {
+													if (!LightningShader) //Lightning
+														LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!LightningMaterial)
+														LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != LightningShader)
+													{
+														MainRenderer->set_material(LightningMaterial);
+														LightningMaterial->set_shader(LightningShader);
+													}
+												}
+												break;
+											case 4:
+												if (GeometricBundle) {
+													if (!GeometricShader) //Geometric Disolve
+														GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!GeometricMaterial)
+														GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != GeometricShader)
+													{
+														MainRenderer->set_material(GeometricMaterial);
+														GeometricMaterial->set_shader(GeometricShader);
+													}
+												}
+												break;
+											case 5:
+												if (GalaxyBundle) {
+													if (!GalaxyShader) //Galaxy
+														GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!GalaxyMaterial)
+														GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != GalaxyShader)
+													{
+														MainRenderer->set_material(GalaxyMaterial);
+														GalaxyMaterial->set_shader(GalaxyShader);
+													}
+												}
+												break;
+											case 6:
+												if (WireFrameBundle) {
+													if (!WireFrameShader) //Galaxy
+														WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!WireFrameMaterial)
+														WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != WireFrameShader)
+													{
+														MainRenderer->set_material(WireFrameMaterial);
+														WireFrameMaterial->set_shader(WireFrameShader);
+														//WireFrameMaterial->SetColor("_Color", Color::Red());
+													}
+												}
+												break;
+											case 7:
+												if (ColorBundle) {
+													if (!ColorShader) //Galaxy
+														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (material->shader() != ColorShader)
+													{
+														material->set_shader(ColorShader);
+														material->SetColor(XS("_ColorVisible"), VisibleColor.GetUnityColor());
+														material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
+
+														if (npc)
+														{
+															material->SetColor(XS("_ColorVisible"), BoxColor.GetUnityColor());
+															material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
+														}
+													}
+												}
+												break;
+											case 8:
+												if (RPBGalaxyBundle) {
+													if (!RPBGalaxyShader) //Galaxy
+														RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+													if (!RPBGalaxyMaterial)
+														RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+													if (material->shader() != RPBGalaxyShader)
+													{
+														MainRenderer->set_material(RPBGalaxyMaterial);
+														RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
+													}
+												}
+												break;
+											}
 										}
+									}
+										
 									}
 								}
 							}
@@ -1065,8 +1046,8 @@ void Visuals::DrawPlayers()
 					}
 				}
 			}
-
 		}
+		
 	}
 }
 

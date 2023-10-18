@@ -7,6 +7,7 @@ inline bool config_type_open;
 inline bool hitmat_open;
 inline bool upgrade_open;
 inline bool gesutre_open;
+inline bool font_open;
 
 inline bool esp_type_open;
 inline bool wchams_type_opens;
@@ -618,7 +619,7 @@ void MenuDraw::RenderLegitMenu()
 					}
 
 
-					Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
+					//Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
 					{
 						if (m_settings::RaidOptions[0])
 							m_settings::RaidESP = true;
@@ -858,9 +859,17 @@ void MenuDraw::RenderLegitMenu()
 				Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
 				{
 					Menu().Button(XS("Reset PlayerModels"), reset_player_model);
-					Menu().Button(XS("Reset LOS Points"), Buttons::ClearRaidCache);
-					Menu().Button(XS("Clear RaidCache"), Buttons::ClearLOSPoints);
+					Menu().Button(XS("Reset LOS Points"), Buttons::ClearLOSPoints);
+					Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 					Menu().Button(XS("Load RageCheat"), Buttons::LoadRageCheat);
+
+					Menu().Spacer(30);
+
+					Menu().Button(XS("Save Config"), Configs::SaveConfig);
+					Menu().Button(XS("Load Config"), Configs::LoadConfig);
+					Menu().Spacer(15);
+
+					Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
 				}
 
 				Menu().BeginChild(XS("Configs"), { 285,45 }, { 220,290 });
@@ -871,19 +880,19 @@ void MenuDraw::RenderLegitMenu()
 					Menu().CheckBox(XS("ShadowedText"), m_settings::ShadedText);
 					if (m_settings::ShadedText)
 						m_settings::OutlinedText = false;
-
 					Menu().CheckBox(XS("WorldOutlinedText"), m_settings::WorldOutlinedText);
 					if (m_settings::WorldOutlinedText)
 						m_settings::WorldShadedText = false;
 					Menu().CheckBox(XS("WorldShadedText"), m_settings::WorldShadedText);
 					if (m_settings::WorldShadedText)
 						m_settings::WorldOutlinedText = false;
+					Menu().Slider(XS("EspFontSize"), m_settings::ESPFontsize, 0, 15);
+					Menu().Slider(XS("WorldFontSize"), m_settings::WorldFontSize, 0, 15);
 
-					Menu().Button(XS("Save Config"), Configs::SaveConfig);
-					Menu().Button(XS("Load Config"), Configs::LoadConfig);
-					Menu().Spacer(30);
-
-					Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
+					Menu().CheckBox(XS("FontChanger"), m_settings::FontChanger);
+					if (m_settings::FontChanger) {
+						Menu().Dropdown(XS("Font"), { XS("Default"), XS("Pixel"), XS("Verdana"), }, m_settings::fonttype, font_open);
+					}
 				}
 				break;
 			}
@@ -1023,12 +1032,14 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBox(XS("WaitForBulletTP"), m_settings::WaitForBulletTP);
 						}*/
 						Menu().CheckBox(XS("Instant Hit"), m_settings::InstantBullet);
-						Menu().CheckBox(XS("WaitForInstantHit"), m_settings::WaitForInstantHit);
+						Menu().CheckBox(XS("WaitForInstantHit/Kill"), m_settings::WaitForInstantHit);
 					}
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
-						Menu().CheckBox(XS("Auto Reload"), m_settings::AutoReload);
+						Menu().CheckBox(XS("AutoReload"), m_settings::AutoReload);
+						if (m_settings::AutoReload)
+							Menu().CheckBox(XS("AutoReload Icon"), m_settings::AutoReloadIcon);
 
 						Menu().CheckBox(XS("Hitbox Override"), m_settings::HitboxOverride);
 						if (m_settings::HitboxOverride)
@@ -1130,7 +1141,7 @@ void MenuDraw::RenderMenu()
 						Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
 						Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
 						Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy") }, m_settings::LoadChams, multi_type_test_open);
-						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color"), XS("RPBGalaxy")}, m_settings::SelectedChams, chams_type_opened);
+						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color"), XS("RPBGalaxy"), XS("TestChams")}, m_settings::SelectedChams, chams_type_opened);
 
 						if (m_settings::SelectedChams == 0)
 							m_settings::PlayerChams = false;
@@ -1508,7 +1519,7 @@ void MenuDraw::RenderMenu()
 						}
 
 
-						Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
+						//Menu().MultiDropdown(XS("Raid ESP"), { XS("Enable"), XS("C4"), XS("Rockets"), XS("Satchels"), XS("ExploAmmo") }, m_settings::RaidOptions, multi_raid_options);
 						{
 							if (m_settings::RaidOptions[0])
 								m_settings::RaidESP = true;
@@ -1753,7 +1764,7 @@ void MenuDraw::RenderMenu()
 						if (m_settings::WeaponChams) {
 							Menu().CheckBox(XS("IgnoreArms"), m_settings::IgnoreArms);
 
-							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy")}, m_settings::WeaponSelectedChams, wchams_type_opens);
+							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy"), XS("TestChams")}, m_settings::WeaponSelectedChams, wchams_type_opens);
 							Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy")}, m_settings::LoadChams, multi_chams_load);
 
 							if (m_settings::LoadChams[0]) {
@@ -1801,9 +1812,16 @@ void MenuDraw::RenderMenu()
 					Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
 					{
 						Menu().Button(XS("Reset PlayerModels"), reset_player_model);
-						Menu().Button(XS("Reset LOS Points"), Buttons::ClearRaidCache);
-						Menu().Button(XS("Clear RaidCache"), Buttons::ClearLOSPoints);
+						Menu().Button(XS("Reset LOS Points"), Buttons::ClearLOSPoints);
+						Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 						Menu().Button(XS("Load LegitCheat"), Buttons::LoadLegitCheat);
+
+						Menu().Spacer(30);
+						Menu().Button(XS("Save Config"), Configs::SaveConfig);
+						Menu().Button(XS("Load Config"), Configs::LoadConfig);
+						Menu().Spacer(15);
+
+						Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
 					}
 
 					Menu().BeginChild(XS("Configs"), { 285,45 }, { 220,290 });
@@ -1814,19 +1832,19 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBox(XS("ShadowedText"), m_settings::ShadedText);
 						if (m_settings::ShadedText)
 							m_settings::OutlinedText = false;
-
 						Menu().CheckBox(XS("WorldOutlinedText"), m_settings::WorldOutlinedText);
 						if (m_settings::WorldOutlinedText)
 							m_settings::WorldShadedText = false;
 						Menu().CheckBox(XS("WorldShadedText"), m_settings::WorldShadedText);
 						if (m_settings::WorldShadedText)
 							m_settings::WorldOutlinedText = false;
+						Menu().Slider(XS("EspFontSize"), m_settings::ESPFontsize, 0, 15);
+						Menu().Slider(XS("WorldFontSize"), m_settings::WorldFontSize, 0, 15);
+						Menu().CheckBox(XS("FontChanger"), m_settings::FontChanger);
+						if (m_settings::FontChanger) {
+							Menu().Dropdown(XS("Font"), { XS("Default"), XS("Pixel"), XS("Verdana"), }, m_settings::fonttype, font_open);
+						}
 
-						Menu().Button(XS("Save Config"), Configs::SaveConfig);
-						Menu().Button(XS("Load Config"), Configs::LoadConfig);
-						Menu().Spacer(30);
-
-						Menu().Dropdown(XS("Config Type"), { XS("Legit"), XS("Rage"), XS("Config1"), XS("Config2"), XS("Config3") }, m_settings::SelectedConfig, config_type_open);
 					}
 					break;
 				}

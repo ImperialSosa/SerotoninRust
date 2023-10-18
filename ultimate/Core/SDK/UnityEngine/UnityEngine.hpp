@@ -2901,6 +2901,54 @@ namespace UnityEngine {
 		}
 	};
 
+	struct textcmd_t_world {
+		bool outline;
+		Vector2 pos;
+		Color clr;
+		Color outlineColor;
+		Il2CppString* text;
+		bool centered;
+		bool draw_outlined;
+		bool draw_shaded;
+		int size;
+
+		textcmd_t_world() = default;
+		textcmd_t_world(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt, bool e, bool f, int g) {
+			outline = a;
+			pos = b;
+			clr = c;
+			outlineColor = d;
+			text = txt;
+			draw_outlined = e;
+			draw_shaded = f;
+			size = g;
+		}
+	};
+
+	struct textcmd_t_screen {
+		bool outline;
+		Vector2 pos;
+		Color clr;
+		Color outlineColor;
+		Il2CppString* text;
+		bool centered;
+		bool draw_outlined;
+		bool draw_shaded;
+		int size;
+
+		textcmd_t_screen() = default;
+		textcmd_t_screen(bool a, const Vector2& b, const Color& c, const Color& d, Il2CppString* txt, bool e, bool f, int g) {
+			outline = a;
+			pos = b;
+			clr = c;
+			outlineColor = d;
+			text = txt;
+			draw_outlined = e;
+			draw_shaded = f;
+			size = g;
+		}
+	};
+
 	struct textcmd2_t {
 		Vector2 pos;
 		Vector2 size;
@@ -2919,9 +2967,13 @@ namespace UnityEngine {
 	inline std::list<textcmd_t*> text_buffer;
 	inline std::list<textcmd2_t*> icon_buffer;
 	inline std::list<menu_textcmd_t*> menu_text_buffer;
+	inline std::list<textcmd_t_world*> world_text_buffer;
+	inline std::list<textcmd_t_screen*> screen_text_buffer;
 	inline UnityEngine::Material* LineMat = nullptr;
 	inline UnityEngine::GUIStyle* gui_style = nullptr;
 	inline UnityEngine::GUIStyle* menu_gui_style = nullptr;
+	inline UnityEngine::GUIStyle* world_gui_style = nullptr;
+	inline UnityEngine::GUIStyle* screen_gui_style = nullptr;
 
 	struct GL {
 		IL2CPP_CLASS("GL");
@@ -3130,6 +3182,38 @@ namespace UnityEngine {
 			return TextOutline(centerPos, color, outlineColor, str, true, size, outlined, shaded);
 		}
 
+		static void WorldTextCenter(const Vector2& centerPos, const char* str, Color color, Color outlineColor, int size, bool outlined = true, bool shaded = false, bool centered = true)
+		{
+			textcmd_t_world* cmd = new textcmd_t_world;
+			cmd->outline = outlineColor.m_alpha > 0;
+			cmd->clr = color;
+			cmd->outlineColor = outlineColor;
+			cmd->text = CIl2Cpp::il2cpp_string_new(str);
+			cmd->pos = centerPos;
+			cmd->centered = true;
+			cmd->size = size;
+			cmd->draw_outlined = outlined;
+			cmd->draw_shaded = shaded;
+
+			world_text_buffer.emplace_back(cmd);
+		}
+
+		static void ScreenTextCenter(const Vector2& centerPos, const char* str, Color color, Color outlineColor, int size, bool outlined = true, bool shaded = false, bool centered = true)
+		{
+			textcmd_t_screen* cmd = new textcmd_t_screen;
+			cmd->outline = outlineColor.m_alpha > 0;
+			cmd->clr = color;
+			cmd->outlineColor = outlineColor;
+			cmd->text = CIl2Cpp::il2cpp_string_new(str);
+			cmd->pos = centerPos;
+			cmd->centered = true;
+			cmd->size = size;
+			cmd->draw_outlined = outlined;
+			cmd->draw_shaded = shaded;
+
+			screen_text_buffer.emplace_back(cmd);
+		}
+
 		static void MenuText(const Vector2& pos, const Color& color, Color outlineColor, const char* text, bool centered)
 		{
 			menu_textcmd_t* cmd = new menu_textcmd_t;
@@ -3147,8 +3231,16 @@ namespace UnityEngine {
 			return text_buffer;
 		}
 
+		static std::list<textcmd_t_world*>& get_world_text_buffer() {
+			return world_text_buffer;
+		}
+
 		static std::list<menu_textcmd_t*>& get_menu_text_buffer() {
 			return menu_text_buffer;
+		}
+
+		static std::list<textcmd_t_screen*>& get_screen_text_buffer() {
+			return screen_text_buffer;
 		}
 
 		static std::list<textcmd2_t*>& get_icon_buffer() {
@@ -3182,7 +3274,7 @@ namespace UnityEngine {
 				else
 					UnityEngine::GUIStyle::SetAlignment(gui_style, 0x0);
 
-				//gui_style->SetFontSize(10); //FPS?
+				gui_style->SetFontSize(m_settings::ESPFontsize); //FPS?
 
 				if (entry->draw_outlined) {
 					UnityEngine::GUI::SetColor(entry->outlineColor);
@@ -3219,6 +3311,112 @@ namespace UnityEngine {
 			}
 		}
 
+		static void RenderWorldText()
+		{
+			auto& text_buffer = get_world_text_buffer();
+			auto it = text_buffer.begin();
+			while (it != text_buffer.end())
+			{
+				const auto& entry = *it;
+				if (entry->centered)
+				{
+					UnityEngine::GUIStyle::SetAlignment(world_gui_style, 0x4);
+					entry->pos.x -= 200;
+					entry->pos.y -= 12;
+				}
+				else
+					UnityEngine::GUIStyle::SetAlignment(world_gui_style, 0x0);
+
+				world_gui_style->SetFontSize(m_settings::WorldFontSize); //FPS?
+
+				if (entry->draw_outlined) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y + 1), entry->text, world_gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y - 1), entry->text, world_gui_style);
+
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y - 1), entry->text, world_gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, world_gui_style);
+
+
+					UnityEngine::GUI::SetColor(entry->clr);
+
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, world_gui_style);
+				}
+				else if (entry->draw_shaded) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, world_gui_style);
+
+					UnityEngine::GUI::SetColor(entry->clr);
+
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, world_gui_style);
+				}
+				else {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, world_gui_style);
+
+					UnityEngine::GUI::SetColor(entry->clr);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, world_gui_style);
+				}
+
+				free(entry);
+				it = text_buffer.erase(it);
+			}
+		}
+
+		static void RenderScreenText()
+		{
+			auto& text_buffer = get_screen_text_buffer();
+			auto it = text_buffer.begin();
+			while (it != text_buffer.end())
+			{
+				const auto& entry = *it;
+				if (entry->centered)
+				{
+					UnityEngine::GUIStyle::SetAlignment(screen_gui_style, 0x4);
+					entry->pos.x -= 200;
+					entry->pos.y -= 12;
+				}
+				else
+					UnityEngine::GUIStyle::SetAlignment(screen_gui_style, 0x0);
+
+				screen_gui_style->SetFontSize(10); //FPS?
+
+				if (entry->draw_outlined) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y + 1), entry->text, screen_gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y - 1), entry->text, screen_gui_style);
+
+					UnityLabel(Vector2(entry->pos.x - 1, entry->pos.y - 1), entry->text, screen_gui_style);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, screen_gui_style);
+
+
+					UnityEngine::GUI::SetColor(entry->clr);
+
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, screen_gui_style);
+				}
+				else if (entry->draw_shaded) {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x + 1, entry->pos.y + 1), entry->text, screen_gui_style);
+
+					UnityEngine::GUI::SetColor(entry->clr);
+
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, screen_gui_style);
+				}
+				else {
+					UnityEngine::GUI::SetColor(entry->outlineColor);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, screen_gui_style);
+
+					UnityEngine::GUI::SetColor(entry->clr);
+					UnityLabel(Vector2(entry->pos.x, entry->pos.y), entry->text, screen_gui_style);
+				}
+
+				free(entry);
+				it = text_buffer.erase(it);
+			}
+		}
+
 		static void RenderMenuText()
 		{
 			auto& text_buffer = get_menu_text_buffer();
@@ -3235,7 +3433,7 @@ namespace UnityEngine {
 				else
 					UnityEngine::GUIStyle::SetAlignment(menu_gui_style, 0x0);
 
-				//UnityEngine::menu_gui_style->SetFontSize(12); //FPS?
+				UnityEngine::menu_gui_style->SetFontSize(12); //FPS?
 
 				UnityEngine::GUI::SetColor(entry->outlineColor);
 

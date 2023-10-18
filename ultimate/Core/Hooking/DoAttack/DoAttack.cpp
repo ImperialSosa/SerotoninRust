@@ -89,7 +89,6 @@ void LaunchRecreation()
 	if (!InGame)
 		return;
 
-
 	if (!IsAddressValid(Features().LocalPlayer))
 		return;
 

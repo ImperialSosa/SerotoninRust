@@ -13,32 +13,53 @@ inline UnityEngine::GUISkin* gui_skin = nullptr;
 
 void SetupStyles()
 {
-	if (UnityEngine::gui_style && gui_skin && UnityEngine::menu_gui_style)
-		return;
+	if (!m_settings::FontChanger) {
+		if (UnityEngine::gui_style && gui_skin && UnityEngine::menu_gui_style && UnityEngine::world_gui_style && UnityEngine::screen_gui_style)
+			return;
+	}
 
-	if (gui_skin == nullptr || UnityEngine::gui_style == nullptr || UnityEngine::menu_gui_style == nullptr)
+	if (gui_skin == nullptr || UnityEngine::gui_style == nullptr || UnityEngine::menu_gui_style == nullptr || UnityEngine::world_gui_style == nullptr || UnityEngine::screen_gui_style == nullptr)
 	{
+
 		gui_skin = UnityEngine::GUI::GetSkin();
+
 		UnityEngine::gui_style = gui_skin->m_label();
 		UnityEngine::menu_gui_style = gui_skin->m_label();
+		UnityEngine::world_gui_style = gui_skin->m_label();
+		UnityEngine::screen_gui_style = gui_skin->m_label();
+
 		static bool FontLoaded = false;
 		if (!FontLoaded)
 		{
-			auto g_font = font_bundle->LoadAsset<uintptr_t>(XS("ubuntu-medium.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			uintptr_t* g_font;
+			if (m_settings::fonttype == 0)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("ubuntu-medium.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 1)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 2)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
 
 			gui_skin->m_Font() = ToAddress(g_font);
-
-			UnityEngine::gui_style->SetFontSize(10);
-			UnityEngine::menu_gui_style->SetFontSize(12);
 
 			FontLoaded = true;
 		}
 
 		UnityEngine::GUIStyle::SetAlignment(UnityEngine::gui_style, 0);
 		UnityEngine::GUIStyle::SetAlignment(UnityEngine::menu_gui_style, 0);
+		UnityEngine::GUIStyle::SetAlignment(UnityEngine::world_gui_style, 0);
+		UnityEngine::GUIStyle::SetAlignment(UnityEngine::screen_gui_style, 0);
 		UnityEngine::GUI::SetColor(Color::White());
 	}
 
+	uintptr_t* g_font;
+	if (m_settings::fonttype == 0)
+		g_font = font_bundle->LoadAsset<uintptr_t>(XS("ubuntu-medium.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+	else if (m_settings::fonttype == 1)
+		g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+	else if (m_settings::fonttype == 2)
+		g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+
+	gui_skin->m_Font() = ToAddress(g_font);
 }
 
 
@@ -85,7 +106,7 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "FontsBundlez"; //Value has to be identical to the uploaded name
+					msg.value = "FontBundlezNew"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 				}
@@ -268,6 +289,8 @@ void TextDrawEnd()
 {
 	UnityEngine::GL::PopMatrix();
 	UnityEngine::GL::RenderText();
+	UnityEngine::GL::RenderScreenText();
+	UnityEngine::GL::RenderWorldText();
 	UnityEngine::GL::RenderMenuText();
 	UnityEngine::GL::RenderIcons();
 }
@@ -840,7 +863,7 @@ void drawMisc()
 
 	if (m_settings::ShowCachedLOS) {
 		if (Features().ConstantLOSCheck == true)
-			UnityEngine::GL().TextCenter(Vector2(center_x, center_y - 400), XS("Cached Visible"), Color::Red(), Color::Black(), m_settings::fontsize);
+			UnityEngine::GL().ScreenTextCenter(Vector2(center_x, center_y - 400), XS("Cached Visible"), Color::Red(), Color::Black(), m_settings::fontsize);
 
 	}
 
@@ -859,7 +882,7 @@ void drawMisc()
 
 					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
 					{
-						UnityEngine::GL().TextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+						UnityEngine::GL().ScreenTextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					}
 				}
 			}
@@ -887,7 +910,7 @@ void drawMisc()
 				sprintf(str, XS("[%dm]"), (int)distance);
 				player_name = player_name + " " + str;
 
-				UnityEngine::GL().TextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+				UnityEngine::GL().WorldTextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 			}
 		}
 	}
@@ -900,7 +923,7 @@ void drawMisc()
 
 	if (m_settings::BulletTPFlags && m_settings::Thickbullet_Indicator && m_settings::BulletTP)
 	{
-		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Bullet TP"), Color::Red(), Color::Black(), m_settings::fontsize);
+		UnityEngine::GL().ScreenTextCenter(Vector2(center_x, center_y - yPos), XS("Bullet TP"), Color::Red(), Color::Black(), m_settings::fontsize);
 		yPos += 10;
 	}
 
@@ -912,7 +935,7 @@ void drawMisc()
 
 		if (desyncpercentage >= 0.85f)
 		{
-			UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Instant Hit"), Color::Red(), Color::Black(), m_settings::fontsize);
+			UnityEngine::GL().ScreenTextCenter(Vector2(center_x, center_y - yPos), XS("Instant Hit"), Color::Red(), Color::Black(), m_settings::fontsize);
 			yPos += 10;
 		}
 	}
@@ -964,9 +987,10 @@ void drawMisc()
 												{
 													if (auto texture = test->get_texture())
 													{
-														//auto rect = test->get_rect();
-														//UnityEngine::GUI::SetColor(Color::White());
-														//UnityEngine::GUI::DrawTexture(UnityEngine::rect_t(screen_center.x - 25, screen_center.y + 68, rect.wid / 4.5f, rect.hei / 4.5f), texture);
+														auto rect = test->get_rect();
+
+														if (m_settings::AutoReloadIcon)
+															UnityEngine::GL().DrawIcon(Vector2(screen_center.x - 25, screen_center.y + 68), Vector2(rect.wid / 4.5f, rect.hei / 4.5f), texture, Color::White());
 													}
 												}
 											}
@@ -1003,12 +1027,12 @@ void drawMisc()
 
 	if (m_settings::Manipulation && m_settings::BulletTP && m_settings::BulletTPFlags && m_settings::ManipFlags && m_settings::Manipulation_Indicator)
 	{
-		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
+		UnityEngine::GL().ScreenTextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
 		yPos += 10;
 	}
 	else if (m_settings::ManipFlags && m_settings::Manipulation_Indicator && UnityEngine::Input::GetKey(m_settings::ManipKey))
 	{
-		UnityEngine::GL().TextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
+		UnityEngine::GL().ScreenTextCenter(Vector2(center_x, center_y - yPos), XS("Manipulated"), Color::Red(), Color::Black(), m_settings::fontsize);
 		yPos += 10;
 	}
 
@@ -1226,10 +1250,10 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 
 														if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
 															if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
-																UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize);
+																UnityEngine::GL().ScreenTextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::Turquoise(), Color::Black(), m_settings::fontsize);
 														}
 														else
-															UnityEngine::GL().TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
+															UnityEngine::GL().ScreenTextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 													}
 												}
 											}
@@ -1257,7 +1281,7 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 
 									//BackGround
 									{
-										UnityEngine::GL::TextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + 12.5), player_name.c_str(), Color::White(), Color::Black(), 10);
+										UnityEngine::GL::ScreenTextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + 12.5), player_name.c_str(), Color::White(), Color::Black(), 10);
 									}
 
 									for (int i = 0; i < ItemList->_size; i++) {
@@ -1399,7 +1423,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 
 											if (IsAddressValid(m_target.m_player))
 											{
-												UnityEngine::GL().TextCenter(Vector2(hotbar_pos_c.x, hotbar_pos_c.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
+												UnityEngine::GL().ScreenTextCenter(Vector2(hotbar_pos_c.x, hotbar_pos_c.y + info_y), ItemName.c_str(), Color::White(), Color::Black(), m_settings::fontsize);
 											}
 										}
 									}
@@ -1522,6 +1546,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	{
 		SetupStyles();
 
+		//if (!TestBundle)
+		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/H_Original.unity3d", 0, 0);
+
 		if (is_menu_open) {
 			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
 				auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
@@ -1633,7 +1660,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		}
 	}
 
-
+#ifdef DEBUG_MODE
 	if (UnityEngine::Input::GetKey(RustStructs::End))
 	{
 		connector::cheat_message msg;
@@ -1803,6 +1830,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		Hooks::FlintStrikeWeaponDoAttackhk.Unhook();
 	}
-	
+#endif
+
 	return;
 }

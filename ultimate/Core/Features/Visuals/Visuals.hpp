@@ -24,6 +24,10 @@ inline UnityEngine::AssetBundle* ColorBundle;
 inline UnityEngine::Shader* ColorShader;
 inline UnityEngine::Material* ColorMaterial;
 
+inline UnityEngine::AssetBundle* TestBundle;
+inline UnityEngine::Shader* TestShader;
+inline UnityEngine::Material* TestMaterial;
+
 inline UnityEngine::AssetBundle* GalaxyBundle;
 inline UnityEngine::Shader* GalaxyShader;
 inline UnityEngine::Material* GalaxyMaterial;

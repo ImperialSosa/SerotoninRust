@@ -48,12 +48,12 @@ bool TestFlying(AssemblyCSharp::BasePlayer* _This, Vector3 oldPos, Vector3 newPo
 			}
 			if (flag) {
 				float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
-				float num6 = _This->GetJumpHeight() + num5 + 4.f;
+				float num6 = _This->GetJumpHeight() + num5 + 3.5f;
 				if (flyhackDistanceVertical > num6) {
 					return true;
 				}
 				float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
-				float num8 = 5.f + num7 + 4.f;
+				float num8 = 5.f + num7 + 3.5f;
 				if (flyhackDistanceHorizontal > num8) {
 					return true;
 				}
@@ -96,7 +96,7 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 					result = TestFlying(LocalPlayer, oldPos, modelPos);
 
 					float num5 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
-					float num6 = _This->GetJumpHeight() + num5 + 4.f;
+					float num6 = _This->GetJumpHeight() + num5 + 3.5f;
 
 					m_settings::MaxVerticalFlyhack = num6;
 					m_settings::VerticalFlyhack = flyhackDistanceVertical;
@@ -104,7 +104,7 @@ bool CheckFlyhack(AssemblyCSharp::BasePlayer* _This, bool PreventFlyhack)
 					float num7 = maxx((flyhackPauseTime > 0.f) ? 10 : 1.4, 0.f);
 					float num8 = 5.f + num7;
 
-					m_settings::MaxHorisontalFlyhack = num8 + 4.f;
+					m_settings::MaxHorisontalFlyhack = num8 + 3.5f;
 					m_settings::HorisontalFlyhack = flyhackDistanceHorizontal;
 
 					if (result && PreventFlyhack)
@@ -1040,7 +1040,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-	if (m_settings::Autoshoot) {
+	if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey)) {
 		auto camera = UnityEngine::Camera::get_main();
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
@@ -1076,6 +1076,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	
 	}
+	else
+		StartShooting = false;
 
 	auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
 
@@ -1745,6 +1747,21 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							}
 						}
 						break;
+					//case 7:
+					//	if (TestBundle) {
+					//		if (!TestShader) //Galaxy
+					//			TestShader = TestBundle->LoadAsset<UnityEngine::Shader>(XS("el_designshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+					//		if (!TestMaterial)
+					//			TestMaterial = TestBundle->LoadAsset<UnityEngine::Material>(XS("h_original.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+					//		if (material->shader() != TestShader)
+					//		{
+					//			MainRenderer->set_material(TestMaterial);
+					//			TestMaterial->set_shader(TestShader);
+					//		}
+					//	}
+					//	break;
 					}
 				}
 			}
