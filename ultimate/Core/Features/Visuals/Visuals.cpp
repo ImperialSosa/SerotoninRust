@@ -1516,9 +1516,9 @@ void Visuals::RenderEntities()
 								}
 
 
-								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
-								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
-								UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffsethealth), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
+								UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
 								yoffset += 8.f;
 							}
 
