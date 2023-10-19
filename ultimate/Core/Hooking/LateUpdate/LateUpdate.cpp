@@ -21,6 +21,47 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 	}
 
 	if (IsAddressValid(_This)) {
+		if (IsAddressValid(_This->Sun()))
+		{
+			auto Sun = _This->Sun();
+			static bool ResetSunBrightness = false;
+			static float Orig_SunBrightness;
+			static float Orig_SunContast;
+			static float Orig_SunSize;
+			if (m_settings::NoSun)
+			{
+				if (Sun->MeshBrightness() != 0.f) {
+					Orig_SunBrightness = Sun->MeshBrightness();
+					Sun->MeshBrightness() = 0.f;
+				}
+
+				if (Sun->MeshBrightness() != 0.f) {
+					Orig_SunContast = Sun->MeshContrast();
+					Sun->MeshContrast() = 0.f;
+				}
+
+				if (Sun->MeshSize() != 0.f) {
+					Orig_SunSize = Sun->MeshSize();
+					Sun->MeshSize() = 0.f;
+				}
+			}
+			else {
+				if (!m_settings::NoSun && ResetSunBrightness)
+				{
+					if (Sun->MeshBrightness() != Orig_SunBrightness) {
+						Sun->MeshBrightness() = Orig_SunBrightness;
+					}
+
+					if (Sun->MeshContrast() != Orig_SunContast) {
+						Sun->MeshContrast() = Orig_SunContast;
+					}
+
+					if (Sun->MeshSize() != Orig_SunSize) {
+						Sun->MeshSize() = Orig_SunSize;
+					}
+				}
+			}
+		}
 
 		if (IsAddressValid(_This->Night()))
 		{

@@ -405,6 +405,7 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 				SimulateProjectile(AimbotTarget.m_player, StartPosition, AimbotTarget.m_position, m_aim_angle, a, travel_time, c_projectile, Features().BaseProjectile, itemModProjectile, AimbotTarget.m_velocity);
 			}
 			else {
+
 				Vector3 aim_angle = GetAimDirectionToTarget(Features().LocalPlayer, Features().BaseProjectile, Features().BulletTPAngle, AimbotTarget.m_velocity, itemModProjectile, StartPosition) - StartPosition;
 				m_aim_angle = (aim_angle).Normalized() * OriginalVelocity.Length();
 			}

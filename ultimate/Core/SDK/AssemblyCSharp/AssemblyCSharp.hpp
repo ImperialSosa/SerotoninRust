@@ -1262,6 +1262,8 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, aimconePenalty);
 		IL2CPP_FIELD(float, aimCone);
 		IL2CPP_FIELD(float, hipAimCone);
+		IL2CPP_FIELD(float, aimConePenaltyMax);
+		IL2CPP_FIELD(float, stancePenaltyScale);
 		IL2CPP_FIELD(float, aimconePenaltyPerShot);
 		IL2CPP_FIELD(float, deployDelay);
 		IL2CPP_FIELD(float, animationDelay);
@@ -1960,6 +1962,14 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, Attenuation); //Amount of skylight that is blocked
 		IL2CPP_FIELD(float, Brightness); //Brightness of the clouds
 	};
+	struct TOD_SunParameters : UnityEngine::MonoBehaviour
+	{
+		IL2CPP_CLASS("TOD_SunParameters");
+
+		IL2CPP_FIELD(float, MeshSize); //Brightness of the sun
+		IL2CPP_FIELD(float, MeshBrightness); //Brightness of the sun
+		IL2CPP_FIELD(float, MeshContrast); //Contrast of the sun
+	};
 
 	struct TOD_AmbientParameters : UnityEngine::MonoBehaviour
 	{
@@ -2149,7 +2159,7 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(TOD_StarParameters*, Stars);
 		IL2CPP_FIELD(TOD_CloudParameters*, Clouds);
 		IL2CPP_FIELD(TOD_AmbientParameters*, Ambient);
-
+		IL2CPP_FIELD(TOD_SunParameters*, Sun);
 
 		inline TOD_Resources* Resources()
 		{
@@ -4284,6 +4294,286 @@ namespace ConVar {
 		IL2CPP_STATIC_FIELD(float, noclipspeed);
 		IL2CPP_STATIC_FIELD(float, noclipspeedslow);
 		IL2CPP_STATIC_FIELD(float, noclipspeedfast);
+	};
+
+	struct Weather : AssemblyCSharp::ConsoleSystem {
+		IL2CPP_CLASS("Weather");
+
+		static void set_cloud_opacity(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_cloud_opacity"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_atmosphere_brightness(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_atmosphere_brightness"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_atmosphere_contrast(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_atmosphere_contrast"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_atmosphere_rayleigh(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_atmosphere_rayleigh"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_cloud_brightness(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_cloud_brightness"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_cloud_coverage(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_cloud_coverage"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_fog(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_fog"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_ocean_scale(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_ocean_scale"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_rain(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_rain"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_rainbow(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_rainbow"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_thunder(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_thunder"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
+
+		static void set_wind(float value)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("set_wind"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, value);
+			}
+			else
+			{
+
+				return;
+			}
+		}
 	};
 }
 

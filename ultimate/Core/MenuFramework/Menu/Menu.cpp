@@ -200,7 +200,7 @@ void MenuDraw::RenderLegitMenu()
 						m_settings::Swastika = false;
 					}
 
-					Menu().CheckBox(XS("SwastikaCrosshair"), m_settings::Swastika);
+					//Menu().CheckBox(XS("SwastikaCrosshair"), m_settings::Swastika);
 					if (m_settings::Swastika)
 					{
 						m_settings::Crosshair = false;
@@ -247,7 +247,7 @@ void MenuDraw::RenderLegitMenu()
 					Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
 					Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
 					Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame") }, m_settings::LoadChams, multi_type_test_open);
-					Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color") }, m_settings::SelectedChams, chams_type_opened);
+					Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("VisColor") }, m_settings::SelectedChams, chams_type_opened);
 
 					if (m_settings::SelectedChams == 0)
 						m_settings::PlayerChams = false;
@@ -953,6 +953,7 @@ void MenuDraw::RenderMenu()
 						//Menu().CheckBox(XS("AutoMed"), m_settings::AutoMed);
 
 						//Menu().CheckBox(XS("WalkToMarker"), m_settings::WalkToMarker);
+						//Menu().CheckBox(XS("ShowPrediction"), m_settings::ShowPrediction);
 						Menu().CheckBoxKeyBind(XS("Silent Aimbot"), m_settings::SilentAim, m_settings::AimbotKey);
 						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
 						if (m_settings::SilentAim)
@@ -1141,7 +1142,7 @@ void MenuDraw::RenderMenu()
 						Menu().Dropdown(XS("BaseCheck"), { XS("None"), XS("Outside"), XS("Inside"), XS("Both") }, m_settings::SelectedOutsideType, inside_Tyope_opem);
 						Menu().Dropdown(XS("Vischeck"), { XS("None"), XS("Enabled"), XS("Tags Enabled"), XS("Both") }, m_settings::VisCheckType, vischeck_type_openm);
 						Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy") }, m_settings::LoadChams, multi_type_test_open);
-						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("Color"), XS("RPBGalaxy"), XS("TestChams")}, m_settings::SelectedChams, chams_type_opened);
+						Menu().Dropdown(XS("Chams"), { XS("None"), XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("VisColor"), XS("RPBGalaxy"), /*XS("TestChams")*/}, m_settings::SelectedChams, chams_type_opened);
 
 						if (m_settings::SelectedChams == 0)
 							m_settings::PlayerChams = false;
@@ -1197,7 +1198,8 @@ void MenuDraw::RenderMenu()
 					{
 						Menu().CheckBox(XS("Corpse"), m_settings::Corpse);
 						Menu().CheckBox(XS("Backpack"), m_settings::BackPack);
-						//Menu().CheckBox(XS("OOFOV"), m_settings::OOFIndicators);
+						Menu().CheckBox(XS("ShowAlerts"), m_settings::ShowAlerts);
+						Menu().CheckBox(XS("Radar"), m_settings::Radar);
 						Menu().CheckBoxKeyBind(XS("Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
 						Menu().CheckBox(XS("Show Target"), m_settings::DrawTarget);
 						Menu().CheckBox(XS("Wounded"), m_settings::DrawWounded);
@@ -1210,6 +1212,7 @@ void MenuDraw::RenderMenu()
 						Menu().Slider(XS("PlayerDistance"), m_settings::PlayerESPDistance, 0, 500);
 						Menu().Slider(XS("NPC Distance"), m_settings::NPCDistance, 0, 500);
 						Menu().Slider(XS("Drops Distance"), m_settings::MaxPlayerDropsDistance, 0, 500);
+						Menu().Slider(XS("RadarSize"), m_settings::RadarSize, 0, 300);
 					}
 					break;
 				case 1:
@@ -1571,7 +1574,7 @@ void MenuDraw::RenderMenu()
 			{
 				Menu().SubTab(XS("LocalPlayer"), 0, Vector2(156, 35)); //468
 				Menu().SubTab(XS("Other"), 1, Vector2(156, 35));
-				Menu().SubTab(XS("Prefab"), 2, Vector2(156, 35));
+				Menu().SubTab(XS("Weather"), 2, Vector2(156, 35));
 				//Menu().SubTab(XS(L"World"), 3, Vector2(117, 35));
 
 				switch (activesubtab)
@@ -1604,6 +1607,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBoxKeyBind(XS("NoClip"), m_settings::AdminCheat, m_settings::AdminCheatKey);
 						//Menu().CheckBoxKeyBind(XS("Teleport"), m_settings::Teleport, m_settings::TeleportKey);
 						Menu().CheckBoxKeyBind(XS("InstantRevive"), m_settings::InstantRevive, m_settings::InstantReviveKey);
+						if (m_settings::InstantRevive)
+							m_settings::TargetWounded = true;
 						Menu().CheckBoxKeyBind(XS("Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
 						Menu().CheckBoxKeyBind(XS("Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
 						Menu().CheckBoxKeyBind(XS("Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
@@ -1646,27 +1651,7 @@ void MenuDraw::RenderMenu()
 
 					}
 
-					Menu().BeginChild(XS("World"), { 285,45 }, { 220,290 });
-					{
-						Menu().CheckBox(XS("BrightNight"), m_settings::Brightnight);
-						Menu().CheckBox(XS("BrightAmbient"), m_settings::BrightAmbient);
-						Menu().CheckBox(XS("Stars"), m_settings::Stars);
-						Menu().CheckBox(XS("SkyColor (Day)"), m_settings::SkyColorDay);
-						Menu().CheckBox(XS("SkyColor (Night)"), m_settings::SkyColorNight);
-						Menu().CheckBox(XS("SharpClouds"), m_settings::SharpClouds);
-						Menu().CheckBox(XS("BrightCave"), m_settings::BrightCave);
-						//Menu().CheckBox(XS("CustomSky"), m_settings::CustomSky);					
-						
-						Menu().CheckBox(XS("TimeChanger"), m_settings::TimeChanger);
-						if (m_settings::TimeChanger) {
-							Menu().Slider(XS("GameTime: "), m_settings::GameTime, 0, 24);
-						}
-						//Menu().CheckBox(XS("RemoveUnderwaterEffects"), m_settings::RemoveUnderwaterEffects);
-					}
-					break;
-
-				case 2:
-					Menu().BeginChild(XS("Prefab Spawner"), { 60,45 }, { 220,290 });
+					Menu().BeginChild(XS("Prefab Spawner"), { 285,45 }, { 220,290 });
 					{
 						Menu().CheckBox(XS("LoadAmongus"), m_settings::LoadAmongusAsset);
 						if (m_settings::LoadAmongusAsset) {
@@ -1677,10 +1662,46 @@ void MenuDraw::RenderMenu()
 							Menu().CheckBoxKeyBind(XS("HerbertPrefab"), m_settings::HerbertPrefabSpawn, m_settings::HerbertKey);
 						}
 					}
+					break;
+
+				case 2:
+					Menu().BeginChild(XS("Prefab Spawner"), { 60,45 }, { 220,290 });
+					{
+						Menu().CheckBox(XS("BrightNight"), m_settings::Brightnight);
+						Menu().CheckBox(XS("BrightAmbient"), m_settings::BrightAmbient);
+						Menu().CheckBox(XS("Stars"), m_settings::Stars);
+						Menu().CheckBox(XS("SkyColor (Day)"), m_settings::SkyColorDay);
+						Menu().CheckBox(XS("SkyColor (Night)"), m_settings::SkyColorNight);
+						Menu().CheckBox(XS("SharpClouds"), m_settings::SharpClouds);
+						Menu().CheckBox(XS("BrightCave"), m_settings::BrightCave);
+						//Menu().CheckBox(XS("CustomSky"), m_settings::CustomSky);					
+
+						Menu().CheckBox(XS("TimeChanger"), m_settings::TimeChanger);
+						if (m_settings::TimeChanger) {
+							Menu().Slider(XS("GameTime: "), m_settings::GameTime, 0, 24);
+						}
+
+
+						//Menu().CheckBox(XS("RemoveUnderwaterEffects"), m_settings::RemoveUnderwaterEffects);
+					}
 
 					Menu().BeginChild(XS("Settings"), { 285,45 }, { 220,290 });
 					{
-
+						Menu().CheckBox(XS("Enable Weather"), m_settings::Weather);
+						Menu().CheckBox(XS("Atmosphere"), m_settings::AtmosphereContrast);
+						Menu().CheckBox(XS("Rainbows"), m_settings::Rainbows);
+						Menu().CheckBox(XS("Waves"), m_settings::Waves);
+						Menu().CheckBox(XS("NoClouds"), m_settings::NoClouds);
+						//Menu().CheckBox(XS("NoAtmosphere"), m_settings::NoAtmosphere);
+						Menu().CheckBox(XS("NoSun"), m_settings::NoSun);
+						Menu().CheckBox(XS("NoFog"), m_settings::NoFog);
+						Menu().CheckBox(XS("NoRain"), m_settings::NoRain);
+						Menu().CheckBox(XS("NoThunder"), m_settings::NoThunder);
+						Menu().CheckBox(XS("NoWind"), m_settings::NoWind);
+						Menu().CheckBox(XS("RainbowSky"), m_settings::RainbowSky);
+						if (m_settings::RainbowSky) {
+							Menu().Slider(XS("SkyValue: "), m_settings::RainbowAmount, 0, 100);
+						}
 					}
 					/*	Menu().BeginChild(XS("Friend List"), { 60,45 }, { 220,290 });
 						{
@@ -1764,7 +1785,7 @@ void MenuDraw::RenderMenu()
 						if (m_settings::WeaponChams) {
 							Menu().CheckBox(XS("IgnoreArms"), m_settings::IgnoreArms);
 
-							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy"), XS("TestChams")}, m_settings::WeaponSelectedChams, wchams_type_opens);
+							Menu().Dropdown(XS("Chams Type"), { XS("NightFire Blue"), XS("NightFire Red"), XS("Lightning"), XS("Geometric Disolve"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy"), /*XS("TestChams")*/}, m_settings::WeaponSelectedChams, wchams_type_opens);
 							Menu().MultiDropdown(XS("Load Chams"), { XS("Lightning"), XS("Geometric"), XS("Galaxy"), XS("WireFrame"), XS("RPBGalaxy")}, m_settings::LoadChams, multi_chams_load);
 
 							if (m_settings::LoadChams[0]) {
@@ -1794,8 +1815,8 @@ void MenuDraw::RenderMenu()
 							}
 
 							//Menu().CheckBox(XS("Grenade Prediction"), m_settings::GrenadePrediction);
-							//Menu().CheckBox(XS("Rocket Prediction"), m_settings::RocketPrediction);
 						}
+						//Menu().CheckBox(XS("Rocket Prediction"), m_settings::RocketPrediction);
 
 					}
 					break;

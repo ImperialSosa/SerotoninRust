@@ -792,6 +792,35 @@ void drawMisc()
 
 	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
 
+	if (m_settings::Radar)
+	{
+		auto sizex = m_settings::RadarSize;
+		auto sizey = m_settings::RadarSize;
+		auto middle = m_settings::RadarSize / 2;
+		auto x = UnityEngine::screen_size.x;
+		auto y = UnityEngine::screen_size.y;
+
+		auto xpos = x - 20 - sizex;
+		auto ypos = 20;
+
+		m_settings::RadarPosX = xpos; 
+		m_settings::RadarPosY = ypos;
+
+		/* MainWindow */
+		UnityEngine::GL().RectangleFilled(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color(0, 0, 0, 255.f).GetUnityColor());
+
+		/* ViewBox */
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + sizex, ypos), Color::White());
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + 1, ypos + 1), Color::White());
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + middle, ypos + middle + sizey / 2), Color::White());
+
+		/* Outline */
+		UnityEngine::GL().Rectangle(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color::White());
+
+		/* LocalPos */
+		UnityEngine::GL().CircleFilled(Vector2(xpos + middle, ypos + middle - 1), 3, Color::White(), 25);
+	}
+
 	if (m_settings::Crosshair)
 	{
 		auto Crosshair_Color = Color{ m_settings::Crosshair_Color[0], m_settings::Crosshair_Color[1], m_settings::Crosshair_Color[2], 255 };
@@ -1624,7 +1653,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					if (m_settings::RaidESP)
 					{
 						drawRaidESP();
-
 					}
 
 					float x = screen_center.x;
@@ -1827,6 +1855,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::OnInputhk.Unhook();
 		Hooks::DoAttackBowhk.Unhook();
 		Hooks::DoAttackMeleehk.Unhook();
+		Hooks::IsAiminghk.Unhook();
 
 		Hooks::FlintStrikeWeaponDoAttackhk.Unhook();
 	}

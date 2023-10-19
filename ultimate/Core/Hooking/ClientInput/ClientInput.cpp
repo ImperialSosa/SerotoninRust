@@ -544,9 +544,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 									for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
 									{
 										position += velCheck * 0.03125f;
-										if (!AssemblyCSharp::IsVisible(position, lastposition, 0))
+										if (!AssemblyCSharp::IsVisible(position, lastposition, 0.18f))
 											break;
-										UnityEngine::DDraw::Line(position, lastposition, Color{ 1, 0, 0, 1.f }, 0.02f, false, false);
+										//UnityEngine::DDraw::Line(position, lastposition, Color{ 1, 0, 0, 1.f }, 0.02f, false, false);
 										velCheck.y -= 9.81f * stats.gravity_modifier * 0.03125f;
 										velCheck -= velCheck * stats.drag * 0.03125f;
 										lastposition = position;
@@ -767,6 +767,40 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			}
 		}
 	}
+
+	//if (m_settings::ShowPrediction)
+	//{
+	//	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+	//	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
+	//	{
+
+	//		auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+	//		if (IsAddressValid(PrimaryMagazine))
+	//		{
+	//			auto AmmoType = PrimaryMagazine->ammoType();
+	//			if (IsAddressValid(AmmoType))
+	//			{
+	//				AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
+	//				if (IsAddressValid(itemModProjectile))
+	//				{
+	//					itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
+	//					itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
+
+	//					Vector3 Local = a1->get_bone_transform(RustStructs::bones::head)->get_position();
+
+	//					auto lookingatPoint = a1->lookingAtPoint();
+
+	//					auto point = Vector3(lookingatPoint.x * 2, lookingatPoint.y, lookingatPoint.z * 2);
+
+	//					Vector3 aim_angle = GetAimDirectionToTarget(a1, BaseProjectile, point, Vector3(0, 0, 0), itemModProjectile, Local);
+
+	//					UnityEngine::DDraw::Sphere(aim_angle, 1.f, Color::Black(), 0.05, 0);
+	//				}
+	//			}
+	//		}
+	//		
+	//	}
+	//}
 
 	float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().Instance()->LocalPlayer->lastSentTickTime());
 	float last_tick_time = maxx(0.f, minm(timeSinceLastTick, 1.f));
@@ -1546,6 +1580,49 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					}
 				}
 
+				//if (m_settings::SilentSpread != 100)
+				//{
+				//	static float orig[6];
+				//	static bool StoreOrig = false;
+
+				//	if (!StoreOrig)
+				//	{
+				//		
+				//		orig[0] = BaseProjectile->aimCone();
+				//		orig[1] = BaseProjectile->hipAimCone();
+				//		orig[2] = BaseProjectile->aimConePenaltyMax();
+				//		orig[3] = BaseProjectile->aimconePenaltyPerShot();
+				//		orig[4] = BaseProjectile->stancePenaltyScale();
+
+				//		if (const auto RecoilProperties = Features().BaseProjectile->recoil())
+				//		{
+				//			if (const auto newRecoilOverride = RecoilProperties->newRecoilOverride())
+				//			{
+				//				orig[5] = newRecoilOverride->aimconeCurveScale();
+				//			}
+				//		}
+
+				//		StoreOrig = true;
+				//	}
+
+				//	if (m_settings::SilentSpread != 100) {
+				//		const float amount = m_settings::SilentSpread;
+				//		BaseProjectile->aimCone() = orig[0] * amount;
+				//		BaseProjectile->hipAimCone() = orig[1] * amount;
+				//		BaseProjectile->aimConePenaltyMax() = orig[2] * amount;
+				//		BaseProjectile->aimconePenaltyPerShot() = orig[3] * amount;
+				//		BaseProjectile->stancePenaltyScale() = orig[4] * amount;
+
+				//		if (const auto RecoilProperties = Features().BaseProjectile->recoil())
+				//		{
+				//			if (const auto newRecoilOverride = RecoilProperties->newRecoilOverride())
+				//			{
+				//				orig[5] = orig[5] * amount;;
+				//			}
+				//		}
+				//	}
+				//}
+
 				if (m_settings::ForceAutomatic)
 				{
 					Features().BaseProjectile->automatic() = true;
@@ -1769,6 +1846,58 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	}
 
 	Features().RemoveCollision();
+
+	if (m_settings::Weather) {
+		if (m_settings::NoClouds)
+			ConVar::Weather::set_cloud_opacity(0.f);
+		else
+			ConVar::Weather::set_cloud_opacity(-1.f);
+
+		if (m_settings::NoAtmosphere)
+			ConVar::Weather::set_atmosphere_brightness(5.f);
+		else
+			ConVar::Weather::set_atmosphere_brightness(-1.f);
+
+		if (m_settings::AtmosphereContrast)
+			ConVar::Weather::set_atmosphere_contrast(5.f);
+		else
+			ConVar::Weather::set_atmosphere_contrast(-1.f);
+
+		if (m_settings::RainbowSky)
+			ConVar::Weather::set_atmosphere_rayleigh(m_settings::RainbowAmount);
+		else
+			ConVar::Weather::set_atmosphere_rayleigh(-1.f);
+
+		if (m_settings::NoFog)
+			ConVar::Weather::set_fog(0.f);
+		else
+			ConVar::Weather::set_fog(-1.f);
+
+		if (m_settings::Waves)
+			ConVar::Weather::set_ocean_scale(5.f);
+		else
+			ConVar::Weather::set_ocean_scale(-1.f);
+
+		if (m_settings::NoRain)
+			ConVar::Weather::set_rain(0.f);
+		else
+			ConVar::Weather::set_rain(-1.f);
+
+		if (m_settings::Rainbows)
+			ConVar::Weather::set_rainbow(1.f);
+		else
+			ConVar::Weather::set_rainbow(-1.f);
+
+		if (m_settings::NoThunder)
+			ConVar::Weather::set_thunder(0.f);
+		else
+			ConVar::Weather::set_thunder(-1.f);
+
+		if (m_settings::NoWind)
+			ConVar::Weather::set_wind(0.f);
+		else
+			ConVar::Weather::set_wind(-1.f);
+	}
 
 	if (m_settings::NoMovementRestrictions)
 	{
@@ -2007,6 +2136,29 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			LocalMovement->sprintForced() = true;
 		}
 	}
+
+	//if (m_settings::SilentSpread != 100)
+	//{
+	//	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
+	//	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
+	//	{
+	//		auto PrimaryMagazine = BaseProjectile->primaryMagazine();
+	//		if (IsAddressValid(PrimaryMagazine))
+	//		{
+	//			auto AmmoType = PrimaryMagazine->ammoType();
+	//			if (IsAddressValid(AmmoType))
+	//			{
+	//				AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
+	//				if (IsAddressValid(itemModProjectile))
+	//				{
+	//					itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
+	//					itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
+	//				}
+	//			}
+	//		}
+	//		
+	//	}
+	//}
 
 	if (m_settings::RotationAimbot)
 	{

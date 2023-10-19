@@ -156,6 +156,7 @@
     <ClCompile Include="Core\CRT\math.cpp" />
     <ClCompile Include="Core\CRT\mutex\smutex.cpp" />
     <ClCompile Include="Core\Hooking\BlockSprint\BlockSprint.cpp" />
+    <ClCompile Include="Core\Hooking\BowIsAiming\IsAiming.cpp" />
     <ClCompile Include="Core\Hooking\DoAttackBaseMelee\DoAttackBaseMelee.cpp" />
     <ClCompile Include="Core\Hooking\DoBowAttack\DoBowAttack.cpp" />
     <ClCompile Include="Core\Hooking\FlintStrikeWeaponAttack\FlintStrikeWeaponDoAttack.cpp" />

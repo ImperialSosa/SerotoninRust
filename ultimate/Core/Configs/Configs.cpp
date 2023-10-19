@@ -350,6 +350,22 @@ void Configs::LoadConfig()
     m_settings::ShowRocket = config[XS("ShowRocket")];
     m_settings::ShowSatchel = config[XS("ShowSatchel")];
     m_settings::ShowExplosiveAmmo = config[XS("ShowExplosiveAmmo")];
+    m_settings::ShowAlerts = config[XS("ShowAlerts")];
+    m_settings::Radar = config[XS("Radar")];
+    m_settings::RadarSize = static_cast<float>(config[XS("RadarSize")]);
+    m_settings::Weather = config[XS("Weather")];
+    m_settings::AtmosphereContrast = config[XS("AtmosphereContrast")];
+    m_settings::Rainbows = config[XS("Rainbows")];
+    m_settings::Waves = config[XS("Waves")];
+    m_settings::NoClouds = config[XS("NoClouds")];
+    m_settings::NoAtmosphere = config[XS("NoAtmosphere")];
+    m_settings::NoFog = config[XS("NoFog")];
+    m_settings::NoRain = config[XS("NoRain")];
+    m_settings::NoThunder = config[XS("NoThunder")];
+    m_settings::NoWind = config[XS("NoWind")];
+    m_settings::RainbowSky = config[XS("RainbowSky")];
+    m_settings::RainbowAmount = static_cast<float>(config[XS("RainbowAmount")]);
+    m_settings::NoSun = config[XS("NoSun")];
     //// Load TagsVisCheck from JSON
     //if (config.find(XS("TagsVisCheck")) != config.end()) {
     //    m_settings::TagsVisCheck = config[XS("TagsVisCheck")];
@@ -665,6 +681,23 @@ void Configs::SaveConfig()
     config[XS("ShowRocket")] = m_settings::ShowRocket;
     config[XS("ShowSatchel")] = m_settings::ShowSatchel;
     config[XS("ShowExplosiveAmmo")] = m_settings::ShowExplosiveAmmo;
+    config[XS("ShowAlerts")] = m_settings::ShowAlerts;
+    config[XS("Radar")] = m_settings::Radar;
+    config[XS("RadarSize")] = static_cast<int>(m_settings::RadarSize);
+    config[XS("Weather")] = m_settings::Weather;
+    config[XS("AtmosphereContrast")] = m_settings::AtmosphereContrast;
+    config[XS("Rainbows")] = m_settings::Rainbows;
+    config[XS("Waves")] = m_settings::Waves;
+    config[XS("NoClouds")] = m_settings::NoClouds;
+    config[XS("NoAtmosphere")] = m_settings::NoAtmosphere;
+    config[XS("NoFog")] = m_settings::NoFog;
+    config[XS("NoRain")] = m_settings::NoRain;
+    config[XS("NoThunder")] = m_settings::NoThunder;
+    config[XS("NoWind")] = m_settings::NoWind;
+    config[XS("RainbowSky")] = m_settings::RainbowSky;
+    config[XS("RainbowAmount")] = static_cast<int>(m_settings::RainbowAmount);
+    config[XS("NoSun")] = m_settings::NoSun;
+
     std::string jsonString = config.dump(4);
 
     std::string file_name;

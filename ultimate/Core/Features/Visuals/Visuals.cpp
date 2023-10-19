@@ -233,6 +233,36 @@ void DrawTriangles(Vector2 center) {
 	}
 }
 
+//Radar Function
+Vector2 WorldToRadar(Vector3 origin, Vector2 position, INT size, FLOAT rotation)
+{
+	Vector2 clampRotation
+	((float)Math::cosf((rotation * (M_PI / 180.f)) + M_PI),
+		-(float)Math::sinf((rotation * (M_PI / 180.f)) + M_PI));
+
+	Vector2 clampCoords
+	((origin.x * clampRotation.x + origin.z * clampRotation.y),
+		(origin.x * clampRotation.y - origin.z * clampRotation.x));
+
+	INT clampSize
+	(size / 2.0f);
+
+	Vector2 bVec
+	(-clampCoords.x + position.x + clampSize,
+		-clampCoords.y + position.y + clampSize);
+
+	bVec.x = -clampCoords.x + position.x + clampSize;
+	bVec.y = -clampCoords.y + position.y + clampSize;
+
+	if (bVec.x > (position.x + size)) bVec.x = (position.x + size);
+	else if (bVec.x < (position.x)) bVec.x = position.x;
+
+	if (bVec.y > (position.y + size)) bVec.y = (position.y + size);
+	else if (bVec.y < (position.y)) bVec.y = position.y;
+
+	return bVec;
+}
+
 box_bounds Visuals::get_bounds(AssemblyCSharp::BasePlayer* player, float expand) {
 	if (!player)
 		return box_bounds::null();
@@ -400,6 +430,12 @@ void Visuals::DrawPlayers()
 
 		const auto playerDistance = Features().LocalPlayer->get_transform()->get_position().Distance(BasePlayer->get_transform()->get_position());
 
+		const auto bodyAngles = AssemblyCSharp::LocalPlayer::get_Entity()->input()->bodyAngles();
+		const auto LocalPos = AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position();
+		const auto PlayerPos = BasePlayer->get_transform()->get_position();
+
+		Vector2 RadarPoint = WorldToRadar(PlayerPos - LocalPos, Vector2(m_settings::RadarPosX, m_settings::RadarPosY), m_settings::RadarSize, bodyAngles.y);
+
 		if (playerDistance <= m_settings::PlayerESPDistance)
 		{
 			box_bounds bo = get_bounds(BasePlayer, 0.f);
@@ -468,6 +504,11 @@ void Visuals::DrawPlayers()
 					BoxColor = Dead_Color;
 				else
 					BoxColor = m_settings::EspVisCheck ? VisCheckColor : DrawBox_Color;
+
+				if (m_settings::Radar)
+				{
+					UnityEngine::GL().CircleFilled(Vector2(RadarPoint), 3.f, BoxColor.GetUnityColor(), 25);
+				}
 
 				if (m_settings::SelectedBoxESP == 1)
 				{
@@ -724,6 +765,28 @@ void Visuals::DrawPlayers()
 						}
 
 						yoffset += 13;
+					}
+				}
+
+				if (m_settings::ShowAlerts)
+				{
+					auto playerpos = BasePlayer->get_bone_transform(48)->get_position();
+					auto localpos = LocalPlayer->get_bone_transform(48)->get_position();
+					auto distance = playerpos.Distance(localpos);
+					auto fwd = playerpos + (BasePlayer->eyes()->BodyForward() * distance);
+
+					auto dist = fwd.Distance(localpos);
+					auto r = (distance / 50.f); r = (r < 1.f ? 1.f : r);
+					if (dist < r)
+					{
+						std::string name = utf16_to_utf8(BasePlayer->get_displayName()->c_str());
+						std::string player_name = XS("");
+						char str[256];
+						sprintf(str, XS("[Warning] %s is looking at you!"), name);
+						player_name = player_name + " " + str;
+						float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
+						UnityEngine::GL().TextCenter(Vector2(center_x, center_y - 415), player_name.c_str(), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+
 					}
 				}
 
@@ -2925,6 +2988,7 @@ void Visuals::CacheEntities()
 	}
 
 }
+
 
 AssemblyCSharp::BasePlayer::Target Visuals::GetAimbotTargetSafe(Vector3 Source, float MaxDist)
 {

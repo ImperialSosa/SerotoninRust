@@ -29,12 +29,53 @@ void Hooks::FlintStrikeWeaponDoAttack(AssemblyCSharp::FlintStrikeWeapon* _This)
 		}
 	}
 
-	if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::ManipKey))
+	static bool StartEokaShot = false;
+	if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey)) {
+		auto camera = UnityEngine::Camera::get_main();
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (IsAddressValid(AimbotTarget.m_player)) {
+				if (AssemblyCSharp::IsVisible(LocalPlayer->get_bone_transform(47)->get_position(), AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position())) {
+					Features().PointVisible = true;
+					StartEokaShot = true;
+				}
+				else if (m_settings::BehindWall) {
+					if (m_settings::Manipulation && m_settings::BulletTP) {
+						if (m_settings::Thickbullet_AutoShoot && m_settings::StartShooting && m_settings::Manipulation_Indicator)
+							StartEokaShot = true;
+						else
+							StartEokaShot = false;
+					}
+				}
+				else if (m_settings::Thickbullet_AutoShoot) {
+					if (m_settings::BulletTP)
+						StartEokaShot = true;
+					else
+						StartEokaShot = false;
+				}
+				else if (m_settings::StartShooting) {
+					if (m_settings::Manipulation)
+						StartEokaShot = true;
+					else
+						StartEokaShot = false;
+				}
+				else
+					StartEokaShot = false;
+			}
+
+		}
+
+	}
+	else
+		StartEokaShot = false;
+
+	if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey))
 	{
 		if (IsAddressValid(LocalPlayer)) {
 			auto eyes = LocalPlayer->eyes();
 			if (IsAddressValid(eyes)) {
-				if (AssemblyCSharp::IsVisible(eyes->get_position() + Features().CachedManipPoint, Features().CachedBulletTPPosition))
+
+				if (StartEokaShot && Features().PointVisible)
 				{
 					_This->_isStriking() = false;
 					if (_This->primaryMagazine()->contents() <= 0)

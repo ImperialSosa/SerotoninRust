@@ -12,7 +12,20 @@ namespace m_settings {
 	inline bool SilentAim = false;
 	inline bool PlayerChams = false;
 	inline bool NoMovementRestrictions = false;
+	inline bool Weather = false;
+	inline bool NoClouds = false;
+	inline bool NoAtmosphere = false;
+	inline bool AtmosphereContrast = false;
+	inline bool RainbowSky = false;
+	inline float RainbowAmount = 40.f;
+	inline bool Waves = false;
+	inline bool Rainbows = false;
+	inline bool NoFog = false;
+	inline bool NoRain = false;
+	inline bool NoThunder = false;
+	inline bool NoWind = false;
 	inline float AimbotSmoothness = 5.f;
+	inline bool ShowPrediction = false;
 	inline float AimbotFOV = 200.f;
 	inline float TestSlider = 24.f;
 	inline bool NormalThickBullet = false;
@@ -21,7 +34,12 @@ namespace m_settings {
 	inline bool DrawInventory = false;
 	inline bool DrawInventoryIcons = false;
 	inline bool DoorSpammer = false;
+	inline bool ShowAlerts = false;
 	inline bool DrawClothing = false;
+	inline bool Radar = true;
+	inline float RadarSize = 200;
+	inline int RadarPosX;
+	inline int RadarPosY;
 	inline bool AutoReloadIcon = false;
 	inline bool TC_Health = false;
 	inline bool TC_Upkeep = false;
@@ -364,7 +382,7 @@ namespace m_settings {
 	inline bool DrawWounded = false;
 	inline bool DrawTarget = false;
 	inline bool DrawSafezone = false;
-	inline float PlayerESPDistance = 300.f;
+	inline float PlayerESPDistance = 500.f;
 
 	inline bool Flyhack_Indicator = true;
 	inline bool AntiFlyKick = false;
@@ -384,6 +402,7 @@ namespace m_settings {
 	inline float MaxMiniSpeed = 1.f;
 	inline float HoverHeight = 150.f;
 	inline bool HoverMini = false;
+	inline bool NoSun = false;
 
 	inline bool GestureSpam = false;
 	inline int gesture = 0;
