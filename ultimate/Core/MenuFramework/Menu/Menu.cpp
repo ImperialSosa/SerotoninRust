@@ -299,7 +299,8 @@ void MenuDraw::RenderLegitMenu()
 				{
 					Menu().CheckBox(XS("Corpse"), m_settings::Corpse);
 					Menu().CheckBox(XS("Backpack"), m_settings::BackPack);
-					//Menu().CheckBox(XS("OOFOV"), m_settings::OOFIndicators);
+					Menu().CheckBox(XS("ShowAlerts"), m_settings::ShowAlerts);
+					Menu().CheckBox(XS("Radar"), m_settings::Radar);
 					Menu().CheckBoxKeyBind(XS("Save Pos"), m_settings::SavePos, m_settings::SavePosKey);
 					Menu().CheckBox(XS("Show Target"), m_settings::DrawTarget);
 					Menu().CheckBox(XS("Wounded"), m_settings::DrawWounded);
@@ -312,6 +313,7 @@ void MenuDraw::RenderLegitMenu()
 					Menu().Slider(XS("PlayerDistance"), m_settings::PlayerESPDistance, 0, 500);
 					Menu().Slider(XS("NPC Distance"), m_settings::NPCDistance, 0, 500);
 					Menu().Slider(XS("Drops Distance"), m_settings::MaxPlayerDropsDistance, 0, 500);
+					Menu().Slider(XS("RadarSize"), m_settings::RadarSize, 0, 300);
 				}
 				break;
 			case 1:
@@ -955,7 +957,7 @@ void MenuDraw::RenderMenu()
 						//Menu().CheckBox(XS("WalkToMarker"), m_settings::WalkToMarker);
 						//Menu().CheckBox(XS("ShowPrediction"), m_settings::ShowPrediction);
 						Menu().CheckBoxKeyBind(XS("Silent Aimbot"), m_settings::SilentAim, m_settings::AimbotKey);
-						Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
+						//Menu().CheckBox(XS("Velocity Aimbot"), m_settings::VelocityAimbot);
 						if (m_settings::SilentAim)
 						{
 							m_settings::RotationAimbot = false;
@@ -1601,6 +1603,7 @@ void MenuDraw::RenderMenu()
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
 						Menu().CheckBox(XS("NameSpoofer"), m_settings::NameSpoofer);
+						Menu().CheckBox(XS("FixDebugCamera"), m_settings::FixDebugCamera);
 						Menu().CheckBox(XS("Instant Loot"), m_settings::InstantLoot);
 						Menu().CheckBox(XS("Instant Heal"), m_settings::InstantHeal);
 						Menu().CheckBox(XS("Adjust NoClipSpeed"), m_settings::AdjustNoClipSpeed);
@@ -1612,8 +1615,6 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBoxKeyBind(XS("Keep TargetAlive"), m_settings::KeepTargetAlive, m_settings::KeepAliveKey);
 						Menu().CheckBoxKeyBind(XS("Loot Body"), m_settings::LootBodyThruWall, m_settings::LootBodyThruWallKey);
 						Menu().CheckBoxKeyBind(XS("Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
-						Menu().CheckBox(XS("Spinbot"), m_settings::Spinbot);
-						Menu().CheckBox(XS("FixDebugCamera"), m_settings::FixDebugCamera);
 						Menu().CheckBoxKeyBind(XS("Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 						Menu().CheckBoxKeyBind(XS("SilentWalk"), m_settings::SilentWalk, m_settings::SilentWalkKey);
 						Menu().CheckBoxKeyBind(XS("TeleportMaxHeight"), m_settings::TeleportMax, m_settings::TeleportMaxKey);
@@ -1758,6 +1759,7 @@ void MenuDraw::RenderMenu()
 
 					Menu().BeginChild(XS("Other"), { 285,45 }, { 220,290 });
 					{
+						Menu().CheckBox(XS("Spinbot"), m_settings::Spinbot);
 						Menu().CheckBoxKeyBind(XS("WeaponSpammer"), m_settings::WeaponSpammer, m_settings::WeaponSpamKey);
 						if (m_settings::WeaponSpammer) {
 							Menu().Slider(XS("WeaponSpammerDelay"), m_settings::WeaponSpamDelay, 0, 20);
