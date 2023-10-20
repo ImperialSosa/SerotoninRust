@@ -18,6 +18,8 @@ void SetupStyles()
 			return;
 	}
 
+	static bool FontLoaded = false;
+
 	if (gui_skin == nullptr || UnityEngine::gui_style == nullptr || UnityEngine::menu_gui_style == nullptr || UnityEngine::world_gui_style == nullptr || UnityEngine::screen_gui_style == nullptr)
 	{
 
@@ -28,7 +30,6 @@ void SetupStyles()
 		UnityEngine::world_gui_style = gui_skin->m_label();
 		UnityEngine::screen_gui_style = gui_skin->m_label();
 
-		static bool FontLoaded = false;
 		if (!FontLoaded)
 		{
 			uintptr_t* g_font;
@@ -52,14 +53,39 @@ void SetupStyles()
 	}
 
 	uintptr_t* g_font;
-	if (m_settings::fonttype == 0)
-		g_font = font_bundle->LoadAsset<uintptr_t>(XS("ubuntu-medium.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
-	else if (m_settings::fonttype == 1)
-		g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
-	else if (m_settings::fonttype == 2)
-		g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+	static bool SetNewFont = false;
+	static int FontTypee = 0;
 
-	gui_skin->m_Font() = ToAddress(g_font);
+	if (FontLoaded) {
+		if (m_settings::fonttype == 0 && FontTypee != m_settings::fonttype && !SetNewFont)
+		{
+			FontTypee = m_settings::fonttype;
+			SetNewFont = true;
+		}
+		else if (m_settings::fonttype == 1 && FontTypee != m_settings::fonttype && !SetNewFont)
+		{
+			FontTypee = m_settings::fonttype;
+			SetNewFont = true;
+		}
+		else if (m_settings::fonttype == 2 && FontTypee != m_settings::fonttype && !SetNewFont)
+		{
+			FontTypee = m_settings::fonttype;
+			SetNewFont = true;
+		}
+
+		if (SetNewFont) {
+			if (m_settings::fonttype == 0)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("ubuntu-medium.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 1)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 2)
+				g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+
+			gui_skin->m_Font() = ToAddress(g_font);
+
+			SetNewFont = false;
+		}
+	}
 }
 
 
@@ -1679,16 +1705,16 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 
-					static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-					if (current_time - send_time > 10.f)
-					{
+					//static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+					//float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+					//if (current_time - send_time > 10.f)
+					//{
 						//LOG(XS("[DEBUG] Speed"));
 
 						Visuals().CacheEntities();
 
-						send_time = current_time;
-					}
+					//	send_time = current_time;
+					//}
 		
 					Visuals().RenderEntities();
 				}	

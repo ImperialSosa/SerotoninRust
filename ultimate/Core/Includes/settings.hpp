@@ -36,7 +36,7 @@ namespace m_settings {
 	inline bool DoorSpammer = false;
 	inline bool ShowAlerts = false;
 	inline bool DrawClothing = false;
-	inline bool Radar = true;
+	inline bool Radar = false;
 	inline float RadarSize = 200;
 	inline int RadarPosX;
 	inline int RadarPosY;
@@ -65,6 +65,9 @@ namespace m_settings {
 	inline bool ShowCachedLOS = false;
 	inline bool ShowCachedPoint = false;
 
+	inline bool HammerSpam = false;
+	inline RustStructs::KeyCode HammerSpamKey = RustStructs::KeyCode::Z;
+
 	inline int HitMaterial = 0;
 	inline bool SilentWalk = false;
 	inline RustStructs::KeyCode SilentWalkKey = RustStructs::KeyCode::H;
@@ -75,6 +78,7 @@ namespace m_settings {
 	inline RustStructs::KeyCode TeleportMaxKey = RustStructs::KeyCode::H;
 	inline bool WeaponChams = false;
 	inline bool HeliAimbot = false;
+	inline int HammerMaterialType = 0;
 	inline bool RemoveAttackAnimations = false;
 	inline bool TurretOnFlags = false;
 	inline bool AmongusPrefabSpawn = false;

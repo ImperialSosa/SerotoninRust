@@ -429,12 +429,15 @@ void Visuals::DrawPlayers()
 
 
 		const auto playerDistance = Features().LocalPlayer->get_transform()->get_position().Distance(BasePlayer->get_transform()->get_position());
+		Vector2 RadarPoint;
 
-		const auto bodyAngles = AssemblyCSharp::LocalPlayer::get_Entity()->input()->bodyAngles();
-		const auto LocalPos = AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position();
-		const auto PlayerPos = BasePlayer->get_transform()->get_position();
+		if (m_settings::Radar) {
+			const auto bodyAngles = AssemblyCSharp::LocalPlayer::get_Entity()->input()->bodyAngles();
+			const auto LocalPos = AssemblyCSharp::LocalPlayer::get_Entity()->get_transform()->get_position();
+			const auto PlayerPos = BasePlayer->get_transform()->get_position();
 
-		Vector2 RadarPoint = WorldToRadar(PlayerPos - LocalPos, Vector2(m_settings::RadarPosX, m_settings::RadarPosY), m_settings::RadarSize, bodyAngles.y);
+			RadarPoint = WorldToRadar(PlayerPos - LocalPos, Vector2(m_settings::RadarPosX, m_settings::RadarPosY), m_settings::RadarSize, bodyAngles.y);
+		}
 
 		if (playerDistance <= m_settings::PlayerESPDistance)
 		{

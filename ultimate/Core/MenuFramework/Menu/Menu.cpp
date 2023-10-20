@@ -13,6 +13,7 @@ inline bool esp_type_open;
 inline bool wchams_type_opens;
 inline bool heldi_type_open;
 inline bool hotbar_type_opne;
+inline bool hammer_type_open;
 inline bool clothing_type_open;
 inline bool vischeck_type_openm;
 inline bool healthbar_tpype_oepn;
@@ -1617,7 +1618,7 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBoxKeyBind(XS("Loot Corpse"), m_settings::LootCorpseThruWall, m_settings::LootCorpseThruWallKey);
 						Menu().CheckBoxKeyBind(XS("Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 						Menu().CheckBoxKeyBind(XS("SilentWalk"), m_settings::SilentWalk, m_settings::SilentWalkKey);
-						Menu().CheckBoxKeyBind(XS("TeleportMaxHeight"), m_settings::TeleportMax, m_settings::TeleportMaxKey);
+						Menu().CheckBoxKeyBind(XS("TeleportMaxHeight"), m_settings::TeleportMax, m_settings::TeleportMaxKey);					
 					}
 					break;
 				case 1:
@@ -1646,6 +1647,11 @@ void MenuDraw::RenderMenu()
 						if (m_settings::GestureSpam) {
 							Menu().Dropdown(XS("GestureSpam"), { XS("None"), XS("Clap"), XS("Friendly"), XS("ThumbsDown"),XS("ThumbsUp"), XS("Ok"), XS("Point"), XS("Shrug"), XS("Victory"), XS("Wave") }, m_settings::gesture, gesutre_open);
 						}
+
+						Menu().CheckBoxKeyBind(XS("HammerSpam"), m_settings::HammerSpam, m_settings::HammerSpamKey);
+						if (m_settings::HammerSpam)
+							Menu().Dropdown(XS("Material"), { XS("Glass"), XS("Water") }, m_settings::SelectedBoxESP, hammer_type_open);
+
 						//Menu().CheckBox(XS("AutoMini"), m_settings::AutoMini);
 						//Menu().CheckBox(XS("HoverMini"), m_settings::HoverMini);
 						//Menu().Slider(XS("HoverHeight"), m_settings::HoverHeight, 0, 500);

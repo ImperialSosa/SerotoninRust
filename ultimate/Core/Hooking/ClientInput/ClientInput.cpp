@@ -2224,6 +2224,57 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
+	if (m_settings::HammerSpam && UnityEngine::Input::GetKey(m_settings::HammerSpamKey))
+	{
+		if (IsAddressValid(camera)) {
+			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+			if (a1 && IsAddressValid(AimbotTarget.m_player))
+			{
+				auto DistanceToPlayer = AimbotTarget.m_position.Distance(a1->get_positionz());
+
+				if (DistanceToPlayer < 5.f)
+				{
+					if (BaseProjectile->IsA(AssemblyCSharp::Hammer::StaticClass()))
+					{
+						auto hammer = reinterpret_cast<AssemblyCSharp::Hammer*>(BaseProjectile);
+
+						auto hit_test_class = CIl2Cpp::FindClass(XS(""), XS("HitTest"));
+						if (!IsAddressValid(hit_test_class))
+							return;
+
+						AssemblyCSharp::HitTest* hit_test = (AssemblyCSharp::HitTest*)CIl2Cpp::il2cpp_object_new((void*)hit_test_class);
+						if (IsAddressValid(hit_test))
+						{
+							hit_test->MaxDistance() = 1000.f;
+							hit_test->HitTransform() = AimbotTarget.m_player->get_bone_transform(47);
+							hit_test->AttackRay() = UnityEngine::Ray(a1->eyes()->get_position(), (AimbotTarget.m_position - a1->eyes()->get_position()).Normalized());
+							hit_test->DidHit() = true;
+							hit_test->HitEntity() = AimbotTarget.m_player;
+
+							if (m_settings::HammerMaterialType == 0)
+							{
+								hit_test->HitMaterial() = CIl2Cpp::il2cpp_string_new(XS("Glass"));
+							}
+							else if (m_settings::HammerMaterialType == 1)
+							{
+								hit_test->HitMaterial() = CIl2Cpp::il2cpp_string_new(XS("Water"));
+							}
+
+
+							hit_test->HitPoint() = AimbotTarget.m_player->model()->eyeBone()->InverseTransformPoint(AimbotTarget.m_player->model()->eyeBone()->get_position() + Vector3(UnityEngine::Random::Range(-0.2f, 0.2f), UnityEngine::Random::Range(-0.2f, 0.2f), UnityEngine::Random::Range(-0.2f, 0.2f)));
+							hit_test->HitNormal() = AimbotTarget.m_player->model()->eyeBone()->InverseTransformPoint(AimbotTarget.m_player->model()->eyeBone()->get_position() + Vector3(UnityEngine::Random::Range(-0.2f, 0.2f), UnityEngine::Random::Range(-0.2f, 0.2f), UnityEngine::Random::Range(-0.2f, 0.2f)));
+							hit_test->damageProperties() = hammer->damageProperties();
+
+							hammer->StartAttackCooldown(0.f);
+							hammer->ProcessAttack(hit_test);
+
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if (m_settings::AntiDeathBarrier)
 	{
 		IsInsideTerrain(m_settings::AntiDeathBarrier);

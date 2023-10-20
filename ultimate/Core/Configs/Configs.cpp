@@ -154,7 +154,7 @@ void Configs::LoadConfig()
     m_settings::WorldOutlinedText = config[XS("WorldOutlinedText")];
     m_settings::WorldShadedText = config[XS("WorldShadedText")];
 
-    // Load the rest of the settings in a similar manner
+    //// Load the rest of the settings in a similar manner
     m_settings::WeaponSpamKey = static_cast<RustStructs::KeyCode>(config[XS("WeaponSpamKey")]);
     m_settings::RotationKey = static_cast<RustStructs::KeyCode>(config[XS("RotationKey")]);
     m_settings::AimbotKey = static_cast<RustStructs::KeyCode>(config[XS("AimbotKey")]);
@@ -172,44 +172,43 @@ void Configs::LoadConfig()
 
 
 
-    // Load the remaining integer settings
-    m_settings::WeaponSpamDelay = static_cast<float>(config[XS("WeaponSpamDelay")]);
-    m_settings::SilentSpread = static_cast<float>(config[XS("SilentSpread")]);
-    m_settings::NormalThickBulletThickness = static_cast<float>(config[XS("NormalThickBulletThickness")]);
-    m_settings::recoilPercent = static_cast<float>(config[XS("recoilPercent")]);
-    m_settings::GameTime = static_cast<float>(config[XS("GameTime")]);
-    m_settings::PlayerFovAmount = static_cast<float>(config[XS("PlayerFovAmount")]);
-    m_settings::AimbotAccuracy = static_cast<float>(config[XS("AimbotAccuracy")]);
-    m_settings::AimbotFOV = static_cast<float>(config[XS("AimbotFOV")]);
-    m_settings::SwastikaSize = static_cast<float>(config[XS("SwastikaSize")]);
-    m_settings::MaxOreDistance = static_cast<float>(config[XS("MaxOreDistance")]);
-    m_settings::MaxCollectableDistance = static_cast<float>(config[XS("MaxCollectableDistance")]);
-    m_settings::MaxFoodDistance = static_cast<float>(config[XS("MaxFoodDistance")]);
-    m_settings::MaxCrateDistance = static_cast<float>(config[XS("MaxCrateDistance")]);
-    m_settings::MaxSupplyDropDistance = static_cast<float>(config[XS("MaxSupplyDropDistance")]);
-    m_settings::MaxDroppedDistance = static_cast<float>(config[XS("MaxDroppedDistance")]);
-    m_settings::MaxTrapsDistance = static_cast<float>(config[XS("MaxTrapsDistance")]);
-    m_settings::MaxAPCDistance = static_cast<float>(config[XS("MaxAPCDistance")]);
-    m_settings::MaxVehicleDistance = static_cast<float>(config[XS("MaxVehicleDistance")]);
-    m_settings::MaxExplosionDistance = static_cast<float>(config[XS("MaxExplosionDistance")]);
-    m_settings::AuthorizedPlayersDistance = static_cast<float>(config[XS("AuthorizedPlayersDistance")]);
-    m_settings::MaxRaidTimer = static_cast<float>(config[XS("MaxRaidTimer")]);
-    m_settings::ZoomAmount = static_cast<float>(config[XS("ZoomAmount")]);
+    //// Load the remaining integer settings
+    m_settings::WeaponSpamDelay = static_cast<int>(config[XS("WeaponSpamDelay")]);
+    m_settings::SilentSpread = static_cast<int>(config[XS("SilentSpread")]);
+    m_settings::NormalThickBulletThickness = static_cast<int>(config[XS("NormalThickBulletThickness")]);
+    m_settings::recoilPercent = static_cast<int>(config[XS("recoilPercent")]);
+    m_settings::GameTime = static_cast<int>(config[XS("GameTime")]);
+    m_settings::PlayerFovAmount = static_cast<int>(config[XS("PlayerFovAmount")]);
+    m_settings::AimbotAccuracy = static_cast<int>(config[XS("AimbotAccuracy")]);
+    m_settings::AimbotFOV = static_cast<int>(config[XS("AimbotFOV")]);
+    m_settings::SwastikaSize = static_cast<int>(config[XS("SwastikaSize")]);
+    m_settings::MaxOreDistance = static_cast<int>(config[XS("MaxOreDistance")]);
+    m_settings::MaxCollectableDistance = static_cast<int>(config[XS("MaxCollectableDistance")]);
+    m_settings::MaxFoodDistance = static_cast<int>(config[XS("MaxFoodDistance")]);
+    m_settings::MaxCrateDistance = static_cast<int>(config[XS("MaxCrateDistance")]);
+    m_settings::MaxSupplyDropDistance = static_cast<int>(config[XS("MaxSupplyDropDistance")]);
+    m_settings::MaxDroppedDistance = static_cast<int>(config[XS("MaxDroppedDistance")]);
+    m_settings::MaxTrapsDistance = static_cast<int>(config[XS("MaxTrapsDistance")]);
+    m_settings::MaxAPCDistance = static_cast<int>(config[XS("MaxAPCDistance")]);
+    m_settings::MaxVehicleDistance = static_cast<int>(config[XS("MaxVehicleDistance")]);
+    m_settings::MaxExplosionDistance = static_cast<int>(config[XS("MaxExplosionDistance")]);
+    m_settings::AuthorizedPlayersDistance = static_cast<int>(config[XS("AuthorizedPlayersDistance")]);
+    m_settings::MaxRaidTimer = static_cast<int>(config[XS("MaxRaidTimer")]);
+    m_settings::ZoomAmount = static_cast<int>(config[XS("ZoomAmount")]);
 
-    m_settings::SelectedBoxESP = config[XS("SelectedBoxESP")];
-    m_settings::HeldItemType = config[XS("HeldItemType")];
-    m_settings::SelectedHealthBar = config[XS("SelectedHealthBar")];
-    m_settings::SelectedHotbar = config[XS("SelectedHotbar")];
-    m_settings::SelectedClothing = config[XS("SelectedClothing")];
-    m_settings::SelectedOutsideType = config[XS("SelectedOutsideType")];
-    m_settings::VisCheckType = config[XS("VisCheckType")];
-    m_settings::HitMaterial = config[XS("HitMaterial")];
-    m_settings::BulletTPIntensity = config[XS("BulletTPIntensity")];
-    m_settings::ManipMode = config[XS("ManipMode")];
-    m_settings::SelectedHitbox = config[XS("SelectedHitbox")];
-    m_settings::SelectedAimbone = config[XS("SelectedAimbone")];
-    m_settings::BuildingGrade = config[XS("BuildingGrade")];
-
+    m_settings::SelectedBoxESP = static_cast<int>(config[XS("SelectedBoxESP")]);
+    m_settings::HeldItemType = static_cast<int>(config[XS("HeldItemType")]);
+    m_settings::SelectedHealthBar = static_cast<int>(config[XS("SelectedHealthBar")]);
+    m_settings::SelectedHotbar = static_cast<int>(config[XS("SelectedHotbar")]);
+    m_settings::SelectedClothing = static_cast<int>(config[XS("SelectedClothing")]);
+    m_settings::SelectedOutsideType = static_cast<int>(config[XS("SelectedOutsideType")]);
+    m_settings::VisCheckType = static_cast<int>(config[XS("VisCheckType")]);
+    m_settings::HitMaterial = static_cast<int>(config[XS("HitMaterial")]);
+    m_settings::BulletTPIntensity = static_cast<int>(config[XS("BulletTPIntensity")]);
+    m_settings::ManipMode = static_cast<int>(config[XS("ManipMode")]);
+    m_settings::SelectedHitbox = static_cast<int>(config[XS("SelectedHitbox")]);
+   // m_settings::SelectedAimbone = static_cast<int>(config[XS("SelectedAimbone")]);
+   // m_settings::BuildingGrade = static_cast<int>(config[XS("BuildingGrade")]);
 
     m_settings::RaidOptions[0] = config[XS("RaidOptions0")];
     m_settings::RaidOptions[1] = config[XS("RaidOptions1")];
@@ -352,20 +351,20 @@ void Configs::LoadConfig()
     m_settings::ShowExplosiveAmmo = config[XS("ShowExplosiveAmmo")];
     m_settings::ShowAlerts = config[XS("ShowAlerts")];
     m_settings::Radar = config[XS("Radar")];
-    m_settings::RadarSize = static_cast<float>(config[XS("RadarSize")]);
+    m_settings::RadarSize = static_cast<int>(config[XS("RadarSize")]);
     m_settings::Weather = config[XS("Weather")];
     m_settings::AtmosphereContrast = config[XS("AtmosphereContrast")];
-    m_settings::Rainbows = config[XS("Rainbows")];
-    m_settings::Waves = config[XS("Waves")];
+    //m_settings::Rainbows = config[XS("Rainbows")];
+    //m_settings::Waves = config[XS("Waves")];
     m_settings::NoClouds = config[XS("NoClouds")];
-    m_settings::NoAtmosphere = config[XS("NoAtmosphere")];
-    m_settings::NoFog = config[XS("NoFog")];
-    m_settings::NoRain = config[XS("NoRain")];
-    m_settings::NoThunder = config[XS("NoThunder")];
-    m_settings::NoWind = config[XS("NoWind")];
+   // m_settings::NoAtmosphere = config[XS("NoAtmosphere")];
+   // m_settings::NoFog = config[XS("DisableFog")];
+   // m_settings::NoRain = config[XS("NoRain")];
+   // m_settings::NoThunder = config[XS("NoThunder")];
+    //m_settings::NoWind = config[XS("NoWind")];
     m_settings::RainbowSky = config[XS("RainbowSky")];
-    m_settings::RainbowAmount = static_cast<float>(config[XS("RainbowAmount")]);
-    m_settings::NoSun = config[XS("NoSun")];
+    m_settings::RainbowAmount = static_cast<int>(config[XS("RainbowAmount")]);
+    //m_settings::NoSun = config[XS("NoSun")];
     //// Load TagsVisCheck from JSON
     //if (config.find(XS("TagsVisCheck")) != config.end()) {
     //    m_settings::TagsVisCheck = config[XS("TagsVisCheck")];
@@ -484,24 +483,24 @@ void Configs::SaveConfig()
     config[XS("WorldOutlinedText")] = m_settings::WorldOutlinedText;
     config[XS("WorldShadedText")] = m_settings::WorldShadedText;
 
-    /* KeyBinds */
-    config[XS("WeaponSpamKey")] = static_cast<int>(m_settings::WeaponSpamKey);
-    config[XS("RotationKey")] = static_cast<int>(m_settings::RotationKey);
-    config[XS("AimbotKey")] = static_cast<int>(m_settings::AimbotKey);
-    config[XS("AutoshootKey")] = static_cast<int>(m_settings::AutoshootKey);
-    config[XS("ManipKey")] = static_cast<int>(m_settings::ManipKey);
-    config[XS("AdminCheatKey")] = static_cast<int>(m_settings::AdminCheatKey);
-    config[XS("InstantReviveKey")] = static_cast<int>(m_settings::InstantReviveKey);
-    config[XS("KeepAliveKey")] = static_cast<int>(m_settings::KeepAliveKey);
-    config[XS("LootBodyThruWallKey")] = static_cast<int>(m_settings::LootBodyThruWallKey);
-    config[XS("LootCorpseThruWallKey")] = static_cast<int>(m_settings::LootCorpseThruWallKey);
-    config[XS("InteractiveKey")] = static_cast<int>(m_settings::InteractiveKey);
-    config[XS("SilentWalkKey")] = static_cast<int>(m_settings::SilentWalkKey);
-    config[XS("TeleportMaxKey")] = static_cast<int>(m_settings::TeleportMaxKey);
-    config[XS("ZoomKey")] = static_cast<int>(m_settings::ZoomKey);
+    ///* KeyBinds */
+    config[XS("WeaponSpamKey")] = static_cast<RustStructs::KeyCode>(m_settings::WeaponSpamKey);
+    config[XS("RotationKey")] = static_cast<RustStructs::KeyCode>(m_settings::RotationKey);
+    config[XS("AimbotKey")] = static_cast<RustStructs::KeyCode>(m_settings::AimbotKey);
+    config[XS("AutoshootKey")] = static_cast<RustStructs::KeyCode>(m_settings::AutoshootKey);
+    config[XS("ManipKey")] = static_cast<RustStructs::KeyCode>(m_settings::ManipKey);
+    config[XS("AdminCheatKey")] = static_cast<RustStructs::KeyCode>(m_settings::AdminCheatKey);
+    config[XS("InstantReviveKey")] = static_cast<RustStructs::KeyCode>(m_settings::InstantReviveKey);
+    config[XS("KeepAliveKey")] = static_cast<RustStructs::KeyCode>(m_settings::KeepAliveKey);
+    config[XS("LootBodyThruWallKey")] = static_cast<RustStructs::KeyCode>(m_settings::LootBodyThruWallKey);
+    config[XS("LootCorpseThruWallKey")] = static_cast<RustStructs::KeyCode>(m_settings::LootCorpseThruWallKey);
+    config[XS("InteractiveKey")] = static_cast<RustStructs::KeyCode>(m_settings::InteractiveKey);
+    config[XS("SilentWalkKey")] = static_cast<RustStructs::KeyCode>(m_settings::SilentWalkKey);
+    config[XS("TeleportMaxKey")] = static_cast<RustStructs::KeyCode>(m_settings::TeleportMaxKey);
+    config[XS("ZoomKey")] = static_cast<RustStructs::KeyCode>(m_settings::ZoomKey);
 
 
-    /* Floats / Ints */
+    ///* Floats / Ints */
     config[XS("WeaponSpamDelay")] = static_cast<int>(m_settings::WeaponSpamDelay);
     config[XS("SilentSpread")] = static_cast<int>(m_settings::SilentSpread);
     config[XS("NormalThickBulletThickness")] = static_cast<int>(m_settings::NormalThickBulletThickness);
@@ -525,7 +524,7 @@ void Configs::SaveConfig()
     config[XS("MaxRaidTimer")] = static_cast<int>(m_settings::MaxRaidTimer);
     config[XS("ZoomAmount")] = static_cast<int>(m_settings::ZoomAmount);
 
-    /* ComboBox shit */
+    ///* ComboBox shit */
     config[XS("SelectedBoxESP")] = static_cast<int>(m_settings::SelectedBoxESP);
     config[XS("HeldItemType")] = static_cast<int>(m_settings::HeldItemType);
     config[XS("SelectedHealthBar")] = static_cast<int>(m_settings::SelectedHealthBar);
@@ -537,10 +536,10 @@ void Configs::SaveConfig()
     config[XS("BulletTPIntensity")] = static_cast<int>(m_settings::BulletTPIntensity);
     config[XS("ManipMode")] = static_cast<int>(m_settings::ManipMode);
     config[XS("SelectedHitbox")] = static_cast<int>(m_settings::SelectedHitbox);
-    config[XS("SelectedAimbone")] = static_cast<int>(m_settings::SelectedAimbone);
-    config[XS("BuildingGrade")] = static_cast<int>(m_settings::BuildingGrade);
+  //  config[XS("SelectedAimbone")] = static_cast<int>(m_settings::SelectedAimbone);
+  //  config[XS("BuildingGrade")] = static_cast<int>(m_settings::BuildingGrade);
 
-    /* MultiBox shit */
+    ///* MultiBox shit */
 
     config[XS("RaidOptions0")] = m_settings::RaidOptions[0];
     config[XS("RaidOptions1")] = m_settings::RaidOptions[1];
@@ -618,7 +617,7 @@ void Configs::SaveConfig()
     config[XS("CollectableOptions6")] = m_settings::CollectableOpions[6];
     config[XS("CollectableOptions7")] = m_settings::CollectableOpions[7];
     config[XS("CollectableOptions8")] = m_settings::CollectableOpions[8];
-
+    
     config[XS("FoodOptions0")] = m_settings::FoodOptions[0];
     config[XS("FoodOptions1")] = m_settings::FoodOptions[1];
     config[XS("FoodOptions2")] = m_settings::FoodOptions[2];
@@ -628,7 +627,7 @@ void Configs::SaveConfig()
     config[XS("FoodOptions6")] = m_settings::FoodOptions[6];
     config[XS("FoodOptions7")] = m_settings::FoodOptions[7];
     config[XS("FoodOptions8")] = m_settings::FoodOptions[8];
-
+    
     config[XS("DeployableOptions0")] = m_settings::DeployableOptions[0];
     config[XS("DeployableOptions1")] = m_settings::DeployableOptions[1];
     config[XS("DeployableOptions2")] = m_settings::DeployableOptions[2];
@@ -686,17 +685,17 @@ void Configs::SaveConfig()
     config[XS("RadarSize")] = static_cast<int>(m_settings::RadarSize);
     config[XS("Weather")] = m_settings::Weather;
     config[XS("AtmosphereContrast")] = m_settings::AtmosphereContrast;
-    config[XS("Rainbows")] = m_settings::Rainbows;
-    config[XS("Waves")] = m_settings::Waves;
+  //  config[XS("Rainbows")] = m_settings::Rainbows;
+  //  config[XS("Waves")] = m_settings::Waves;
     config[XS("NoClouds")] = m_settings::NoClouds;
-    config[XS("NoAtmosphere")] = m_settings::NoAtmosphere;
-    config[XS("NoFog")] = m_settings::NoFog;
-    config[XS("NoRain")] = m_settings::NoRain;
-    config[XS("NoThunder")] = m_settings::NoThunder;
-    config[XS("NoWind")] = m_settings::NoWind;
+    //config[XS("NoAtmosphere")] = m_settings::NoAtmosphere;
+   // config[XS("DisableFog")] = m_settings::NoFog;
+   // config[XS("NoRain")] = m_settings::NoRain;
+    //config[XS("NoThunder")] = m_settings::NoThunder;
+    //config[XS("NoWind")] = m_settings::NoWind;
     config[XS("RainbowSky")] = m_settings::RainbowSky;
     config[XS("RainbowAmount")] = static_cast<int>(m_settings::RainbowAmount);
-    config[XS("NoSun")] = m_settings::NoSun;
+    //config[XS("NoSun")] = m_settings::NoSun;
 
     std::string jsonString = config.dump(4);
 
