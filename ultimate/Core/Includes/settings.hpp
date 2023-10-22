@@ -18,6 +18,7 @@ namespace m_settings {
 	inline bool AtmosphereContrast = false;
 	inline bool RainbowSky = false;
 	inline float RainbowAmount = 40.f;
+	inline bool TargetAttackHeli = false;
 	inline bool Waves = false;
 	inline bool Rainbows = false;
 	inline bool NoFog = false;

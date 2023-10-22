@@ -37,7 +37,7 @@ std::vector<Vector3> GenerateCircle(float radius, int points, bool BulletTP = fa
 
 inline void BulletTPAnglesModeIntense(std::vector<Vector3>& re, int numPoints = 100)
 {
-	float radius = 2.5f; // Radius of the sphere
+	float radius = 2.6f; // Radius of the sphere
 	//int numPoints = 100; // Number of points to generate
 
 	for (int i = 0; i < numPoints; ++i) {
@@ -710,7 +710,7 @@ auto Features::FindBulletTPAngles(float maxDesyncValue) -> void
 		else if (m_settings::BulletTPIntensity == 1)
 			BulletTPAnglesModeIntense(arrz, 250);
 		else if (m_settings::BulletTPIntensity == 2)
-			arrz = generatePointsInNonUniformSphere(2.3, 2.2, 2.2, 100);
+			arrz = generatePointsInNonUniformSphere(2.6, 2.6, 2.6, 100);
 
 		for (const auto& s : arrz)
 		{

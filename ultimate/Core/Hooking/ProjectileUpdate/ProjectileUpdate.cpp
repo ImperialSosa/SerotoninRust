@@ -32,9 +32,12 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 	if (Features().LocalPlayer->IsDead() || Features().LocalPlayer->IsSleeping())
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
 
+	static float OriginalThickness = _This->thickness();
+
+
 	float Thickness = m_settings::NormalThickBulletThickness / 10;
 	if (m_settings::NormalThickBullet)
-		_This->thickness() = Thickness;
+		_This->thickness() = Thickness * 5.f;
 	else
 		_This->thickness() = 0.1f;
 
