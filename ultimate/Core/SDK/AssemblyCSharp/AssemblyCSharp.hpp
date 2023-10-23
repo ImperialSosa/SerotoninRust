@@ -1670,6 +1670,9 @@ namespace AssemblyCSharp {
 			{
 				return;
 			}
+
+			this->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
+		
 			this->primaryMagazine()->contents()--;
 
 			this->LaunchProjectile();

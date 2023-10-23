@@ -60,6 +60,7 @@ namespace UnityEngine
 		return direction.LengthSquared();
 	}
 
+
 	float Vector2::Distance(const Vector2& vector) const
 	{
 		const auto direction(*this - vector);

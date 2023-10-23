@@ -1889,9 +1889,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::LateUpdatehk.Unhook();
 		Hooks::OnNetworkMessagehk.Unhook();
 		Hooks::OnInputhk.Unhook();
-		Hooks::DoAttackBowhk.Unhook();
+		//Hooks::DoAttackBowhk.Unhook();
 		Hooks::DoAttackMeleehk.Unhook();
-		Hooks::IsAiminghk.Unhook();
+		//Hooks::IsAiminghk.Unhook();
 
 		Hooks::FlintStrikeWeaponDoAttackhk.Unhook();
 	}

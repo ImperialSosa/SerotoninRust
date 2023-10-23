@@ -816,6 +816,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	float num5 = Features().Instance()->LocalPlayer->MaxEyeVelocity() + Features().Instance()->LocalPlayer->GetParentVelocity().Magnitude();
 	float num6 = Features().Instance()->LocalPlayer->BoundsPadding() + num4 * num5;
 
+
+
+
 	m_settings::max_spoofed_eye_distance = num6;
 
 
@@ -1133,7 +1136,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 					if (Features().BulletTPAngle.IsZero())
 						Features().BulletTPAngle = AimbotTarget.m_position;
 
-					if (m_settings::Autoshoot && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BowWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CrossbowWeapon::StaticClass()))
+					if (m_settings::Autoshoot && !BaseProjectile->IsA(AssemblyCSharp::FlintStrikeWeapon::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::MedicalTool::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::CrossbowWeapon::StaticClass()))
 					{
 						if (m_settings::WaitForInstantHit)
 						{
@@ -1154,10 +1157,38 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							{
 								if (StartShooting && Features().PointVisible)
 								{
-									CalledLaunchFromHook = true;
-									BaseProjectile->DoAttackRecreation();
-									CalledLaunchFromHook = false;
+									float last_shoot_timezz = 0.f;
+									float lastShotTime = BaseProjectile->lastShotTime() - UnityEngine::Time::get_time();
 
+									if (BaseProjectile->IsA(AssemblyCSharp::BowWeapon::StaticClass()))
+									{
+										if (IsAddressValid(BaseProjectile->primaryMagazine()))
+										{
+											if (BaseProjectile->primaryMagazine()->contents() > 0)
+											{
+												if (lastShotTime < -0.1f) {
+													float curtime = Features().LocalPlayer->lastSentTickTime();
+													if (curtime > last_shoot_timezz + 1.3f) {
+														BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
+														BaseProjectile->LaunchProjectile();
+														BaseProjectile->primaryMagazine()->contents()--;
+														BaseProjectile->UpdateAmmoDisplay();
+														BaseProjectile->ShotFired();
+														BaseProjectile->DidAttackClientside();
+														BaseProjectile->BeginCycle();
+														last_shoot_timezz = curtime;
+													}
+												}
+											}
+										}
+										
+									}
+									else
+									{
+										CalledLaunchFromHook = true;
+										BaseProjectile->DoAttackRecreation();
+										CalledLaunchFromHook = false;
+									}
 								}
 							}
 							else if (m_settings::AlwaysAutoshoot)
@@ -1192,7 +1223,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (StartShooting && Features().PointVisible)
 										{
 
-											float maxpacketsperSECOND = 1;
+											float maxpacketsperSECOND = 2;
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 											{
 												CalledLaunchFromHook = true;
@@ -1233,7 +1264,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										if (StartShooting && Features().PointVisible)
 										{
 
-											float maxpacketsperSECOND = 1;
+											float maxpacketsperSECOND = 2;
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 											{
 												CalledLaunchFromHook = true;
@@ -1261,7 +1292,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 										if (StartShooting && Features().PointVisible)
 										{
-											float maxpacketsperSECOND = 1;
+											float maxpacketsperSECOND = 2;
 											if (RPC_Counter3.Calculate() <= maxpacketsperSECOND)
 											{
 												CalledLaunchFromHook = true;

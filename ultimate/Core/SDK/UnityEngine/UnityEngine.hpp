@@ -52,6 +52,10 @@ namespace UnityEngine {
 
 		float Normalize();
 
+		float distance_2d(Vector2 input) {
+			return Math::sqrtf(Math::powf(x - input.x, 2) + Math::powf(y - input.y, 2));
+		}
+
 	public:
 		Vector2 Normalized();
 		Vector2 MemoryAimNormalize();
