@@ -221,6 +221,9 @@ namespace m_settings {
 	inline RustStructs::KeyCode ZoomKey = RustStructs::KeyCode::G;
 	inline float ZoomAmount = 50.f;
 
+	inline RustStructs::KeyCode SuicideKey = RustStructs::KeyCode::K;
+	inline bool Suicide = false;
+
 	inline bool AutoFarmTree = false;
 	inline bool AutoFarmOre = false;
 
