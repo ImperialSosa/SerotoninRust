@@ -2292,6 +2292,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.camspeed 1"), nullptr);
 	}
 
+	if (m_settings::Suicide && UnityEngine::Input::GetKey(m_settings::SuicideKey))
+	{
+		a1->OnLand(-8.0001f - 100);
+	}
+
 	if (m_settings::KeepTargetAlive && UnityEngine::Input::GetKey(m_settings::KeepAliveKey))
 	{
 		auto camera = UnityEngine::Camera::get_main();

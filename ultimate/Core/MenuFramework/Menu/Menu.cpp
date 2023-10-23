@@ -1619,6 +1619,8 @@ void MenuDraw::RenderMenu()
 						Menu().CheckBoxKeyBind(XS("Interactive Debug"), m_settings::InteractiveDebug, m_settings::InteractiveKey);
 						Menu().CheckBoxKeyBind(XS("SilentWalk"), m_settings::SilentWalk, m_settings::SilentWalkKey);
 						Menu().CheckBoxKeyBind(XS("TeleportMaxHeight"), m_settings::TeleportMax, m_settings::TeleportMaxKey);					
+						Menu().CheckBoxKeyBind(XS("Suicide"), m_settings::Suicide, m_settings::SuicideKey);
+
 					}
 					break;
 				case 1:
