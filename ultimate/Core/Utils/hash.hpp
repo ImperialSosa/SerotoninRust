@@ -64,7 +64,11 @@ constexpr std::uint64_t Hash(const Type* const data, std::size_t size, bool igno
 {
 	return HashCompute(HashBasis, data, size, ignore_case);
 }
-
+constexpr std::uint64_t Hash_C(const char* const data, bool ignore_case)
+{
+	const auto length = GetLength(data);
+	return Hash(data, length, ignore_case);
+}
 constexpr std::uint64_t Hash(const char* const data, bool ignore_case)
 {
 	const auto length = GetLength(data);

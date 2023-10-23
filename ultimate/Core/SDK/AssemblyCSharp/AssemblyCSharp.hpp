@@ -3517,6 +3517,31 @@ namespace AssemblyCSharp {
 
 	};
 
+	struct KeyCodeEx
+	{
+		IL2CPP_CLASS("KeyCodeEx");
+
+		static FPSystem::String* ToShortname(RustStructs::KeyCode code, bool lowercase)
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("ToShortname"), 2);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<FPSystem::String*>(procedure, code, lowercase);
+			}
+
+
+			return {};
+		}
+	};
 
 	struct ExplosionsFPS
 	{

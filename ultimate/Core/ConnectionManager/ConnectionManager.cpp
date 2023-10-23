@@ -26,6 +26,7 @@ void ConnectionManager::ResetPlayerCache()
 	}
 
 	translated_map.clear();
+	translated_map2.clear();
 
 	VisualsArray.clear();
 	VisualsArrayTemp.clear();

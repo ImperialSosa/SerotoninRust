@@ -50,6 +50,17 @@
     <ClCompile Include="Core\Hooking\FlintStrikeWeaponAttack\FlintStrikeWeaponDoAttack.cpp" />
     <ClCompile Include="Core\Hooking\DoAttackBaseMelee\DoAttackBaseMelee.cpp" />
     <ClCompile Include="Core\Hooking\BowIsAiming\IsAiming.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\button\button.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\checkbox\checkbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\colorpicker\colorpicker.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\dropdown\dropdown.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\groupbox\groupbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\keybind\keybind.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\listbox\listbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\slider\slider.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\textbox\textbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\window\window.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\gui.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Core\Core.hpp" />
@@ -131,5 +142,7 @@
     <ClInclude Include="Core\Features\Notifications\Notifications.hpp" />
     <ClInclude Include="Core\Utils\json.hpp" />
     <ClInclude Include="Core\Configs\Configs.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\framework\calliope.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\gui.hpp" />
   </ItemGroup>
 </Project>

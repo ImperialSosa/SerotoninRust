@@ -199,4 +199,27 @@ inline std::string utf16_to_utf8(std::wstring utf16_string) {
 }
 
 
+inline std::unordered_map<size_t, std::wstring> translated_map2{};
+
+using MBTWC = int(__stdcall*)(unsigned int, unsigned long, const char*, int, wchar_t*, int);
+inline std::wstring utf8_to_utf16(std::string utf8_string) {
+    auto hash = std::hash<std::string>{}(utf8_string);
+    auto find = translated_map2.find(hash);
+    if (find != translated_map2.end())
+        return translated_map2[hash];
+
+    static memory::address_t _MultiByteToWideChar = 0;
+
+    if (!_MultiByteToWideChar.is_valid())
+        _MultiByteToWideChar = LI_FN(MultiByteToWideChar).cached();
+
+    auto len = _MultiByteToWideChar.cast<MBTWC>()(65001, 0, utf8_string.c_str(), int(utf8_string.length()), NULL, 0);
+    if (len) {
+        std::wstring converted(len, L'\0');
+        _MultiByteToWideChar.cast<MBTWC>()(65001, 0, utf8_string.c_str(), int(utf8_string.length()), &converted[0], len);
+        translated_map2.emplace(hash, converted);
+        return converted;
+    }
+    return {};
+}
 

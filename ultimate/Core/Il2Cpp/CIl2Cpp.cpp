@@ -65,9 +65,13 @@ IL2CPP_API( const MethodInfo*, il2cpp_image_get_entry_point, ( const Il2CppImage
 IL2CPP_API( void, il2cpp_monitor_enter, ( Il2CppObject* obj ) );
 IL2CPP_API( void, il2cpp_monitor_exit, ( Il2CppObject* obj ) );
 IL2CPP_API(uintptr_t, il2cpp_object_new, (void*));
-
+IL2CPP_API(const char*, il2cpp_method_get_param_name, (uint64_t, uint64_t));
+IL2CPP_API(const char*, il2cpp_method_get_name, (uint64_t));
 bool CreateIL2CPP()
 {
+	IL2CPP_IMPORT(m_game_assembly, il2cpp_method_get_param_name);
+	IL2CPP_IMPORT(m_game_assembly, il2cpp_method_get_name);
+
 	IL2CPP_IMPORT( m_game_assembly, il2cpp_domain_get );
 	IL2CPP_IMPORT( m_game_assembly, il2cpp_thread_attach );
 	IL2CPP_IMPORT( m_game_assembly, il2cpp_thread_detach );

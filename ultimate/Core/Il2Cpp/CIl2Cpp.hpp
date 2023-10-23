@@ -127,6 +127,8 @@ namespace CIl2Cpp {
 	DO_API(void, il2cpp_monitor_enter, (Il2CppObject* obj));
 	DO_API(void, il2cpp_monitor_exit, (Il2CppObject* obj));
 
+	DO_API(const char*, il2cpp_method_get_param_name, (uint64_t, uint64_t));
+	DO_API(const char*, il2cpp_method_get_name, (uint64_t));
 
 	inline const Il2CppClass* FindClass(const Il2CppImage* image, const char* name_space, const char* name)
 	{
@@ -320,6 +322,57 @@ namespace CIl2Cpp {
 	}
 
 
+	inline uint64_t get_class(const char* namespace_name, const char* class_name) {
+		const auto domain = il2cpp_domain_get();
+
+		std::uintptr_t assembly_count{ 0 };
+		const Il2CppAssembly** assemblies;
+		assemblies = il2cpp_domain_get_assemblies(domain, &assembly_count);
+
+		for (size_t idx{ 0 }; idx < assembly_count; idx++) {
+			const auto img = il2cpp_assembly_get_image(assemblies[idx]);
+			const auto kl = il2cpp_class_from_name(img, namespace_name, class_name);
+			if (!kl)
+				continue;
+
+			return (uint64_t)kl;
+		}
+
+		return {};
+	}
+
+	inline uint64_t get_method_ptr(uint64_t klass, const char* method_name, int arg_count) {
+		if (!klass)
+			return { };
+
+		const auto method_ptr = il2cpp_class_get_method_from_name((Il2CppClass*)klass, method_name, arg_count);
+		return (uint64_t)method_ptr;
+	}
+
+
+	inline uint64_t get_method_ptr_with_args(uint64_t klass, const char* method_name, const char* arg_name, int arg_count) {
+		if (!klass)
+			return { };
+
+		void* it{ 0 };
+		while (auto method = il2cpp_class_get_methods((Il2CppClass*)klass, &it)) {
+			if (auto _method_name = il2cpp_method_get_name((uint64_t)method);
+				strcmp(method_name, _method_name) != 0)
+				continue;
+
+			if (auto param_count = il2cpp_method_get_param_count((uint64_t)method);
+				param_count != arg_count)
+				continue;
+
+			for (int i{ }; i < arg_count; i++) {
+				if (auto param_name = il2cpp_method_get_param_name((uint64_t)method, i);
+					strcmp(arg_name, param_name) == 0)
+					return (uint64_t)method;
+			}
+		}
+
+		return { };
+	}
 
 
 	inline const MethodInfo* FindMethodFullArgs(std::uint64_t name_hash)

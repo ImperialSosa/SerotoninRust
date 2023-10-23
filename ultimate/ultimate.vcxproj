@@ -182,6 +182,17 @@
     <ClCompile Include="Core\Il2Cpp\CIl2Cpp.cpp" />
     <ClCompile Include="Core\Il2Cpp\il2cpp-api.cpp" />
     <ClCompile Include="Core\MenuFramework\Drawing\Drawing.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\button\button.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\checkbox\checkbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\colorpicker\colorpicker.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\dropdown\dropdown.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\groupbox\groupbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\keybind\keybind.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\listbox\listbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\slider\slider.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\textbox\textbox.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\framework\components\window\window.cpp" />
+    <ClCompile Include="Core\MenuFramework\gui\gui.cpp" />
     <ClCompile Include="Core\MenuFramework\Menu\Menu.cpp" />
     <ClCompile Include="Core\Net\ConfigManager.cpp" />
     <ClCompile Include="Core\Net\data.cpp" />
@@ -235,6 +246,8 @@
     <ClInclude Include="Core\Includes\settings.hpp" />
     <ClInclude Include="Core\json.hpp" />
     <ClInclude Include="Core\MenuFramework\Drawing\Drawing.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\framework\calliope.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\gui.hpp" />
     <ClInclude Include="Core\MenuFramework\Menu\Menu.hpp" />
     <ClInclude Include="Core\Net\3rd_party\steam\ISteamApps.h" />
     <ClInclude Include="Core\Net\3rd_party\steam\ISteamClient.h" />

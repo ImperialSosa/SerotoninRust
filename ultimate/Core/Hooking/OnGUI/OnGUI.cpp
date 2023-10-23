@@ -7,6 +7,7 @@
 #include "../../Features/Visuals/Visuals.hpp"
 #include "../../MenuFramework/Menu/Menu.hpp"
 #include "../../Features/Notifications/Notifications.hpp"
+#include "../../MenuFramework/gui/gui.hpp"
 
 
 inline UnityEngine::GUISkin* gui_skin = nullptr;
@@ -1600,7 +1601,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	if (MenuIconBundles)
 	{
 		SetupStyles();
-
+		GUI().SetupGUI();
 		//if (!TestBundle)
 		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/H_Original.unity3d", 0, 0);
 
@@ -1624,17 +1625,19 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			}
 		}
 
+		GUI().DrawMenu();
+
 		auto m_Event = UnityEngine::Event::Current();
 		if (IsAddressValid(m_Event))
 		{
 			TextDrawBegin();
 
-			if (!m_settings::SelectedOption)
+			/*if (!m_settings::SelectedOption)
 				MenuDraw().RenderOptions();
 			else if (m_settings::LoadLegit)
 				MenuDraw().RenderLegitMenu();
 			else if (m_settings::LoadRage)
-				MenuDraw().RenderMenu();
+				MenuDraw().RenderMenu();*/
 
 			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{
@@ -1871,6 +1874,9 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			}
 		}
 
+		white_texture = 0;
+		skin = 0;
+		label_style = 0;
 
 		Hooks::ClientInputhk.Unhook();
 		ConnectionManager().Instance()->ResetPlayerCache();
