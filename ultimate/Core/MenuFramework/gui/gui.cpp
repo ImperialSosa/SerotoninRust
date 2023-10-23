@@ -580,6 +580,24 @@ void PlayersVisuals()
 
 }
 
+void ChamsTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+
+        //calliope::menu.components.colorpicker(XS("menu accent"), calliope::globals::menu_accent, false);
+        //calliope::menu.components.keybind(XS("test"), keybd, false);
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Other"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+      //  calliope::menu.components.checkbox(XS("Tracking Prediction"), tracking_prediction);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+}
+
 void ColorsTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
@@ -603,7 +621,7 @@ void GUI::DrawMenu()
 
 
     if (calliope::menu.components.window(XS("Serotonin"), calliope::vec2_t(250, 250), calliope::vec2_t(600, 400), calliope::menu_t::window_flags_none)) {
-        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("World"), XS("Local"), XS("Weapon"), XS("Settings"), XS("Colors")})) {
+        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("Local"), XS("Weapon"), XS("Settings"), XS("Colors")})) {
         case 0: {
             AimbotTab();
             break;
@@ -616,7 +634,11 @@ void GUI::DrawMenu()
             PlayersVisuals();
             break;
         }
-        case 6: {
+        case 3: {
+            ChamsTab();
+            break;
+        }
+        case 8: {
             ColorsTab();
             break;
         }
