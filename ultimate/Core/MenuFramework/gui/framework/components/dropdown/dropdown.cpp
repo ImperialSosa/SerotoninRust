@@ -10,7 +10,7 @@ void calliope::menu_t::components_t::dropdown( const char* name, std::vector< co
 	if ( !menu.m_current_groupbox )
 		return;
 
-	auto dropdown_position = menu.m_current_groupbox->cursor_position + vec2_t( 15, 15 );
+	auto dropdown_position = menu.m_current_groupbox->cursor_position + vec2_t( 0, 17 );
 	const auto dropdown_size = vec2_t( menu.m_current_groupbox->size.x - 54, 20 );
 
 	menu.drawing.multi_color_filled_rect( dropdown_position, dropdown_size, { dropdown_top_color, dropdown_top_color, dropdown_bottom_color, dropdown_bottom_color } );
@@ -61,7 +61,7 @@ void calliope::menu_t::components_t::dropdown( const char* name, std::vector< co
 	auto name_text_sz = menu.drawing.calc_text_size( name );
 
 	menu.drawing.text( dropdown_position + vec2_t( 5, ( dropdown_size.y / 2 ) - ( label_text_sz.y / 2 )), items.at( value ), label_color, text_flags::text_flags_none );
-	menu.drawing.text( dropdown_position - vec2_t( 0, dropdown_size.y - ( name_text_sz.y / 2 ) + 5 ), name, label_color, text_flags::text_flags_none );
+	menu.drawing.text( dropdown_position - vec2_t( -2, dropdown_size.y - ( name_text_sz.y / 2 ) + 5 ), name, label_color, text_flags::text_flags_none );
 
 	menu.m_current_groupbox->cursor_position.y += ( dropdown_size.y * 2 ) + 5;
 }

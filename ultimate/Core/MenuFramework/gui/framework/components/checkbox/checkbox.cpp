@@ -59,5 +59,5 @@ void calliope::menu_t::components_t::checkbox( const char* name, bool& value, st
 		}
 	}
 
-	menu.m_current_groupbox->cursor_position.y += max( checkbox_size.y * 2.f, text_size.y + 4.f );
+	menu.m_current_groupbox->cursor_position.y += max( checkbox_size.y * 0.f, text_size.y - 1.f );
 }

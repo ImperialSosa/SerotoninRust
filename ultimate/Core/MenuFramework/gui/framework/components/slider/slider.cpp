@@ -13,8 +13,8 @@ void calliope::menu_t::components_t::slider( const char* name, const char* suffi
 	if ( !menu.m_current_groupbox )
 		return;
 
-	auto slider_position = menu.m_current_groupbox->cursor_position + vec2_t( 15, 15 );
-	const auto slider_size = vec2_t( menu.m_current_groupbox->size.x - 54, 10 );
+	auto slider_position = menu.m_current_groupbox->cursor_position + vec2_t( 0, 18 );
+	const auto slider_size = vec2_t( menu.m_current_groupbox->size.x - 54, 5 );
 
 	menu.drawing.filled_rect( slider_position, slider_size, slider_back_color, 0.f );
 
@@ -113,7 +113,7 @@ void calliope::menu_t::components_t::slider( const char* name, const char* suffi
 	const auto value_buf_sz = menu.drawing.calc_text_size( buf );
 	const auto label_text_sz = menu.drawing.calc_text_size( name );
 
-	menu.drawing.text( slider_position - vec2_t( 0, label_text_sz.y + 2 ), name, globals::palette::white, text_flags::text_flags_none );
+	menu.drawing.text( slider_position - vec2_t( -2, label_text_sz.y + 0 ), name, globals::palette::white, text_flags::text_flags_none );
 
 	if ( !( menu.window_ctx.m_active_hash == ( util::hash( name ) + 2 ) ) ) {
 		menu.drawing.text( slider_position + vec2_t( slider_size.x - value_buf_sz.x, -( label_text_sz.y + 2 ) ), buf, globals::palette::white, text_flags::text_flags_none );
@@ -165,7 +165,7 @@ void calliope::menu_t::components_t::slider( const char* name, const char* suffi
 		}
 	}
 
-	menu.m_current_groupbox->cursor_position.y += ( slider_size.y * 2.f ) + 10;
+	menu.m_current_groupbox->cursor_position.y += ( slider_size.y * 3.f ) + 10;
 }
 
 template void calliope::menu_t::components_t::slider( const char* name, const char* suffix, float& value, float min, float max, std::optional< component_info_t > description );

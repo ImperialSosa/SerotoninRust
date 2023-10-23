@@ -43,7 +43,7 @@ calliope::menu_t::groupbox_context_t* calliope::menu_t::components_t::groupbox( 
 	menu.drawing.filled_rect( wnd_ctx->position + vec2_t( 1, 25 ), vec2_t( _size.x - 2, _size.y - 26 ), color_t( 8, 8, 8, 150 ), 0.f );
 
 	menu.drawing.multi_color_filled_rect( wnd_ctx->position + vec2_t( _size.x / 2, 25 ), vec2_t( _size.x / 2, 1 ), { globals::palette::black.alpha( 0 ), color_t( 52, 52, 52, 150 ), color_t( 52, 52, 52, 150 ), globals::palette::black.alpha( 0 ) } );
-	menu.drawing.multi_color_filled_rect( wnd_ctx->position + vec2_t( 0, 25 ), vec2_t( _size.x / 2, 1 ), { color_t( 52, 52, 52, 150 ), globals::palette::black.alpha( 0 ), globals::palette::black.alpha( 0 ), color_t( 52, 52, 52, 150 ) } );
+	menu.drawing.multi_color_filled_rect( wnd_ctx->position + vec2_t( 0, 25 ), vec2_t( _size.x, 1 ), { color_t( 52, 52, 52, 150 ), globals::palette::black.alpha( 0 ), globals::palette::black.alpha( 0 ), color_t( 52, 52, 52, 150 ) } );
 
 	menu.drawing.rect( wnd_ctx->position, _size, color_t( 52, 52, 52, 255 ), 3.f );
 

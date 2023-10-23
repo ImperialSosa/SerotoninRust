@@ -334,7 +334,13 @@ namespace m_settings {
 	inline bool TurretRange = false;
 	inline bool TurretAuthorizedPlayers = false;
 	inline bool TurretTurningFlag = false;
+	inline bool bottomhealthbar = false;
+	inline bool lefthealthbar = false;
+	inline bool InventoryIcons = false;
+	inline bool InventoryText = false;
 	inline bool TurretEquippedFlags = false;
+	inline bool ClothingText = false;
+	inline bool ClothingIcons = false;
 	inline bool TurretHealth = false;
 	inline float TurretColor[4] = { 238.f, 0.f, 0.f, 255.f };
 	inline float CrateColor[4] = { 0.f, 255.f, 255.f, 255.f };
@@ -346,6 +352,9 @@ namespace m_settings {
 	inline float MaxExplosionDistance = 5000.f;
 	inline float MaxRaidTimer = 120.f;
 
+	inline bool ShowOutside = false;
+	inline bool ShowInside = false;
+
 	inline bool nameEsp = true;
 	inline bool BoxEsp = false;
 	inline bool Swastika = false;
@@ -354,7 +363,7 @@ namespace m_settings {
 	inline bool CornerBox = false;
 	inline bool healthBar = true;
 	inline bool Skeleton = true;
-	inline bool helditem = true;
+	inline bool helditem = false;
 	inline bool ammoESP = false;
 	inline bool EspVisCheck = false;
 	inline float DrawBox_Color[4] = { 205.f, 5.0f, 2.0f, 255.f };
