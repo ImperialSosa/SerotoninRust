@@ -1306,25 +1306,28 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 		auto menu_event = event->Type();
 		auto key_code = UnityEngine::Event::get_keyCode(event);
 
-		mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
-		mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
+		//mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
+		//mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
 		auto mouse_state = UnityEngine::Input::GetMouseButton(0);
 
-		if (main_menu_open)
-		{
-			if (Menu().is_mouse_in_box({ hotbar_pos.x, hotbar_pos.y }, { hotbar_pos.x + window_size2.x, hotbar_pos.y + window_size2.y }) && mouse_state && !hover_element) {
-				hotbar_pos.x += mouse_pos.x - old_mouse_pos.x;
-				hotbar_pos.y += mouse_pos.y - old_mouse_pos.y;
-			}
-			else {
-				hover_element = false;
-			}
+		//if (main_menu_open)
+		//{
+		//	if (Menu().is_mouse_in_box({ hotbar_pos.x, hotbar_pos.y }, { hotbar_pos.x + window_size2.x, hotbar_pos.y + window_size2.y }) && mouse_state && !hover_element) {
+		//		hotbar_pos.x += mouse_pos.x - old_mouse_pos.x;
+		//		hotbar_pos.y += mouse_pos.y - old_mouse_pos.y;
+		//	}
+		//	else {
+		//		hover_element = false;
+		//	}
 
-		}
+		//}
 
 		auto camera = UnityEngine::Camera::get_main();
 		float info_y = 0;
 		float info_y_icons = 0;
+
+		float TestPos = 0;
+
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 			if (IsAddressValid(AimbotTarget.m_player))
@@ -1405,7 +1408,12 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 										UnityEngine::GL::ScreenTextCenter(Vector2(hotbar_pos.x, hotbar_pos.y + 12.5), player_name.c_str(), Color::White(), Color::Black(), 10);
 									}
 
-									for (int i = 0; i < ItemList->_size; i++) {
+									for (int i = 0; i < 6; i++) {
+										UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * 6) / 2) + TestPos, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * 6) / 2) + TestPos + Size.x, hotbar_pos.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+										TestPos += 65;
+									}
+
+									for (int i = 0; i < 6; i++) {
 										auto item = ItemList->_items->m_Items[i];
 										if (!item)
 											continue;
@@ -1441,18 +1449,18 @@ inline void DrawPlayerHotbar(UnityEngine::Event* event, const Vector2& pos, cons
 													//
 													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
 														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
-															UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
+															UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * 6) / 2) + info_y_icons, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * 6) / 2) + info_y_icons + Size.x, hotbar_pos.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
 													}
-													else
-														UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
 
-													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos.y + 20.f), Size, texture, Color::White());
+													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos.x - (((Size.x + 5) * 6) / 2) + info_y_icons, hotbar_pos.y + 20.f), Size, texture, Color::White());
 												}
 											}
 										}
 
 										info_y_icons += 65;
 									}
+
+									TestPos = 0;
 									info_y_icons = 0;
 								}
 							}
@@ -1485,25 +1493,26 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 		auto menu_event = event->Type();
 		auto key_code = UnityEngine::Event::get_keyCode(event);
 
-		mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
-		mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
-		auto mouse_state = UnityEngine::Input::GetMouseButton(0);
+		//mouse_pos.x = UnityEngine::Input::GetMousePosition().x;
+		//mouse_pos.y = UnityEngine::Screen::get_height() - UnityEngine::Input::GetMousePosition().y;
+		//auto mouse_state = UnityEngine::Input::GetMouseButton(0);
 
-		if (main_menu_open)
-		{
-			if (Menu().is_mouse_in_box({ hotbar_pos_c.x, hotbar_pos_c.y }, { hotbar_pos_c.x + window_size2_c.x, hotbar_pos_c.y + window_size2_c.y }) && mouse_state && !hover_element) {
-				hotbar_pos_c.x += mouse_pos.x - old_mouse_pos.x;
-				hotbar_pos_c.y += mouse_pos.y - old_mouse_pos.y;
-			}
-			else {
-				hover_element = false;
-			}
+		//if (main_menu_open)
+		//{
+		//	if (Menu().is_mouse_in_box({ hotbar_pos_c.x, hotbar_pos_c.y }, { hotbar_pos_c.x + window_size2_c.x, hotbar_pos_c.y + window_size2_c.y }) && mouse_state && !hover_element) {
+		//		hotbar_pos_c.x += mouse_pos.x - old_mouse_pos.x;
+		//		hotbar_pos_c.y += mouse_pos.y - old_mouse_pos.y;
+		//	}
+		//	else {
+		//		hover_element = false;
+		//	}
 
-		}
+		//}
 
 		auto camera = UnityEngine::Camera::get_main();
 		float info_y = 0;
 		float info_y_icons = 0;
+		float TestPos = 0;
 		if (IsAddressValid(camera)) {
 			auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 			if (IsAddressValid(AimbotTarget.m_player))
@@ -1566,6 +1575,11 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 								{
 									Vector2 Size = Vector2(60, 60);
 
+									for (int i = 0; i < 7; i++) {
+										UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * 7) / 2) + TestPos, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * 7) / 2) + TestPos + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+										TestPos += 65;
+									}
+
 									for (int i = 0; i < ItemList->_size; i++) {
 										auto item = ItemList->_items->m_Items[i];
 										if (!item)
@@ -1614,6 +1628,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 
 										info_y_icons += 65;
 									}
+									TestPos = 0;
 									info_y_icons = 0;
 								}
 							}
@@ -1666,29 +1681,30 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 	if (MenuIconBundles)
 	{
 		SetupStyles();
+
 		GUI().SetupGUI();
 		//if (!TestBundle)
 		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/H_Original.unity3d", 0, 0);
 
-		if (is_menu_open) {
-			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-				auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
+		//if (is_menu_open) {
+		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
+		//		auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
 
-				if (z.contains(mouse_pos))
-				{
-					hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
-				}
-			}
+		//		if (z.contains(mouse_pos))
+		//		{
+		//			hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
+		//		}
+		//	}
 
-			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-				auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
+		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
+		//		auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
 
-				if (z.contains(mouse_pos))
-				{
-					hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
-				}
-			}
-		}
+		//		if (z.contains(mouse_pos))
+		//		{
+		//			hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
+		//		}
+		//	}
+		//}
 
 		GUI().DrawMenu();
 
@@ -1753,19 +1769,47 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					float YPos = (UnityEngine::screen_size.y / 8);
 					int YOffset = 40;
 
-					if (m_settings::SelectedHotbar == 1 || m_settings::SelectedHotbar == 2) {
+					if (m_settings::SelectedHotbar == 1 && m_settings::SelectedClothing == 1)
+					{
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
-						YOffset += 25.f;
+						YOffset += 20.f;
+					}
+					else if (m_settings::SelectedHotbar == 2 && m_settings::SelectedClothing == 1)
+					{
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 20.f;
+					}
+					else if (m_settings::SelectedHotbar == 1) {
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 10.f;
+					}
+					else if (m_settings::SelectedHotbar == 2)
+					{
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerHotbar(m_Event, { x,  YPos - YOffset + 20 }, WindowSize);
+						YOffset += 5.f;
 					}
 
-					if (m_settings::SelectedClothing == 1 || m_settings::SelectedClothing == 2) {
+					if (m_settings::SelectedClothing == 1) {
+						Vector2 WindowSize = Vector2(200, 50);
+
+						DrawPlayerClothing(m_Event, { x,  YPos + YOffset + 10 }, WindowSize);
+						YOffset += 25.f;
+					}
+					else if (m_settings::SelectedClothing == 2) {
 						Vector2 WindowSize = Vector2(200, 50);
 
 						DrawPlayerClothing(m_Event, { x,  YPos + YOffset }, WindowSize);
 						YOffset += 25.f;
 					}
+					YOffset = 40;
 
 					if (m_settings::HerbertPrefabSpawn || m_settings::AmongusPrefabSpawn)
 						prefab_spawner();

@@ -390,6 +390,7 @@ void AimbotTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Aimbot"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_aimbot_tab_y))) {
         calliope::menu.components.checkbox(XS("Silent-Aim"), m_settings::SilentAim);
+        calliope::menu.components.keybind(XS("SilentAim Key"), (int&)m_settings::AimbotKey, true);
         if (m_settings::SilentAim)
             m_settings::RotationAimbot = false;
         calliope::menu.components.checkbox(XS("Legit-Silent"), m_settings::RotationAimbot);
