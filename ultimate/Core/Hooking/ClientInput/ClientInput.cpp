@@ -1878,7 +1878,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	Features().RemoveCollision();
 
-	if (m_settings::Weather) {
+	if (m_settings::AtmosphereContrast || m_settings::Rainbows || m_settings::NoClouds || m_settings::NoSun || m_settings::NoFog || m_settings::NoRain || m_settings::NoThunder || m_settings::NoWind || m_settings::RainbowSky) {
 		if (m_settings::NoClouds)
 			ConVar::Weather::set_cloud_opacity(0.f);
 		else

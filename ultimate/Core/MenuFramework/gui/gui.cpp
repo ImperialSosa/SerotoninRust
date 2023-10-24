@@ -10,8 +10,19 @@
 #include "framework/components/colorpicker/colorpicker.cpp"
 #include "framework/components/dropdown/dropdown.cpp"
 #include "framework/components/textbox/textbox.cpp"
+#include "framework/components/button/button.cpp"
 
 #include "../../Includes/settings.hpp"
+#include "../../Configs/Configs.hpp"
+
+#include "../../Features/Visuals/Visuals.hpp"
+auto reset_player_model()
+{
+    if (InGame)
+    {
+        AssemblyCSharp::PlayerModel().RebuildAll();
+    }
+}
 
 namespace game {
     void create_game_object(uint64_t game_object, uint64_t unity_str) {
@@ -363,6 +374,15 @@ int small_weapons_tab = 260;
 int small_weapon_tab2 = 90;
 
 int small_loadeffects_tab = 80;
+
+int small_bright_tab = 110;
+int small_sky_tab = 110;
+
+int small_nosky_tab = 150;
+int small_weather_tab = 80;
+
+int small_text_tab = 230;
+int small_config_tab = 160;
 
 void AimbotTab()
 {
@@ -952,17 +972,22 @@ void MiscTab()
 
 void WeatherTab()
 {
-    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Skydome"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Skydome"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_bright_tab))) {
 
         calliope::menu.components.checkbox(XS("Bright-Night"), m_settings::Brightnight);
         calliope::menu.components.checkbox(XS("Bright-Ambient"), m_settings::BrightAmbient);
         calliope::menu.components.checkbox(XS("Bright-Cave"), m_settings::BrightCave);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Sky Adjustments"), calliope::vec2_t(50, 10 + small_bright_tab), calliope::vec2_t(groupbox_sz, small_sky_tab))) {
+
         calliope::menu.components.checkbox(XS("Stars"), m_settings::Stars);
-        calliope::menu.components.checkbox(XS("SkyColor"), m_settings::SkyColorNight);
+        calliope::menu.components.checkbox(XS("Sky-Color"), m_settings::SkyColorNight);
         calliope::menu.components.checkbox(XS("Sharp-Clouds"), m_settings::SharpClouds);
 
-        calliope::menu.components.checkbox(XS("Time-Changer"), m_settings::TimeChanger);
-        calliope::menu.components.slider<float>(XS("Game-Time"), XS(""), m_settings::GameTime, 0, 24);
 
         if (m_settings::SkyColorNight)
             m_settings::SkyColorDay = true;
@@ -972,16 +997,37 @@ void WeatherTab()
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weather"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
-        calliope::menu.components.checkbox(XS("Enable-Weather"), m_settings::Weather);
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Time"), calliope::vec2_t(50, 10 + small_bright_tab + 10 + small_sky_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_bright_tab - small_sky_tab - 35))) {
+
+        calliope::menu.components.checkbox(XS("Time-Changer"), m_settings::TimeChanger);
+        calliope::menu.components.slider<float>(XS("Game-Time"), XS(""), m_settings::GameTime, 0, 24);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weather"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_weather_tab))) {
+       // calliope::menu.components.checkbox(XS("Enable-Weather"), m_settings::Weather);
         calliope::menu.components.checkbox(XS("Atmosphere"), m_settings::AtmosphereContrast);
         calliope::menu.components.checkbox(XS("Rainbows"), m_settings::Rainbows);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two2 = calliope::menu.components.groupbox(XS("Remove Weather"), calliope::vec2_t(60 + groupbox_sz, 10 + small_weather_tab), calliope::vec2_t(groupbox_sz, small_nosky_tab))) {
         calliope::menu.components.checkbox(XS("No-Clouds"), m_settings::NoClouds);
         calliope::menu.components.checkbox(XS("No-Sun"), m_settings::NoSun);
         calliope::menu.components.checkbox(XS("No-Fog"), m_settings::NoFog);
         calliope::menu.components.checkbox(XS("No-Rain"), m_settings::NoRain);
         calliope::menu.components.checkbox(XS("No-Thunder"), m_settings::NoThunder);
         calliope::menu.components.checkbox(XS("No-Wind"), m_settings::NoWind);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two3 = calliope::menu.components.groupbox(XS("Rainbow-Sky"), calliope::vec2_t(60 + groupbox_sz, 10 + small_weather_tab + 10 + small_nosky_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_weather_tab - small_nosky_tab - 35))) {
 
         calliope::menu.components.checkbox(XS("Rainbow-Sky"), m_settings::RainbowSky);
         calliope::menu.components.slider<float>(XS("SkyValue"), XS(""), m_settings::RainbowAmount, 0, 100);
@@ -1063,19 +1109,57 @@ void WeaponsTab()
 
 }
 
+void testconfig()
+{
 
+}
 void ColorsTab()
 {
-    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Text Settings"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_text_tab))) {
 
-        calliope::menu.components.colorpicker(XS("menu accent"), calliope::globals::menu_accent, false);
-        calliope::menu.components.keybind(XS("test"), keybd, false);
+        calliope::menu.components.checkbox(XS("Font-Changer"), m_settings::FontChanger);
+        calliope::menu.components.checkbox(XS("Player-Outlined-Text"), m_settings::OutlinedText);
+        if (m_settings::OutlinedText)
+            m_settings::ShadedText = false;
+        calliope::menu.components.checkbox(XS("Player-Shadowed-Text"), m_settings::ShadedText);
+        if (m_settings::ShadedText)
+            m_settings::OutlinedText = false;
+        calliope::menu.components.checkbox(XS("World-Outlined-Text"), m_settings::WorldOutlinedText);
+        if (m_settings::WorldOutlinedText)
+            m_settings::WorldShadedText = false;
+        calliope::menu.components.checkbox(XS("World-Shaded-Text"), m_settings::WorldShadedText);
+        if (m_settings::WorldShadedText)
+            m_settings::WorldOutlinedText = false;
+
+        calliope::menu.components.slider<float>(XS("Player-Font-Size"), XS(""), m_settings::ESPFontsize, 0, 15);
+        calliope::menu.components.slider<float>(XS("World-Font-Size"), XS(""), m_settings::WorldFontSize, 0, 15);
+
+        calliope::menu.components.dropdown(XS("Font"), { ("Default"), ("Pixel"), ("Verdana") }, m_settings::fonttype);
+
+
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Other"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
-        calliope::menu.components.checkbox(XS("Tracking Prediction"), tracking_prediction);
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 10 + small_text_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_text_tab - 25))) {
 
+        calliope::menu.components.colorpicker(XS("Menu Color"), calliope::globals::menu_accent, false);
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Settings"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_config_tab))) {
+
+        calliope::menu.components.dropdown(XS("Config"), { ("Legit"), ("Rage"), ("Config1"), ("Config2"), ("Config3") }, m_settings::SelectedConfig);
+        calliope::menu.components.button(XS("Save-Config"), Configs::SaveConfig);
+        calliope::menu.components.button(XS("Load-Config"), Configs::LoadConfig);
+ 
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Resets"), calliope::vec2_t(60 + groupbox_sz, 10 + small_config_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_config_tab - 25))) {
+
+        calliope::menu.components.button(XS("Reset-PlayerModels"), reset_player_model);
+        calliope::menu.components.button(XS("Reset-LOS Points"), Buttons::ClearLOSPoints);
+        calliope::menu.components.button(XS("Clear-RaidCache"), Buttons::ClearRaidCache);
 
         calliope::menu.components.end_groupbox();
     }

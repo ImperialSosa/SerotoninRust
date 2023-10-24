@@ -1104,8 +1104,8 @@ void Visuals::DrawPlayers()
 											}
 										}
 									}
-										
-									}
+
+								}
 								}
 							}
 						}

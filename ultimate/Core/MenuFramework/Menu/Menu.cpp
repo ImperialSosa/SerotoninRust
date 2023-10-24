@@ -40,13 +40,7 @@ inline bool multi_deployable_options;
 #include "../../SDK/AssemblyCSharp/AssemblyCSharp.hpp"
 
 #include "../../Features/Visuals/Visuals.hpp"
-auto reset_player_model()
-{
-	if (InGame)
-	{
-		AssemblyCSharp::PlayerModel().RebuildAll();
-	}
-}
+
 void MenuDraw::RenderOptions()
 {
 	auto m_Event = UnityEngine::Event::Current();
@@ -861,7 +855,7 @@ void MenuDraw::RenderLegitMenu()
 			case 0:
 				Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
 				{
-					Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+					//Menu().Button(XS("Reset PlayerModels"), reset_player_model);
 					Menu().Button(XS("Reset LOS Points"), Buttons::ClearLOSPoints);
 					Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 					Menu().Button(XS("Load RageCheat"), Buttons::LoadRageCheat);
@@ -1842,7 +1836,7 @@ void MenuDraw::RenderMenu()
 				case 0:
 					Menu().BeginChild(XS("Colors"), { 60,45 }, { 220,290 });
 					{
-						Menu().Button(XS("Reset PlayerModels"), reset_player_model);
+						//Menu().Button(XS("Reset PlayerModels"), reset_player_model);
 						Menu().Button(XS("Reset LOS Points"), Buttons::ClearLOSPoints);
 						Menu().Button(XS("Clear RaidCache"), Buttons::ClearRaidCache);
 						Menu().Button(XS("Load LegitCheat"), Buttons::LoadLegitCheat);
