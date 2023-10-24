@@ -2,6 +2,7 @@
 #include "../../Features/Features/Features.hpp"
 #include "../WriteToStream/Prediction.hpp"
 #include "../../SDK/AssemblyCSharp/ProjectileCode.hpp"
+#include "../../Includes/colorsettings.hpp"
 
 void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 {
@@ -58,6 +59,8 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 
 		if (m_settings::BulletTracers)
 		{
+			auto Tracers_Color = Color(ColorSettings::BulletTracers_Color.r, ColorSettings::BulletTracers_Color.g, ColorSettings::BulletTracers_Color.b, ColorSettings::BulletTracers_Color.a);
+
 			Vector3 a = _This->currentVelocity() * delta_time;
 			float magnitude = a.Length();
 			float num2 = 1 / magnitude;
@@ -66,7 +69,7 @@ void ProjectileLaunch(AssemblyCSharp::Projectile* _This)
 
 			Vector3 vec3 = _This->currentPosition() + vec2 * magnitude;
 
-			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Color::Red(), 5.f, false, false);
+			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Tracers_Color, 5.f, false, false);
 		}
 
 		auto project_ = (Projectile_c*)_This;

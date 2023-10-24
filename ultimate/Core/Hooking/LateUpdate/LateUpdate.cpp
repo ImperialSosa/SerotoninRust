@@ -1,6 +1,8 @@
 #include "../Hooks.hpp"
 #include "../../Features/Features/Features.hpp"
 
+#include "../../Includes/colorsettings.hpp"
+
 void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 {
 	if (!InGame)
@@ -119,9 +121,11 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 						if (IsAddressValid(Ambient))
 						{
 							if (!HasSetAmbient) {
+								auto Ambient_Color = Color{ ColorSettings::Ambient_Color.r, ColorSettings::Ambient_Color.g, ColorSettings::Ambient_Color.b, ColorSettings::Ambient_Color.a };
+
 								uintptr_t AmbientColor = *reinterpret_cast<uintptr_t*>(Ambient + 0x10);
 								Orig_AmbientColor = *reinterpret_cast<Vector4*>(AmbientColor);
-								*reinterpret_cast<Vector4*>(AmbientColor) = { 0.8f, 0.8f, 0.8f, 0.8f };
+								*reinterpret_cast<Color*>(AmbientColor) = { Ambient_Color };
 								HasSetAmbient = true;
 								ResetBrightAmbientToDefault = true;
 							}
@@ -151,9 +155,11 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 						if (IsAddressValid(Sky))
 						{
 							if (!HasSetNightColor) {
+								auto Skybox_Color = Color{ ColorSettings::SkyBox_Color.r, ColorSettings::SkyBox_Color.g, ColorSettings::SkyBox_Color.b, ColorSettings::SkyBox_Color.a };
+
 								uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
 								Orig_SkyColorNight = *reinterpret_cast<Color*>(SkyColor);
-								*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+								*reinterpret_cast<Color*>(SkyColor) = Color(Skybox_Color);
 								HasSetNightColor = true;
 								ResetSkyColorNightToDefault = true;
 							}
@@ -221,9 +227,11 @@ void Hooks::LateUpdate(AssemblyCSharp::TOD_Sky* _This)
 						if (IsAddressValid(Sky))
 						{
 							if (!HasSetDayColor) {
+
+								auto Skybox_Color = Color{ ColorSettings::SkyBox_Color.r, ColorSettings::SkyBox_Color.g, ColorSettings::SkyBox_Color.b, ColorSettings::SkyBox_Color.a };
 								uintptr_t SkyColor = *reinterpret_cast<uintptr_t*>(Sky + 0x10);
 								Orig_SkyColorDay = *reinterpret_cast<Vector4*>(SkyColor);
-								*reinterpret_cast<Color*>(SkyColor) = Color(66.f, 245.f, 206.f, 255.f).GetUnityColor();
+								*reinterpret_cast<Color*>(SkyColor) = Color(Skybox_Color);
 								HasSetDayColor = true;
 								ResetSkyColorDayToDefault = true;
 							}

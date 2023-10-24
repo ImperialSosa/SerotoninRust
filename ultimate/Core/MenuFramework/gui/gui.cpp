@@ -16,6 +16,8 @@
 #include "../../Configs/Configs.hpp"
 
 #include "../../Features/Visuals/Visuals.hpp"
+#include "../../Includes/colorsettings.hpp"
+
 auto reset_player_model()
 {
     if (InGame)
@@ -412,12 +414,22 @@ void AimbotTab()
 
     if (auto groupbox_three = calliope::menu.components.groupbox(XS("Aimbot Visuals"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_visuals_tab_y))) {
 
+        calliope::menu.components.colorpicker(XS("Crosshair Color"), ColorSettings::Crosshair_Color, true);
         calliope::menu.components.checkbox(XS("Crosshair"), m_settings::Crosshair);
+
+        calliope::menu.components.colorpicker(XS("FOV Color"), ColorSettings::FOV_Color, true);
         calliope::menu.components.checkbox(XS("FOV-Circle"), m_settings::DrawFov);
+
+        calliope::menu.components.colorpicker(XS("TargetSnapline Color"), ColorSettings::TargetSnapline_Color, true);
         calliope::menu.components.checkbox(XS("Target-Snapline"), m_settings::Aimline);
+
+        calliope::menu.components.colorpicker(XS("TargetMarker Color"), ColorSettings::TargetMarker_Color, true);
         calliope::menu.components.checkbox(XS("Target-Marker"), m_settings::AimMarker);
+
        // calliope::menu.components.checkbox(XS("Target Indicator"), m_settings::Target_Indicator);
+        calliope::menu.components.colorpicker(XS("BulletTracers Color"), ColorSettings::BulletTracers_Color, true);
         calliope::menu.components.checkbox(XS("Bullet-Tracers"), m_settings::BulletTracers);
+
         calliope::menu.components.dropdown(XS("Hit-Material"), { ("Flesh"), ("Glass"), ("Metal"), ("Water") }, m_settings::HitMaterial);
 
         calliope::menu.components.end_groupbox();
@@ -513,28 +525,39 @@ void PlayersVisuals()
 {
 
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Player"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_player_tab_y))) {
-        calliope::menu.components.checkbox(XS("Username"), m_settings::nameEsp);
-        calliope::menu.components.checkbox(XS("Skeleton"), m_settings::Skeleton);
 
+        calliope::menu.components.colorpicker(XS("Username Color"), ColorSettings::Username_Color, true);
+        calliope::menu.components.checkbox(XS("Username"), m_settings::nameEsp);
+
+        calliope::menu.components.colorpicker(XS("HeldItem Color"), ColorSettings::Helditem_Color, true);
+        calliope::menu.components.checkbox(XS("HeldItem"), m_settings::helditem);
+        {
+            if (m_settings::helditem)
+                m_settings::HeldItemType = 1;
+            if (!m_settings::helditem && !m_settings::HeldItemIcon)
+                m_settings::HeldItemType = 0;
+        }
+
+        calliope::menu.components.colorpicker(XS("Box Color"), ColorSettings::BoxEsp_Color, true);
         calliope::menu.components.checkbox(XS("Box"), m_settings::BoxEsp);
-        if (m_settings::BoxEsp) {
-            m_settings::SelectedBoxESP = 1;
-            m_settings::CornerBox = false;
+        {
+            if (m_settings::BoxEsp) {
+                m_settings::SelectedBoxESP = 1;
+                m_settings::CornerBox = false;
+            }
         }
         calliope::menu.components.checkbox(XS("Corner-Box"), m_settings::CornerBox);
-        if (m_settings::CornerBox) {
-            m_settings::SelectedBoxESP = 2;
-            m_settings::BoxEsp = false;
+        {
+            if (m_settings::CornerBox) {
+                m_settings::SelectedBoxESP = 2;
+                m_settings::BoxEsp = false;
+            }
+            if (!m_settings::BoxEsp && !m_settings::CornerBox)
+                m_settings::SelectedBoxESP = 0;
         }
-        if (!m_settings::BoxEsp && !m_settings::CornerBox)
-            m_settings::SelectedBoxESP = 0;
 
-        calliope::menu.components.checkbox(XS("HeldItem"), m_settings::helditem);
-        if (m_settings::helditem)
-            m_settings::HeldItemType = 1;
-
-        if (!m_settings::helditem && !m_settings::HeldItemIcon)
-            m_settings::HeldItemType = 0;
+        // calliope::menu.components.colorpicker(XS("Skeleton Color"), ColorSettings::FOV_Color, true);
+        calliope::menu.components.checkbox(XS("Skeleton"), m_settings::Skeleton);
 
         calliope::menu.components.dropdown(XS("Vischeck"), { ("None"), ("Enabled"), ("Tags Enabled"), ("Both") }, m_settings::VisCheckType);
 
@@ -578,7 +601,10 @@ void PlayersVisuals()
     }
 
     if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("BaseCheck"), calliope::vec2_t(50 + (groupbox_sz / 2), 10 + small_player_tab_y), calliope::vec2_t(groupbox_sz / 2, small_box_tab_y))) {
+        calliope::menu.components.colorpicker(XS("Outside Color"), ColorSettings::Outside_Color, true);
         calliope::menu.components.checkbox(XS("Outside"), m_settings::ShowOutside);
+
+        calliope::menu.components.colorpicker(XS("Inside Color"), ColorSettings::Inside_Color, true);
         calliope::menu.components.checkbox(XS("Inside"), m_settings::ShowInside);
 
         calliope::menu.components.end_groupbox();
@@ -594,9 +620,16 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_p1 = calliope::menu.components.groupbox(XS("Player Settings"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_otherplayer_tab_y))) {
 
+        calliope::menu.components.colorpicker(XS("Wounded Color"), ColorSettings::Wounded_Color, true);
         calliope::menu.components.checkbox(XS("Wounded"), m_settings::DrawWounded);
+
+        calliope::menu.components.colorpicker(XS("Safezone Color"), ColorSettings::Safezone_Color, true);
         calliope::menu.components.checkbox(XS("Safezone"), m_settings::DrawSafezone);
+
+        calliope::menu.components.colorpicker(XS("Npc Color"), ColorSettings::NPC_Color, true);
         calliope::menu.components.checkbox(XS("Npc's"), m_settings::DrawNPC);
+
+        calliope::menu.components.colorpicker(XS("Sleepers Color"), ColorSettings::Sleeper_Color, true);
         calliope::menu.components.checkbox(XS("Sleepers"), m_settings::DrawSleepers);
 
         calliope::menu.components.slider<float>(XS("Player Distance"), XS(""), m_settings::PlayerESPDistance, 0, 500);
@@ -638,7 +671,9 @@ void PlayersVisuals()
     if (auto groupbox_ctx_p3 = calliope::menu.components.groupbox(XS("Misc"), calliope::vec2_t(60 + groupbox_sz, 10 + small_otherplayer_tab_y + 10 + small_invetory_tab), calliope::vec2_t(groupbox_sz, small_invetory_tab))) {
 
         calliope::menu.components.checkbox(XS("Show-Alerts"), m_settings::ShowAlerts);
+        calliope::menu.components.colorpicker(XS("ShowTargetESP Color"), ColorSettings::Target_Color, true);
         calliope::menu.components.checkbox(XS("Show-Target"), m_settings::DrawTarget);
+        calliope::menu.components.colorpicker(XS("Visible Color"), ColorSettings::Visible_Color, false);
 
         calliope::menu.components.end_groupbox();
     }
@@ -663,6 +698,12 @@ void ChamsTab()
         calliope::menu.components.checkbox(XS("Player-Chams"), m_settings::PlayerChams);
         calliope::menu.components.dropdown(XS("PChams-Type"), { ("None"), ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("Color"), ("RPBGalaxy")}, m_settings::SelectedChams);
 
+        if (m_settings::SelectedChams == 7)
+        {
+            calliope::menu.components.colorpicker(XS("CVisible Color"), ColorSettings::VisibleChams_Color, false);
+            calliope::menu.components.colorpicker(XS("CInvisible Color"), ColorSettings::InvisibleChams_Color, false);
+            calliope::menu.components.colorpicker(XS("CScientist Color"), ColorSettings::ScientistChams_Color, false);
+        }
         calliope::menu.components.end_groupbox();
     }
 
@@ -679,8 +720,12 @@ void ChamsTab()
 void WorldTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("PlayerDrops"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_world_tab))) {
+        calliope::menu.components.colorpicker(XS("Corpse Color"), ColorSettings::Corpse_Color, true);
         calliope::menu.components.checkbox(XS("Corpse"), m_settings::Corpse);
+
+        calliope::menu.components.colorpicker(XS("Backpack Color"), ColorSettings::Backpack_Color, true);
         calliope::menu.components.checkbox(XS("Backpack"), m_settings::BackPack);
+
         calliope::menu.components.slider<float>(XS("Drops Distance"), XS(""), m_settings::MaxPlayerDropsDistance, 0, 500);
 
         calliope::menu.components.end_groupbox();
@@ -688,39 +733,66 @@ void WorldTab()
 
     if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("Ores"), calliope::vec2_t(50, 10 + small_world_tab), calliope::vec2_t(groupbox_sz, small_world_tab2))) {
 
+        calliope::menu.components.colorpicker(XS("StoneOre Color"), ColorSettings::StoneOre_Color, true);
         calliope::menu.components.checkbox(XS("Stone"), m_settings::StoneOre);
+
+        calliope::menu.components.colorpicker(XS("MetalOre Color"), ColorSettings::MetalOre_Color, true);
         calliope::menu.components.checkbox(XS("Metal"), m_settings::MetalOre);
+
+        calliope::menu.components.colorpicker(XS("SulfurOre Color"), ColorSettings::SulfurOre_Color, true);
         calliope::menu.components.checkbox(XS("Sulfur"), m_settings::SulfurOre);
         calliope::menu.components.slider<float>(XS("Ore Distance"), XS(""), m_settings::MaxOreDistance, 0, 500);
 
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("DroppedItems"), calliope::vec2_t(50, 10 + small_world_tab + 10 + small_world_tab2), calliope::vec2_t(groupbox_sz, smaller_world_tab))) {
+    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("Save Positions"), calliope::vec2_t(50, 10 + small_world_tab + 10 + small_world_tab2), calliope::vec2_t(groupbox_sz, smaller_world_tab))) {
 
-        calliope::menu.components.checkbox(XS("Dropped-Items"), m_settings::DroppedItems);
-        calliope::menu.components.checkbox(XS("Dropped-Chams"), m_settings::DroppedItemsChams);
-        calliope::menu.components.slider<float>(XS("Dropped Distance"), XS(""), m_settings::MaxDroppedDistance, 0, 500);
+        calliope::menu.components.checkbox(XS("Save-Position"), m_settings::SavePos);
+        calliope::menu.components.keybind(XS("SavePosition Bind"), (int&)m_settings::SavePosKey, true);
+
+        calliope::menu.components.checkbox(XS("Save-House"), m_settings::SaveHouse);
+        calliope::menu.components.keybind(XS("SaveHouse Bind"), (int&)m_settings::SaveHouseKey, true);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Collectables"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_world_tab3))) {
+
+        calliope::menu.components.colorpicker(XS("Hemp Color"), ColorSettings::Hemp_Color, true);
         calliope::menu.components.checkbox(XS("Hemp"), m_settings::Hemp);
+
+        calliope::menu.components.colorpicker(XS("DieselBarrel Color"), ColorSettings::DieselBarrel_Color, true);
         calliope::menu.components.checkbox(XS("Diesel-Barrel"), m_settings::DieselBarrel);
-        calliope::menu.components.checkbox(XS("Stone"), m_settings::StoneCollectable);
-        calliope::menu.components.checkbox(XS("Metal"), m_settings::MetalCollectable);
-        calliope::menu.components.checkbox(XS("Sulfur"), m_settings::SulfurCollectable);
+
+        calliope::menu.components.colorpicker(XS("StoneCollectable Color"), ColorSettings::StoneCollectable_Color, true);
+        calliope::menu.components.checkbox(XS("Stone-Collectable"), m_settings::StoneCollectable);
+
+        calliope::menu.components.colorpicker(XS("MetalCollectable Color"), ColorSettings::MetalCollectable_Color, true);
+        calliope::menu.components.checkbox(XS("Metal-Collectable"), m_settings::MetalCollectable);
+
+        calliope::menu.components.colorpicker(XS("SulfurCollectable Color"), ColorSettings::SulfurCollectable_Color, true);
+        calliope::menu.components.checkbox(XS("Sulfur-Collectable"), m_settings::SulfurCollectable);
+
         calliope::menu.components.slider<float>(XS("Collectables Distance"), XS(""), m_settings::MaxCollectableDistance, 0, 500);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Food"), calliope::vec2_t(60 + groupbox_sz, 10 + small_world_tab3), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_world_tab3 - 25))) {
+
+        calliope::menu.components.colorpicker(XS("Corn Color"), ColorSettings::Corn_Color, true);
         calliope::menu.components.checkbox(XS("Corn"), m_settings::Corn);
+
+        calliope::menu.components.colorpicker(XS("Pumpkin Color"), ColorSettings::Pumpkin_Color, true);
         calliope::menu.components.checkbox(XS("Pumpkin"), m_settings::Pumpkin);
+
+        calliope::menu.components.colorpicker(XS("Potato Color"), ColorSettings::Potato_Color, true);
         calliope::menu.components.checkbox(XS("Potato"), m_settings::Potato);
+
+        calliope::menu.components.colorpicker(XS("Mushroom Color"), ColorSettings::Mushroom_Color, true);
         calliope::menu.components.checkbox(XS("Mushroom"), m_settings::Mushroom);
+
         calliope::menu.components.slider<float>(XS("Food Distance"), XS(""), m_settings::MaxFoodDistance, 0, 500);
 
         calliope::menu.components.end_groupbox();
@@ -731,9 +803,17 @@ void WorldTab()
 void World2Tab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Deployables"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_deployable_tab))) {
+
+        calliope::menu.components.colorpicker(XS("Stash Color"), ColorSettings::Stash_Color, true);
         calliope::menu.components.checkbox(XS("Stash"), m_settings::Stash);
+
+        calliope::menu.components.colorpicker(XS("Workbench1 Color"), ColorSettings::Workbench1_Color, true);
         calliope::menu.components.checkbox(XS("T1-Workbench"), m_settings::T1Workbench);
+
+        calliope::menu.components.colorpicker(XS("Workbench2 Color"), ColorSettings::Workbench2_Color, true);
         calliope::menu.components.checkbox(XS("T2-Workbench"), m_settings::T2Workbench);
+
+        calliope::menu.components.colorpicker(XS("Workbench3 Color"), ColorSettings::Workbench3_Color, true);
         calliope::menu.components.checkbox(XS("T3-Workbench"), m_settings::T3Workbench);
 
 
@@ -744,10 +824,17 @@ void World2Tab()
 
     if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("ToolCupboard"), calliope::vec2_t(50, 10 + small_deployable_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_deployable_tab - 25))) {
 
+        calliope::menu.components.colorpicker(XS("Cupboard Color"), ColorSettings::Cupboard_Color, true);
         calliope::menu.components.checkbox(XS("Cupboard"), m_settings::cupboard);
-        calliope::menu.components.checkbox(XS("TC-Health"), m_settings::TC_Health);
+
+        calliope::menu.components.colorpicker(XS("CAuthedPlayers Color"), ColorSettings::CAuthedPlayers_Color, true);
         calliope::menu.components.checkbox(XS("Authed-Players"), m_settings::AuthorizedPlayers);
+
+        calliope::menu.components.colorpicker(XS("CUpkeep Color"), ColorSettings::CUpKeep_Color, true);
         calliope::menu.components.checkbox(XS("Upkeep"), m_settings::TC_Upkeep);
+
+        calliope::menu.components.checkbox(XS("TC-Health"), m_settings::TC_Health);
+
         calliope::menu.components.slider<float>(XS("Authed Distance"), XS(""), m_settings::AuthorizedPlayersDistance, 0, 500);
         calliope::menu.components.slider<float>(XS("TC Distance"), XS(""), m_settings::MaxTCDistance, 0, 500);
 
@@ -756,15 +843,33 @@ void World2Tab()
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Crates"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y - 10))) {
 
+        calliope::menu.components.colorpicker(XS("Airdrop Color"), ColorSettings::Airdrop_Color, true);
         calliope::menu.components.checkbox(XS("Airdrop"), m_settings::SupplyDrop);
+
+        calliope::menu.components.colorpicker(XS("BradleyCrate Color"), ColorSettings::BradleyCrate_Color, true);
         calliope::menu.components.checkbox(XS("Bradley-Crate"), m_settings::BradleyCrate);
+
+        calliope::menu.components.colorpicker(XS("HeliCrate Color"), ColorSettings::HeliCrate_Color, true);
         calliope::menu.components.checkbox(XS("Heli-Crate"), m_settings::HeliCrate);
+
+        calliope::menu.components.colorpicker(XS("HackableCrate Color"), ColorSettings::HackableCrate_Color, true);
         calliope::menu.components.checkbox(XS("Hackable-Crate"), m_settings::HackableCrate);
+
+        calliope::menu.components.colorpicker(XS("BasicCrate Color"), ColorSettings::BasicCrate_Color, true);
         calliope::menu.components.checkbox(XS("Basic-Crate"), m_settings::BasicCrate);
+
+        calliope::menu.components.colorpicker(XS("NormalCrate Color"), ColorSettings::NormalCrate_Color, true);
         calliope::menu.components.checkbox(XS("Normal-Crate"), m_settings::NormalCrate);
+
+        calliope::menu.components.colorpicker(XS("MilitaryCrate Color"), ColorSettings::MilitaryCrate_Color, true);
         calliope::menu.components.checkbox(XS("Military-Crate"), m_settings::MilitaryCrate);
+
+        calliope::menu.components.colorpicker(XS("EliteCrate Color"), ColorSettings::EliteCrate_Color, true);
         calliope::menu.components.checkbox(XS("Elite-Crate"), m_settings::EliteCrate);
+
+        calliope::menu.components.colorpicker(XS("LootBarrel Color"), ColorSettings::LootBarrel_Color, true);
         calliope::menu.components.checkbox(XS("Loot-Barrel"), m_settings::LootBarrel);
+
         calliope::menu.components.slider<float>(XS("Airdrop Distance"), XS(""), m_settings::MaxSupplyDropDistance, 0, 500);
         calliope::menu.components.slider<float>(XS("Crate Distance"), XS(""), m_settings::MaxCrateDistance, 0, 500);
 
@@ -782,11 +887,21 @@ void World2Tab()
 void World3Tab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Traps"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_traps_tab))) {
-        calliope::menu.components.checkbox(XS("ShotgunTrap"), m_settings::ShotgunTrap);
-        calliope::menu.components.checkbox(XS("FlameTurret"), m_settings::FlameTurret);
-        calliope::menu.components.checkbox(XS("BearTrap"), m_settings::BearTrap);
-        calliope::menu.components.checkbox(XS("SpikesTrap"), m_settings::SpikesTrap);
-        calliope::menu.components.checkbox(XS("LandMine"), m_settings::LandMine);
+
+        calliope::menu.components.colorpicker(XS("ShotgunTrap Color"), ColorSettings::ShotgunTrap_Color, true);
+        calliope::menu.components.checkbox(XS("Shotgun-Trap"), m_settings::ShotgunTrap);
+
+        calliope::menu.components.colorpicker(XS("FlameTurret Color"), ColorSettings::FlameTurret_Color, true);
+        calliope::menu.components.checkbox(XS("Flame-Turret"), m_settings::FlameTurret);
+
+        calliope::menu.components.colorpicker(XS("BearTrap Color"), ColorSettings::BearTrap_Color, true);
+        calliope::menu.components.checkbox(XS("Bear-Trap"), m_settings::BearTrap);
+
+        calliope::menu.components.colorpicker(XS("SpikesTrap Color"), ColorSettings::SpikesTrap_Color, true);
+        calliope::menu.components.checkbox(XS("Spikes-Trap"), m_settings::SpikesTrap);
+
+        calliope::menu.components.colorpicker(XS("LandMine Color"), ColorSettings::LandMine_Color, true);
+        calliope::menu.components.checkbox(XS("Land-Mine"), m_settings::LandMine);
 
         calliope::menu.components.slider<float>(XS("Traps Distance"), XS(""), m_settings::MaxTrapsDistance, 0, 500);
 
@@ -795,13 +910,25 @@ void World3Tab()
 
     if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("Turret"), calliope::vec2_t(50, 10 + small_traps_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_traps_tab - 25))) {
 
+        calliope::menu.components.colorpicker(XS("Turret Color"), ColorSettings::Turret_Color, true);
         calliope::menu.components.checkbox(XS("Turret"), m_settings::AutoTurret);
-        calliope::menu.components.checkbox(XS("Authed Players"), m_settings::TurretAuthorizedPlayers);
-        calliope::menu.components.checkbox(XS("EquippedFlag"), m_settings::TurretEquippedFlags);
-        calliope::menu.components.checkbox(XS("ShowOnline"), m_settings::TurretOnFlags);
-        calliope::menu.components.checkbox(XS("Health"), m_settings::TurretHealth);
-        calliope::menu.components.checkbox(XS("TurningFlags"), m_settings::TurretTurningFlag);
+
+        calliope::menu.components.colorpicker(XS("TAuthedPlayers Color"), ColorSettings::TAuthedPlayers_Color, true);
+        calliope::menu.components.checkbox(XS("TAuthed-Players"), m_settings::TurretAuthorizedPlayers);
+
+        calliope::menu.components.colorpicker(XS("EquippedFlag Color"), ColorSettings::TEquipedFlag_Color, true);
+        calliope::menu.components.checkbox(XS("Equipped-Flag"), m_settings::TurretEquippedFlags);
+
+        calliope::menu.components.colorpicker(XS("TShowOnline Color"), ColorSettings::ShowOnline_Color, true);
+        calliope::menu.components.checkbox(XS("Show-Online"), m_settings::TurretOnFlags);
+
+        calliope::menu.components.colorpicker(XS("TTurning Color"), ColorSettings::TurningFlags_Color, true);
+        calliope::menu.components.checkbox(XS("Turning-Flags"), m_settings::TurretTurningFlag);
+
+        calliope::menu.components.colorpicker(XS("TRange Color"), ColorSettings::Range_Color, true);
         calliope::menu.components.checkbox(XS("Range"), m_settings::TurretRange);
+
+        calliope::menu.components.checkbox(XS("Turret-Health"), m_settings::TurretHealth);
         calliope::menu.components.slider<float>(XS("Turret Distance"), XS(""), m_settings::MaxTurretDistance, 0, 500);
 
         calliope::menu.components.end_groupbox();
@@ -809,26 +936,111 @@ void World3Tab()
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Vehicles"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_home_tab))) {
 
+        calliope::menu.components.colorpicker(XS("PatrolHeli Color"), ColorSettings::PatrolHeli_Color, true);
         calliope::menu.components.checkbox(XS("Patrol-Heli"), m_settings::PatrolHelicopter);
+
+        calliope::menu.components.colorpicker(XS("Bradley Color"), ColorSettings::Bradley_Color, true);
         calliope::menu.components.checkbox(XS("Bradley"), m_settings::BradleyAPC);
+
+        calliope::menu.components.colorpicker(XS("MiniCopter Color"), ColorSettings::Minicopter_Color, true);
         calliope::menu.components.checkbox(XS("MiniCopter"), m_settings::Minicopter);
+
+        calliope::menu.components.colorpicker(XS("ScrapHeli Color"), ColorSettings::ScrapHeli_Color, true);
         calliope::menu.components.checkbox(XS("ScrapHeli"), m_settings::ScrapHeli);
+
+        calliope::menu.components.colorpicker(XS("TugBoat Color"), ColorSettings::TugBoat_Color, true);
         calliope::menu.components.checkbox(XS("TugBoat"), m_settings::TugBoat);
+
+        calliope::menu.components.colorpicker(XS("RHIB Color"), ColorSettings::RHIB_Color, true);
         calliope::menu.components.checkbox(XS("RHIB"), m_settings::Rhib);
+
+        calliope::menu.components.colorpicker(XS("RowBoat Color"), ColorSettings::RowBoat_Color, true);
         calliope::menu.components.checkbox(XS("RowBoat"), m_settings::Rowboat);
+
         calliope::menu.components.slider<float>(XS("Vehicle Distance"), XS(""), m_settings::MaxVehicleDistance, 0, 500);
         calliope::menu.components.slider<float>(XS("APC Distance"), XS(""), m_settings::MaxAPCDistance, 0, 5000);
 
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Position"), calliope::vec2_t(60 + groupbox_sz, 10 + small_home_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_home_tab - 25))) {
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Dropped Items"), calliope::vec2_t(60 + groupbox_sz, 10 + small_home_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_home_tab - 25))) {
 
-        calliope::menu.components.checkbox(XS("Save-Position"), m_settings::SavePos);
-        calliope::menu.components.keybind(XS("SavePosition Bind"), (int&)m_settings::SavePosKey, true);
-        
-        calliope::menu.components.checkbox(XS("Save-House"), m_settings::SaveHouse);
-        calliope::menu.components.keybind(XS("SaveHouse Bind"), (int&)m_settings::SaveHouseKey, true);
+        calliope::menu.components.colorpicker(XS("DroppedItems Color"), ColorSettings::DroppedItems_Color, true);
+        calliope::menu.components.checkbox(XS("Dropped-Items"), m_settings::DroppedItems);
+
+        calliope::menu.components.colorpicker(XS("DroppedChams Color"), ColorSettings::DroppedChams_Color, true);
+        calliope::menu.components.checkbox(XS("Dropped-Chams"), m_settings::DroppedItemsChams);
+
+        calliope::menu.components.multi_dropdown(XS("Hide-Selected-Items"), { ("Weapon-Mods"), ("Melee-Items"), ("Tier1-Weapons"), ("Tier2-Weapons"), ("Tier3-Weapons"), ("Workbenches"), ("Resources"), ("Armor"), ("Tools"), ("Explosives"), ("Medical"), ("Ammo"), ("Components") }, m_settings::DroppedOptions);
+
+        calliope::menu.components.slider<float>(XS("Dropped Distance"), XS(""), m_settings::MaxDroppedDistance, 0, 500);
+
+        {
+            if (m_settings::DroppedOptions[0])
+                m_settings::HideWeaponMods = true;
+            else
+                m_settings::HideWeaponMods = false;
+
+            if (m_settings::DroppedOptions[1])
+                m_settings::HideMeleeItems = true;
+            else
+                m_settings::HideMeleeItems = false;
+
+            if (m_settings::DroppedOptions[2])
+                m_settings::HideTier1Weapons = true;
+            else
+                m_settings::HideTier1Weapons = false;
+
+            if (m_settings::DroppedOptions[3])
+                m_settings::HideTier2Weapons = true;
+            else
+                m_settings::HideTier2Weapons = false;
+
+            if (m_settings::DroppedOptions[4])
+                m_settings::HideTier3Weapons = true;
+            else
+                m_settings::HideTier3Weapons = false;
+
+            if (m_settings::DroppedOptions[5])
+                m_settings::HideWorkbenches = true;
+            else
+                m_settings::HideWorkbenches = false;
+
+            if (m_settings::DroppedOptions[6])
+                m_settings::HideResources = true;
+            else
+                m_settings::HideResources = false;
+
+            if (m_settings::DroppedOptions[7])
+                m_settings::HideArmor = true;
+            else
+                m_settings::HideArmor = false;
+
+            if (m_settings::DroppedOptions[8])
+                m_settings::HideTools = true;
+            else
+                m_settings::HideTools = false;
+
+            if (m_settings::DroppedOptions[9])
+                m_settings::HideExplosive = true;
+            else
+                m_settings::HideExplosive = false;
+
+            if (m_settings::DroppedOptions[10])
+                m_settings::HideMedical = true;
+            else
+                m_settings::HideMedical = false;
+
+            if (m_settings::DroppedOptions[11])
+                m_settings::HideAmmo = true;
+            else
+                m_settings::HideAmmo = false;
+
+            if (m_settings::DroppedOptions[12])
+                m_settings::HideComponents = true;
+            else
+                m_settings::HideComponents = false;
+        }
 
 
         calliope::menu.components.end_groupbox();
@@ -975,7 +1187,10 @@ void WeatherTab()
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Skydome"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_bright_tab))) {
 
         calliope::menu.components.checkbox(XS("Bright-Night"), m_settings::Brightnight);
+
+        calliope::menu.components.colorpicker(XS("Ambient Color"), ColorSettings::Ambient_Color, true);
         calliope::menu.components.checkbox(XS("Bright-Ambient"), m_settings::BrightAmbient);
+
         calliope::menu.components.checkbox(XS("Bright-Cave"), m_settings::BrightCave);
 
 
@@ -985,7 +1200,10 @@ void WeatherTab()
     if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Sky Adjustments"), calliope::vec2_t(50, 10 + small_bright_tab), calliope::vec2_t(groupbox_sz, small_sky_tab))) {
 
         calliope::menu.components.checkbox(XS("Stars"), m_settings::Stars);
+
+        calliope::menu.components.colorpicker(XS("Skybox Color"), ColorSettings::SkyBox_Color, true);
         calliope::menu.components.checkbox(XS("Sky-Color"), m_settings::SkyColorNight);
+
         calliope::menu.components.checkbox(XS("Sharp-Clouds"), m_settings::SharpClouds);
 
 
@@ -1134,7 +1352,7 @@ void ColorsTab()
         calliope::menu.components.slider<float>(XS("Player-Font-Size"), XS(""), m_settings::ESPFontsize, 0, 15);
         calliope::menu.components.slider<float>(XS("World-Font-Size"), XS(""), m_settings::WorldFontSize, 0, 15);
 
-        calliope::menu.components.dropdown(XS("Font"), { ("Default"), ("Pixel"), ("Verdana") }, m_settings::fonttype);
+        calliope::menu.components.dropdown(XS("Font"), { ("Default"), ("Pixel"), ("Verdana"), ("Division")}, m_settings::fonttype);
 
 
         calliope::menu.components.end_groupbox();
@@ -1142,9 +1360,10 @@ void ColorsTab()
 
     if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 10 + small_text_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_text_tab - 25))) {
 
-        calliope::menu.components.colorpicker(XS("Menu Color"), calliope::globals::menu_accent, false);
+       calliope::menu.components.colorpicker(XS("Menu Color"), calliope::globals::menu_accent, false);
         calliope::menu.components.end_groupbox();
     }
+
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Settings"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_config_tab))) {
 

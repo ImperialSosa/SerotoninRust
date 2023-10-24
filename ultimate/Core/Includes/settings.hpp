@@ -2,7 +2,6 @@
 
 #include "../SDK/RustStructs.h"
 
-
 namespace m_settings {
 	inline bool LoadRage = false;
 	inline bool LoadLegit = false;
@@ -314,6 +313,8 @@ namespace m_settings {
 	inline static std::vector<bool> RaidOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	inline static std::vector<bool> CupboardOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+	inline static std::vector<bool> DroppedOptions{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
 	inline float CorpseColor[4] = { 201.f, 235.f, 168.f, 255.f };
 	inline float BackPackColor[4] = { 238.f, 238.f, 238.f, 255.f };
 
@@ -478,6 +479,20 @@ namespace m_settings {
 	inline bool AttackHeli = false;
 
 	inline bool IgnoreArms = false;
+
+	inline bool HideWeaponMods = false;
+	inline bool HideMeleeItems = false;
+	inline bool HideTier1Weapons = false;
+	inline bool HideTier2Weapons = false;
+	inline bool HideTier3Weapons = false;
+	inline bool HideWorkbenches = false;
+	inline bool HideResources = false;
+	inline bool HideArmor = false;
+	inline bool HideTools = false;
+	inline bool HideExplosive = false;
+	inline bool HideMedical = false;
+	inline bool HideAmmo = false;
+	inline bool HideComponents = false;
 };
 
 //inline RustStructs::KeyCode ManipulationKey = RustStructs::KeyCode::F;

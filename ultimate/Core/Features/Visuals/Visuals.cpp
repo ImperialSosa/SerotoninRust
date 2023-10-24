@@ -2,6 +2,8 @@
 #include "../../Hooking/Hooks.hpp"
 #include "../../ConnectionManager/ConnectionManager.hpp"
 #include "../Features/Features.hpp"
+#include "../../Includes/colorsettings.hpp"
+
 #include <array>
 #include <algorithm>
 inline std::array<int, 20> valid_bones = {
@@ -467,18 +469,20 @@ void Visuals::DrawPlayers()
 
 				auto is_Visible = IsVisible(camera->get_positionz());
 				bool IsWounded = BasePlayer->playerFlags() & RustStructs::PlayerFlags::Wounded;
-				auto VisibleColor = Color{ m_settings::VisCheck_Color[0], m_settings::VisCheck_Color[1], m_settings::VisCheck_Color[2], m_settings::VisCheck_Color[3] };
-				auto DrawBox_Color = Color{ m_settings::DrawBox_Color[0], m_settings::DrawBox_Color[1], m_settings::DrawBox_Color[2], m_settings::DrawBox_Color[3] };
+				auto VisibleColor = Color{ ColorSettings::Visible_Color.r, ColorSettings::Visible_Color.g, ColorSettings::Visible_Color.b, ColorSettings::Visible_Color.a };
+
+				auto DrawBox_Color = Color{ ColorSettings::BoxEsp_Color.r, ColorSettings::BoxEsp_Color.g, ColorSettings::BoxEsp_Color.b, ColorSettings::BoxEsp_Color.a };
 				auto VisCheckColor = is_Visible ? VisibleColor : DrawBox_Color;
-				auto NameTag_Color = Color{ m_settings::DrawNameTag_Color[0], m_settings::DrawNameTag_Color[1], m_settings::DrawNameTag_Color[2], m_settings::DrawNameTag_Color[3] };
-				auto Sleeper_Color = Color{ m_settings::Sleeper_Color[0], m_settings::Sleeper_Color[1], m_settings::Sleeper_Color[2], m_settings::Sleeper_Color[3] };
-				auto Wounded_Color = Color{ m_settings::Wounded_Color[0], m_settings::Wounded_Color[1], m_settings::Wounded_Color[2], m_settings::Wounded_Color[3] };
-				auto Scientist_Color = Color{ m_settings::Scientist_color[0], m_settings::Scientist_color[1], m_settings::Scientist_color[2], m_settings::Scientist_color[3] };
+				auto NameTag_Color = Color{ ColorSettings::Username_Color.r, ColorSettings::Username_Color.g, ColorSettings::Username_Color.b, ColorSettings::Username_Color.a };
+				auto Sleeper_Color = Color{ ColorSettings::Sleeper_Color.r, ColorSettings::Sleeper_Color.g, ColorSettings::Sleeper_Color.b, ColorSettings::Sleeper_Color.a };
+				auto Wounded_Color = Color{ ColorSettings::Wounded_Color.r, ColorSettings::Wounded_Color.g, ColorSettings::Wounded_Color.b, ColorSettings::Wounded_Color.a };
+				auto Scientist_Color = Color{ ColorSettings::NPC_Color.r, ColorSettings::NPC_Color.g, ColorSettings::NPC_Color.b, ColorSettings::NPC_Color.a };
 				auto Dead_Color = Color{ m_settings::Dead_Color[0], m_settings::Dead_Color[1], m_settings::Dead_Color[2], m_settings::Dead_Color[3] };
-				auto Safezone_Color = Color{ m_settings::Safezone_Color[0], m_settings::Safezone_Color[1], m_settings::Safezone_Color[2], m_settings::Safezone_Color[3] };
-				auto HeldItem_Color = Color{ m_settings::DrawHeldItem_Color[0], m_settings::DrawHeldItem_Color[1], m_settings::DrawHeldItem_Color[2], m_settings::DrawHeldItem_Color[3] };
+				auto Safezone_Color = Color{ ColorSettings::Safezone_Color.r, ColorSettings::Safezone_Color.g, ColorSettings::Safezone_Color.b, ColorSettings::Safezone_Color.a };
+				auto HeldItem_Color = Color{ ColorSettings::Helditem_Color.r, ColorSettings::Helditem_Color.g, ColorSettings::Helditem_Color.b, ColorSettings::Helditem_Color.a };
+
 				auto Friend_Color = Color{ m_settings::Friend_Color[0], m_settings::Friend_Color[1], m_settings::Friend_Color[2], m_settings::Friend_Color[3] };
-				auto Target_Color = Color{ m_settings::Target_Color[0], m_settings::Target_Color[1], m_settings::Target_Color[2], m_settings::Target_Color[3] };
+				auto Target_Color = Color{ ColorSettings::Target_Color.r, ColorSettings::Target_Color.g, ColorSettings::Target_Color.b, ColorSettings::Target_Color.a };
 
 				bool isFriend = false;
 				auto camera = UnityEngine::Camera::get_main();
@@ -510,31 +514,32 @@ void Visuals::DrawPlayers()
 
 				if (m_settings::Radar)
 				{
-					UnityEngine::GL().CircleFilled(Vector2(RadarPoint), 3.f, BoxColor.GetUnityColor(), 25);
+					UnityEngine::GL().CircleFilled(Vector2(RadarPoint), 3.f, BoxColor, 25);
 				}
 
 				if (m_settings::SelectedBoxESP == 1)
 				{
-					UnityEngine::GL::Rectangle(Vector2(bo.left, bo.top), Vector2(bo.right, bo.bottom), BoxColor.GetUnityColor());
+					UnityEngine::GL::Rectangle(Vector2(bo.left, bo.top), Vector2(bo.right, bo.bottom), BoxColor);
 				}
 
 				if (m_settings::SelectedBoxESP == 2)
 				{
-					DrawCornerBox(bo.left, bo.top, bo.right, bo.bottom, BoxColor.GetUnityColor());
+					DrawCornerBox(bo.left, bo.top, bo.right, bo.bottom, BoxColor);
 				}
 
 				if (m_settings::Target_Indicator)
 				{
 					if (BasePlayer == m_target.m_player)
 					{
-						UnityEngine::GL::TextCenter(Vector2(headPos.x, headPos.y - yoffsethead), XS("Target"), BoxColor, Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+						UnityEngine::GL::TextCenter(Vector2(headPos.x, headPos.y - yoffsethead), XS("Target"), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 						yoffsethead += 12.f;
 					}
 				}
 
 				if (m_settings::Skeleton)
 				{
-					auto SkeletonColor = BoxColor.GetUnityColor();
+					
+					auto SkeletonColor = BoxColor;
 
 					auto HeadBone = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
 					auto NeckBone = BasePlayer->get_bone_transform(RustStructs::bones::neck)->get_position();
@@ -727,7 +732,7 @@ void Visuals::DrawPlayers()
 							sprintf(str, XS("[%dm]"), (int)distance);
 							player_name = player_name + " " + str;
 
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 						}
 						else
 						{
@@ -738,7 +743,7 @@ void Visuals::DrawPlayers()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							}
 
 						}
@@ -753,7 +758,7 @@ void Visuals::DrawPlayers()
 							sprintf(str, XS("[%dm]"), (int)distance);
 							player_name = player_name + " " + str;
 
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color, Color::Black(ColorSettings::Username_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 						}
 						else
 						{
@@ -763,7 +768,7 @@ void Visuals::DrawPlayers()
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+								UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), player_name.c_str(), NameTag_Color, Color::Black(ColorSettings::Username_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							}
 						}
 
@@ -810,12 +815,12 @@ void Visuals::DrawPlayers()
 
 								if (m_settings::TagsVisCheck)
 								{
-									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 									yoffset += 13;
 								}
 								else
 								{
-									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 									yoffset += 13;
 								}
 							}
@@ -895,7 +900,7 @@ void Visuals::DrawPlayers()
 										else
 											AmmoType = XS("Unknown");
 
-										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), AmmoType.c_str(), HeldItem_Color.GetUnityColor(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), AmmoType.c_str(), HeldItem_Color, Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 										yoffset += 13;
 									}
 								}
@@ -911,14 +916,16 @@ void Visuals::DrawPlayers()
 					if (AssemblyCSharp::GamePhysics::Trace(UnityEngine::Ray(BasePlayer->get_bone_transform(47)->get_position(), position), 0.f, hitInfo, 500.f, 2097152, RustStructs::QueryTriggerInteraction::Ignore, nullptr))
 					{
 						if (m_settings::ShowInside) {
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+							auto Inside_Color = Color{ ColorSettings::Inside_Color.r, ColorSettings::Inside_Color.g, ColorSettings::Inside_Color.b, ColorSettings::Inside_Color.a };
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Inside_Color, Color::Black(ColorSettings::Inside_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							yoffset += 13;
 						}
 					}
 					else
 					{
 						if (m_settings::ShowOutside) {
-							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+							auto Outside_Color = Color{ ColorSettings::Outside_Color.r, ColorSettings::Outside_Color.g, ColorSettings::Outside_Color.b, ColorSettings::Outside_Color.a };
+							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Outside_Color, Color::Black(ColorSettings::Outside_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							yoffset += 13;
 						}
 					}
@@ -1069,19 +1076,23 @@ void Visuals::DrawPlayers()
 												break;
 											case 7:
 												if (ColorBundle) {
+													auto VisibleChams_Color = Color{ ColorSettings::VisibleChams_Color.r, ColorSettings::VisibleChams_Color.g, ColorSettings::VisibleChams_Color.b, ColorSettings::VisibleChams_Color.a };
+													auto InvisibleChams_Color = Color{ ColorSettings::InvisibleChams_Color.r, ColorSettings::InvisibleChams_Color.g, ColorSettings::InvisibleChams_Color.b, ColorSettings::InvisibleChams_Color.a };
+													auto ScientistChams_Color = Color{ ColorSettings::ScientistChams_Color.r, ColorSettings::ScientistChams_Color.g, ColorSettings::ScientistChams_Color.b, ColorSettings::ScientistChams_Color.a };
+
 													if (!ColorShader) //Galaxy
 														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
 													if (material->shader() != ColorShader)
 													{
 														material->set_shader(ColorShader);
-														material->SetColor(XS("_ColorVisible"), VisibleColor.GetUnityColor());
-														material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
+														material->SetColor(XS("_ColorVisible"), VisibleChams_Color);
+														material->SetColor(XS("_ColorBehind"), InvisibleChams_Color);
 
 														if (npc)
 														{
-															material->SetColor(XS("_ColorVisible"), BoxColor.GetUnityColor());
-															material->SetColor(XS("_ColorBehind"), BoxColor.GetUnityColor());
+															material->SetColor(XS("_ColorVisible"), ScientistChams_Color);
+															material->SetColor(XS("_ColorBehind"), ScientistChams_Color);
 														}
 													}
 												}
@@ -1354,43 +1365,244 @@ void Visuals::RenderEntities()
 
 									if (name->c_str())
 									{
-										auto DroppedColor = Color{ m_settings::DroppedItemColor[0], m_settings::DroppedItemColor[1], m_settings::DroppedItemColor[2], m_settings::DroppedItemColor[3] };
-										std::string player_name = utf16_to_utf8(name->c_str());
-										char str[256];
-										sprintf(str, XS("[%dm]"), (int)distance);
-										player_name = player_name + " " + str;
+										if (name->Contains("Muzzle") || name->Contains("Scope") ||
+											name->Contains("Magazine") || name->Contains("flashlight") ||
+											name->Contains("Holosight") || name->Contains("Lasersight") ||
+											name->Contains("Sight") || name->Contains("Silencer") ||
+											name->Contains("Front") || name->Contains("embrasure") ||
+											name->Contains("Bars") || name->Contains("Netting") ||
+											name->Contains("Prison") || name->Contains("Quarry") ||
+											name->Contains("Building") || name->Contains("Chainlink") ||
+											name->Contains("Lock") || name->Contains("Floor") ||
+											name->Contains("Gate") || name->Contains("Wall") ||
+											name->Contains("Barricade") || name->Contains("Door") ||
+											name->Contains("Hatch") || name->Contains("Shutters") ||
+											name->Contains("Pump Jack") || name->Contains("Ladder") ||
+											name->Contains("Tower") || name->Contains("Window") ||
+											name->Contains("Cupboard") || name->Contains("Knife") ||
+											name->Contains("Club") || name->Contains("Mace") ||
+											name->Contains("Machete") || name->Contains("Cleaver") ||
+											name->Contains("sword") || name->Contains("fork") ||
+											name->Contains("Paddle") || name->Contains("Spear") ||
+											name->Contains("Bat") || name->Contains("Water") ||
+											name->Contains("Snowball") || name->Contains("Bow") ||
+											name->Contains("Eoka") || name->Contains("Flame") ||
+											name->Contains("Nailgun") || name->Contains("bow") ||
+											name->Contains("Revolver") || name->Contains("Shotgun") ||
+											name->Contains("Homing Missile") || name->Contains("Pistol") ||
+											name->Contains("Grenade Launcher") || name->Contains("Prototype") ||
+											name->Contains("Custom SMG") || name->Contains("Thompson") ||
+											name->Contains("M39 Rifle") || name->Contains("Semi-Automatic") ||
+											name->Contains("MP5A4") || name->Contains("HMLMG") ||
+											name->Contains("Bolt Action") || name->Contains("Launcher") ||
+											name->Contains("Assault Rifle") || name->Contains("L96") ||
+											name->Contains("LR-300") || name->Contains("M249") ||
+											name->Contains("Workbench") || name->Contains("Animal Fat") ||
+											name->Contains("Charcoal") || name->Contains("Cloth") ||
+											name->Contains("Coal") || name->Contains("Crude Oil") ||
+											name->Contains("Leather") || name->Contains("High Quality") ||
+											name->Contains("Sulfur") || name->Contains("Wood") ||
+											name->Contains("Metal Fragments") || name->Contains("Explosives") ||
+											name->Contains("Gun Powder") || name->Contains("Metal Ore") ||
+											name->Contains("Sulfur") || name->Contains("Stones") ||
+											name->Contains("Scrap") || name->Contains("Fuel") ||
+											name->Contains("Suit") || name->Contains("Gear") ||
+											name->Contains("Pants") || name->Contains("Jacket") ||
+											name->Contains("Gloves") || name->Contains("Facemask") ||
+											name->Contains("Chest Plate") || name->Contains("Helmet") ||
+											name->Contains("Kilt") || name->Contains("IcePick") ||
+											name->Contains("Chainsaw") || name->Contains("Jackhammer") ||
+											name->Contains("Icepick") || name->Contains("Pickaxe") ||
+											name->Contains("Rocket") || name->Contains("Explosive") ||
+											name->Contains("Satchel") || name->Contains("Grenade") ||
+											name->Contains("Supply Signal") || name->Contains("Large Medkit") ||
+											name->Contains("Medical") || name->Contains("Bandage") ||
+											name->Contains("Torpedo") || name->Contains("12 Gauge") ||
+											name->Contains("Rifle Ammo") || name->Contains("Shell") ||
+											name->Contains("Road Signs") || name->Contains("Electric Fuse") ||
+											name->Contains("Sewing Kit") || name->Contains("Sheet Metal") ||
+											name->Contains("Rifle Body") || name->Contains("Rope") ||
+											name->Contains("SMG Body") || name->Contains("Spring") ||
+											name->Contains("Pipe") || name->Contains("Blade") ||
+											name->Contains("Semi Automatic Body") || name->Contains("Tech Trash") ||
+											name->Contains("Tarp") || name->Contains("Targeting Computer"))
+										{
 
-										UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DroppedColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
-
-										if (m_settings::DroppedItemsChams) {
-											auto ChamsColor = Color{ 168, 166, 50, 255.f };
-											auto g_render = BaseEntity->GetComponentsInChildren(FPSystem::Type::Renderer());
-											if (IsAddressValid(g_render))
+											//Weapon mods
+											if (m_settings::HideWeaponMods)
 											{
-												auto size = g_render->max_length;
-												for (int i = 0; i < size; i++)
+												if (name->Contains("Muzzle") || name->Contains("Scope") ||
+													name->Contains("Magazine") || name->Contains("flashlight") ||
+													name->Contains("Holosight") || name->Contains("Lasersight") ||
+													name->Contains("Sight") || name->Contains("Silencer"))
+													continue;
+											}
+
+											//Melee Items
+											if (m_settings::HideMeleeItems)
+											{
+												if (name->Contains("Knife") || name->Contains("Club") ||
+													name->Contains("Mace") || name->Contains("Machete") ||
+													name->Contains("Cleaver") || name->Contains("sword") ||
+													name->Contains("fork") || name->Contains("Paddle") ||
+													name->Contains("Spear") || name->Contains("Bat"))
+													continue;
+											}
+
+											//Tier 1 Weapons
+											if (m_settings::HideTier1Weapons)
+											{
+												if (name->Contains("Water") || name->Contains("Shotgun") ||
+													name->Contains("Snowball") || name->Contains("Bow") ||
+													name->Contains("Eoka") || name->Contains("Flame") ||
+													name->Contains("Nailgun") || name->Contains("bow") ||
+													name->Contains("Revolver"))
+													continue;
+											}
+
+											//Tier 2 Weapons
+											if (m_settings::HideTier2Weapons)
+											{
+												if (name->Contains("Homing Missile") || name->Contains("Pistol") ||
+													name->Contains("Grenade Launcher") || name->Contains("Prototype") ||
+													name->Contains("Custom SMG") || name->Contains("Thompson") ||
+													name->Contains("M39 Rifle") || name->Contains("Semi-Automatic") ||
+													name->Contains("MP5A4"))
+													continue;
+											}
+
+											//Tier 3 Weapons
+											if (m_settings::HideTier3Weapons)
+											{
+												if (name->Contains("HMLMG") || name->Contains("Bolt Action") ||
+													name->Contains("Launcher") || name->Contains("Assault Rifle") ||
+													name->Contains("L96") || name->Contains("LR-300") ||
+													name->Contains("M249"))
+													continue;
+											}
+
+											//Workbench
+											if (m_settings::HideWorkbenches)
+											{
+												if (name->Contains("Workbench"))
+													continue;
+											}
+
+											//Resources
+											if (m_settings::HideResources)
+											{
+												if (name->Contains("Animal Fat") || name->Contains("Charcoal") ||
+													name->Contains("Cloth") || name->Contains("Coal") ||
+													name->Contains("Crude Oil") || name->Contains("Fuel") ||
+													name->Contains("Leather") || name->Contains("High Quality") ||
+													name->Contains("Sulfur") || name->Contains("Wood") ||
+													name->Contains("Metal Fragments") || name->Contains("Explosives") ||
+													name->Contains("Gun Powder") || name->Contains("Metal Ore") || 
+													name->Contains("Sulfur") || name->Contains("Stones") || 
+													name->Contains("Scrap"))
+													continue;
+											}
+
+											//Armor
+											if (m_settings::HideArmor)
+											{
+												if (name->Contains("Suit") || name->Contains("Gear") ||
+													name->Contains("Pants") || name->Contains("Jacket") ||
+													name->Contains("Gloves") || name->Contains("Facemask") ||
+													name->Contains("Chest Plate") || name->Contains("Helmet") ||
+													name->Contains("Kilt"))
+													continue;
+											}
+
+											//Tools
+											if (m_settings::HideTools)
+											{
+												if (name->Contains("IcePick") || name->Contains("Pickaxe") ||
+													name->Contains("Chainsaw") || name->Contains("Jackhammer") ||
+													name->Contains("Icepick"))
+													continue;
+											}
+
+											//Explosive
+											if (m_settings::HideExplosive)
+											{
+												if (name->Contains("Rocket") || name->Contains("Explosive") ||
+													name->Contains("Satchel") || name->Contains("Grenade") ||
+													name->Contains("Supply Signal"))
+													continue;
+											}
+
+											//Medical
+											if (m_settings::HideMedical)
+											{
+												if (name->Contains("Large Medkit") || name->Contains("Medical") ||
+													name->Contains("Bandage"))
+													continue;
+											}
+
+											//Ammo
+											if (m_settings::HideAmmo)
+											{
+												if (name->Contains("Torpedo") || name->Contains("12 Gauge") ||
+													name->Contains("Rifle Ammo") || name->Contains("Shell"))
+													continue;
+											}
+
+											//Component
+											if (m_settings::HideComponents)
+											{
+												if (name->Contains("Road Signs") || name->Contains("Electric Fuse") ||
+													name->Contains("Sewing Kit") || name->Contains("Sheet Metal") ||
+													name->Contains("Rifle Body") || name->Contains("Rope") ||
+													name->Contains("SMG Body") || name->Contains("Spring") ||
+													name->Contains("Pipe") || name->Contains("Blade") ||
+													name->Contains("Semi Automatic Body") || name->Contains("Tech Trash") ||
+													name->Contains("Tarp") || name->Contains("Targeting Computer"))
+													continue;
+											}
+
+											//LOG(XS("[DEBUG] %ls"), name->c_str());
+
+											auto DroppedColor = Color{ ColorSettings::DroppedItems_Color.r, ColorSettings::DroppedItems_Color.g, ColorSettings::DroppedItems_Color.b, ColorSettings::DroppedItems_Color.a };
+
+											std::string player_name = utf16_to_utf8(name->c_str());
+											char str[256];
+											sprintf(str, XS("[%dm]"), (int)distance);
+											player_name = player_name + " " + str;
+
+											UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DroppedColor, Color::Black(ColorSettings::DroppedItems_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+
+											if (m_settings::DroppedItemsChams) {
+												auto ChamsColor = Color{ ColorSettings::DroppedChams_Color.r, ColorSettings::DroppedChams_Color.g, ColorSettings::DroppedChams_Color.b, ColorSettings::DroppedChams_Color.a };
+
+												auto g_render = BaseEntity->GetComponentsInChildren(FPSystem::Type::Renderer());
+												if (IsAddressValid(g_render))
 												{
-													auto main_renderer = g_render->m_Items[i];
-													if (!(main_renderer))
-														continue;
-
-													auto material = main_renderer->material();
-
-													if (!IsAddressValid(material))
-														continue;
-
-													auto g_shader = UnityEngine::Shader::Find(XS("Hidden/Internal-Colored"));
-
-													if (!IsAddressValid(g_shader))
-														continue;
-
-													if (g_shader != material->shader())
+													auto size = g_render->max_length;
+													for (int i = 0; i < size; i++)
 													{
-														material->set_shader(g_shader);
-													}
-													material->SetInt(XS("_ZTest"), 8);
-													material->SetColor(XS("_Color"), ChamsColor.GetUnityColor());
+														auto main_renderer = g_render->m_Items[i];
+														if (!(main_renderer))
+															continue;
 
+														auto material = main_renderer->material();
+
+														if (!IsAddressValid(material))
+															continue;
+
+														auto g_shader = UnityEngine::Shader::Find(XS("Hidden/Internal-Colored"));
+
+														if (!IsAddressValid(g_shader))
+															continue;
+
+														if (g_shader != material->shader())
+														{
+															material->set_shader(g_shader);
+														}
+														material->SetInt(XS("_ZTest"), 8);
+														material->SetColor(XS("_Color"), ChamsColor);
+
+													}
 												}
 											}
 										}
@@ -1409,14 +1621,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("hemp-collectable") == Hash(name, false))
 							{
-
-								auto HempColor = Color{ m_settings::HempColor[0], m_settings::HempColor[1], m_settings::HempColor[2], m_settings::HempColor[3] };
+								auto HempColor = Color{ ColorSettings::Hemp_Color.r, ColorSettings::Hemp_Color.g, ColorSettings::Hemp_Color.b, ColorSettings::Hemp_Color.a };
 
 								std::string player_name = XS("Hemp");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), HempColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), HempColor, Color::Black(ColorSettings::Hemp_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 								if (m_settings::CollectablesIcon)
 								{
@@ -1436,12 +1647,13 @@ void Visuals::RenderEntities()
 						{
 							if (m_settings::DieselBarrel)
 							{
-								auto DieselColor = Color{ m_settings::DieselColor[0], m_settings::DieselColor[1], m_settings::DieselColor[2], m_settings::DieselColor[3] };
+								auto DieselColor = Color{ ColorSettings::DieselBarrel_Color.r, ColorSettings::DieselBarrel_Color.g, ColorSettings::DieselBarrel_Color.b, ColorSettings::DieselBarrel_Color.a };
+
 								std::string player_name = XS("Diesel");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DieselColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DieselColor, Color::Black(ColorSettings::DieselBarrel_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 								if (m_settings::CollectablesIcon)
 								{
@@ -1472,7 +1684,9 @@ void Visuals::RenderEntities()
 							{
 								float yoffset = 0;
 
-								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								auto DeployableColor = Color{ ColorSettings::Cupboard_Color.r, ColorSettings::Cupboard_Color.g, ColorSettings::Cupboard_Color.b, ColorSettings::Cupboard_Color.a };
+								auto UpkeepColor = Color{ ColorSettings::CUpKeep_Color.r, ColorSettings::CUpKeep_Color.g, ColorSettings::CUpKeep_Color.b, ColorSettings::CUpKeep_Color.a };
+								auto AuthListColor = Color{ ColorSettings::CAuthedPlayers_Color.r, ColorSettings::CAuthedPlayers_Color.g, ColorSettings::CAuthedPlayers_Color.b, ColorSettings::CAuthedPlayers_Color.a };
 
 								int cachedUpkeepPeriodMinutes = building_priv->UpKeep();
 								int days = cachedUpkeepPeriodMinutes / 1440;
@@ -1486,7 +1700,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), DeployableColor, Color::Black(ColorSettings::Cupboard_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								if (m_settings::TC_Upkeep) {
@@ -1495,7 +1709,7 @@ void Visuals::RenderEntities()
 									sprintf(str2, XS("[%dh]"), (int)hours);
 									upkeep = upkeep + " " + str2;
 
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), upkeep.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), upkeep.c_str(), UpkeepColor, Color::Black(ColorSettings::CUpKeep_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12;
 								}
 								if (m_settings::TC_Health)
@@ -1551,7 +1765,7 @@ void Visuals::RenderEntities()
 															char retstr[256];
 															sprintf(retstr, XS("%s"), str->string_safe().c_str());
 
-															UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+															UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, AuthListColor, Color::Black(ColorSettings::CAuthedPlayers_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 															yoffset += 12.f;
 														}
 													}
@@ -1575,12 +1789,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("crate_basic") == Hash(name, false))
 							{
+								auto BasicCrate_Color = Color{ ColorSettings::BasicCrate_Color.r, ColorSettings::BasicCrate_Color.g, ColorSettings::BasicCrate_Color.b, ColorSettings::BasicCrate_Color.a };
 								std::string player_name = XS("Basic Crate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BasicCrate_Color, Color::Black(ColorSettings::BasicCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1591,12 +1806,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("crate_normal_2") == Hash(name, false) || HASH("crate_normal_2_food") == Hash(name, false) || HASH("crate_normal_2_medical") == Hash(name, false))
 							{
+								auto NormalCrate_Color = Color{ ColorSettings::NormalCrate_Color.r, ColorSettings::NormalCrate_Color.g, ColorSettings::NormalCrate_Color.b, ColorSettings::NormalCrate_Color.a };
 								std::string player_name = XS("Normal Crate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), NormalCrate_Color, Color::Black(ColorSettings::NormalCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1607,12 +1823,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("crate_normal") == Hash(name, false))
 							{
+								auto MilitaryCrate_Color = Color{ ColorSettings::MilitaryCrate_Color.r, ColorSettings::MilitaryCrate_Color.g, ColorSettings::MilitaryCrate_Color.b, ColorSettings::MilitaryCrate_Color.a };
 								std::string player_name = XS("Military Crate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MilitaryCrate_Color, Color::Black(ColorSettings::MilitaryCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1623,12 +1840,14 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("crate_elite") == Hash(name, false))
 							{
+								auto EliteCrate_Color = Color{ ColorSettings::EliteCrate_Color.r, ColorSettings::EliteCrate_Color.g, ColorSettings::EliteCrate_Color.b, ColorSettings::EliteCrate_Color.a };
+
 								std::string player_name = XS("Elite Crate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), EliteCrate_Color, Color::Black(ColorSettings::EliteCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1642,12 +1861,14 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("supply_drop") == Hash(name, false))
 							{
+								auto Airdrop_Color = Color{ ColorSettings::Airdrop_Color.r, ColorSettings::Airdrop_Color.g, ColorSettings::Airdrop_Color.b, ColorSettings::Airdrop_Color.a };
+
 								std::string player_name = XS("Airdrop");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Airdrop_Color, Color::Black(ColorSettings::Airdrop_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1661,13 +1882,14 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("mushroom-cluster-6") == Hash(name, false) || HASH("mushroom-cluster-5") == Hash(name, false))
 							{
-								auto FoodColor = Color{ m_settings::MushRoomColor[0], m_settings::MushRoomColor[1], m_settings::MushRoomColor[2], m_settings::MushRoomColor[3] };
+								auto FoodColor = Color{ ColorSettings::Mushroom_Color.r, ColorSettings::Mushroom_Color.g, ColorSettings::Mushroom_Color.b, ColorSettings::Mushroom_Color.a };
+
 								std::string player_name = XS("Mushroom");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor, Color::Black(ColorSettings::Mushroom_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 								if (m_settings::FoodIcons)
 								{
@@ -1690,13 +1912,14 @@ void Visuals::RenderEntities()
 							{
 								if (HASH("pumpkin-collectable") == Hash(name, false))
 								{
-									auto FoodColor = Color{ m_settings::PumpkinColor[0], m_settings::PumpkinColor[1], m_settings::PumpkinColor[2], m_settings::PumpkinColor[3] };
+									auto FoodColor = Color{ ColorSettings::Pumpkin_Color.r, ColorSettings::Pumpkin_Color.g, ColorSettings::Pumpkin_Color.b, ColorSettings::Pumpkin_Color.a };
+
 									std::string player_name = XS("Pumpkin");
 									char str[256];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor, Color::Black(ColorSettings::Pumpkin_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1720,13 +1943,14 @@ void Visuals::RenderEntities()
 							{
 								if (HASH("corn-collectable") == Hash(name, false))
 								{
-									auto FoodColor = Color{ m_settings::CornColor[0], m_settings::CornColor[1], m_settings::CornColor[2], m_settings::CornColor[3] };
+									auto FoodColor = Color{ ColorSettings::Corn_Color.r, ColorSettings::Corn_Color.g, ColorSettings::Corn_Color.b, ColorSettings::Corn_Color.a };
+
 									std::string player_name = XS("Corn");
 									char str[256];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor, Color::Black(ColorSettings::Corn_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1750,13 +1974,13 @@ void Visuals::RenderEntities()
 							{
 								if (HASH("potato-collectable") == Hash(name, false))
 								{
-									auto FoodColor = Color{ m_settings::PotatoColor[0], m_settings::PotatoColor[1], m_settings::PotatoColor[2], m_settings::PotatoColor[3] };
+									auto FoodColor = Color{ ColorSettings::Potato_Color.r, ColorSettings::Potato_Color.g, ColorSettings::Potato_Color.b, ColorSettings::Potato_Color.a };
 
 									std::string player_name = XS("Potato");
 									char str[256];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FoodColor, Color::Black(ColorSettings::Potato_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 									if (m_settings::FoodIcons)
 									{
@@ -1780,13 +2004,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("stone-collectable") == Hash(name, false))
 							{
-								auto StoneColor = Color{ m_settings::StoneColor[0], m_settings::StoneColor[1], m_settings::StoneColor[2], m_settings::StoneColor[3] };
+								auto StoneColor = Color{ ColorSettings::StoneCollectable_Color.r, ColorSettings::StoneCollectable_Color.g, ColorSettings::StoneCollectable_Color.b, ColorSettings::StoneCollectable_Color.a };
 
 								std::string player_name = XS("Stone Collectable");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor, Color::Black(ColorSettings::StoneCollectable_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -1794,12 +2018,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("metal-collectable") == Hash(name, false))
 							{
-								auto MetalColor = Color{ m_settings::MetalColor[0], m_settings::MetalColor[1], m_settings::MetalColor[2], m_settings::MetalColor[3] };
+								auto MetalColor = Color{ ColorSettings::MetalCollectable_Color.r, ColorSettings::MetalCollectable_Color.g, ColorSettings::MetalCollectable_Color.b, ColorSettings::MetalCollectable_Color.a };
+
 								std::string player_name = XS("Metal Collectable");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor, Color::Black(ColorSettings::MetalCollectable_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 							}
 						}
@@ -1808,12 +2033,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("sulfur-collectable") == Hash(name, false))
 							{
-								auto SulfurColor = Color{ m_settings::SulfurColor[0], m_settings::SulfurColor[1], m_settings::SulfurColor[2], m_settings::SulfurColor[3] };
-								std::string player_name = XS("SulfurOre");
+								auto SulfurColor = Color{ ColorSettings::SulfurCollectable_Color.r, ColorSettings::SulfurCollectable_Color.g, ColorSettings::SulfurCollectable_Color.b, ColorSettings::SulfurCollectable_Color.a };
+
+								std::string player_name = XS("Sulfur Collectable");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor, Color::Black(ColorSettings::SulfurCollectable_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -1828,13 +2054,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("stone-ore") == Hash(name, false) || HASH("ore_stone") == Hash(name, false))
 							{
-								auto StoneColor = Color{ m_settings::StoneColor[0], m_settings::StoneColor[1], m_settings::StoneColor[2], m_settings::StoneColor[3] };
+								auto StoneColor = Color{ ColorSettings::StoneOre_Color.r, ColorSettings::StoneOre_Color.g, ColorSettings::StoneOre_Color.b, ColorSettings::StoneOre_Color.a };
 
 								std::string player_name = XS("StoneOre");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor, Color::Black(ColorSettings::StoneOre_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1853,13 +2079,14 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("metal-ore") == Hash(name, false) || HASH("ore_metal") == Hash(name, false))
 							{
-								auto MetalColor = Color{ m_settings::MetalColor[0], m_settings::MetalColor[1], m_settings::MetalColor[2], m_settings::MetalColor[3] };
+								auto MetalColor = Color{ ColorSettings::MetalOre_Color.r, ColorSettings::MetalOre_Color.g, ColorSettings::MetalOre_Color.b, ColorSettings::MetalOre_Color.a };
+
 								std::string player_name = XS("MetalOre");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), MetalColor, Color::Black(ColorSettings::MetalOre_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1878,13 +2105,14 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("sulfur-ore") == Hash(name, false) || HASH("ore_sulfur") == Hash(name, false))
 							{
-								auto SulfurColor = Color{ m_settings::SulfurColor[0], m_settings::SulfurColor[1], m_settings::SulfurColor[2], m_settings::SulfurColor[3] };
+								auto SulfurColor = Color{ ColorSettings::SulfurOre_Color.r, ColorSettings::SulfurOre_Color.g, ColorSettings::SulfurOre_Color.b, ColorSettings::SulfurOre_Color.a };
+
 								std::string player_name = XS("SulfurOre");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SulfurColor, Color::Black(ColorSettings::SulfurOre_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
 									UnityEngine::Texture2D* texture = nullptr;
@@ -1909,12 +2137,12 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("item_drop_backpack") == Hash(name, false))
 							{
-								auto BackpackColor = Color{ m_settings::BackPackColor[0], m_settings::BackPackColor[1], m_settings::BackPackColor[2], m_settings::BackPackColor[3] };
+								auto BackpackColor = Color{ ColorSettings::Backpack_Color.r, ColorSettings::Backpack_Color.g, ColorSettings::Backpack_Color.b, ColorSettings::Backpack_Color.a };
 								std::string player_name = XS("Backpack");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BackpackColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BackpackColor, Color::Black(ColorSettings::Backpack_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -1922,12 +2150,12 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("player_corpse") == Hash(name, false))
 							{
-								auto CorpseColor = Color{ m_settings::CorpseColor[0], m_settings::CorpseColor[1], m_settings::CorpseColor[2], m_settings::CorpseColor[3] };
+								auto CorpseColor = Color{ ColorSettings::Corpse_Color.r, ColorSettings::Corpse_Color.g, ColorSettings::Corpse_Color.b, ColorSettings::Corpse_Color.a };
 								std::string player_name = XS("Corpse");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), CorpseColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), CorpseColor, Color::Black(ColorSettings::Corpse_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -1942,6 +2170,7 @@ void Visuals::RenderEntities()
 							auto entity = static_cast<AssemblyCSharp::BaseEntity*>(BaseEntity);
 							{
 								auto flags = entity->flags();
+								auto StashColor = Color{ ColorSettings::Stash_Color.r, ColorSettings::Stash_Color.g, ColorSettings::Stash_Color.b, ColorSettings::Stash_Color.a };
 
 								if (flags & 2048)
 								{
@@ -1950,7 +2179,7 @@ void Visuals::RenderEntities()
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StashColor, Color::Black(ColorSettings::Stash_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								}
 							}
 						}
@@ -1969,7 +2198,13 @@ void Visuals::RenderEntities()
 								auto turret_entity = static_cast<AssemblyCSharp::AutoTurret*>(BaseEntity);
 								auto turret_baseentity = static_cast<AssemblyCSharp::BaseCombatEntity*>(BaseEntity);
 
-								auto TurretColor = Color{ m_settings::TurretColor[0], m_settings::TurretColor[1], m_settings::TurretColor[2], m_settings::TurretColor[3] };
+								auto TurretColor = Color{ ColorSettings::Turret_Color.r, ColorSettings::Turret_Color.g, ColorSettings::Turret_Color.b, ColorSettings::Turret_Color.a };
+								auto TAuthedPlayers_Color = Color{ ColorSettings::TAuthedPlayers_Color.r, ColorSettings::TAuthedPlayers_Color.g, ColorSettings::TAuthedPlayers_Color.b, ColorSettings::TAuthedPlayers_Color.a };
+								auto TEquipedFlag_Color = Color{ ColorSettings::TEquipedFlag_Color.r, ColorSettings::TEquipedFlag_Color.g, ColorSettings::TEquipedFlag_Color.b, ColorSettings::TEquipedFlag_Color.a };
+								auto ShowOnline_Color = Color{ ColorSettings::ShowOnline_Color.r, ColorSettings::ShowOnline_Color.g, ColorSettings::ShowOnline_Color.b, ColorSettings::ShowOnline_Color.a };
+								auto TurningFlags_Color = Color{ ColorSettings::TurningFlags_Color.r, ColorSettings::TurningFlags_Color.g, ColorSettings::TurningFlags_Color.b, ColorSettings::TurningFlags_Color.a };
+								auto Range_Color = Color{ ColorSettings::Range_Color.r, ColorSettings::Range_Color.g, ColorSettings::Range_Color.b, ColorSettings::Range_Color.a };
+
 								auto flags = turret_entity->flags();
 								/*if (flags & 2) {
 									TurretColor = Color{ m_settings::TurretColor[0], m_settings::TurretColor[1], m_settings::TurretColor[2], m_settings::TurretColor[3] };
@@ -1985,7 +2220,7 @@ void Visuals::RenderEntities()
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), TurretColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), TurretColor, Color::Black(ColorSettings::Turret_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								auto aimDir = turret_entity->aimDir();
@@ -2030,7 +2265,7 @@ void Visuals::RenderEntities()
 
 								if (m_settings::TurretEquippedFlags) {
 									if (flags & 512) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Equipped"), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Equipped"), TEquipedFlag_Color, Color::Black(ColorSettings::TEquipedFlag_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -2038,19 +2273,19 @@ void Visuals::RenderEntities()
 								if (m_settings::TurretOnFlags)
 								{
 									if (flags & 2) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("ON"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("ON"), ShowOnline_Color, Color::Black(ColorSettings::ShowOnline_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 									else
 									{
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OFF"), Color::Green(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OFF"), ShowOnline_Color, Color::Black(ColorSettings::ShowOnline_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
 
 								if (m_settings::TurretTurningFlag) {
 									if (turret_entity->wasTurning()) {
-										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Turning"), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+										UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("Turning"), TurningFlags_Color, Color::Black(ColorSettings::TurningFlags_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 										yoffset += 12.f;
 									}
 								}
@@ -2061,9 +2296,9 @@ void Visuals::RenderEntities()
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
 
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Range_Color, Color::Black(ColorSettings::Range_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12.f;
-									UnityEngine::DDraw().Line(muzzlePos, Vector3(muzzlePos + (aimDir * sightRange)), Color::Red(), 0.2f, true, false);
+									UnityEngine::DDraw().Line(muzzlePos, Vector3(muzzlePos + (aimDir * sightRange)), Range_Color, 0.2f, true, false);
 								}
 
 								if (m_settings::TurretAuthorizedPlayers) {
@@ -2090,7 +2325,7 @@ void Visuals::RenderEntities()
 													char str[128];
 													sprintf(str, XS("[%dm]"), (int)distance);
 													player_name = player_name + " " + str;*/
-													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+													UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, TAuthedPlayers_Color, Color::Black(ColorSettings::TAuthedPlayers_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 													yoffset += 12.f;
 												}
 											}
@@ -2110,12 +2345,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("beartrap") == Hash(name, false))
 							{
-								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								auto BearTrap_Color = Color{ ColorSettings::BearTrap_Color.r, ColorSettings::BearTrap_Color.g, ColorSettings::BearTrap_Color.b, ColorSettings::BearTrap_Color.a };
+
 								std::string player_name = XS("BearTrap");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), BearTrap_Color, Color::Black(ColorSettings::BearTrap_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2129,12 +2365,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("guntrap.deployed") == Hash(name, false))
 							{
-								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								auto ShotgunTrap_Color = Color{ ColorSettings::ShotgunTrap_Color.r, ColorSettings::ShotgunTrap_Color.g, ColorSettings::ShotgunTrap_Color.b, ColorSettings::ShotgunTrap_Color.a };
+
 								std::string player_name = XS("Shotgun Trap");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), ShotgunTrap_Color, Color::Black(ColorSettings::ShotgunTrap_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2148,12 +2385,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("spikes.floor") == Hash(name, false))
 							{
-								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								auto SpikesTrap_Color = Color{ ColorSettings::SpikesTrap_Color.r, ColorSettings::SpikesTrap_Color.g, ColorSettings::SpikesTrap_Color.b, ColorSettings::SpikesTrap_Color.a };
+
 								std::string player_name = XS("Spikes Trap");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), SpikesTrap_Color, Color::Black(ColorSettings::SpikesTrap_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2167,12 +2405,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("flameturret.deployed") == Hash(name, false))
 							{
-								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								auto FlameTurret_Color = Color{ ColorSettings::FlameTurret_Color.r, ColorSettings::FlameTurret_Color.g, ColorSettings::FlameTurret_Color.b, ColorSettings::FlameTurret_Color.a };
+
 								std::string player_name = XS("FlameTurret");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), FlameTurret_Color, Color::Black(ColorSettings::FlameTurret_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2186,12 +2425,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("landmine") == Hash(name, false))
 							{
-								auto TrapsColor = Color{ m_settings::TrapsColor[0], m_settings::TrapsColor[1], m_settings::TrapsColor[2], m_settings::TrapsColor[3] };
+								auto LandMine_Color = Color{ ColorSettings::LandMine_Color.r, ColorSettings::LandMine_Color.g, ColorSettings::LandMine_Color.b, ColorSettings::LandMine_Color.a };
+
 								std::string player_name = XS("LandMine");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), TrapsColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), LandMine_Color, Color::Black(ColorSettings::LandMine_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2228,14 +2468,14 @@ void Visuals::RenderEntities()
 							if (HASH("codelockedhackablecrate") == Hash(name, false) || HASH("codelockedhackablecrate_oilrig") == Hash(name, false))
 							{
 								float yoffset = 0;
-								auto CrateColor = Color{ m_settings::CrateColor[0], m_settings::CrateColor[1], m_settings::CrateColor[2], m_settings::CrateColor[3] };
+								auto CrateColor = Color{ ColorSettings::HackableCrate_Color.r, ColorSettings::HackableCrate_Color.g, ColorSettings::HackableCrate_Color.b, ColorSettings::HackableCrate_Color.a };
 								std::string player_name = XS("HackableCrate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 								auto flags = hackablecrate_entity->flags();
 								auto hackSeconds = hackablecrate->hackSeconds();
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor, Color::Black(ColorSettings::HackableCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								if (m_settings::HackableCrateFlags) {
@@ -2278,7 +2518,7 @@ void Visuals::RenderEntities()
 							if (HASH("bradley_crate") == Hash(name, false))
 							{
 								float yoffset = 0;
-								auto CrateColor = Color{ m_settings::CrateColor[0], m_settings::CrateColor[1], m_settings::CrateColor[2], m_settings::CrateColor[3] };
+								auto CrateColor = Color{ ColorSettings::BradleyCrate_Color.r, ColorSettings::BradleyCrate_Color.g, ColorSettings::BradleyCrate_Color.b, ColorSettings::BradleyCrate_Color.a };
 								std::string player_name = XS("BradleyCrate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
@@ -2287,7 +2527,7 @@ void Visuals::RenderEntities()
 								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 								if (flags & 4)
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), CrateColor, Color::Black(ColorSettings::BradleyCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 
 							}
 						}
@@ -2299,13 +2539,13 @@ void Visuals::RenderEntities()
 							if (HASH("heli_crate") == Hash(name, false))
 							{
 								float yoffset = 0;
-								auto CrateColor = Color{ m_settings::CrateColor[0], m_settings::CrateColor[1], m_settings::CrateColor[2], m_settings::CrateColor[3] };
+								auto CrateColor = Color{ ColorSettings::HeliCrate_Color.r, ColorSettings::HeliCrate_Color.g, ColorSettings::HeliCrate_Color.b, ColorSettings::HeliCrate_Color.a };
 								std::string player_name = XS("HeliCrate");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
 								auto flags = crate_entity->flags();
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), CrateColor, Color::Black(ColorSettings::HeliCrate_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 								if (flags & 4)
 									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), XS("OnFire"), Color::Red(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
@@ -2325,13 +2565,14 @@ void Visuals::RenderEntities()
 
 							if (thugboat)
 							{
-								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								auto TugBoat_Color = Color{ ColorSettings::TugBoat_Color.r, ColorSettings::TugBoat_Color.g, ColorSettings::TugBoat_Color.b, ColorSettings::TugBoat_Color.a };
+
 								float yoffset = 0;
 								std::string player_name = XS("TugBoat");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), TugBoat_Color, Color::Black(ColorSettings::TugBoat_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								float draw_health = thugboat->_health();
@@ -2372,12 +2613,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("minicopter.entity") == Hash(name, false))
 							{
-								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								auto Minicopter_Color = Color{ ColorSettings::Minicopter_Color.r, ColorSettings::Minicopter_Color.g, ColorSettings::Minicopter_Color.b, ColorSettings::Minicopter_Color.a };
+
 								std::string player_name = XS("Minicopter");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), Minicopter_Color, Color::Black(ColorSettings::Minicopter_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -2385,12 +2627,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("scraptransporthelicopter") == Hash(name, false))
 							{
-								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								auto ScrapHeli_Color = Color{ ColorSettings::ScrapHeli_Color.r, ColorSettings::ScrapHeli_Color.g, ColorSettings::ScrapHeli_Color.b, ColorSettings::ScrapHeli_Color.a };
+
 								std::string player_name = XS("ScrapHeli");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), ScrapHeli_Color, Color::Black(ColorSettings::ScrapHeli_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -2411,12 +2654,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("rowboat") == Hash(name, false))
 							{
-								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								auto RowBoat_Color = Color{ ColorSettings::RowBoat_Color.r, ColorSettings::RowBoat_Color.g, ColorSettings::RowBoat_Color.b, ColorSettings::RowBoat_Color.a };
+
 								std::string player_name = XS("RowBoat");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), RowBoat_Color, Color::Black(ColorSettings::RowBoat_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -2424,12 +2668,13 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("RHIB") == Hash(name, false))
 							{
-								auto VehicleColor = Color{ m_settings::VehicleColor[0], m_settings::VehicleColor[1], m_settings::VehicleColor[2], m_settings::VehicleColor[3] };
+								auto RHIB_Color = Color{ ColorSettings::RHIB_Color.r, ColorSettings::RHIB_Color.g, ColorSettings::RHIB_Color.b, ColorSettings::RHIB_Color.a };
+
 								std::string player_name = XS("RHIB");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), VehicleColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), RHIB_Color, Color::Black(ColorSettings::RHIB_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2443,12 +2688,12 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("workbench1.deployed") == Hash(name, false))
 							{
-								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								auto DeployableColor = Color{ ColorSettings::Workbench1_Color.r, ColorSettings::Workbench1_Color.g, ColorSettings::Workbench1_Color.b, ColorSettings::Workbench1_Color.a };
 								std::string player_name = XS("T1 Workbench");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor, Color::Black(ColorSettings::Workbench1_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -2456,12 +2701,12 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("workbench2.deployed") == Hash(name, false))
 							{
-								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								auto DeployableColor = Color{ ColorSettings::Workbench2_Color.r, ColorSettings::Workbench2_Color.g, ColorSettings::Workbench2_Color.b, ColorSettings::Workbench2_Color.a };
 								std::string player_name = XS("T2 Workbench");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor, Color::Black(ColorSettings::Workbench2_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 
@@ -2469,12 +2714,12 @@ void Visuals::RenderEntities()
 						{
 							if (HASH("workbench3.deployed") == Hash(name, false))
 							{
-								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+								auto DeployableColor = Color{ ColorSettings::Workbench3_Color.r, ColorSettings::Workbench3_Color.g, ColorSettings::Workbench3_Color.b, ColorSettings::Workbench3_Color.a };
 								std::string player_name = XS("T3 Workbench");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), DeployableColor, Color::Black(ColorSettings::Workbench3_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 							}
 						}
 					}
@@ -2489,12 +2734,13 @@ void Visuals::RenderEntities()
 							if (base_heli)
 							{
 								float yoffset = 0;
-								auto HeliColor = Color{ m_settings::BradleyColor[0], m_settings::BradleyColor[1], m_settings::BradleyColor[2], m_settings::BradleyColor[3] };
+								auto Bradley_Color = Color{ ColorSettings::Bradley_Color.r, ColorSettings::Bradley_Color.g, ColorSettings::Bradley_Color.b, ColorSettings::Bradley_Color.a };
+
 								std::string player_name = XS("Bradley");
 								char str[256];
 								sprintf(str, XS("[%dm]"), (int)distance);
 								player_name = player_name + " " + str;
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Bradley_Color, Color::Black(ColorSettings::Bradley_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
 
 								//if (m_settings::BradleyhealthBar)
@@ -2554,12 +2800,14 @@ void Visuals::RenderEntities()
 								if (base_heli)
 								{
 									float yoffset = 0;
-									auto HeliColor = Color{ m_settings::HeliColor[0], m_settings::HeliColor[1], m_settings::HeliColor[2], m_settings::HeliColor[3] };
+
+									auto PatrolHeli_Color = Color{ ColorSettings::PatrolHeli_Color.r, ColorSettings::PatrolHeli_Color.g, ColorSettings::PatrolHeli_Color.b, ColorSettings::PatrolHeli_Color.a };
+
 									std::string player_name = XS("Patrol Helicopter");
 									char str[256];
 									sprintf(str, XS("[%dm]"), (int)distance);
 									player_name = player_name + " " + str;
-									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), HeliColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), PatrolHeli_Color, Color::Black(ColorSettings::PatrolHeli_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12.f;
 
 									//if (m_settings::healthBar)

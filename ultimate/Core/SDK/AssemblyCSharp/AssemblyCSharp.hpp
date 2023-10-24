@@ -4316,6 +4316,12 @@ namespace ConVar {
 		IL2CPP_STATIC_FIELD(float, entityMinCullDist);
 	};
 
+	struct Effects : AssemblyCSharp::ConsoleSystem {
+		IL2CPP_CLASS("Effects");
+
+		IL2CPP_STATIC_FIELD(int, _antialiasing);
+	};
+
 	struct Player : AssemblyCSharp::ConsoleSystem {
 		IL2CPP_CLASS("Player");
 
@@ -4323,6 +4329,7 @@ namespace ConVar {
 		IL2CPP_STATIC_FIELD(float, noclipspeedslow);
 		IL2CPP_STATIC_FIELD(float, noclipspeedfast);
 	};
+
 
 	struct Weather : AssemblyCSharp::ConsoleSystem {
 		IL2CPP_CLASS("Weather");

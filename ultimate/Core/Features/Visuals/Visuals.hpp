@@ -11,6 +11,7 @@ inline UnityEngine::Shader* RPBGalaxyShader;
 inline UnityEngine::Material* RPBGalaxyMaterial;
 
 inline UnityEngine::AssetBundle* font_bundle;
+inline UnityEngine::AssetBundle* font_bundle2;
 
 inline UnityEngine::AssetBundle* FireBundleA;
 inline UnityEngine::Shader* FireShaderA;

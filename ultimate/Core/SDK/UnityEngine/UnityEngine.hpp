@@ -5,7 +5,6 @@
 #include "../../CRT/math.hpp"
 #include "../../Includes/settings.hpp"
 
-
 #define powFFFFFFFFFFFFFFFFFFFFFF(n) (n)*(n)
 #define CIRCLE_AUTO_SEGMENT_MIN 4
 #define CIRCLE_AUTO_SEGMENT_MAX 512

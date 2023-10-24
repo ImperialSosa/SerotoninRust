@@ -241,6 +241,7 @@
     <ClInclude Include="Core\Il2Cpp\il2cpp-metadata.hpp" />
     <ClInclude Include="Core\Il2Cpp\il2cpp-object-internals.hpp" />
     <ClInclude Include="Core\Il2Cpp\il2cpp-runtime-metadata.hpp" />
+    <ClInclude Include="Core\Includes\colorsettings.hpp" />
     <ClInclude Include="Core\Includes\includes.hpp" />
     <ClInclude Include="Core\CRT\ntwinddk.hpp" />
     <ClInclude Include="Core\Includes\settings.hpp" />

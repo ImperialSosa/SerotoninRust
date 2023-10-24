@@ -2318,6 +2318,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		ConVar::Player::noclipspeedslow() = 2.f;
 	}
 
+	if (ConVar::Effects::_antialiasing() != 0)
+		ConVar::Effects::_antialiasing() = 0;
+
 	if (m_settings::FixDebugCamera)
 	{
 		AssemblyCSharp::ConsoleSystem::Run(AssemblyCSharp::ConsoleSystem::client(), XS("client.camspeed 1"), nullptr);

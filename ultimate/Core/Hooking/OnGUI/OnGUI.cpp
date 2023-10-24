@@ -9,6 +9,7 @@
 #include "../../Features/Notifications/Notifications.hpp"
 #include "../../MenuFramework/gui/gui.hpp"
 
+#include "../../Includes/colorsettings.hpp"
 
 inline UnityEngine::GUISkin* gui_skin = nullptr;
 
@@ -40,6 +41,8 @@ void SetupStyles()
 				g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
 			else if (m_settings::fonttype == 2)
 				g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 3)
+				g_font = font_bundle2->LoadAsset<uintptr_t>(XS("division.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
 
 			gui_skin->m_Font() = ToAddress(g_font);
 
@@ -73,6 +76,11 @@ void SetupStyles()
 			FontTypee = m_settings::fonttype;
 			SetNewFont = true;
 		}
+		else if (m_settings::fonttype == 3 && FontTypee != m_settings::fonttype && !SetNewFont)
+		{
+			FontTypee = m_settings::fonttype;
+			SetNewFont = true;
+		}
 
 		if (SetNewFont) {
 			if (m_settings::fonttype == 0)
@@ -81,6 +89,8 @@ void SetupStyles()
 				g_font = font_bundle->LoadAsset<uintptr_t>(XS("smallest_pixel-7.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
 			else if (m_settings::fonttype == 2)
 				g_font = font_bundle->LoadAsset<uintptr_t>(XS("verdana.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
+			else if (m_settings::fonttype == 3)
+				g_font = font_bundle2->LoadAsset<uintptr_t>(XS("division.ttf"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Font"))));
 
 			gui_skin->m_Font() = ToAddress(g_font);
 
@@ -128,6 +138,7 @@ void ConnectorClient()
 				static bool ReceivedFile4 = false;
 				static bool ReceivedFile5 = false;
 				static bool ReceivedFile6 = false;
+				static bool ReceivedFile7 = false;
 				//request your uploaded file anytime else
 				if (!ReceivedFile1)
 				{
@@ -191,6 +202,17 @@ void ConnectorClient()
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent5 = true;
+				}
+
+				static bool DataSent6 = false;
+				if (ReceivedFile7 && !DataSent6)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "DivisionFontz"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent6 = true;
 				}
 
 				net->shared_files_mutex_.lock();
@@ -271,7 +293,20 @@ void ConnectorClient()
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
 							ColorBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
+							ReceivedFile7 = true;
 							ReceivedFile6 = false;
+						}
+
+						if (ReceivedFile7 && DataSent6)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							font_bundle2 = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile7 = false;
 						}
 					}
 				}
@@ -809,7 +844,7 @@ void drawMisc()
 {
 	if (!InGame)
 		return;
-
+	
 	if (!IsAddressValid(Features().LocalPlayer))
 		return;
 
@@ -850,12 +885,12 @@ void drawMisc()
 
 	if (m_settings::Crosshair)
 	{
-		auto Crosshair_Color = Color{ m_settings::Crosshair_Color[0], m_settings::Crosshair_Color[1], m_settings::Crosshair_Color[2], 255 };
+		auto Crosshair_Color = Color(ColorSettings::Crosshair_Color.r, ColorSettings::Crosshair_Color.g, ColorSettings::Crosshair_Color.b, ColorSettings::Crosshair_Color.a);
 
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x + 8, screen_center.y), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x - 7, screen_center.y), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y + 8), Color::Red());
-		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y - 7), Color::Red());
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x + 8, screen_center.y), Crosshair_Color);
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x - 7, screen_center.y), Crosshair_Color);
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y + 8), Crosshair_Color);
+		UnityEngine::GL::Line(Vector2(screen_center.x, screen_center.y), Vector2(screen_center.x, screen_center.y - 7), Crosshair_Color);
 	}
 
 	if (m_settings::Swastika)
@@ -897,6 +932,8 @@ void drawMisc()
 			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 			if (IsAddressValid(m_target.m_player))
 			{
+				auto AimLine_Color = Color(ColorSettings::TargetSnapline_Color.r, ColorSettings::TargetSnapline_Color.g, ColorSettings::TargetSnapline_Color.b, ColorSettings::TargetSnapline_Color.a);
+
 				auto targetPos = m_target.m_position;
 				if (!targetPos.IsZero())
 				{
@@ -910,7 +947,7 @@ void drawMisc()
 					Vector2 w2sPos;
 					if (UnityEngine::WorldToScreen(bulletTPPos, w2sPos))
 					{
-						UnityEngine::GL::Line(Vector2(UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f), w2sPos, Color::Red());
+						UnityEngine::GL::Line(Vector2(UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f), w2sPos, AimLine_Color);
 					}
 				}
 			}
@@ -930,6 +967,8 @@ void drawMisc()
 			auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500);
 			if (IsAddressValid(m_target.m_player))
 			{
+				auto AimMarker_Color = Color(ColorSettings::TargetMarker_Color.r, ColorSettings::TargetMarker_Color.g, ColorSettings::TargetMarker_Color.b, ColorSettings::TargetMarker_Color.a);
+
 				auto targetPos = m_target.m_position;
 
 				if (!targetPos.IsZero())
@@ -938,7 +977,7 @@ void drawMisc()
 
 					if (UnityEngine::WorldToScreen(targetPos, w2sPos))
 					{
-						UnityEngine::GL().ScreenTextCenter(w2sPos, XS("X"), Color::White(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+						UnityEngine::GL().ScreenTextCenter(w2sPos, XS("X"), AimMarker_Color, Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 					}
 				}
 			}
@@ -999,8 +1038,8 @@ void drawMisc()
 
 	if (m_settings::DrawFov)
 	{
-		Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();
-		UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Color, 100);
+		auto Fov_Color = Color(ColorSettings::FOV_Color.r, ColorSettings::FOV_Color.g, ColorSettings::FOV_Color.b, ColorSettings::FOV_Color.a);
+		UnityEngine::GL::Circle(screen_center, m_settings::AimbotFOV, Fov_Color, 100);
 	}
 
 	if (m_settings::BulletTPFlags && m_settings::Thickbullet_Indicator && m_settings::BulletTP)
@@ -1897,6 +1936,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			{
 				font_bundle->Unload(true);
 				font_bundle = nullptr;
+			}
+
+			if (font_bundle2)
+			{
+				font_bundle2->Unload(true);
+				font_bundle2 = nullptr;
 			}
 		}
 
