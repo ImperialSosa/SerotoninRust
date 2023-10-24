@@ -904,20 +904,20 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-				if (m_settings::SelectedOutsideType == 1 || m_settings::SelectedOutsideType == 2 || m_settings::SelectedOutsideType == 3)
+				if (m_settings::ShowOutside || m_settings::ShowInside)
 				{
 					Vector3 position = BasePlayer->get_bone_transform(47)->get_position() + Vector3(0.f, 500.f, 0.f);
 					UnityEngine::RaycastHit hitInfo;
 					if (AssemblyCSharp::GamePhysics::Trace(UnityEngine::Ray(BasePlayer->get_bone_transform(47)->get_position(), position), 0.f, hitInfo, 500.f, 2097152, RustStructs::QueryTriggerInteraction::Ignore, nullptr))
 					{
-						if (m_settings::SelectedOutsideType == 2 || m_settings::SelectedOutsideType == 3) {
+						if (m_settings::ShowInside) {
 							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Inside"), Color::Red(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							yoffset += 13;
 						}
 					}
 					else
 					{
-						if (m_settings::SelectedOutsideType == 1 || m_settings::SelectedOutsideType == 3) {
+						if (m_settings::ShowOutside) {
 							UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), XS("Outside"), Color::Green(), Color::Black(), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 							yoffset += 13;
 						}

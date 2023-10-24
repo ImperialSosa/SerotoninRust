@@ -335,6 +335,7 @@ namespace m_settings {
 	inline bool TurretAuthorizedPlayers = false;
 	inline bool TurretTurningFlag = false;
 	inline bool bottomhealthbar = false;
+	inline bool PlayerChamss = false;
 	inline bool lefthealthbar = false;
 	inline bool InventoryIcons = false;
 	inline bool InventoryText = false;

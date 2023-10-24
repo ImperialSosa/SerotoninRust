@@ -335,6 +335,8 @@ int small_box_tab_y = 80;
 int small_otherplayer_tab_y = 165;
 int small_invetory_tab = 80;
 
+int small_chams_tab = 150;
+int small_chams_minitab = 80;
 void AimbotTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Aimbot"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_aimbot_tab_y))) {
@@ -489,6 +491,23 @@ void PlayersVisuals()
 
         calliope::menu.components.dropdown(XS("Vischeck"), { ("None"), ("Enabled"), ("Tags Enabled"), ("Both") }, m_settings::VisCheckType);
 
+        if (m_settings::VisCheckType == 0) {
+            m_settings::EspVisCheck = false;
+            m_settings::TagsVisCheck = false;
+        }
+        else if (m_settings::VisCheckType == 1) {
+            m_settings::EspVisCheck = true;
+            m_settings::TagsVisCheck = false;
+        }
+        else if (m_settings::VisCheckType == 2) {
+            m_settings::EspVisCheck = false;
+            m_settings::TagsVisCheck = true;
+        }
+        else if (m_settings::VisCheckType == 3) {
+            m_settings::EspVisCheck = true;
+            m_settings::TagsVisCheck = true;
+        }
+
         calliope::menu.components.end_groupbox();
     }
 
@@ -513,14 +532,7 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("BaseCheck"), calliope::vec2_t(50, 10 + small_player_tab_y + 10 + small_box_tab_y), calliope::vec2_t(groupbox_sz, small_box_tab_y))) {
         calliope::menu.components.checkbox(XS("Outside"), m_settings::ShowOutside);
-        if (m_settings::ShowOutside)
-            m_settings::SelectedOutsideType = 1;
         calliope::menu.components.checkbox(XS("Inside"), m_settings::ShowInside);
-        if (m_settings::ShowInside)
-            m_settings::SelectedOutsideType = 2;
-
-        if (!m_settings::ShowOutside && !m_settings::ShowInside)
-            m_settings::SelectedOutsideType = 0;
 
         calliope::menu.components.end_groupbox();
     }
@@ -528,10 +540,10 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_p1 = calliope::menu.components.groupbox(XS("Player Settings"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_otherplayer_tab_y))) {
 
-        calliope::menu.components.checkbox(XS("Wounded"), m_settings::StopPlayer);
-        calliope::menu.components.checkbox(XS("Safezone"), m_settings::PierceMaterials);
-        calliope::menu.components.checkbox(XS("Npc's"), m_settings::InstantKill);
-        calliope::menu.components.checkbox(XS("Sleepers"), m_settings::InstantBullet);
+        calliope::menu.components.checkbox(XS("Wounded"), m_settings::DrawWounded);
+        calliope::menu.components.checkbox(XS("Safezone"), m_settings::DrawSafezone);
+        calliope::menu.components.checkbox(XS("Npc's"), m_settings::DrawNPC);
+        calliope::menu.components.checkbox(XS("Sleepers"), m_settings::DrawSleepers);
 
         calliope::menu.components.slider<float>(XS("Player Distance"), XS(""), m_settings::PlayerESPDistance, 0, 500);
         calliope::menu.components.slider<float>(XS("NPC Distance"), XS(""), m_settings::NPCDistance, 0, 500);
@@ -541,10 +553,10 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_p2 = calliope::menu.components.groupbox(XS("Inventory"), calliope::vec2_t(60 + groupbox_sz, 10 + small_otherplayer_tab_y), calliope::vec2_t(groupbox_sz / 2, small_invetory_tab))) {
 
-        calliope::menu.components.checkbox(XS("Text"), m_settings::InventoryText);
+        calliope::menu.components.checkbox(XS("IText"), m_settings::InventoryText);
         if (m_settings::InventoryText)
             m_settings::SelectedHotbar = 1;
-        calliope::menu.components.checkbox(XS("Icons"), m_settings::InventoryIcons);
+        calliope::menu.components.checkbox(XS("IIcons"), m_settings::InventoryIcons);
         if (m_settings::InventoryIcons)
             m_settings::SelectedHotbar = 2;
 
@@ -556,10 +568,10 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_p3 = calliope::menu.components.groupbox(XS("Clothing"), calliope::vec2_t(60 + groupbox_sz + (groupbox_sz / 2), 10 + small_otherplayer_tab_y), calliope::vec2_t(groupbox_sz / 2, small_invetory_tab))) {
 
-        calliope::menu.components.checkbox(XS("Text"), m_settings::ClothingText);
+        calliope::menu.components.checkbox(XS("CText"), m_settings::ClothingText);
         if (m_settings::ClothingText)
             m_settings::SelectedClothing = 1;
-        calliope::menu.components.checkbox(XS("Icons"), m_settings::ClothingIcons);
+        calliope::menu.components.checkbox(XS("CIcons"), m_settings::ClothingIcons);
         if (m_settings::ClothingIcons)
             m_settings::SelectedClothing = 2;
 
@@ -582,16 +594,28 @@ void PlayersVisuals()
 
 void ChamsTab()
 {
-    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Menu Colors"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Load Chams"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_chams_tab))) {
+        calliope::menu.components.checkbox(XS("Load Lightning"), m_settings::LoadLightning);
+        calliope::menu.components.checkbox(XS("Load Geometric"), m_settings::LoadGeometric);
+        calliope::menu.components.checkbox(XS("Load Galaxy"), m_settings::LoadGalaxy);
+        calliope::menu.components.checkbox(XS("Load WireFrame"), m_settings::LoadWireFrame);
+        calliope::menu.components.checkbox(XS("Load RPBGalaxy"), m_settings::LoadRBP);
 
-        //calliope::menu.components.colorpicker(XS("menu accent"), calliope::globals::menu_accent, false);
-        //calliope::menu.components.keybind(XS("test"), keybd, false);
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Other"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
-      //  calliope::menu.components.checkbox(XS("Tracking Prediction"), tracking_prediction);
+    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("PlayerChams"), calliope::vec2_t(50, 10 + small_chams_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_chams_tab - 25))) {
 
+        calliope::menu.components.checkbox(XS("PlayerChams"), m_settings::PlayerChams);
+        calliope::menu.components.dropdown(XS("PChams Type"), { ("None"), ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("Color"), ("RPBGalaxy")}, m_settings::SelectedChams);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weapon Chams"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+        calliope::menu.components.checkbox(XS("WeaponChams"), m_settings::WeaponChams);
+        calliope::menu.components.checkbox(XS("IgnoreArms"), m_settings::IgnoreArms);
+        calliope::menu.components.dropdown(XS("WChams Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy") }, m_settings::WeaponSelectedChams);
 
         calliope::menu.components.end_groupbox();
     }
