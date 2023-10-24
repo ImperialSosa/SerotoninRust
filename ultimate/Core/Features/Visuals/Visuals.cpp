@@ -1459,108 +1459,111 @@ void Visuals::RenderEntities()
 					}
 				}
 
-				if (m_settings::cupboard)
+				if (distance <= m_settings::MaxTCDistance)
 				{
-					float half = (box.z - box.x) / 2;
-					if (BaseEntity->IsA(AssemblyCSharp::BuildingPrivlidge::StaticClass()))
+					if (m_settings::cupboard)
 					{
-						auto building_priv = reinterpret_cast<AssemblyCSharp::BuildingPrivlidge*>(BaseEntity);
-
-						if (IsAddressValid(building_priv))
+						float half = (box.z - box.x) / 2;
+						if (BaseEntity->IsA(AssemblyCSharp::BuildingPrivlidge::StaticClass()))
 						{
-							float yoffset = 0;
+							auto building_priv = reinterpret_cast<AssemblyCSharp::BuildingPrivlidge*>(BaseEntity);
 
-							auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
-
-							int cachedUpkeepPeriodMinutes = building_priv->UpKeep();
-							int days = cachedUpkeepPeriodMinutes / 1440;
-							int hours = cachedUpkeepPeriodMinutes / 60;
-
-							auto _health = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_health();
-							auto _maxhealth = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_maxHealth();
-
-							std::string player_name = XS("Tool Cupboard");
-							char str[256];
-							sprintf(str, XS("[%dm]"), (int)distance);
-							player_name = player_name + " " + str;
-
-							UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
-							yoffset += 12.f;
-
-							if (m_settings::TC_Upkeep) {
-								std::string upkeep = XS("Upkeep: ");
-								char str2[256];
-								sprintf(str2, XS("[%dh]"), (int)hours);
-								upkeep = upkeep + " " + str2;
-
-								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), upkeep.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
-								yoffset += 12;
-							}
-							if (m_settings::TC_Health)
+							if (IsAddressValid(building_priv))
 							{
-								float draw_health = _health;
-								float yoffsethealth = 7.f;
-								if (_health > _maxhealth) {
-									draw_health = _maxhealth;
+								float yoffset = 0;
+
+								auto DeployableColor = Color{ m_settings::DeployableColor[0], m_settings::DeployableColor[1], m_settings::DeployableColor[2], m_settings::DeployableColor[3] };
+
+								int cachedUpkeepPeriodMinutes = building_priv->UpKeep();
+								int days = cachedUpkeepPeriodMinutes / 1440;
+								int hours = cachedUpkeepPeriodMinutes / 60;
+
+								auto _health = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_health();
+								auto _maxhealth = reinterpret_cast<AssemblyCSharp::BaseCombatEntity*>(building_priv)->_maxHealth();
+
+								std::string player_name = XS("Tool Cupboard");
+								char str[256];
+								sprintf(str, XS("[%dm]"), (int)distance);
+								player_name = player_name + " " + str;
+
+								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), DeployableColor.GetUnityColor(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+								yoffset += 12.f;
+
+								if (m_settings::TC_Upkeep) {
+									std::string upkeep = XS("Upkeep: ");
+									char str2[256];
+									sprintf(str2, XS("[%dh]"), (int)hours);
+									upkeep = upkeep + " " + str2;
+
+									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), upkeep.c_str(), Color::White(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+									yoffset += 12;
 								}
-
-								const auto bar_width = 30;
-								const auto bar_health = (bar_width / _maxhealth) * draw_health;
-								auto bar_color = Color::Green();
-
-								if (_health > 50.f) {
-									bar_color = Color::Green();
-								}
-								else if (_health > 20.f && _health < 40.f) {
-									bar_color = Color::Orange();
-								}
-								else if (_health < 20.f) {
-									bar_color = Color::Red();
-								}
-
-
-								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
-								UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
-								UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
-								yoffset += 8.f;
-							}
-
-							if (m_settings::AuthorizedPlayers)
-							{
-								const auto authorized_players = building_priv->authorizedPlayers();
-								if (IsAddressValid(authorized_players))
+								if (m_settings::TC_Health)
 								{
-									for (auto it = 0; it < authorized_players->_size; it++)
+									float draw_health = _health;
+									float yoffsethealth = 7.f;
+									if (_health > _maxhealth) {
+										draw_health = _maxhealth;
+									}
+
+									const auto bar_width = 30;
+									const auto bar_health = (bar_width / _maxhealth) * draw_health;
+									auto bar_color = Color::Green();
+
+									if (_health > 50.f) {
+										bar_color = Color::Green();
+									}
+									else if (_health > 20.f && _health < 40.f) {
+										bar_color = Color::Orange();
+									}
+									else if (_health < 20.f) {
+										bar_color = Color::Red();
+									}
+
+
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
+									UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+									yoffset += 8.f;
+								}
+
+								if (m_settings::AuthorizedPlayers)
+								{
+									const auto authorized_players = building_priv->authorizedPlayers();
+									if (IsAddressValid(authorized_players))
 									{
-										const auto current = authorized_players->_items->m_Items[it];
-										if (IsAddressValid(current))
+										for (auto it = 0; it < authorized_players->_size; it++)
 										{
-											const auto str = current->username();
-											if (IsAddressValid(str))
+											const auto current = authorized_players->_items->m_Items[it];
+											if (IsAddressValid(current))
 											{
-												auto camera = UnityEngine::Camera::get_main();
-
-												if (IsAddressValid(camera))
+												const auto str = current->username();
+												if (IsAddressValid(str))
 												{
-													auto distance = camera->get_positionz().get_3d_dist(BaseEntity->get_positionz());
+													auto camera = UnityEngine::Camera::get_main();
 
-													if (distance <= m_settings::AuthorizedPlayersDistance)
+													if (IsAddressValid(camera))
 													{
-														char retstr[256];
-														sprintf(retstr, XS("%s"), str->string_safe().c_str());
+														auto distance = camera->get_positionz().get_3d_dist(BaseEntity->get_positionz());
 
-														UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
-														yoffset += 12.f;
+														if (distance <= m_settings::AuthorizedPlayersDistance)
+														{
+															char retstr[256];
+															sprintf(retstr, XS("%s"), str->string_safe().c_str());
+
+															UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), retstr, Color::Turquoise(), Color::Black(), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+															yoffset += 12.f;
+														}
 													}
-												}
 
+												}
 											}
 										}
 									}
 								}
 							}
-						}
 
+						}
 					}
 				}
 
@@ -1932,7 +1935,8 @@ void Visuals::RenderEntities()
 
 				if (BaseEntity->IsA(AssemblyCSharp::StashContainer::StaticClass()))
 				{
-					if (distance <= m_settings::MaxCollectableDistance) {
+					if (distance <= m_settings::MaxDeployableDistance)
+					{
 						if (m_settings::Stash)
 						{
 							auto entity = static_cast<AssemblyCSharp::BaseEntity*>(BaseEntity);
@@ -1955,7 +1959,7 @@ void Visuals::RenderEntities()
 
 				if (BaseEntity->IsA(AssemblyCSharp::AutoTurret::StaticClass()))
 				{
-					if (distance <= m_settings::MaxTrapsDistance)
+					if (distance <= m_settings::MaxTurretDistance)
 					{
 						if (m_settings::AutoTurret)
 						{

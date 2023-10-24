@@ -35,6 +35,7 @@ namespace m_settings {
 	inline bool DrawInventory = false;
 	inline bool DrawInventoryIcons = false;
 	inline bool DoorSpammer = false;
+	inline float MaxTurretDistance = 50.f;
 	inline bool ShowAlerts = false;
 	inline bool DrawClothing = false;
 	inline bool Radar = false;
@@ -253,6 +254,7 @@ namespace m_settings {
 	inline float MetalColor[4] = { 100.f, 49.f, 49.f, 255.f };
 	inline float SulfurColor[4] = { 238.f, 238.f, 0.f, 255.f };
 	inline float TrapsColor[4] = { 245, 188, 66, 255.f };
+	inline float MaxTCDistance = 250.f;
 	inline float VehicleColor[4] = { 66, 245, 167, 255.f };
 	inline float DeployableColor[4] = { 245, 87, 66, 255.f };
 	inline float MaxDroppedDistance = 50.f;
@@ -350,12 +352,16 @@ namespace m_settings {
 	inline bool SavePos = false;
 	inline RustStructs::KeyCode SavePosKey = RustStructs::KeyCode::F;
 
+	inline bool SaveHouse = false;
+	inline RustStructs::KeyCode SaveHouseKey = RustStructs::KeyCode::F;
+
 	inline float MaxExplosionDistance = 5000.f;
 	inline float MaxRaidTimer = 120.f;
 
 	inline bool ShowOutside = false;
 	inline bool ShowInside = false;
-
+	inline bool ExplosionEffect = false;
+	inline bool GhostEffect = false;
 	inline bool nameEsp = true;
 	inline bool BoxEsp = false;
 	inline bool Swastika = false;

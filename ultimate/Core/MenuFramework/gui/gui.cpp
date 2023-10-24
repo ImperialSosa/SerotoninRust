@@ -337,28 +337,55 @@ int small_invetory_tab = 80;
 
 int small_chams_tab = 150;
 int small_chams_minitab = 80;
+
+int smaller_world_tab = 95;
+int small_world_tab = 105;
+int small_world_tab2 = 125;
+int small_world_tab3 = 155;
+
+int small_deployable_tab = 140;
+int small_deplayable_tab2 = 120;
+
+int small_home_tab = 220;
+
+int small_traps_tab = 140;
+int small_traps_tab2 = 120;
+
+int small_flyhack_tab = 100;
+int small_misc_tab = 140;
+int small_instant_tab = 80;
+
+int small_auto_tab = 145;
+int small_spam_tab = 190;
+int small_prefab_tab = 90;
+
+int small_weapons_tab = 260;
+int small_weapon_tab2 = 90;
+
+int small_loadeffects_tab = 80;
+
 void AimbotTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Aimbot"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_aimbot_tab_y))) {
-        calliope::menu.components.checkbox(XS("Silent Aim"), m_settings::SilentAim);
+        calliope::menu.components.checkbox(XS("Silent-Aim"), m_settings::SilentAim);
         if (m_settings::SilentAim)
             m_settings::RotationAimbot = false;
-        calliope::menu.components.checkbox(XS("Legit Silent"), m_settings::RotationAimbot);
-        calliope::menu.components.checkbox(XS("Melee SilentAim"), m_settings::MeleeAimbot);
-        calliope::menu.components.checkbox(XS("Silent Melee"), m_settings::SilentMelee);
+        calliope::menu.components.checkbox(XS("Legit-Silent"), m_settings::RotationAimbot);
+        calliope::menu.components.checkbox(XS("Melee-SilentAim"), m_settings::MeleeAimbot);
+        calliope::menu.components.checkbox(XS("Silent-Melee"), m_settings::SilentMelee);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Aimbot Settings"), calliope::vec2_t(50, 10 + small_aimbot_tab_y), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_aimbot_tab_y - 25))) {
 
-        calliope::menu.components.checkbox(XS("Target NPC"), m_settings::AimbotNPC);
-        calliope::menu.components.checkbox(XS("Target Wounded"), m_settings::TargetWounded);
+        calliope::menu.components.checkbox(XS("Target-NPC"), m_settings::AimbotNPC);
+        calliope::menu.components.checkbox(XS("Target-Wounded"), m_settings::TargetWounded);
 
         calliope::menu.components.dropdown(XS("Aimbone"), { ("Head"), ("Neck"), ("Chest"), ("Random"), ("Closest To Crosshair") }, m_settings::SelectedAimbone);
 
         calliope::menu.components.slider<float>(XS("Accuracy"), XS(""), m_settings::AimbotAccuracy, 0, 100);
-        calliope::menu.components.slider<float>(XS("Fov Slider"), XS(""), m_settings::AimbotFOV, 0, 1000);
+        calliope::menu.components.slider<float>(XS("Fov-Slider"), XS(""), m_settings::AimbotFOV, 0, 1000);
 
         calliope::menu.components.end_groupbox();
     }
@@ -366,29 +393,29 @@ void AimbotTab()
     if (auto groupbox_three = calliope::menu.components.groupbox(XS("Aimbot Visuals"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_visuals_tab_y))) {
 
         calliope::menu.components.checkbox(XS("Crosshair"), m_settings::Crosshair);
-        calliope::menu.components.checkbox(XS("FOV Circle"), m_settings::DrawFov);
-        calliope::menu.components.checkbox(XS("Target Snapline"), m_settings::Aimline);
-        calliope::menu.components.checkbox(XS("Target Marker"), m_settings::AimMarker);
+        calliope::menu.components.checkbox(XS("FOV-Circle"), m_settings::DrawFov);
+        calliope::menu.components.checkbox(XS("Target-Snapline"), m_settings::Aimline);
+        calliope::menu.components.checkbox(XS("Target-Marker"), m_settings::AimMarker);
        // calliope::menu.components.checkbox(XS("Target Indicator"), m_settings::Target_Indicator);
-        calliope::menu.components.checkbox(XS("Bullet Tracers"), m_settings::BulletTracers);
-        calliope::menu.components.dropdown(XS("HitMaterial"), { ("Flesh"), ("Glass"), ("Metal"), ("Water") }, m_settings::HitMaterial);
+        calliope::menu.components.checkbox(XS("Bullet-Tracers"), m_settings::BulletTracers);
+        calliope::menu.components.dropdown(XS("Hit-Material"), { ("Flesh"), ("Glass"), ("Metal"), ("Water") }, m_settings::HitMaterial);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_four = calliope::menu.components.groupbox(XS("Other"), calliope::vec2_t(60 + groupbox_sz, 10 + small_visuals_tab_y), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_visuals_tab_y - 25))) {
 
-        calliope::menu.components.checkbox(XS("Hitbox Override"), m_settings::HitboxOverride);
+        calliope::menu.components.checkbox(XS("Hitbox-Override"), m_settings::HitboxOverride);
 
         if (m_settings::HitboxOverride)
         {
             calliope::menu.components.dropdown(XS("HitBox"), { ("Head"), ("Chest"), ("Random") }, m_settings::SelectedHitbox);
         }
 
-        calliope::menu.components.checkbox(XS("AutoReload"), m_settings::AutoReload);
+        calliope::menu.components.checkbox(XS("Auto-Reload"), m_settings::AutoReload);
         if (m_settings::AutoReload)
         {
-            calliope::menu.components.checkbox(XS("AutoReload Icon"), m_settings::AutoReloadIcon);
+            calliope::menu.components.checkbox(XS("Auto-Reload-Icon"), m_settings::AutoReloadIcon);
         }
 
         calliope::menu.components.end_groupbox();
@@ -402,18 +429,18 @@ void RageTab()
 
 
         calliope::menu.components.checkbox(XS("Manipulation"), m_settings::Manipulation);
-        calliope::menu.components.checkbox(XS("Manip Indicator"), m_settings::ManipFlags);
-        calliope::menu.components.checkbox(XS("Manip Angle"), m_settings::DrawManipPoints);
-        calliope::menu.components.slider<float>(XS("Manip Angles"), XS(""), m_settings::ManipPoints, 0, 50);
-        calliope::menu.components.dropdown(XS("Manip Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
+        calliope::menu.components.checkbox(XS("Manip-Indicator"), m_settings::ManipFlags);
+        calliope::menu.components.checkbox(XS("Manip-Angle"), m_settings::DrawManipPoints);
+        calliope::menu.components.slider<float>(XS("Manip-Angles"), XS(""), m_settings::ManipPoints, 0, 50);
+        calliope::menu.components.dropdown(XS("Manip-Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Simulation"), calliope::vec2_t(50, 10 + small_rage_tab2_y), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_rage_tab2_y - 25))) {
         
-        calliope::menu.components.checkbox(XS("SimulateAngles (Saves FPS)"), m_settings::CacheBulletTP);
-        calliope::menu.components.checkbox(XS("Behind Wall (FPS)"), m_settings::BehindWall);
+        calliope::menu.components.checkbox(XS("Simulate-Angles (Saves FPS)"), m_settings::CacheBulletTP);
+        calliope::menu.components.checkbox(XS("Behind-Wall (FPS)"), m_settings::BehindWall);
         if (m_settings::CacheBulletTP)
         {
             //calliope::menu.components.checkbox(XS("AdvancedCaching (Saves FPS)"), m_settings::AdvancedChecks);
@@ -422,20 +449,20 @@ void RageTab()
         else
             m_settings::AdvancedChecks = false;
         
-        calliope::menu.components.checkbox(XS("Simulated Indicator"), m_settings::ShowCachedLOS);
-        calliope::menu.components.checkbox(XS("Simulated Point"), m_settings::ShowCachedPoint);
-        calliope::menu.components.slider<float>(XS("Simulated Points"), XS(""), m_settings::LOSCheckAmount, 0, 2000);
+        calliope::menu.components.checkbox(XS("Simulated-Indicator"), m_settings::ShowCachedLOS);
+        calliope::menu.components.checkbox(XS("Simulated-Point"), m_settings::ShowCachedPoint);
+        calliope::menu.components.slider<float>(XS("Simulated-Points"), XS(""), m_settings::LOSCheckAmount, 0, 2000);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_three = calliope::menu.components.groupbox(XS("BulletTP"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_rage_tab_y))) {
 
-        calliope::menu.components.checkbox(XS("Bullet TP"), m_settings::BulletTP);
-        calliope::menu.components.checkbox(XS("BulletTP Indicator"), m_settings::BulletTPFlags);
-        calliope::menu.components.checkbox(XS("BulletTP Arrows"), m_settings::Thickbullet_Arrows);
-        calliope::menu.components.checkbox(XS("BulletTP Angle"), m_settings::ShowBulletTPAngle);
-        calliope::menu.components.checkbox(XS("Snicker Lines"), m_settings::SnickerBullet);
+        calliope::menu.components.checkbox(XS("BulletTP"), m_settings::BulletTP);
+        calliope::menu.components.checkbox(XS("BulletTP-Indicator"), m_settings::BulletTPFlags);
+        calliope::menu.components.checkbox(XS("BulletTP-Arrows"), m_settings::Thickbullet_Arrows);
+        calliope::menu.components.checkbox(XS("BulletTP-Angle"), m_settings::ShowBulletTPAngle);
+        calliope::menu.components.checkbox(XS("Snicker-Lines"), m_settings::SnickerBullet);
 
         calliope::menu.components.dropdown(XS("BulletTP Mode"), { ("Static Angles"), ("Dynamic Angles"), ("Enhanced Angles") }, m_settings::BulletTPIntensity);
 
@@ -450,11 +477,11 @@ void RageTab()
         {
             calliope::menu.components.keybind(XS("AutoShoot Bind"), (int&)m_settings::AutoshootKey, true);
         }
-        calliope::menu.components.checkbox(XS("AutoStop"), m_settings::StopPlayer);
-        calliope::menu.components.checkbox(XS("PierceMaterials"), m_settings::PierceMaterials);
-        calliope::menu.components.checkbox(XS("Bullet Queue"), m_settings::InstantKill);
-        calliope::menu.components.checkbox(XS("Instant Hit"), m_settings::InstantBullet);
-        calliope::menu.components.checkbox(XS("WaitForInstantHit/Queue"), m_settings::WaitForInstantHit);
+        calliope::menu.components.checkbox(XS("Auto-Stop"), m_settings::StopPlayer);
+        calliope::menu.components.checkbox(XS("Pierce-Materials"), m_settings::PierceMaterials);
+        calliope::menu.components.checkbox(XS("Bullet-Queue"), m_settings::InstantKill);
+        calliope::menu.components.checkbox(XS("Instant-Hit"), m_settings::InstantBullet);
+        calliope::menu.components.checkbox(XS("Wait-For-Instant-Hit/Queue"), m_settings::WaitForInstantHit);
 
 
         calliope::menu.components.end_groupbox();
@@ -474,7 +501,7 @@ void PlayersVisuals()
             m_settings::SelectedBoxESP = 1;
             m_settings::CornerBox = false;
         }
-        calliope::menu.components.checkbox(XS("CornerBox"), m_settings::CornerBox);
+        calliope::menu.components.checkbox(XS("Corner-Box"), m_settings::CornerBox);
         if (m_settings::CornerBox) {
             m_settings::SelectedBoxESP = 2;
             m_settings::BoxEsp = false;
@@ -511,14 +538,14 @@ void PlayersVisuals()
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("HealthBar"), calliope::vec2_t(50, 10 + small_player_tab_y), calliope::vec2_t(groupbox_sz, small_box_tab_y))) {
+    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("HealthBar"), calliope::vec2_t(50, 10 + small_player_tab_y), calliope::vec2_t(groupbox_sz / 2, small_box_tab_y))) {
 
-        calliope::menu.components.checkbox(XS("Bottom bar"), m_settings::bottomhealthbar);
+        calliope::menu.components.checkbox(XS("Bottom-bar"), m_settings::bottomhealthbar);
         if (m_settings::bottomhealthbar) {
             m_settings::lefthealthbar = false;
             m_settings::SelectedHealthBar = 1;
         }
-        calliope::menu.components.checkbox(XS("Left bar"), m_settings::lefthealthbar);
+        calliope::menu.components.checkbox(XS("Left-bar"), m_settings::lefthealthbar);
         if (m_settings::lefthealthbar) {
             m_settings::bottomhealthbar = false;
             m_settings::SelectedHealthBar = 2;
@@ -530,9 +557,16 @@ void PlayersVisuals()
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("BaseCheck"), calliope::vec2_t(50, 10 + small_player_tab_y + 10 + small_box_tab_y), calliope::vec2_t(groupbox_sz, small_box_tab_y))) {
+    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("BaseCheck"), calliope::vec2_t(50 + (groupbox_sz / 2), 10 + small_player_tab_y), calliope::vec2_t(groupbox_sz / 2, small_box_tab_y))) {
         calliope::menu.components.checkbox(XS("Outside"), m_settings::ShowOutside);
         calliope::menu.components.checkbox(XS("Inside"), m_settings::ShowInside);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("Radar"), calliope::vec2_t(50, 10 + small_player_tab_y + 10 + small_box_tab_y), calliope::vec2_t(groupbox_sz, small_box_tab_y))) {
+        calliope::menu.components.checkbox(XS("Radar"), m_settings::Radar);
+        calliope::menu.components.slider<float>(XS("Radar-Size"), XS(""), m_settings::RadarSize, 0, 300);
 
         calliope::menu.components.end_groupbox();
     }
@@ -583,8 +617,8 @@ void PlayersVisuals()
 
     if (auto groupbox_ctx_p3 = calliope::menu.components.groupbox(XS("Misc"), calliope::vec2_t(60 + groupbox_sz, 10 + small_otherplayer_tab_y + 10 + small_invetory_tab), calliope::vec2_t(groupbox_sz, small_invetory_tab))) {
 
-        calliope::menu.components.checkbox(XS("ShowAlerts"), m_settings::ShowAlerts);
-        calliope::menu.components.checkbox(XS("ShowTarget"), m_settings::DrawTarget);
+        calliope::menu.components.checkbox(XS("Show-Alerts"), m_settings::ShowAlerts);
+        calliope::menu.components.checkbox(XS("Show-Target"), m_settings::DrawTarget);
 
         calliope::menu.components.end_groupbox();
     }
@@ -595,32 +629,440 @@ void PlayersVisuals()
 void ChamsTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Load Chams"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_chams_tab))) {
-        calliope::menu.components.checkbox(XS("Load Lightning"), m_settings::LoadLightning);
-        calliope::menu.components.checkbox(XS("Load Geometric"), m_settings::LoadGeometric);
-        calliope::menu.components.checkbox(XS("Load Galaxy"), m_settings::LoadGalaxy);
-        calliope::menu.components.checkbox(XS("Load WireFrame"), m_settings::LoadWireFrame);
-        calliope::menu.components.checkbox(XS("Load RPBGalaxy"), m_settings::LoadRBP);
+        calliope::menu.components.checkbox(XS("Load-Lightning"), m_settings::LoadLightning);
+        calliope::menu.components.checkbox(XS("Load-Geometric"), m_settings::LoadGeometric);
+        calliope::menu.components.checkbox(XS("Load-Galaxy"), m_settings::LoadGalaxy);
+        calliope::menu.components.checkbox(XS("Load-WireFrame"), m_settings::LoadWireFrame);
+        calliope::menu.components.checkbox(XS("Load-RPBGalaxy"), m_settings::LoadRBP);
 
         calliope::menu.components.end_groupbox();
     }
 
     if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("PlayerChams"), calliope::vec2_t(50, 10 + small_chams_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_chams_tab - 25))) {
 
-        calliope::menu.components.checkbox(XS("PlayerChams"), m_settings::PlayerChams);
-        calliope::menu.components.dropdown(XS("PChams Type"), { ("None"), ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("Color"), ("RPBGalaxy")}, m_settings::SelectedChams);
+        calliope::menu.components.checkbox(XS("Player-Chams"), m_settings::PlayerChams);
+        calliope::menu.components.dropdown(XS("PChams-Type"), { ("None"), ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("Color"), ("RPBGalaxy")}, m_settings::SelectedChams);
 
         calliope::menu.components.end_groupbox();
     }
 
-    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weapon Chams"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
-        calliope::menu.components.checkbox(XS("WeaponChams"), m_settings::WeaponChams);
-        calliope::menu.components.checkbox(XS("IgnoreArms"), m_settings::IgnoreArms);
-        calliope::menu.components.dropdown(XS("WChams Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy") }, m_settings::WeaponSelectedChams);
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weapon Chams"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y - 10))) {
+        calliope::menu.components.checkbox(XS("Weapon-Chams"), m_settings::WeaponChams);
+        calliope::menu.components.checkbox(XS("Ignore-Arms"), m_settings::IgnoreArms);
+        calliope::menu.components.dropdown(XS("WChams-Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy") }, m_settings::WeaponSelectedChams);
 
         calliope::menu.components.end_groupbox();
     }
 
 }
+
+void WorldTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("PlayerDrops"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_world_tab))) {
+        calliope::menu.components.checkbox(XS("Corpse"), m_settings::Corpse);
+        calliope::menu.components.checkbox(XS("Backpack"), m_settings::BackPack);
+        calliope::menu.components.slider<float>(XS("Drops Distance"), XS(""), m_settings::MaxPlayerDropsDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("Ores"), calliope::vec2_t(50, 10 + small_world_tab), calliope::vec2_t(groupbox_sz, small_world_tab2))) {
+
+        calliope::menu.components.checkbox(XS("Stone"), m_settings::StoneOre);
+        calliope::menu.components.checkbox(XS("Metal"), m_settings::MetalOre);
+        calliope::menu.components.checkbox(XS("Sulfur"), m_settings::SulfurOre);
+        calliope::menu.components.slider<float>(XS("Ore Distance"), XS(""), m_settings::MaxOreDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx_3 = calliope::menu.components.groupbox(XS("DroppedItems"), calliope::vec2_t(50, 10 + small_world_tab + 10 + small_world_tab2), calliope::vec2_t(groupbox_sz, smaller_world_tab))) {
+
+        calliope::menu.components.checkbox(XS("Dropped-Items"), m_settings::DroppedItems);
+        calliope::menu.components.checkbox(XS("Dropped-Chams"), m_settings::DroppedItemsChams);
+        calliope::menu.components.slider<float>(XS("Dropped Distance"), XS(""), m_settings::MaxDroppedDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Collectables"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_world_tab3))) {
+        calliope::menu.components.checkbox(XS("Hemp"), m_settings::Hemp);
+        calliope::menu.components.checkbox(XS("Diesel-Barrel"), m_settings::DieselBarrel);
+        calliope::menu.components.checkbox(XS("Stone"), m_settings::StoneCollectable);
+        calliope::menu.components.checkbox(XS("Metal"), m_settings::MetalCollectable);
+        calliope::menu.components.checkbox(XS("Sulfur"), m_settings::SulfurCollectable);
+        calliope::menu.components.slider<float>(XS("Collectables Distance"), XS(""), m_settings::MaxCollectableDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Food"), calliope::vec2_t(60 + groupbox_sz, 10 + small_world_tab3), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_world_tab3 - 25))) {
+        calliope::menu.components.checkbox(XS("Corn"), m_settings::Corn);
+        calliope::menu.components.checkbox(XS("Pumpkin"), m_settings::Pumpkin);
+        calliope::menu.components.checkbox(XS("Potato"), m_settings::Potato);
+        calliope::menu.components.checkbox(XS("Mushroom"), m_settings::Mushroom);
+        calliope::menu.components.slider<float>(XS("Food Distance"), XS(""), m_settings::MaxFoodDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+}
+
+void World2Tab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Deployables"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_deployable_tab))) {
+        calliope::menu.components.checkbox(XS("Stash"), m_settings::Stash);
+        calliope::menu.components.checkbox(XS("T1-Workbench"), m_settings::T1Workbench);
+        calliope::menu.components.checkbox(XS("T2-Workbench"), m_settings::T2Workbench);
+        calliope::menu.components.checkbox(XS("T3-Workbench"), m_settings::T3Workbench);
+
+
+        calliope::menu.components.slider<float>(XS("Deployable Distance"), XS(""), m_settings::MaxDeployableDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("ToolCupboard"), calliope::vec2_t(50, 10 + small_deployable_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_deployable_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("Cupboard"), m_settings::cupboard);
+        calliope::menu.components.checkbox(XS("TC-Health"), m_settings::TC_Health);
+        calliope::menu.components.checkbox(XS("Authed-Players"), m_settings::AuthorizedPlayers);
+        calliope::menu.components.checkbox(XS("Upkeep"), m_settings::TC_Upkeep);
+        calliope::menu.components.slider<float>(XS("Authed Distance"), XS(""), m_settings::AuthorizedPlayersDistance, 0, 500);
+        calliope::menu.components.slider<float>(XS("TC Distance"), XS(""), m_settings::MaxTCDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Crates"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y - 10))) {
+
+        calliope::menu.components.checkbox(XS("Airdrop"), m_settings::SupplyDrop);
+        calliope::menu.components.checkbox(XS("Bradley-Crate"), m_settings::BradleyCrate);
+        calliope::menu.components.checkbox(XS("Heli-Crate"), m_settings::HeliCrate);
+        calliope::menu.components.checkbox(XS("Hackable-Crate"), m_settings::HackableCrate);
+        calliope::menu.components.checkbox(XS("Basic-Crate"), m_settings::BasicCrate);
+        calliope::menu.components.checkbox(XS("Normal-Crate"), m_settings::NormalCrate);
+        calliope::menu.components.checkbox(XS("Military-Crate"), m_settings::MilitaryCrate);
+        calliope::menu.components.checkbox(XS("Elite-Crate"), m_settings::EliteCrate);
+        calliope::menu.components.checkbox(XS("Loot-Barrel"), m_settings::LootBarrel);
+        calliope::menu.components.slider<float>(XS("Airdrop Distance"), XS(""), m_settings::MaxSupplyDropDistance, 0, 500);
+        calliope::menu.components.slider<float>(XS("Crate Distance"), XS(""), m_settings::MaxCrateDistance, 0, 500);
+
+        if (m_settings::HackableCrate)
+        {
+            m_settings::HackableCrateFlags = true;
+            m_settings::HackableCrateTimer = true;
+        }
+
+        calliope::menu.components.end_groupbox();
+    }
+
+}
+
+void World3Tab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Traps"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_traps_tab))) {
+        calliope::menu.components.checkbox(XS("ShotgunTrap"), m_settings::ShotgunTrap);
+        calliope::menu.components.checkbox(XS("FlameTurret"), m_settings::FlameTurret);
+        calliope::menu.components.checkbox(XS("BearTrap"), m_settings::BearTrap);
+        calliope::menu.components.checkbox(XS("SpikesTrap"), m_settings::SpikesTrap);
+        calliope::menu.components.checkbox(XS("LandMine"), m_settings::LandMine);
+
+        calliope::menu.components.slider<float>(XS("Traps Distance"), XS(""), m_settings::MaxTrapsDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx_2 = calliope::menu.components.groupbox(XS("Turret"), calliope::vec2_t(50, 10 + small_traps_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_traps_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("Turret"), m_settings::AutoTurret);
+        calliope::menu.components.checkbox(XS("Authed Players"), m_settings::TurretAuthorizedPlayers);
+        calliope::menu.components.checkbox(XS("EquippedFlag"), m_settings::TurretEquippedFlags);
+        calliope::menu.components.checkbox(XS("ShowOnline"), m_settings::TurretOnFlags);
+        calliope::menu.components.checkbox(XS("Health"), m_settings::TurretHealth);
+        calliope::menu.components.checkbox(XS("TurningFlags"), m_settings::TurretTurningFlag);
+        calliope::menu.components.checkbox(XS("Range"), m_settings::TurretRange);
+        calliope::menu.components.slider<float>(XS("Turret Distance"), XS(""), m_settings::MaxTurretDistance, 0, 500);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Vehicles"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_home_tab))) {
+
+        calliope::menu.components.checkbox(XS("Patrol-Heli"), m_settings::PatrolHelicopter);
+        calliope::menu.components.checkbox(XS("Bradley"), m_settings::BradleyAPC);
+        calliope::menu.components.checkbox(XS("MiniCopter"), m_settings::Minicopter);
+        calliope::menu.components.checkbox(XS("ScrapHeli"), m_settings::ScrapHeli);
+        calliope::menu.components.checkbox(XS("TugBoat"), m_settings::TugBoat);
+        calliope::menu.components.checkbox(XS("RHIB"), m_settings::Rhib);
+        calliope::menu.components.checkbox(XS("RowBoat"), m_settings::Rowboat);
+        calliope::menu.components.slider<float>(XS("Vehicle Distance"), XS(""), m_settings::MaxVehicleDistance, 0, 500);
+        calliope::menu.components.slider<float>(XS("APC Distance"), XS(""), m_settings::MaxAPCDistance, 0, 5000);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Position"), calliope::vec2_t(60 + groupbox_sz, 10 + small_home_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_home_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("Save-Position"), m_settings::SavePos);
+        calliope::menu.components.keybind(XS("SavePosition Bind"), (int&)m_settings::SavePosKey, true);
+        
+        calliope::menu.components.checkbox(XS("Save-House"), m_settings::SaveHouse);
+        calliope::menu.components.keybind(XS("SaveHouse Bind"), (int&)m_settings::SaveHouseKey, true);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+}
+
+void LocalTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Flyhack"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_flyhack_tab))) {
+
+        calliope::menu.components.checkbox(XS("Flyhack-Indicator"), m_settings::Flyhack_Indicator);
+        calliope::menu.components.checkbox(XS("Anti-FlyhackKick"), m_settings::AntiFlyKick);
+        calliope::menu.components.checkbox(XS("Anti-DeathBarrier"), m_settings::AntiDeathBarrier);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Movement"), calliope::vec2_t(50, 10 + small_flyhack_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_flyhack_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("SpiderMan"), m_settings::SpiderMan);
+        calliope::menu.components.checkbox(XS("Smaller-Local-Radius"), m_settings::SmallerLocalRadius);
+        calliope::menu.components.checkbox(XS("Admin-Flags"), m_settings::AdminFlags);
+        calliope::menu.components.checkbox(XS("Infinite-Jump"), m_settings::InfiniteJump);
+        calliope::menu.components.checkbox(XS("Omni-Sprint"), m_settings::OmniSprint);
+        calliope::menu.components.checkbox(XS("Always-Sprint"), m_settings::AlwaysSprint);
+        calliope::menu.components.checkbox(XS("No-Movement-Restrictions"), m_settings::NoMovementRestrictions);
+        calliope::menu.components.checkbox(XS("Adjust-NoClip-Speed"), m_settings::AdjustNoClipSpeed);
+        calliope::menu.components.checkbox(XS("No-Clip"), m_settings::AdminCheat);
+        calliope::menu.components.keybind(XS("NoClip Bind"), (int&)m_settings::AdminCheatKey, true);
+        calliope::menu.components.checkbox(XS("Silent-Walk"), m_settings::SilentWalk);
+        calliope::menu.components.keybind(XS("SilentWalk Bind"), (int&)m_settings::SilentWalkKey, true);
+        calliope::menu.components.checkbox(XS("Interactive-Debug"), m_settings::InteractiveDebug);
+        calliope::menu.components.keybind(XS("Interactive Bind"), (int&)m_settings::InteractiveKey, true);
+        calliope::menu.components.checkbox(XS("Teleport-Max-Height"), m_settings::TeleportMax);
+        calliope::menu.components.keybind(XS("TeleportMax Bind"), (int&)m_settings::TeleportMaxKey, true);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Misc"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_misc_tab))) {
+
+        calliope::menu.components.checkbox(XS("Name-Spoofer"), m_settings::NameSpoofer);
+        calliope::menu.components.checkbox(XS("Spin-bot"), m_settings::Spinbot);
+        calliope::menu.components.checkbox(XS("Anti-DebugCamera"), m_settings::FixDebugCamera);
+
+        calliope::menu.components.checkbox(XS("Instant-Revive"), m_settings::InstantRevive);
+        calliope::menu.components.keybind(XS("InstantRevive Bind"), (int&)m_settings::InstantReviveKey, true);
+
+        calliope::menu.components.checkbox(XS("Keep-Target-Alive"), m_settings::KeepTargetAlive);
+        calliope::menu.components.keybind(XS("KeepAlive Bind"), (int&)m_settings::KeepAliveKey, true);
+
+        calliope::menu.components.checkbox(XS("Suicide"), m_settings::Suicide);
+        calliope::menu.components.keybind(XS("Suicide Bind"), (int&)m_settings::SuicideKey, true);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two2 = calliope::menu.components.groupbox(XS("Instant"), calliope::vec2_t(60 + groupbox_sz, 10 + small_misc_tab), calliope::vec2_t(groupbox_sz, small_instant_tab))) {
+
+        calliope::menu.components.checkbox(XS("Instant-Loot"), m_settings::InstantLoot);
+        calliope::menu.components.checkbox(XS("Instant-Heal"), m_settings::InstantHeal);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two2 = calliope::menu.components.groupbox(XS("Collision"), calliope::vec2_t(60 + groupbox_sz, 10 + small_misc_tab + 10 + small_instant_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_instant_tab - small_misc_tab - 35))) {
+
+        calliope::menu.components.checkbox(XS("Trees"), m_settings::IgnoreTrees);
+        calliope::menu.components.checkbox(XS("Players"), m_settings::IgnorePlayers);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+}
+
+void MiscTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Automatic"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_auto_tab))) {
+
+        calliope::menu.components.checkbox(XS("Auto-Farm-Tree"), m_settings::AutoFarmTree);
+        calliope::menu.components.checkbox(XS("Auto-Farm-Ore"), m_settings::AutoFarmOre);
+        calliope::menu.components.checkbox(XS("Auto-Upgrade"), m_settings::AutoUpgrade);
+        calliope::menu.components.dropdown(XS("BuildingGrade"), { ("Wood"), ("Stone"), ("Metal"), ("HQM") }, m_settings::BuildingGrade);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Prefab Spawner"), calliope::vec2_t(50, 10 + small_auto_tab), calliope::vec2_t(groupbox_sz, small_prefab_tab))) {
+
+        calliope::menu.components.checkbox(XS("Load-Amongus"), m_settings::LoadAmongusAsset);
+        calliope::menu.components.checkbox(XS("Load-Herbert"), m_settings::LoadHerbertAsset);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Prefab Spawner"), calliope::vec2_t(50, 10 + small_auto_tab + 10 + small_prefab_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_auto_tab - small_prefab_tab - 35))) {
+
+        calliope::menu.components.checkbox(XS("Spawn-Amongus"), m_settings::AmongusPrefabSpawn);
+        calliope::menu.components.keybind(XS("Amongus Bind"), (int&)m_settings::AmongusKey, true);
+
+        calliope::menu.components.checkbox(XS("Spawn-Herbert"), m_settings::HerbertPrefabSpawn);
+        calliope::menu.components.keybind(XS("Herbert Bind"), (int&)m_settings::HerbertKey, true);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Spam"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_spam_tab))) {
+
+        calliope::menu.components.checkbox(XS("Door-Spammer"), m_settings::DoorSpammer);
+
+        calliope::menu.components.checkbox(XS("Gesture-Spam"), m_settings::GestureSpam);
+        calliope::menu.components.dropdown(XS("Gesture"), { ("None"), ("Clap"), ("Friendly"), ("ThumbsDown"), ("ThumbsUp"), ("Ok"), ("Point"), ("Shrug"), ("Victory"), ("Wave") }, m_settings::gesture);
+
+        calliope::menu.components.checkbox(XS("Hammer-Spam"), m_settings::HammerSpam);
+        calliope::menu.components.keybind(XS("HammerSpam Bind"), (int&)m_settings::HammerSpamKey, true);
+        calliope::menu.components.dropdown(XS("Material"), { ("Glass"), ("Water") }, m_settings::HammerMaterialType);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two2 = calliope::menu.components.groupbox(XS("FOV"), calliope::vec2_t(60 + groupbox_sz, 10 + small_spam_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_spam_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("Player-Fov"), m_settings::PlayerFov);
+        calliope::menu.components.checkbox(XS("Zoom"), m_settings::Zoom);
+        calliope::menu.components.keybind(XS("Zoom Bind"), (int&)m_settings::ZoomKey, true);
+
+        calliope::menu.components.slider<float>(XS("Player-Fov Amount"), XS(""), m_settings::PlayerFovAmount, 0, 140);
+        calliope::menu.components.slider<float>(XS("Zoom Amount"), XS(""), m_settings::ZoomAmount, 0, 50);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+
+}
+
+void WeatherTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Skydome"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+
+        calliope::menu.components.checkbox(XS("Bright-Night"), m_settings::Brightnight);
+        calliope::menu.components.checkbox(XS("Bright-Ambient"), m_settings::BrightAmbient);
+        calliope::menu.components.checkbox(XS("Bright-Cave"), m_settings::BrightCave);
+        calliope::menu.components.checkbox(XS("Stars"), m_settings::Stars);
+        calliope::menu.components.checkbox(XS("SkyColor"), m_settings::SkyColorNight);
+        calliope::menu.components.checkbox(XS("Sharp-Clouds"), m_settings::SharpClouds);
+
+        calliope::menu.components.checkbox(XS("Time-Changer"), m_settings::TimeChanger);
+        calliope::menu.components.slider<float>(XS("Game-Time"), XS(""), m_settings::GameTime, 0, 24);
+
+        if (m_settings::SkyColorNight)
+            m_settings::SkyColorDay = true;
+        else
+            m_settings::SkyColorDay = false;
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weather"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y))) {
+        calliope::menu.components.checkbox(XS("Enable-Weather"), m_settings::Weather);
+        calliope::menu.components.checkbox(XS("Atmosphere"), m_settings::AtmosphereContrast);
+        calliope::menu.components.checkbox(XS("Rainbows"), m_settings::Rainbows);
+        calliope::menu.components.checkbox(XS("No-Clouds"), m_settings::NoClouds);
+        calliope::menu.components.checkbox(XS("No-Sun"), m_settings::NoSun);
+        calliope::menu.components.checkbox(XS("No-Fog"), m_settings::NoFog);
+        calliope::menu.components.checkbox(XS("No-Rain"), m_settings::NoRain);
+        calliope::menu.components.checkbox(XS("No-Thunder"), m_settings::NoThunder);
+        calliope::menu.components.checkbox(XS("No-Wind"), m_settings::NoWind);
+
+        calliope::menu.components.checkbox(XS("Rainbow-Sky"), m_settings::RainbowSky);
+        calliope::menu.components.slider<float>(XS("SkyValue"), XS(""), m_settings::RainbowAmount, 0, 100);
+
+
+        calliope::menu.components.end_groupbox();
+    }
+
+}
+
+void WeaponsTab()
+{
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Weapon"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_weapons_tab))) {
+
+        calliope::menu.components.checkbox(XS("No-Attack-Restrictions"), m_settings::NoAttackRestrictions);
+        calliope::menu.components.checkbox(XS("Recoil-Modifier"), m_settings::ChangeRecoil);
+        calliope::menu.components.checkbox(XS("Thick-Bullet"), m_settings::NormalThickBullet);
+        calliope::menu.components.checkbox(XS("Fast-Bullet"), m_settings::NormalFastBullet);
+        calliope::menu.components.checkbox(XS("Force-Automatic"), m_settings::ForceAutomatic);
+        calliope::menu.components.checkbox(XS("No-Sway"), m_settings::NoSway);
+        calliope::menu.components.checkbox(XS("Instant-Eoka"), m_settings::InstantEoka);
+        calliope::menu.components.checkbox(XS("No-Weapon-Bob"), m_settings::NoWeaponBob);
+        calliope::menu.components.checkbox(XS("No-Animations"), m_settings::RemoveAttackAnimations);
+        calliope::menu.components.checkbox(XS("Long-Melee"), m_settings::LongMelee);
+
+        if (m_settings::ChangeRecoil)
+            calliope::menu.components.slider<float>(XS("Recoil"), XS(""), m_settings::recoilPercent, 0, 100);
+        if (m_settings::NormalThickBullet)
+            calliope::menu.components.slider<float>(XS("Thickness"), XS(""), m_settings::NormalThickBulletThickness, 0, 4.5);
+
+        calliope::menu.components.slider<float>(XS("Spread-Amount"), XS(""), m_settings::SilentSpread, 0, 100);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("HitSounds"), calliope::vec2_t(50, 10 + small_weapons_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_weapons_tab - 25))) {
+
+        calliope::menu.components.checkbox(XS("Disable-HitSounds"), m_settings::DisableHitSounds);
+        calliope::menu.components.checkbox(XS("Custom-HitSounds"), m_settings::CustomHitSounds);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Misc"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_weapon_tab2))) {
+
+        calliope::menu.components.checkbox(XS("Weapon-Spammer"), m_settings::WeaponSpammer);
+        calliope::menu.components.keybind(XS("WeaponSpammer Bind"), (int&)m_settings::WeaponSpamKey, true);
+
+        calliope::menu.components.slider<float>(XS("Weapon-Spammer-Delay"), XS(""), m_settings::WeaponSpamDelay, 0, 20);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Load Effects"), calliope::vec2_t(60 + groupbox_sz, 10 + small_weapon_tab2), calliope::vec2_t(groupbox_sz, small_loadeffects_tab))) {
+
+        calliope::menu.components.checkbox(XS("Load-Explosion"), m_settings::LoadExplosionEffect);
+        calliope::menu.components.checkbox(XS("Load-Ghosts"), m_settings::LoadGhostEffect);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_two = calliope::menu.components.groupbox(XS("Kill Effects"), calliope::vec2_t(60 + groupbox_sz, 10 + small_weapon_tab2 + 10 + small_loadeffects_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_loadeffects_tab - small_weapon_tab2 - 35))) {
+
+        calliope::menu.components.checkbox(XS("Explosion-Effect"), m_settings::ExplosionEffect);
+        if (m_settings::ExplosionEffect)
+        {
+            m_settings::GhostEffect = false;
+            m_settings::SelectedKillEffect = 0;
+        }
+        calliope::menu.components.checkbox(XS("Ghost-Effect"), m_settings::GhostEffect);
+        if (m_settings::GhostEffect)
+        {
+            m_settings::ExplosionEffect = false;
+            m_settings::SelectedKillEffect = 1;
+        }
+
+        calliope::menu.components.end_groupbox();
+    }
+
+}
+
 
 void ColorsTab()
 {
@@ -645,7 +1087,7 @@ void GUI::DrawMenu()
 
 
     if (calliope::menu.components.window(XS("Serotonin"), calliope::vec2_t(250, 250), calliope::vec2_t(600, 400), calliope::menu_t::window_flags_none)) {
-        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("Local"), XS("Weapon"), XS("Settings"), XS("Colors")})) {
+        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("World-2"), XS("World-3"), XS("Player"), XS("Misc"), XS("Weather"), XS("Weapon"), XS("Colors")})) {
         case 0: {
             AimbotTab();
             break;
@@ -662,7 +1104,35 @@ void GUI::DrawMenu()
             ChamsTab();
             break;
         }
+        case 4: {
+            WorldTab();
+            break;
+        }
+        case 5: {
+            World2Tab();
+            break;
+        }
+        case 6: {
+            World3Tab();
+            break;
+        }
+        case 7: {
+            LocalTab();
+            break;
+        }
         case 8: {
+            MiscTab();
+            break;
+        }
+        case 9: {
+            WeatherTab();
+            break;
+        }
+        case 10: {
+            WeaponsTab();
+            break;
+        }
+        case 11: {
             ColorsTab();
             break;
         }

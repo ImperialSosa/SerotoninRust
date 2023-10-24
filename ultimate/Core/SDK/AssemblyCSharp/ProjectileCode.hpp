@@ -552,13 +552,13 @@ public:
 		}
 	OFFSET:
 		typedef DWORD64(__stdcall* Unknown)(DWORD64);
-		DWORD64 st = safe_read(m_game_assembly + 53648824, DWORD64); //Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() address
+		DWORD64 st = safe_read(m_game_assembly + 53648920, DWORD64); //Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() address
 		if (!st)
 		{
 			goto OFFSET;
 		}
 
-		Unknown get_list = (Unknown)(m_game_assembly + 18733264);//Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() MethodAddress
+		Unknown get_list = (Unknown)(m_game_assembly + 18734016);//Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() MethodAddress
 		if (!get_list)
 		{
 			goto OFFSET;

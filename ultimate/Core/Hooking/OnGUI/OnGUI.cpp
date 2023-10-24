@@ -971,6 +971,32 @@ void drawMisc()
 		}
 	}
 
+	if (m_settings::SaveHouse)
+	{
+		auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+		if (IsAddressValid(LocalPlayer)) {
+			auto CurrentPos = LocalPlayer->get_bone_transform(47)->get_position();
+			static Vector2 SavedPos;
+
+			if (UnityEngine::Input::GetKey(m_settings::SaveHouseKey))
+			{
+				SavedWorldPos = CurrentPos;
+			}
+
+			if (UnityEngine::WorldToScreen(SavedWorldPos, SavedPos))
+			{
+				auto distance = CurrentPos.Distance(SavedWorldPos);
+
+				std::string player_name = "Home";
+				char str[256];
+				sprintf(str, XS("[%dm]"), (int)distance);
+				player_name = player_name + " " + str;
+
+				UnityEngine::GL().WorldTextCenter(SavedPos, player_name.c_str(), Color::Cyan(), Color::Black(), m_settings::fontsize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
+			}
+		}
+	}
+
 	if (m_settings::DrawFov)
 	{
 		Color Color = m_settings::Manipulation_Indicator ? Color::Green() : Color::White();

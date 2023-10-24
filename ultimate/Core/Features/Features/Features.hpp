@@ -54,3 +54,4 @@ public:
 };
 
 static inline Vector3 SavedWorldPos;
+static inline Vector3 SavedHousePos;
