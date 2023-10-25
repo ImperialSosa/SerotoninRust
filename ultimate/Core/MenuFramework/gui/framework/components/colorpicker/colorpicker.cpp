@@ -86,79 +86,6 @@ void calliope::menu_t::components_t::colorpicker( const char* title, color_t& co
     if ( preview_hovered && ( util::is_key_pressed( RustStructs::Mouse1 ) ) && was_empty_last_hash ) {
         menu.window_ctx.m_active_hash = util::hash( title ) + 2;
     }
-    else if ( menu.window_ctx.m_active_hash == ( util::hash( title ) + 2 ) ) {
-        menu.draw_list.filled_rect( color_picker_position, alt_window_size, color_t( 8, 8, 8, 255 ), 3.f );
-
-
-        char color_buf[ 256 ]{ };
-
-        sprintf( color_buf, "#%02X%02X%02X%02X",
-            static_cast< uint8_t >( color.r * 255 ),
-            static_cast< uint8_t >( color.g * 255 ),
-            static_cast< uint8_t >( color.b * 255 ),
-            static_cast< uint8_t >( color.a * 255 ) );
-
-        // set the color_buf string to clipboard...
-
-        //for ( int idx = 0; idx < 2; idx++ ) {
-        //    const bool hovered = menu.mouse_in_rect( color_picker_position + vec2_t( 0, 20 + ( idx * 20 ) ), color_picker_position + vec2_t( alt_window_size.x, 20 + ( idx * 20 ) + 19 ) );
-        //    if ( hovered )
-        //        menu.draw_list.filled_rect( color_picker_position + vec2_t( 0, 20 + ( idx * 20 ) ), vec2_t( alt_window_size.x, 20 ), color_t( 24, 24, 24, 255 ), 3.f );
-
-        //    auto text_size = menu.drawing.calc_text_size( m_titles[ idx ] );
-
-        //    if ( hovered && ( menu.mouse_active && !menu.old_mouse_active ) ) {
-        //        if ( idx == 0 ) {
-        //            // save color...
-        //            printf( "%s\n", color_buf );
-        //            auto len = strlen( color_buf );
-
-        //            auto hdst = GlobalAlloc( GMEM_MOVEABLE | GMEM_DDESHARE, ( len + 1 ) * sizeof( char ) );
-        //            if ( hdst ) {
-        //                auto dst = ( LPSTR ) GlobalLock( hdst );
-        //                if ( dst ) {
-        //                    memcpy( dst, color_buf, len * sizeof( char ) );
-        //                    dst[ len ] = '\0';
-        //                }
-        //            }
-        //            GlobalUnlock( hdst );
-
-        //            if ( OpenClipboard( nullptr ) ) {
-        //                EmptyClipboard( );
-        //                SetClipboardData( CF_TEXT, hdst );
-        //                CloseClipboard( );
-        //            }
-        //        }
-        //        else {
-        //            if ( OpenClipboard( nullptr ) ) {
-        //                if ( auto handle = GetClipboardData( CF_TEXT ) ) {
-        //                    char* input = static_cast< char* >( GlobalLock( handle ) );
-        //                    if ( input )
-        //                        color = hex_to_rgb( input );
-
-        //                    GlobalUnlock( handle );
-        //                }
-
-        //                CloseClipboard( );
-        //            }
-        //        }
-
-        //        menu.window_ctx.m_active_hash = 0;
-        //    }
-
-        //    menu.draw_list.text( color_picker_position + vec2_t( 5, 20 + ( idx * 20 ) + 10 - text_size.y / 2 ), m_titles[ idx ], hovered ? globals::menu_accent : color_t( 60, 60, 60, 255 ), text_flags::text_flags_none );
-        //}
-
-        auto color_buf_size = menu.drawing.calc_text_size( color_buf );
-
-        menu.draw_list.text( color_picker_position + vec2_t( 5, 10 - ( color_buf_size.y / 2 ) ), color_buf, globals::palette::white, text_flags::text_flags_none );
-
-        menu.draw_list.filled_rect( color_picker_position + vec2_t( alt_window_size.x - 15, 5 ), vec2_t( 10, 10 ), color, 3.f );
-        menu.draw_list.rect( color_picker_position + vec2_t( alt_window_size.x - 15, 5 ), vec2_t( 10, 10 ), globals::palette::black, 3.f );
-
-        menu.draw_list.rect( color_picker_position + vec2_t( 1, 1 ), alt_window_size - vec2_t( 2, 2 ), color_t( 60, 60, 60, 255 ), 3.f );
-        menu.draw_list.rect( color_picker_position, alt_window_size, globals::palette::black, 3.f );
-    }
     else if ( menu.window_ctx.m_active_hash == util::hash( title ) ) {
         auto color_hsv = color.to_hsv( );
 
@@ -214,10 +141,7 @@ void calliope::menu_t::components_t::colorpicker( const char* title, color_t& co
 
         color = color_t::hsv( color_hsv.x, color_hsv.y, color_hsv.z );
 
-        auto picker_color = color_t::hsv( color_hsv.x, 1, 1 );
-
-        menu.draw_list.multi_color_filled_rect( picker_position, picker_position_size, { globals::palette::black, picker_color, picker_color, globals::palette::white } );
-        menu.draw_list.multi_color_filled_rect( picker_position, picker_position_size, { globals::palette::black.alpha( 0 ), globals::palette::black.alpha( 0 ), globals::palette::black, globals::palette::black } );
+        menu.draw_list.multi_color_filled_rect(picker_position, picker_position_size, { color, color, color, globals::palette::white });
 
         menu.draw_list.filled_rect( picker_mouse_cursor - vec2_t( 1, 1 ), vec2_t( 4, 4 ), globals::palette::white );
         menu.draw_list.rect( picker_mouse_cursor - vec2_t( 1, 1 ), vec2_t( 4, 4 ), globals::palette::black );
@@ -242,12 +166,16 @@ void calliope::menu_t::components_t::colorpicker( const char* title, color_t& co
             }
         }
 
+
+       // menu.draw_list.multi_color_filled_rect(picker_position, picker_position_size, { globals::palette::black.alpha(0), globals::palette::black.alpha(0), globals::palette::black, globals::palette::black });
+
         menu.draw_list.filled_rect( alpha_bar_position, alpha_bar_size, color );
         menu.draw_list.rect( alpha_bar_position, alpha_bar_size, color_t( 0, 0, 0, 255 ), 0.f );
 
         menu.draw_list.rect( vec2_t( alpha_bar_mouse_cursor.x - 1, alpha_bar_mouse_cursor.y - 1 ), vec2_t( 7, alpha_bar_size.y + 2 ), globals::palette::black );
         menu.draw_list.rect( vec2_t( alpha_bar_mouse_cursor.x + 1, alpha_bar_mouse_cursor.y + 1 ), vec2_t( 3, alpha_bar_size.y - 2 ), globals::palette::black );
         menu.draw_list.rect( vec2_t( alpha_bar_mouse_cursor.x, alpha_bar_mouse_cursor.y ), vec2_t( 5, alpha_bar_size.y ), globals::palette::white );
+   
     }
 
     for ( auto idx{ 0 }; idx < 4; idx++ ) {

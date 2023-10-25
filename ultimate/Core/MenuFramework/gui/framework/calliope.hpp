@@ -50,6 +50,13 @@ namespace calliope {
 		bool operator==( float num ) { return x == num && y == num; }
 	};
 
+
+	using AREA = struct SArea_t
+	{
+		int m_iLeft, m_iTop, m_iRight, m_iBottom;
+	};
+
+
 	struct color_t {
 		float r, g, b, a;
 

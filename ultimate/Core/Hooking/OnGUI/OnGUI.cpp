@@ -1670,6 +1670,11 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		//if (!TestBundle)
 		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/H_Original.unity3d", 0, 0);
 
+
+		 //draw color picker
+
+	
+
 		if (is_menu_open) {
 			if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
 				auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
