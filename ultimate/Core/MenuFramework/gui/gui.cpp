@@ -484,7 +484,7 @@ void RageTab()
         else
             m_settings::AdvancedChecks = false;
         
-        calliope::menu.components.checkbox(XS("Simulated-Indicator"), m_settings::ShowCachedLOS);
+       // calliope::menu.components.checkbox(XS("Simulated-Indicator"), m_settings::ShowCachedLOS);
         calliope::menu.components.checkbox(XS("Simulated-Point"), m_settings::ShowCachedPoint);
         calliope::menu.components.slider<float>(XS("Simulated-Points"), XS(""), m_settings::LOSCheckAmount, 0, 2000);
 
