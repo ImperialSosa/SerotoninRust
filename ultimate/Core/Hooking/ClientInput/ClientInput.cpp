@@ -1856,12 +1856,12 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 						}
 						break;
 					//case 7:
-					//	if (TestBundle) {
+					//	if (IconBundle) {
 					//		if (!TestShader) //Galaxy
-					//			TestShader = TestBundle->LoadAsset<UnityEngine::Shader>(XS("el_designshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+					//			TestShader = IconBundle->LoadAsset<UnityEngine::Shader>(XS("el_designshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
 					//		if (!TestMaterial)
-					//			TestMaterial = TestBundle->LoadAsset<UnityEngine::Material>(XS("h_original.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+					//			TestMaterial = IconBundle->LoadAsset<UnityEngine::Material>(XS("h_original.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
 
 					//		if (material->shader() != TestShader)
 					//		{

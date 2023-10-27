@@ -462,8 +462,10 @@ void RageTab()
 
 
         calliope::menu.components.checkbox(XS("Manipulation"), m_settings::Manipulation);
+        calliope::menu.components.keybind(XS("Manipulation Key"), (int&)m_settings::ManipKey, true);
+
         calliope::menu.components.checkbox(XS("Manip-Indicator"), m_settings::ManipFlags);
-        calliope::menu.components.checkbox(XS("Manip-Angle"), m_settings::DrawManipPoints);
+        calliope::menu.components.checkbox(XS("Manip-Scanning-Speed"), m_settings::DrawManipPoints);
         calliope::menu.components.slider<float>(XS("Manip-Angles"), XS(""), m_settings::ManipPoints, 0, 50);
         calliope::menu.components.dropdown(XS("Manip-Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
 
@@ -1275,7 +1277,7 @@ void WeaponsTab()
         if (m_settings::ChangeRecoil)
             calliope::menu.components.slider<float>(XS("Recoil"), XS(""), m_settings::recoilPercent, 0, 100);
         if (m_settings::NormalThickBullet)
-            calliope::menu.components.slider<float>(XS("Thickness"), XS(""), m_settings::NormalThickBulletThickness, 0, 4.5);
+            calliope::menu.components.slider<float>(XS("Thickness"), XS(""), m_settings::NormalThickBulletThickness, 0, 4.44);
 
         calliope::menu.components.slider<float>(XS("Spread-Amount"), XS(""), m_settings::SilentSpread, 0, 100);
 
