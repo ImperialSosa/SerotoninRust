@@ -1391,7 +1391,7 @@ void ColorsTab()
 void GUI::DrawMenu()
 {
     if (calliope::menu.components.window(XS("Serotonin"), calliope::vec2_t(250, 250), calliope::vec2_t(600, 400), calliope::menu_t::window_flags_none)) {
-        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("World-2"), XS("World-3"), XS("Player"), XS("Misc"), XS("Weather"), XS("Weapon"), XS("Colors")})) {
+        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("World-2"), XS("World-3"), XS("Player"), XS("Misc"), XS("Weather"), XS("Weapon"), XS("Settings")})) {
         case 0: {
             AimbotTab();
             break;
