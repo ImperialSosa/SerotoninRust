@@ -66,19 +66,18 @@ constexpr std::size_t GetLength(const Type* const data)
 template <typename Type>
 constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, std::size_t size, bool ignore_case)
 {
-	std::uint64_t finalHash = hash * HashPrime;
-
+	std::uint64_t finalHash = hash;
 	if (ignore_case) {
+		// Preprocess data to lowercase
 		for (std::size_t i = 0; i < size; ++i) {
-			finalHash ^= ToLower(data[i]);
+			finalHash = (finalHash * HashPrime) ^ ToLower(data[i]);
 		}
 	}
 	else {
 		for (std::size_t i = 0; i < size; ++i) {
-			finalHash ^= data[i];
+			finalHash = (finalHash * HashPrime) ^ data[i];
 		}
 	}
-
 	return finalHash;
 }
 
