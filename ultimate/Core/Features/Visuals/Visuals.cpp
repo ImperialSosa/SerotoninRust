@@ -2867,6 +2867,8 @@ void Visuals::CacheEntities()
 							if (!BaseEntity->net())
 								continue;
 
+							auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
+
 							const auto EntityID = BaseEntity->prefabID();
 							const auto StashID = 2568831788;
 							const auto boarID = 502341109;
@@ -2957,35 +2959,35 @@ void Visuals::CacheEntities()
 							//{
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//*/}
-							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat)
+							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t1workbench && m_settings::T1Workbench)
+							else if (EntityID == t1workbench && m_settings::T1Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t2workbench && m_settings::T2Workbench)
+							else if (EntityID == t2workbench && m_settings::T2Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t3workbench && m_settings::T3Workbench)
+							else if (EntityID == t3workbench && m_settings::T3Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == Minicopter && m_settings::Minicopter)
+							else if (EntityID == Minicopter && m_settings::Minicopter && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == ScrapHeli && m_settings::ScrapHeli)
+							else if (EntityID == ScrapHeli && m_settings::ScrapHeli && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == RHIB && m_settings::Rhib)
+							else if (EntityID == RHIB && m_settings::Rhib && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == Rowboat && m_settings::Rowboat)
+							else if (EntityID == Rowboat && m_settings::Rowboat && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2993,51 +2995,51 @@ void Visuals::CacheEntities()
 							//{
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
-							else if (EntityID == BearTrap && m_settings::BearTrap)
+							else if (EntityID == BearTrap && m_settings::BearTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == GunTrap && m_settings::ShotgunTrap)
+							else if (EntityID == GunTrap && m_settings::ShotgunTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == FlameTurret && m_settings::FlameTurret)
+							else if (EntityID == FlameTurret && m_settings::FlameTurret && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == FloorSpikes && m_settings::SpikesTrap)
+							else if (EntityID == FloorSpikes && m_settings::SpikesTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == LandMine && m_settings::LandMine)
+							else if (EntityID == LandMine && m_settings::LandMine && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == SamSite && m_settings::SamSite)
+							else if (EntityID == SamSite && m_settings::SamSite && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_basic && m_settings::BasicCrate)
+							else if (EntityID == crate_basic && m_settings::BasicCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate)
+							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal && m_settings::MilitaryCrate)
+							else if (EntityID == crate_normal && m_settings::MilitaryCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_elite && m_settings::EliteCrate)
+							else if (EntityID == crate_elite && m_settings::EliteCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == supply_drop && m_settings::SupplyDrop)
+							else if (EntityID == supply_drop && m_settings::SupplyDrop && distance <= m_settings::MaxSupplyDropDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							else if (EntityID == crate_normal && m_settings::NormalCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -3045,113 +3047,112 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}*/
-							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
+							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter && distance <= m_settings::MaxAPCDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == heli_crate && m_settings::HeliCrate)
+							else if (EntityID == heli_crate && m_settings::HeliCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == bradley_apc && m_settings::BradleyAPC)
+							else if (EntityID == bradley_apc && m_settings::BradleyAPC && distance <= m_settings::MaxAPCDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == bradley_crate && m_settings::BradleyCrate)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
-
-							else if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate)
+							else if (EntityID == bradley_crate && m_settings::BradleyCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == autoturret_deployed && m_settings::AutoTurret)
+							else if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == player_corpse && m_settings::Corpse)
+							else if (EntityID == autoturret_deployed && m_settings::AutoTurret && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == player_backpack && m_settings::BackPack)
+							else if (EntityID == player_corpse && m_settings::Corpse && distance <= m_settings::MaxPlayerDropsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
+							else if (EntityID == player_backpack && m_settings::BackPack && distance <= m_settings::MaxPlayerDropsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
+							else if (EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
+							else if (EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StoneCollectable && m_settings::StoneCollectable)
+							else if (EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == MetalCollectable && m_settings::MetalCollectable)
+							else if (EntityID == StoneCollectable && m_settings::StoneCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == SulfurCollectable && m_settings::SulfurCollectable)
+							else if (EntityID == MetalCollectable && m_settings::MetalCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == dieselCollectable && m_settings::DieselBarrel)
+							else if (EntityID == SulfurCollectable && m_settings::SulfurCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == HempCollectable && m_settings::Hemp)
+							else if (EntityID == dieselCollectable && m_settings::DieselBarrel && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StashID && m_settings::Stash)
+							else if (EntityID == HempCollectable && m_settings::Hemp && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom)
+							else if (EntityID == StashID && m_settings::Stash && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == PumpkinID && m_settings::Pumpkin)
+							else if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == PotatoID && m_settings::Potato)
+							else if (EntityID == PumpkinID && m_settings::Pumpkin && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == CornID && m_settings::Corn)
+							else if (EntityID == PotatoID && m_settings::Potato && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems)
+							else if (EntityID == CornID && m_settings::Corn && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == cupboard_deployed && m_settings::cupboard)
+							else if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems && distance <= m_settings::MaxDroppedDistance)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == cupboard_deployed && m_settings::cupboard && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}

@@ -1,5 +1,6 @@
 #pragma once
 #include "../Utils/hash.hpp"
+#include "../Utils/crc32.hpp"
 #include "../Utils/lazy.hpp"
 
 extern int sprintf(char* buf, const char* fmt, ...);

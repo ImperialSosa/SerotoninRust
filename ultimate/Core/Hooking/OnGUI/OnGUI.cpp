@@ -1928,18 +1928,19 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 
-					//static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-					//float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-					//if (current_time - send_time > 5.f)
-					//{
+					static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+					if (current_time - send_time > 5.f)
+					{
 						//LOG(XS("[DEBUG] Speed"));
 
 						Visuals().CacheEntities();
 
-					//	send_time = current_time;
-					//}
+						send_time = current_time;
+					}
 		
-					Visuals().RenderEntities();
+					if (!PrefabVectorList.empty())
+						Visuals().RenderEntities();
 				}	
 			}
 

@@ -145,5 +145,6 @@
     <ClInclude Include="Core\MenuFramework\gui\framework\calliope.hpp" />
     <ClInclude Include="Core\MenuFramework\gui\gui.hpp" />
     <ClInclude Include="Core\Includes\colorsettings.hpp" />
+    <ClInclude Include="Core\Utils\crc32.hpp" />
   </ItemGroup>
 </Project>

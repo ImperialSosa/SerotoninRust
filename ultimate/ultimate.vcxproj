@@ -288,6 +288,7 @@
     <ClInclude Include="Core\SDK\RustStructs.h" />
     <ClInclude Include="Core\SDK\System\System.hpp" />
     <ClInclude Include="Core\SDK\UnityEngine\UnityEngine.hpp" />
+    <ClInclude Include="Core\Utils\crc32.hpp" />
     <ClInclude Include="Core\Utils\hash.hpp" />
     <ClInclude Include="Core\Utils\json.hpp" />
     <ClInclude Include="Core\Utils\stb_sprintf.h" />
