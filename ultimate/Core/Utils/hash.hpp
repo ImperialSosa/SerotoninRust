@@ -52,14 +52,33 @@ constexpr std::size_t GetLength(const Type* const data)
 }
 
 
+//template <typename Type>
+//constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, std::size_t size, bool ignore_case)
+//{
+//	std::uint64_t finalHash = hash;
+//	for (std::size_t i = 0; i < size; ++i) {
+//		const auto element = static_cast<std::uint64_t>(ignore_case ? ToLower(data[i]) : data[i]);
+//		finalHash = (finalHash * HashPrime) ^ element;
+//	}
+//	return finalHash;
+//}
+
 template <typename Type>
 constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, std::size_t size, bool ignore_case)
 {
-	std::uint64_t finalHash = hash;
-	for (std::size_t i = 0; i < size; ++i) {
-		const auto element = static_cast<std::uint64_t>(ignore_case ? ToLower(data[i]) : data[i]);
-		finalHash = (finalHash * HashPrime) ^ element;
+	std::uint64_t finalHash = hash * HashPrime;
+
+	if (ignore_case) {
+		for (std::size_t i = 0; i < size; ++i) {
+			finalHash ^= ToLower(data[i]);
+		}
 	}
+	else {
+		for (std::size_t i = 0; i < size; ++i) {
+			finalHash ^= data[i];
+		}
+	}
+
 	return finalHash;
 }
 
