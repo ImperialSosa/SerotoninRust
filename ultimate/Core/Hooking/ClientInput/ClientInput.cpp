@@ -347,7 +347,7 @@ int GetSelectedSlot() {
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
 {
-	if(!InGame)
+	if (!InGame)
 		return Hooks::ClientInputhk.get_original< decltype(&ClientInput)>()(a1, a2);
 
 	if (!IsAddressValid(Features().Instance()->LocalPlayer))
@@ -1095,9 +1095,9 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 										{
 											if (BaseProjectile->primaryMagazine()->contents() > 0)
 											{
-												if (lastShotTime < -0.1f) {
-													float curtime = Features().LocalPlayer->lastSentTickTime();
-													if (curtime > last_shoot_timezz + 1.3f) {
+												if (!BaseProjectile->HasAttackCooldown())
+												{
+													if (lastShotTime < -0.1f) {
 														BaseProjectile->SendSignalBroadcast(RustStructs::Signal::Attack, XS(""));
 														BaseProjectile->LaunchProjectile();
 														BaseProjectile->primaryMagazine()->contents()--;
@@ -1105,9 +1105,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 														BaseProjectile->ShotFired();
 														BaseProjectile->DidAttackClientside();
 														BaseProjectile->BeginCycle();
-														last_shoot_timezz = curtime;
+														BaseProjectile->StartAttackCooldown(BaseProjectile->repeatDelay() - 0.1f);
 													}
 												}
+												
 											}
 										}
 

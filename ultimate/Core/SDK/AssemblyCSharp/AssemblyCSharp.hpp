@@ -513,6 +513,12 @@ namespace AssemblyCSharp {
 		Sit_Throne = 29,
 		Standing = 128
 	};
+
+	struct CargoShip {
+		IL2CPP_CLASS("CargoShip");
+	};
+
+
 	struct BaseMountable : BaseCombatEntity
 	{
 		IL2CPP_CLASS("BaseMountable");
@@ -723,6 +729,10 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(float, ProjectileTravelTime);
 		IL2CPP_FIELD(Vector3, ProjectileVelocity);
 		IL2CPP_FIELD(bool, DidHit);
+		IL2CPP_FIELD(Projectile*, ProjectilePrefab);
+		IL2CPP_FIELD(bool, IsPredicting);
+		IL2CPP_FIELD(AttackEntity*, WeaponPrefab);
+		IL2CPP_FIELD(bool, DoDecals);
 
 		IL2CPP_FIELD(uint64_t, HitMaterial);
 		IL2CPP_FIELD(uint64_t, HitBone);
@@ -731,8 +741,59 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(BaseEntity*, HitEntity);
 
 		IL2CPP_FIELD(Vector3, HitPositionWorld);
+		IL2CPP_FIELD(Vector3, PointStart);
 
-		
+		Vector3 PositionOnRay(Vector3 pos)
+		{
+			if (!this)
+				return Vector3();
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("PositionOnRay"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<Vector3>(procedure, this, pos);
+			}
+			else
+			{
+
+				return Vector3();
+			}
+		}
+
+		void LoadFromAttack(ProtoBuf::Attack* atk, bool serverSide)
+		{
+			if (!this)
+				return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("LoadFromAttack"), 2);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this, atk, serverSide);
+			}
+			else
+			{
+
+				return;
+			}
+		}
 	};
 
 	struct HitTest : Il2CppObject {
@@ -765,6 +826,32 @@ namespace AssemblyCSharp {
 		Vector3 HitPointWorld();
 		Vector3 HitNormalWorld();
 
+		ProtoBuf::Attack* BuildAttackMessage(BasePlayer* attackingEntity)
+		{
+
+			if (!this)
+				return {};
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("BuildAttackMessage"), 1);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<ProtoBuf::Attack*>(procedure, this, attackingEntity);
+			}
+			else
+			{
+
+				return {};
+			}
+		}
 
 
 		void Clear()
@@ -913,6 +1000,8 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(Vector3, previousPosition);
 		IL2CPP_FIELD(Vector3, previousVelocity);
 		IL2CPP_FIELD(HitTest*, hitTest);
+		IL2CPP_FIELD(Projectile*, sourceProjectilePrefab);
+
 		IL2CPP_FIELD(float, traveledTime);
 		IL2CPP_FIELD(float, traveledDistance);
 		IL2CPP_FIELD(float, gravityModifier);
@@ -2285,6 +2374,8 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(SkinnedMultiMesh*, _multiMesh);
 		IL2CPP_FIELD(bool, isLocalPlayer);
 		IL2CPP_FIELD(bool, visible);
+		IL2CPP_FIELD(uintptr_t, modelState);
+
 		IL2CPP_FIELD(UnityEngine::Vector3, velocity);
 		IL2CPP_FIELD(UnityEngine::Vector3, newVelocity);
 		//IL2CPP_FIELD(UnityEngine::BoxCollider*, collision);
@@ -2300,6 +2391,28 @@ namespace AssemblyCSharp {
 		IL2CPP_PROPERTY(UnityEngine::Animator*, animator);
 
 		bool isNpc();
+
+
+		void FrameUpdate()
+		{
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("FrameUpdate"), 0);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this);
+			}
+
+
+			return;
+		}
 
 		static void RebuildAll()
 		{
@@ -2447,6 +2560,9 @@ namespace AssemblyCSharp {
 		IL2CPP_FIELD(InputState*, state);
 		IL2CPP_FIELD(Vector3, bodyAngles);
 		IL2CPP_FIELD(Vector2, recoilAngles);
+		IL2CPP_FIELD(Vector3, offsetAngles);
+		IL2CPP_FIELD(Vector2, viewDelta);
+
 	};
 
 	struct OBB // TypeDefIndex: 12983
@@ -2458,8 +2574,6 @@ namespace AssemblyCSharp {
 		Vector3 forward; // 0x28
 		Vector3 right; // 0x34
 		Vector3 up; // 0x40
-		float reject; // 0x4C
-
 	};
 
 
@@ -3390,8 +3504,25 @@ namespace AssemblyCSharp {
 		IL2CPP_CLASS("Hammer");
 
 	};
-	struct Plannel_Guide : HeldEntity {
 
+	struct ConstructionTarget
+	{
+		bool valid; // 0x0
+		UnityEngine::Ray ray; // 0x4
+		BaseEntity* entity; // 0x20
+		uintptr_t socket; // 0x28
+		bool onTerrain; // 0x30
+		Vector3 position; // 0x34
+		Vector3 normal; // 0x40
+		Vector3 rotation; // 0x4C
+		BasePlayer* player; // 0x58
+		bool inBuildingPrivilege; // 0x60
+	};
+
+	struct Plannel_Guide : HeldEntity {
+		IL2CPP_CLASS("Planner.Guide");
+
+		IL2CPP_FIELD(ConstructionTarget*, lastPlacement);
 	};
 
 	struct Planner : HeldEntity {
@@ -3399,7 +3530,7 @@ namespace AssemblyCSharp {
 
 		IL2CPP_FIELD(Vector3, rotationOffset);
 		IL2CPP_FIELD(Plannel_Guide*, guide);
-
+		IL2CPP_FIELD(uintptr_t, currentConstruction);
 	};
 
 	

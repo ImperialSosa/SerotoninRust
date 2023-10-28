@@ -95,6 +95,9 @@ namespace m_settings {
 	inline bool TargetWounded = false;
 	inline bool ShowUsers = false;
 	inline bool NameSpoofer = false;
+	inline bool RandomName = false;
+	inline bool CustomName = false;
+	inline std::string custom_name = "";
 	inline int SelectedBoxESP = 0;
 	inline int HeldItemType = 0;
 	inline int SelectedHealthBar = 0;

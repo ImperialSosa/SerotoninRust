@@ -385,6 +385,8 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 			}
 		}
 
+		if (c_projectile->projectileID() == 0)
+			continue;
 
 		AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
 
@@ -436,6 +438,8 @@ void Hooks::ProjectileShootHook(ProtoBuf::ProjectileShoot* _This, ProtoBuf::Stre
 		if (!c_projectile) 
 			continue;
 
+		if (c_projectile->projectileID() == 0)
+			continue;
 
 
 		if (aimbot_percentage <= (int)m_settings::AimbotAccuracy)
