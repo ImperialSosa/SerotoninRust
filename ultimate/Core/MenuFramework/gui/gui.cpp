@@ -324,6 +324,8 @@ void GUI::SetupGUI()
 
    // game::drawing::draw_texture_with_color_and_rounding({ 10, 10, 50, 50 }, white_texture, 0, true, 0.f, { 1.f, 0.f, 0.f, 1.f }, 0.f, 4.f);
 
+   // game::drawing::draw_texture_multi_colored({ 10, 10, 200, 200 }, white_texture, 0, true, 0.f, { 1.f, 0.f, 0.f, 0.5f }, { 0.f, 1.f, 0.f, 0.5f }, { 0.f, 0.f, 1.f, 0.5f }, { 1.f, 1.f, 0.f, 0.5f }, game::vec4(0, 0, 0, 0), game::vec4(0, 0, 0, 0.f), false);
+
     // you may want to change this to use the Unity VK Keys instead, etc... unity mouse buttons its all up to your preferences...
     calliope::util::get_key_states();
 
@@ -465,8 +467,8 @@ void RageTab()
         calliope::menu.components.keybind(XS("Manipulation Key"), (int&)m_settings::ManipKey, true);
 
         calliope::menu.components.checkbox(XS("Manip-Indicator"), m_settings::ManipFlags);
-        calliope::menu.components.checkbox(XS("Manip-Scanning-Speed"), m_settings::DrawManipPoints);
-        calliope::menu.components.slider<float>(XS("Manip-Angles"), XS(""), m_settings::ManipPoints, 0, 50);
+        calliope::menu.components.checkbox(XS("Manip-Point"), m_settings::DrawManipPoints);
+        calliope::menu.components.slider<float>(XS("Manip-Scanning-Speed"), XS(""), m_settings::ManipPoints, 0, 50);
         calliope::menu.components.dropdown(XS("Manip-Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
 
         calliope::menu.components.end_groupbox();

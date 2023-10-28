@@ -10,7 +10,8 @@ inline std::array<int, 20> valid_bones = {
 		1, 2, 3, 5, 6, 14, 15, 17, 18, 21, 23, 24, 25, 26, 27, 48, 55, 56, 57, 76
 };
 
-inline float NormalizeAngle(float angle) {
+//OOF FOV Function
+float normalize_angle(float angle) {
 	while (angle > 360.0f) {
 		angle -= 360.0f;
 	}
@@ -20,219 +21,55 @@ inline float NormalizeAngle(float angle) {
 	return angle;
 }
 
-inline Vector3 NormalizeAngles(Vector3 angles) {
-	angles.x = NormalizeAngle(angles.x);
-	angles.y = NormalizeAngle(angles.y);
-	angles.z = NormalizeAngle(angles.z);
+Vector3 normalize_angles(Vector3 angles) {
+	angles.x = normalize_angle(angles.x);
+	angles.y = normalize_angle(angles.y);
+	angles.z = normalize_angle(angles.z);
 	return angles;
 }
 
-inline Vector3 EulerAngles(Vector4 q1) {
+Vector3 to_euler_angles(Vector4 q1) {
 	float num = q1.w * q1.w;
 	float num2 = q1.x * q1.x;
 	float num3 = q1.y * q1.y;
 	float num4 = q1.z * q1.z;
 	float num5 = num2 + num3 + num4 + num;
 	float num6 = q1.x * q1.w - q1.y * q1.z;
-	Vector3 vector;
+	Vector3 vector = Vector3();
 	if (num6 > 0.4995f * num5) {
-		vector.y = 2.0f * Math::atan2f(q1.y, q1.x);
+		vector.y = 2.0f * Math::my_atan2(q1.y, q1.x);
 		vector.x = 1.57079637f;
 		vector.z = 0.0f;
-		return NormalizeAngles(vector * 57.2958f);
+		return normalize_angles(vector * 57.2958f);
 	}
 	if (num6 < -0.4995f * num5) {
-		vector.y = -2.0f * Math::atan2f(q1.y, q1.x);
+		vector.y = -2.0f * Math::my_atan2(q1.y, q1.x);
 		vector.x = -1.57079637f;
 		vector.z = 0.0f;
-		return NormalizeAngles(vector * 57.2958f);
+		return normalize_angles(vector * 57.2958f);
 	}
-	Vector4 quaternion = Vector4(q1.w, q1.z, q1.x, q1.y);
-	vector.y = Math::atan2f(2.0f * quaternion.x * quaternion.w + 2.0f * quaternion.y * quaternion.z, 1.0f - 2.0f * (quaternion.z * quaternion.z + quaternion.w * quaternion.w));
-	vector.x = Math::asinf(2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y));
-	vector.z = Math::atan2f(2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
-	return NormalizeAngles(vector * 57.2958f);
+	Vector4 quaternion = Vector4(q1.w, q1.z, q1.x, q1.y); 
+	vector.y = Math::my_atan2(2.0f * quaternion.x * quaternion.w + 2.0f * quaternion.y * quaternion.z, 1.0f - 2.0f * (quaternion.z * quaternion.z + quaternion.w * quaternion.w));
+	vector.x = Math::my_asin(2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y));
+	vector.z = Math::my_atan2(2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
+	return normalize_angles(vector * 57.2958f);
 }
 
-Vector2 CosTanSinLineH(float flAngle, float range, int x, int y, int LineLength) {
-	float mainAngle = flAngle;
-	mainAngle += 45.f;
+Vector2 cos_tan_horizontal(float angle, float range, float x, float y, int length) {
+	float our_angle = (angle + 45.f);
 
-	float flYaw = (mainAngle) * (M_PI / 180.0);
+	float yaw = our_angle * (M_PI / 180.0);
 
-	float viewcosyawzzzzzzz = Math::cosf(flYaw);
-	float viewsinyawzzzzzzz = Math::sinf(flYaw);
+	float view_cosinus = Math::cosf(yaw);
+	float view_sinus = Math::sinf(yaw);
 
-	float x2 = range * (-viewcosyawzzzzzzz) + range * viewsinyawzzzzzzz;
-	float y2 = range * (-viewcosyawzzzzzzz) - range * viewsinyawzzzzzzz;
+	float x2 = range * (-view_cosinus) + range * view_sinus;
+	float y2 = range * (-view_cosinus) - range * view_sinus;
 
-	int posonscreenX = x + int(x2 / range * (LineLength));
-	int posonscreenY = y + int(y2 / range * (LineLength));
+	int screen_x = x + static_cast<int>(x2 / range * length);
+	int screen_y = y + static_cast<int>(y2 / range * length);
 
-	return Vector2(posonscreenX, posonscreenY);
-}
-
-void DrawTriangles(Vector2 center) {
-	Color col = Color(1, 1, 1, 1.f);
-	auto pixelsize = 5; auto trianglecount = 5;
-	Vector2 triangleList[5][3] = {
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } }
-	};
-	for (size_t n = 0; n < trianglecount; n++)
-	{
-		std::vector<Vector2> v = {};
-		for (size_t i = 0; i < 3; i++)
-		{
-			triangleList[n][i].x = LI_FN(rand)() % (pixelsize / 2) + 1;
-			triangleList[n][i].y = LI_FN(rand)() % (pixelsize / 2) + 1;
-
-			if (triangleList[n][i].x > triangleList[n][i].y)
-			{
-				float tmp = triangleList[n][i].x;
-				triangleList[n][i].x = triangleList[n][i].y;
-				triangleList[n][i].y = tmp;
-			}
-		}
-	}
-
-
-	auto morphTriangleIdx = new int[pixelsize];
-	auto morphVertexIdx = new int[pixelsize];
-	auto morphDeltaX = new int[pixelsize];
-	auto morphDeltaY = new int[pixelsize];
-	auto setMorphParams = [&]() {
-		for (size_t i = 0; i < 3; i++)
-		{
-			morphTriangleIdx[i] = LI_FN(rand)() % pixelsize + 0;
-			morphVertexIdx[i] = LI_FN(rand)() % 3 + 0;
-			morphDeltaX[i] = 0;
-			morphDeltaY[i] = 0;
-			if ((LI_FN(rand)() % 1 + 0) == 0)
-				morphDeltaX[i] = 1;
-			else
-				morphDeltaX[i] = -1;
-		}
-		};
-
-	if ((LI_FN(rand)() % 10 + 1) == 1)
-		setMorphParams();
-
-	for (size_t i = 0; i < 5; i++)
-	{
-		float x = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = morphDeltaX[i];
-		float y = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = morphDeltaY[i];
-
-		if (x > pixelsize / 2 - 1)
-		{
-			x = pixelsize / 2 - 1;
-			morphDeltaX[i] = -1;
-		}
-		else if (x < 0)
-		{
-			x = 0;
-			morphDeltaX[i] = 1;
-		}
-
-		if (y > pixelsize / 2 - 1)
-		{
-			y = pixelsize / 2 - 1;
-			morphDeltaY[i] = -1;
-		}
-		else if (y < 0)
-		{
-			y = 0;
-			morphDeltaY[i] = 1;
-		}
-
-		if (x > y) {
-			float tmp = x;
-			x = y;
-			y = tmp;
-		}
-
-		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = x;
-		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = y;
-	}
-
-	std::vector<Vector2> v = { };
-	std::vector<Vector2> w = { };
-
-	auto reflect = [&](std::vector<Vector2>& v, std::vector<Vector2>& w, int n, int offset) {
-		for (int i = 0; i < v.size(); i++)
-		{
-			if (n == 0)
-			{
-				w[i].x = v[i].x + offset;
-				w[i].y = v[i].y + offset;
-			}
-			else if (n == 1)
-			{
-				w[i].x = -v[i].x + offset;
-				w[i].y = v[i].y + offset;
-			}
-			else if (n == 2)
-			{
-				w[i].x = v[i].x + offset;
-				w[i].y = -v[i].y + offset;
-			}
-			else if (n == 3)
-			{
-				w[i].x = -v[i].x + offset;
-				w[i].y = -v[i].y + offset;
-			}
-			else if (n == 4)
-			{
-				w[i].x = v[i].y + offset;
-				w[i].y = v[i].x + offset;
-			}
-			else if (n == 5)
-			{
-				w[i].x = -v[i].y + offset;
-				w[i].y = v[i].x + offset;
-			}
-			else if (n == 6)
-			{
-				w[i].x = v[i].y + offset;
-				w[i].y = -v[i].x + offset;
-			}
-			else if (n == 7)
-			{
-				w[i].x = -v[i].y + offset;
-				w[i].y = -v[i].x + offset;
-			}
-		}
-		};
-
-	for (size_t n = 0; n < trianglecount; n++)
-	{
-		for (size_t k = 0; k < 3; k++)
-		{
-			v[k].x = triangleList[n][k].x;
-			v[k].y = triangleList[n][k].y;
-		}
-
-		for (size_t k = 0; k < 3; k++)
-		{
-			reflect(v, w, k, pixelsize / 2);
-
-			for (size_t z = 0; z < trianglecount; z++)
-			{
-				for (size_t ii = 0; ii < 3; ii++)
-				{
-					w[ii].x += center.x;
-					w[ii].y += center.y;
-				}
-
-				UnityEngine::GL().Line(w[0], w[1], col);
-				UnityEngine::GL().Line(w[1], w[2], col);
-				UnityEngine::GL().Line(w[0], w[2], col);
-			}
-		}
-	}
+	return Vector2(screen_x, screen_y);
 }
 
 //Radar Function
@@ -648,6 +485,42 @@ void Visuals::DrawPlayers()
 					}
 				}
 
+				if (m_settings::Skeleton)
+				{
+					auto HeadBone = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
+					Vector2 HeadLocation;
+					UnityEngine::WorldToScreen(HeadBone, HeadLocation);
+					auto eyes = BasePlayer->eyes()->HeadForward();
+					Vector2 Forwards;
+					UnityEngine::WorldToScreen(HeadBone + eyes / 2, Forwards);
+
+					if (!HeadLocation.IsZero() && !Forwards.IsZero())
+						UnityEngine::GL::Line(Vector2(HeadLocation.x, HeadLocation.y), Vector2(Forwards.x, Forwards.y), Color::White());
+				}
+
+				//{
+				//	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+				//	auto LocalPos = LocalPlayer->model()->get_positionz();
+				//	auto LocalEyes = LocalPlayer->eyes();
+
+				//	auto PlayerPos = BasePlayer->model()->get_positionz();
+
+				//	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
+
+				//	Vector3 euler_angles = to_euler_angles(LocalEyes->get_rotation());
+
+				//	const Vector2 position = Vector2(LocalPos.x - PlayerPos.x, LocalPos.z - PlayerPos.z).normalize();
+
+				//	float angle = Math::my_atan2( position.x, position.y ) * 57.29578f - 180.f - euler_angles.y;
+
+				//	Vector2 pos_0 = cos_tan_horizontal(angle, 10.f, center_x, center_y, 140);
+				//	Vector2 pos_1 = cos_tan_horizontal(angle + 2.f, 10.f, center_x, center_y, 130);
+				//	Vector2 pos_2 = cos_tan_horizontal(angle - 2.f, 10.f, center_x, center_y, 130);
+
+				//	UnityEngine::GL().Triangle(Vector2(pos_0.x + 1, pos_0.y + 1), Vector2(pos_1.x + 1, pos_1.y + 1), Vector2(pos_2.x + 1, pos_2.y + 1), Color(0, 0, 0, 150.f));
+				//	UnityEngine::GL().Triangle(Vector2(pos_0.x, pos_0.y), Vector2(pos_1.x, pos_1.y), Vector2(pos_2.x, pos_2.y), BoxColor);
+				//}
+
 				if (m_settings::SelectedHealthBar == 1)
 				{
 					float bar_health = 0;
@@ -1062,177 +935,179 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-			if (m_settings::PlayerChams)
-			{
-				auto playerModel = BasePlayer->playerModel();
-				if (IsAddressValid(playerModel))
+
+				if (m_settings::PlayerChams)
 				{
-					auto _multiMesh = playerModel->_multiMesh();
-					if (IsAddressValid(_multiMesh))
-					{
-						auto Renderers = _multiMesh->get_Renderers();
-						if (IsAddressValid(Renderers))
+
+						auto playerModel = BasePlayer->playerModel();
+						if (IsAddressValid(playerModel))
 						{
-							auto Renderers_Items = Renderers->_items;
-							if (Renderers_Items)
+							auto _multiMesh = playerModel->_multiMesh();
+							if (IsAddressValid(_multiMesh))
 							{
-								auto Renderers_Size = Renderers->_size;
-								if (Renderers_Size) {
-									for (int i = 0; i < Renderers_Size; i++) {
-										auto MainRenderer = Renderers_Items->m_Items[i];
+								auto Renderers = _multiMesh->get_Renderers();
+								if (IsAddressValid(Renderers))
+								{
+									auto Renderers_Items = Renderers->_items;
+									if (Renderers_Items)
+									{
+										auto Renderers_Size = Renderers->_size;
+										if (Renderers_Size) {
 
-										if (IsAddressValid(MainRenderer))
-										{
-											auto material = MainRenderer->material();
+											for (int i = 0; i < Renderers_Size; i++) {
+												auto MainRenderer = Renderers_Items->m_Items[i];
 
-											if (!IsAddressValid(material))
-												continue;
+												if (IsAddressValid(MainRenderer))
+												{
+													auto material = MainRenderer->material();
 
-											int selectedChams = m_settings::SelectedChams;
+													if (!IsAddressValid(material))
+														continue;
 
-											switch (selectedChams) {
-											case 1:
-												if (FireBundleA) {
-													if (!FireShaderA) //Blue Fire
-														FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+													int selectedChams = m_settings::SelectedChams;
 
-													if (!FireMaterialA)
-														FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+													switch (selectedChams) {
+													case 1:
+														if (FireBundleA) {
+															if (!FireShaderA) //Blue Fire
+																FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-													if (material->shader() != FireShaderA)
-													{
-														MainRenderer->set_material(FireMaterialA);
-														FireMaterialA->set_shader(FireShaderA);
-													}
-												}
-												break;
-											case 2:
-												if (FireBundleB) {
-													if (!FireShaderB) //Red Fire
-														FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+															if (!FireMaterialA)
+																FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
 
-													if (!FireMaterialB)
-														FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != FireShaderB)
-													{
-														MainRenderer->set_material(FireMaterialB);
-														FireMaterialB->set_shader(FireShaderB);
-													}
-												}
-												break;
-											case 3:
-												if (LightningBundle) {
-													if (!LightningShader) //Lightning
-														LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!LightningMaterial)
-														LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != LightningShader)
-													{
-														MainRenderer->set_material(LightningMaterial);
-														LightningMaterial->set_shader(LightningShader);
-													}
-												}
-												break;
-											case 4:
-												if (GeometricBundle) {
-													if (!GeometricShader) //Geometric Disolve
-														GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!GeometricMaterial)
-														GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != GeometricShader)
-													{
-														MainRenderer->set_material(GeometricMaterial);
-														GeometricMaterial->set_shader(GeometricShader);
-													}
-												}
-												break;
-											case 5:
-												if (GalaxyBundle) {
-													if (!GalaxyShader) //Galaxy
-														GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!GalaxyMaterial)
-														GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != GalaxyShader)
-													{
-														MainRenderer->set_material(GalaxyMaterial);
-														GalaxyMaterial->set_shader(GalaxyShader);
-													}
-												}
-												break;
-											case 6:
-												if (WireFrameBundle) {
-													if (!WireFrameShader) //Galaxy
-														WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!WireFrameMaterial)
-														WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != WireFrameShader)
-													{
-														MainRenderer->set_material(WireFrameMaterial);
-														WireFrameMaterial->set_shader(WireFrameShader);
-														//WireFrameMaterial->SetColor("_Color", Color::Red());
-													}
-												}
-												break;
-											case 7:
-												if (ColorBundle) {
-													auto VisibleChams_Color = Color{ ColorSettings::VisibleChams_Color.r, ColorSettings::VisibleChams_Color.g, ColorSettings::VisibleChams_Color.b, ColorSettings::VisibleChams_Color.a };
-													auto InvisibleChams_Color = Color{ ColorSettings::InvisibleChams_Color.r, ColorSettings::InvisibleChams_Color.g, ColorSettings::InvisibleChams_Color.b, ColorSettings::InvisibleChams_Color.a };
-													auto ScientistChams_Color = Color{ ColorSettings::ScientistChams_Color.r, ColorSettings::ScientistChams_Color.g, ColorSettings::ScientistChams_Color.b, ColorSettings::ScientistChams_Color.a };
-
-													if (!ColorShader) //Galaxy
-														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (material->shader() != ColorShader)
-													{
-														material->set_shader(ColorShader);
-														material->SetColor(XS("_ColorVisible"), VisibleChams_Color);
-														material->SetColor(XS("_ColorBehind"), InvisibleChams_Color);
-
-														if (npc)
-														{
-															material->SetColor(XS("_ColorVisible"), ScientistChams_Color);
-															material->SetColor(XS("_ColorBehind"), ScientistChams_Color);
+															if (material->shader() != FireShaderA)
+															{
+																MainRenderer->set_material(FireMaterialA);
+																FireMaterialA->set_shader(FireShaderA);
+															}
 														}
+														break;
+													case 2:
+														if (FireBundleB) {
+															if (!FireShaderB) //Red Fire
+																FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!FireMaterialB)
+																FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != FireShaderB)
+															{
+																MainRenderer->set_material(FireMaterialB);
+																FireMaterialB->set_shader(FireShaderB);
+															}
+														}
+														break;
+													case 3:
+														if (LightningBundle) {
+															if (!LightningShader) //Lightning
+																LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!LightningMaterial)
+																LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != LightningShader)
+															{
+																MainRenderer->set_material(LightningMaterial);
+																LightningMaterial->set_shader(LightningShader);
+															}
+														}
+														break;
+													case 4:
+														if (GeometricBundle) {
+															if (!GeometricShader) //Geometric Disolve
+																GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!GeometricMaterial)
+																GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != GeometricShader)
+															{
+																MainRenderer->set_material(GeometricMaterial);
+																GeometricMaterial->set_shader(GeometricShader);
+															}
+														}
+														break;
+													case 5:
+														if (GalaxyBundle) {
+															if (!GalaxyShader) //Galaxy
+																GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!GalaxyMaterial)
+																GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != GalaxyShader)
+															{
+																MainRenderer->set_material(GalaxyMaterial);
+																GalaxyMaterial->set_shader(GalaxyShader);
+															}
+														}
+														break;
+													case 6:
+														if (WireFrameBundle) {
+															if (!WireFrameShader) //Galaxy
+																WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!WireFrameMaterial)
+																WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != WireFrameShader)
+															{
+																MainRenderer->set_material(WireFrameMaterial);
+																WireFrameMaterial->set_shader(WireFrameShader);
+																//WireFrameMaterial->SetColor("_Color", Color::Red());
+															}
+														}
+														break;
+													case 7:
+														if (ColorBundle) {
+															auto VisibleChams_Color = Color{ ColorSettings::VisibleChams_Color.r, ColorSettings::VisibleChams_Color.g, ColorSettings::VisibleChams_Color.b, ColorSettings::VisibleChams_Color.a };
+															auto InvisibleChams_Color = Color{ ColorSettings::InvisibleChams_Color.r, ColorSettings::InvisibleChams_Color.g, ColorSettings::InvisibleChams_Color.b, ColorSettings::InvisibleChams_Color.a };
+															auto ScientistChams_Color = Color{ ColorSettings::ScientistChams_Color.r, ColorSettings::ScientistChams_Color.g, ColorSettings::ScientistChams_Color.b, ColorSettings::ScientistChams_Color.a };
+
+															if (!ColorShader) //Galaxy
+																ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (material->shader() != ColorShader)
+															{
+																material->set_shader(ColorShader);
+																material->SetColor(XS("_ColorVisible"), VisibleChams_Color);
+																material->SetColor(XS("_ColorBehind"), InvisibleChams_Color);
+
+																if (npc)
+																{
+																	material->SetColor(XS("_ColorVisible"), ScientistChams_Color);
+																	material->SetColor(XS("_ColorBehind"), ScientistChams_Color);
+																}
+															}
+														}
+														break;
+													case 8:
+														if (RPBGalaxyBundle) {
+															if (!RPBGalaxyShader) //Galaxy
+																RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!RPBGalaxyMaterial)
+																RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != RPBGalaxyShader)
+															{
+																MainRenderer->set_material(RPBGalaxyMaterial);
+																RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
+															}
+														}
+														break;
 													}
 												}
-												break;
-											case 8:
-												if (RPBGalaxyBundle) {
-													if (!RPBGalaxyShader) //Galaxy
-														RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-													if (!RPBGalaxyMaterial)
-														RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != RPBGalaxyShader)
-													{
-														MainRenderer->set_material(RPBGalaxyMaterial);
-														RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
-													}
-												}
-												break;
 											}
 										}
 									}
-
-								}
 								}
 							}
-						}
 					}
 				}
 			}
-		}
-		
+		}	
 	}
 }
 
@@ -2171,6 +2046,7 @@ void Visuals::RenderEntities()
 								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor, Color::Black(ColorSettings::StoneOre_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
+									
 									UnityEngine::Texture2D* texture = nullptr;
 									if (!texture)
 									{
@@ -3149,7 +3025,7 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							else if (EntityID == crate_normal && m_settings::MilitaryCrate)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}

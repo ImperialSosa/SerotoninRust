@@ -1930,7 +1930,7 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 					//static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
 					//float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-					//if (current_time - send_time > 10.f)
+					//if (current_time - send_time > 5.f)
 					//{
 						//LOG(XS("[DEBUG] Speed"));
 
