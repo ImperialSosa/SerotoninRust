@@ -1360,6 +1360,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				AimbotTarget.m_player->ServerRPC(XS("RPC_LootCorpse"));							
 			}
 		}
+		else {
+			m_settings::Thickbullet_AutoShoot = false;
+			m_settings::Thickbullet_Indicator = false;
+			StartShooting = false;
+		}
 	}
 	else {
 		m_settings::Thickbullet_AutoShoot = false;
