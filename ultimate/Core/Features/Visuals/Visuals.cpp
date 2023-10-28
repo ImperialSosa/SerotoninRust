@@ -10,231 +10,6 @@ inline std::array<int, 20> valid_bones = {
 		1, 2, 3, 5, 6, 14, 15, 17, 18, 21, 23, 24, 25, 26, 27, 48, 55, 56, 57, 76
 };
 
-inline float NormalizeAngle(float angle) {
-	while (angle > 360.0f) {
-		angle -= 360.0f;
-	}
-	while (angle < 0.0f) {
-		angle += 360.0f;
-	}
-	return angle;
-}
-
-inline Vector3 NormalizeAngles(Vector3 angles) {
-	angles.x = NormalizeAngle(angles.x);
-	angles.y = NormalizeAngle(angles.y);
-	angles.z = NormalizeAngle(angles.z);
-	return angles;
-}
-
-inline Vector3 EulerAngles(Vector4 q1) {
-	float num = q1.w * q1.w;
-	float num2 = q1.x * q1.x;
-	float num3 = q1.y * q1.y;
-	float num4 = q1.z * q1.z;
-	float num5 = num2 + num3 + num4 + num;
-	float num6 = q1.x * q1.w - q1.y * q1.z;
-	Vector3 vector;
-	if (num6 > 0.4995f * num5) {
-		vector.y = 2.0f * Math::atan2f(q1.y, q1.x);
-		vector.x = 1.57079637f;
-		vector.z = 0.0f;
-		return NormalizeAngles(vector * 57.2958f);
-	}
-	if (num6 < -0.4995f * num5) {
-		vector.y = -2.0f * Math::atan2f(q1.y, q1.x);
-		vector.x = -1.57079637f;
-		vector.z = 0.0f;
-		return NormalizeAngles(vector * 57.2958f);
-	}
-	Vector4 quaternion = Vector4(q1.w, q1.z, q1.x, q1.y);
-	vector.y = Math::atan2f(2.0f * quaternion.x * quaternion.w + 2.0f * quaternion.y * quaternion.z, 1.0f - 2.0f * (quaternion.z * quaternion.z + quaternion.w * quaternion.w));
-	vector.x = Math::asinf(2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y));
-	vector.z = Math::atan2f(2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
-	return NormalizeAngles(vector * 57.2958f);
-}
-
-Vector2 CosTanSinLineH(float flAngle, float range, int x, int y, int LineLength) {
-	float mainAngle = flAngle;
-	mainAngle += 45.f;
-
-	float flYaw = (mainAngle) * (M_PI / 180.0);
-
-	float viewcosyawzzzzzzz = Math::cosf(flYaw);
-	float viewsinyawzzzzzzz = Math::sinf(flYaw);
-
-	float x2 = range * (-viewcosyawzzzzzzz) + range * viewsinyawzzzzzzz;
-	float y2 = range * (-viewcosyawzzzzzzz) - range * viewsinyawzzzzzzz;
-
-	int posonscreenX = x + int(x2 / range * (LineLength));
-	int posonscreenY = y + int(y2 / range * (LineLength));
-
-	return Vector2(posonscreenX, posonscreenY);
-}
-
-void DrawTriangles(Vector2 center) {
-	Color col = Color(1, 1, 1, 1.f);
-	auto pixelsize = 5; auto trianglecount = 5;
-	Vector2 triangleList[5][3] = {
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } },
-		{ Vector2{ 0, 0 }, Vector2{ 0, 0 }, Vector2{ 0, 0 } }
-	};
-	for (size_t n = 0; n < trianglecount; n++)
-	{
-		std::vector<Vector2> v = {};
-		for (size_t i = 0; i < 3; i++)
-		{
-			triangleList[n][i].x = LI_FN(rand)() % (pixelsize / 2) + 1;
-			triangleList[n][i].y = LI_FN(rand)() % (pixelsize / 2) + 1;
-
-			if (triangleList[n][i].x > triangleList[n][i].y)
-			{
-				float tmp = triangleList[n][i].x;
-				triangleList[n][i].x = triangleList[n][i].y;
-				triangleList[n][i].y = tmp;
-			}
-		}
-	}
-
-
-	auto morphTriangleIdx = new int[pixelsize];
-	auto morphVertexIdx = new int[pixelsize];
-	auto morphDeltaX = new int[pixelsize];
-	auto morphDeltaY = new int[pixelsize];
-	auto setMorphParams = [&]() {
-		for (size_t i = 0; i < 3; i++)
-		{
-			morphTriangleIdx[i] = LI_FN(rand)() % pixelsize + 0;
-			morphVertexIdx[i] = LI_FN(rand)() % 3 + 0;
-			morphDeltaX[i] = 0;
-			morphDeltaY[i] = 0;
-			if ((LI_FN(rand)() % 1 + 0) == 0)
-				morphDeltaX[i] = 1;
-			else
-				morphDeltaX[i] = -1;
-		}
-		};
-
-	if ((LI_FN(rand)() % 10 + 1) == 1)
-		setMorphParams();
-
-	for (size_t i = 0; i < 5; i++)
-	{
-		float x = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = morphDeltaX[i];
-		float y = triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = morphDeltaY[i];
-
-		if (x > pixelsize / 2 - 1)
-		{
-			x = pixelsize / 2 - 1;
-			morphDeltaX[i] = -1;
-		}
-		else if (x < 0)
-		{
-			x = 0;
-			morphDeltaX[i] = 1;
-		}
-
-		if (y > pixelsize / 2 - 1)
-		{
-			y = pixelsize / 2 - 1;
-			morphDeltaY[i] = -1;
-		}
-		else if (y < 0)
-		{
-			y = 0;
-			morphDeltaY[i] = 1;
-		}
-
-		if (x > y) {
-			float tmp = x;
-			x = y;
-			y = tmp;
-		}
-
-		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].x = x;
-		triangleList[morphTriangleIdx[i]][morphVertexIdx[i]].y = y;
-	}
-
-	std::vector<Vector2> v = { };
-	std::vector<Vector2> w = { };
-
-	auto reflect = [&](std::vector<Vector2>& v, std::vector<Vector2>& w, int n, int offset) {
-		for (int i = 0; i < v.size(); i++)
-		{
-			if (n == 0)
-			{
-				w[i].x = v[i].x + offset;
-				w[i].y = v[i].y + offset;
-			}
-			else if (n == 1)
-			{
-				w[i].x = -v[i].x + offset;
-				w[i].y = v[i].y + offset;
-			}
-			else if (n == 2)
-			{
-				w[i].x = v[i].x + offset;
-				w[i].y = -v[i].y + offset;
-			}
-			else if (n == 3)
-			{
-				w[i].x = -v[i].x + offset;
-				w[i].y = -v[i].y + offset;
-			}
-			else if (n == 4)
-			{
-				w[i].x = v[i].y + offset;
-				w[i].y = v[i].x + offset;
-			}
-			else if (n == 5)
-			{
-				w[i].x = -v[i].y + offset;
-				w[i].y = v[i].x + offset;
-			}
-			else if (n == 6)
-			{
-				w[i].x = v[i].y + offset;
-				w[i].y = -v[i].x + offset;
-			}
-			else if (n == 7)
-			{
-				w[i].x = -v[i].y + offset;
-				w[i].y = -v[i].x + offset;
-			}
-		}
-		};
-
-	for (size_t n = 0; n < trianglecount; n++)
-	{
-		for (size_t k = 0; k < 3; k++)
-		{
-			v[k].x = triangleList[n][k].x;
-			v[k].y = triangleList[n][k].y;
-		}
-
-		for (size_t k = 0; k < 3; k++)
-		{
-			reflect(v, w, k, pixelsize / 2);
-
-			for (size_t z = 0; z < trianglecount; z++)
-			{
-				for (size_t ii = 0; ii < 3; ii++)
-				{
-					w[ii].x += center.x;
-					w[ii].y += center.y;
-				}
-
-				UnityEngine::GL().Line(w[0], w[1], col);
-				UnityEngine::GL().Line(w[1], w[2], col);
-				UnityEngine::GL().Line(w[0], w[2], col);
-			}
-		}
-	}
-}
-
 //Radar Function
 Vector2 WorldToRadar(Vector3 origin, Vector2 position, INT size, FLOAT rotation)
 {
@@ -2742,46 +2517,6 @@ void Visuals::RenderEntities()
 								player_name = player_name + " " + str;
 								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Bradley_Color, Color::Black(ColorSettings::Bradley_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
-
-								//if (m_settings::BradleyhealthBar)
-								//{
-								//	float bar_health = 0;
-								//	auto health = base_heli->_health();
-								//	//auto max_health = base_player->_maxHealth();
-								//	float max_health = 100.f;
-								//	float draw_health = health;
-
-								//	if (health > max_health)
-								//	{
-								//		draw_health = max_health;
-								//	}
-
-								//	const auto bar_width = 30;
-								//	bar_health = (bar_width / max_health) * draw_health;
-
-								//	auto bar_color = Color::Green();
-								//	if (health > 50.f)
-								//	{
-								//		bar_color = Color::Green();
-								//	}
-								//	else if (health > 20.f && health < 40.f)
-								//	{
-								//		bar_color = Color::Orange();
-								//	}
-								//	else if (health < 20.f)
-								//	{
-								//		bar_color = Color::Red();
-								//	}
-
-								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
-								//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-
-								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
-								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
-								//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
-								//	yoffset += 13;
-								//}
 							}
 
 						}
@@ -2809,46 +2544,6 @@ void Visuals::RenderEntities()
 									player_name = player_name + " " + str;
 									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), PatrolHeli_Color, Color::Black(ColorSettings::PatrolHeli_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12.f;
-
-									//if (m_settings::healthBar)
-									//{
-									//	float bar_health = 0;
-									//	auto health = base_heli->_health();
-									//	//auto max_health = base_player->_maxHealth();
-									//	float max_health = 100.f;
-									//	float draw_health = health;
-
-									//	if (health > max_health)
-									//	{
-									//		draw_health = max_health;
-									//	}
-
-									//	const auto bar_width = 30;
-									//	bar_health = (bar_width / max_health) * draw_health;
-
-									//	auto bar_color = Color::Green();
-									//	if (health > 50.f)
-									//	{
-									//		bar_color = Color::Green();
-									//	}
-									//	else if (health > 20.f && health < 40.f)
-									//	{
-									//		bar_color = Color::Orange();
-									//	}
-									//	else if (health < 20.f)
-									//	{
-									//		bar_color = Color::Red();
-									//	}
-
-									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
-									//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
-
-									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
-									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
-									//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
-									//	yoffset += 13;
-									//}
 								}
 							}
 						}
@@ -2858,7 +2553,6 @@ void Visuals::RenderEntities()
 		}
 	}
 }
-
 
 void Visuals::CacheEntities()
 {
@@ -2954,25 +2648,7 @@ void Visuals::CacheEntities()
 							const auto t1workbench = 2561955800;
 							const auto t2workbench = 601265145;
 							const auto t3workbench = 2764275075;
-							//const auto Minicopter = 2278499844;
 
-							//const auto timedexplosive = 1915331115;
-							//const auto timedexplosive_deployed = 3898309212;
-
-							//if (EntityID == timedexplosive || EntityID == timedexplosive_deployed)
-							//{
-							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
-							//}
-
-							///*if (EntityID == horse && m_settings::horseEsp)
-							//{
-							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
-							//}
-
-							//else if (EntityID == oil_barrel && m_settings::OilBarrel)
-							//{
-							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
-							//*/}
 							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));

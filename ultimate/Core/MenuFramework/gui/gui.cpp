@@ -534,10 +534,12 @@ void PlayersVisuals()
         calliope::menu.components.checkbox(XS("HeldItem"), m_settings::helditem);
         {
             if (m_settings::helditem)
-                m_settings::HeldItemType = 1;
+                m_settings::HeldItemType = 2;
             if (!m_settings::helditem && !m_settings::HeldItemIcon)
                 m_settings::HeldItemType = 0;
         }
+
+      //  calliope::menu.components.checkbox(XS("HeldItemIcon"), m_settings::HeldItemIcon);
 
         calliope::menu.components.colorpicker(XS("Box Color"), ColorSettings::BoxEsp_Color, true);
         calliope::menu.components.checkbox(XS("Box"), m_settings::BoxEsp);

@@ -1690,21 +1690,21 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
 		//		auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
 
-		//		if (z.contains(mouse_pos))
-		//		{
-		//			hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
-		//		}
-		//	}
+		////		if (z.contains(mouse_pos))
+		////		{
+		////			hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
+		////		}
+		////	}
 
-		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-		//		auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
+		////	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
+		////		auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
 
-		//		if (z.contains(mouse_pos))
-		//		{
-		//			hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
-		//		}
-		//	}
-		//}
+		////		if (z.contains(mouse_pos))
+		////		{
+		////			hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
+		////		}
+		////	}
+		////}
 
 		GUI().DrawMenu();
 
@@ -2004,8 +2004,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::SkyUpdatehk.Unhook();
 		Hooks::SteamPlatformUpdatehk.Unhook();
 		Hooks::OnAttackedhk.Unhook();
-		Hooks::OnGUIhk.Unhook();
-		Hooks::Update_hk.Unhook();
 		Hooks::BlockSprinthk.Unhook();
 		Hooks::LateUpdatehk.Unhook();
 		Hooks::OnNetworkMessagehk.Unhook();
@@ -2015,6 +2013,8 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		//Hooks::IsAiminghk.Unhook();
 
 		Hooks::FlintStrikeWeaponDoAttackhk.Unhook();
+		Hooks::OnGUIhk.Unhook();
+		Hooks::Update_hk.Unhook();
 	}
 #endif
 

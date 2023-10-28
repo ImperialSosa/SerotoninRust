@@ -52,12 +52,21 @@ constexpr std::size_t GetLength(const Type* const data)
 }
 
 
-template< typename Type >
+
+template <typename Type>
 constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, std::size_t size, bool ignore_case)
 {
-	const auto element = static_cast<std::uint64_t>(ignore_case ? ToLower(data[0]) : data[0]);
-	return (size == 0) ? hash : HashCompute((hash * HashPrime) ^ element, data + 1, size - 1, ignore_case);
+	std::uint64_t finalHash = hash;
+	for (std::size_t i = 0; i < size; ++i) {
+		const auto element = static_cast<std::uint64_t>(ignore_case ? ToLower(data[i]) : data[i]);
+		finalHash = (finalHash * HashPrime) ^ element;
+	}
+	return finalHash;
 }
+
+
+
+
 
 template< typename Type >
 constexpr std::uint64_t Hash(const Type* const data, std::size_t size, bool ignore_case)

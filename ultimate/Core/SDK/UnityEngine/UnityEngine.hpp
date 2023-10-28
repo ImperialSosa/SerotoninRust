@@ -1529,6 +1529,7 @@ namespace UnityEngine {
 	{
 		IL2CPP_CLASS("Texture2D");
 
+
 		IL2CPP_STATIC_PROPERTY(Texture2D*, whiteTexture);
 		IL2CPP_STATIC_PROPERTY(Texture2D*, blackTexture);
 
@@ -1630,7 +1631,6 @@ namespace UnityEngine {
 			}
 		}
 
-
 		//static Texture2D* _cctor(Texture2D* tex,int width, int height, RustStructs::TextureFormat textureFormat, bool mipChain)
 		//{
 		//	static uintptr_t procedure = 0;
@@ -1683,6 +1683,26 @@ namespace UnityEngine {
 			return texture2D;
 		}
 
+
+
+		Texture2D* FillTextureWithColor(Texture2D* originalTexture, Color color)
+		{
+			if (!originalTexture)
+				return {};
+
+			Texture2D* newTexture = New(originalTexture->get_width(), originalTexture->get_height());
+
+			for (int x = 0; x < originalTexture->get_width(); x++)
+			{
+				for (int y = 0; y < originalTexture->get_height(); y++)
+				{
+					newTexture->SetPixel(x, y, color);
+				}
+			}
+
+			newTexture->Apply();
+			return newTexture;
+		}
 
 
 	};
@@ -1950,6 +1970,30 @@ namespace UnityEngine {
 		IL2CPP_CLASS("Matrix4x4");
 
 
+		Vector3 MultiplyPoint(Vector3 value)
+		{
+			if (!this)
+				return Vector3();
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethodFullArgs(HASH("UnityEngine.CoreModule::UnityEngine::Matrix4x4::MultiplyPoint(Vector3): Vector3"));
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<Vector3>(procedure, this, value);
+			}
+
+
+			return Vector3();
+		}
+
 		Vector3 MultiplyPoint3x4(Vector3 value)
 		{
 			if (!this)
@@ -1978,6 +2022,128 @@ namespace UnityEngine {
 	
 
 
+	struct VMatrix
+	{
+		VMatrix()
+			: m{ { 0, 0, 0, 0 },
+				 { 0, 0, 0, 0 },
+				 { 0, 0, 0, 0 },
+				 { 0, 0, 0, 0 } }
+		{}
+
+		VMatrix(const VMatrix&) = default;
+
+		VMatrix transpose() {
+			VMatrix m;
+
+			for (int i = 0; i < 4; i++)
+				for (int j = 0; j < 4; j++)
+					m.m[i][j] = this->m[j][i];
+
+			return m;
+		}
+
+		void matrix_identity() {
+			memset(this, 0, sizeof(VMatrix));
+			m[0][0] = 1.0f;
+			m[1][1] = 1.0f;
+			m[2][2] = 1.0f;
+			m[3][3] = 1.0f;
+		}
+		Vector3 GetRow(std::size_t index) const
+		{
+			return { m[index][0], m[index][1], m[index][2] };
+		}
+
+		Vector3 GetColumn(std::size_t index) const
+		{
+			return { m[0][index], m[1][index], m[2][index] };
+		}
+
+		Vector3 GetAxis(std::size_t index) const
+		{
+			return { m[index][0], m[index][1], m[index][2] };
+		}
+		bool is_empty() {
+			if (!m[3][0] && !m[3][1] && !m[3][2] && !m[2][1] && !m[2][0] && !m[2][2])
+				return true;
+
+			return false;
+		}
+
+		Vector3 operator*(const Vector3& vec) {
+			VMatrix m;
+
+			m[3][0] = vec.x;
+			m[3][1] = vec.y;
+			m[3][2] = vec.z;
+
+			m[0][0] = 1;
+			m[1][1] = 1;
+			m[2][2] = 1;
+
+
+			m[0][3] = 0.0f;
+			m[1][3] = 0.0f;
+			m[2][3] = 0.0f;
+			m[3][3] = 1.0f;
+
+			auto result = m * (*this);
+
+			return Vector3{ result[3][0], result[3][1], result[3][2] };
+		}
+
+		VMatrix operator*(const VMatrix& _m2) {
+			auto _m = *this;
+
+			VMatrix out;
+			out[0][0] = _m[0][0] * _m2[0][0] + _m[0][1] * _m2[1][0] + _m[0][2] * _m2[2][0] + _m[0][3] * _m2[3][0];
+			out[0][1] = _m[0][0] * _m2[0][1] + _m[0][1] * _m2[1][1] + _m[0][2] * _m2[2][1] + _m[0][3] * _m2[3][1];
+			out[0][2] = _m[0][0] * _m2[0][2] + _m[0][1] * _m2[1][2] + _m[0][2] * _m2[2][2] + _m[0][3] * _m2[3][2];
+			out[0][3] = _m[0][0] * _m2[0][3] + _m[0][1] * _m2[1][3] + _m[0][2] * _m2[2][3] + _m[0][3] * _m2[3][3];
+			out[1][0] = _m[1][0] * _m2[0][0] + _m[1][1] * _m2[1][0] + _m[1][2] * _m2[2][0] + _m[1][3] * _m2[3][0];
+			out[1][1] = _m[1][0] * _m2[0][1] + _m[1][1] * _m2[1][1] + _m[1][2] * _m2[2][1] + _m[1][3] * _m2[3][1];
+			out[1][2] = _m[1][0] * _m2[0][2] + _m[1][1] * _m2[1][2] + _m[1][2] * _m2[2][2] + _m[1][3] * _m2[3][2];
+			out[1][3] = _m[1][0] * _m2[0][3] + _m[1][1] * _m2[1][3] + _m[1][2] * _m2[2][3] + _m[1][3] * _m2[3][3];
+			out[2][0] = _m[2][0] * _m2[0][0] + _m[2][1] * _m2[1][0] + _m[2][2] * _m2[2][0] + _m[2][3] * _m2[3][0];
+			out[2][1] = _m[2][0] * _m2[0][1] + _m[2][1] * _m2[1][1] + _m[2][2] * _m2[2][1] + _m[2][3] * _m2[3][1];
+			out[2][2] = _m[2][0] * _m2[0][2] + _m[2][1] * _m2[1][2] + _m[2][2] * _m2[2][2] + _m[2][3] * _m2[3][2];
+			out[2][3] = _m[2][0] * _m2[0][3] + _m[2][1] * _m2[1][3] + _m[2][2] * _m2[2][3] + _m[2][3] * _m2[3][3];
+			out[3][0] = _m[3][0] * _m2[0][0] + _m[3][1] * _m2[1][0] + _m[3][2] * _m2[2][0] + _m[3][3] * _m2[3][0];
+			out[3][1] = _m[3][0] * _m2[0][1] + _m[3][1] * _m2[1][1] + _m[3][2] * _m2[2][1] + _m[3][3] * _m2[3][1];
+			out[3][2] = _m[3][0] * _m2[0][2] + _m[3][1] * _m2[1][2] + _m[3][2] * _m2[2][2] + _m[3][3] * _m2[3][2];
+			out[3][3] = _m[3][0] * _m2[0][3] + _m[3][1] * _m2[1][3] + _m[3][2] * _m2[2][3] + _m[3][3] * _m2[3][3];
+
+			return out;
+		}
+
+
+		Vector3 MultiplyPoint(Vector3 point) {
+			Vector3 result;
+			result.x = m[0][0] * point.x + m[0][1] * point.y + m[0][2] * point.z + m[0][3];
+			result.y = m[1][0] * point.x + m[1][1] * point.y + m[1][2] * point.z + m[1][3];
+			result.z = m[2][0] * point.x + m[2][1] * point.y + m[2][2] * point.z + m[2][3];
+			float num = m[3][0] * point.x + m[3][1] * point.y + m[3][2] * point.z + m[3][3];
+			num = 1.0f / num;
+			result.x *= num;
+			result.y *= num;
+			result.z *= num;
+			return result;
+		}
+
+		float* operator[](size_t i) { return m[i]; }
+		const float* operator[](size_t i) const { return m[i]; }
+
+		union {
+			struct {
+				float _11, _12, _13, _14;
+				float _21, _22, _23, _24;
+				float _31, _32, _33, _34;
+				float _41, _42, _43, _44;
+			};
+			float m[4][4];
+		};
+	};
 	struct Transform : Component
 	{
 		IL2CPP_CLASS("Transform");
@@ -1994,7 +2160,7 @@ namespace UnityEngine {
 		IL2CPP_PROPERTY(Vector3, localScale);
 		IL2CPP_PROPERTY(Vector4, rotation);
 
-		IL2CPP_PROPERTY(Matrix4x4*, localToWorldMatrix);
+		IL2CPP_PROPERTY(VMatrix*, localToWorldMatrix);
 
 
 		auto InverseTransformPoint(Vector3 pt) -> Vector3;
@@ -2134,6 +2300,52 @@ namespace UnityEngine {
 	struct Animator : Il2CppObject {
 		IL2CPP_CLASS("Animator");
 
+		void SetFloat(int id, float value)
+		{
+			if (!this) return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = (MethodInfo*)CIl2Cpp::get_method_ptr_with_args((uint64_t)StaticClass(), "SetFloat", "id", 2);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this, id, value);
+			}
+
+
+			return;
+		}
+
+		void SetBool(const char* name, bool value)
+		{
+			if (!this) return;
+
+			static uintptr_t procedure = 0;
+			if (!(procedure))
+			{
+				const auto method = CIl2Cpp::FindMethod(StaticClass(), HASH("SetBool"), 2);
+				if ((method))
+				{
+					procedure = ToAddress(method->methodPointer);
+				}
+			}
+
+			if ((procedure))
+			{
+				return Call<void>(procedure, this,CIl2Cpp::il2cpp_string_new(name), value);
+			}
+
+
+			return;
+		}
+
 		void SetTriggerID(int d)
 		{
 			if (!this) return;
@@ -2150,7 +2362,7 @@ namespace UnityEngine {
 
 			if ((procedure))
 			{
-				return Call<void>(procedure, this);
+				return Call<void>(procedure, this, d);
 			}
 
 
@@ -2216,114 +2428,6 @@ namespace UnityEngine {
 		}
 	};
 
-	struct VMatrix
-	{
-		VMatrix()
-			: m{ { 0, 0, 0, 0 },
-				 { 0, 0, 0, 0 },
-				 { 0, 0, 0, 0 },
-				 { 0, 0, 0, 0 } }
-		{}
-
-		VMatrix(const VMatrix&) = default;
-
-		VMatrix transpose() {
-			VMatrix m;
-
-			for (int i = 0; i < 4; i++)
-				for (int j = 0; j < 4; j++)
-					m.m[i][j] = this->m[j][i];
-
-			return m;
-		}
-
-		void matrix_identity() {
-			memset(this, 0, sizeof(VMatrix));
-			m[0][0] = 1.0f;
-			m[1][1] = 1.0f;
-			m[2][2] = 1.0f;
-			m[3][3] = 1.0f;
-		}
-		Vector3 GetRow(std::size_t index) const
-		{
-			return { m[index][0], m[index][1], m[index][2] };
-		}
-
-		Vector3 GetColumn(std::size_t index) const
-		{
-			return { m[0][index], m[1][index], m[2][index] };
-		}
-
-		Vector3 GetAxis(std::size_t index) const
-		{
-			return { m[index][0], m[index][1], m[index][2] };
-		}
-		bool is_empty() {
-			if (!m[3][0] && !m[3][1] && !m[3][2] && !m[2][1] && !m[2][0] && !m[2][2])
-				return true;
-
-			return false;
-		}
-
-		Vector3 operator*(const Vector3& vec) {
-			VMatrix m;
-
-			m[3][0] = vec.x;
-			m[3][1] = vec.y;
-			m[3][2] = vec.z;
-
-			m[0][0] = 1;
-			m[1][1] = 1;
-			m[2][2] = 1;
-
-
-			m[0][3] = 0.0f;
-			m[1][3] = 0.0f;
-			m[2][3] = 0.0f;
-			m[3][3] = 1.0f;
-
-			auto result = m * (*this);
-
-			return Vector3{ result[3][0], result[3][1], result[3][2] };
-		}
-
-		VMatrix operator*(const VMatrix& _m2) {
-			auto _m = *this;
-
-			VMatrix out;
-			out[0][0] = _m[0][0] * _m2[0][0] + _m[0][1] * _m2[1][0] + _m[0][2] * _m2[2][0] + _m[0][3] * _m2[3][0];
-			out[0][1] = _m[0][0] * _m2[0][1] + _m[0][1] * _m2[1][1] + _m[0][2] * _m2[2][1] + _m[0][3] * _m2[3][1];
-			out[0][2] = _m[0][0] * _m2[0][2] + _m[0][1] * _m2[1][2] + _m[0][2] * _m2[2][2] + _m[0][3] * _m2[3][2];
-			out[0][3] = _m[0][0] * _m2[0][3] + _m[0][1] * _m2[1][3] + _m[0][2] * _m2[2][3] + _m[0][3] * _m2[3][3];
-			out[1][0] = _m[1][0] * _m2[0][0] + _m[1][1] * _m2[1][0] + _m[1][2] * _m2[2][0] + _m[1][3] * _m2[3][0];
-			out[1][1] = _m[1][0] * _m2[0][1] + _m[1][1] * _m2[1][1] + _m[1][2] * _m2[2][1] + _m[1][3] * _m2[3][1];
-			out[1][2] = _m[1][0] * _m2[0][2] + _m[1][1] * _m2[1][2] + _m[1][2] * _m2[2][2] + _m[1][3] * _m2[3][2];
-			out[1][3] = _m[1][0] * _m2[0][3] + _m[1][1] * _m2[1][3] + _m[1][2] * _m2[2][3] + _m[1][3] * _m2[3][3];
-			out[2][0] = _m[2][0] * _m2[0][0] + _m[2][1] * _m2[1][0] + _m[2][2] * _m2[2][0] + _m[2][3] * _m2[3][0];
-			out[2][1] = _m[2][0] * _m2[0][1] + _m[2][1] * _m2[1][1] + _m[2][2] * _m2[2][1] + _m[2][3] * _m2[3][1];
-			out[2][2] = _m[2][0] * _m2[0][2] + _m[2][1] * _m2[1][2] + _m[2][2] * _m2[2][2] + _m[2][3] * _m2[3][2];
-			out[2][3] = _m[2][0] * _m2[0][3] + _m[2][1] * _m2[1][3] + _m[2][2] * _m2[2][3] + _m[2][3] * _m2[3][3];
-			out[3][0] = _m[3][0] * _m2[0][0] + _m[3][1] * _m2[1][0] + _m[3][2] * _m2[2][0] + _m[3][3] * _m2[3][0];
-			out[3][1] = _m[3][0] * _m2[0][1] + _m[3][1] * _m2[1][1] + _m[3][2] * _m2[2][1] + _m[3][3] * _m2[3][1];
-			out[3][2] = _m[3][0] * _m2[0][2] + _m[3][1] * _m2[1][2] + _m[3][2] * _m2[2][2] + _m[3][3] * _m2[3][2];
-			out[3][3] = _m[3][0] * _m2[0][3] + _m[3][1] * _m2[1][3] + _m[3][2] * _m2[2][3] + _m[3][3] * _m2[3][3];
-
-			return out;
-		}
-
-		float* operator[](size_t i) { return m[i]; }
-		const float* operator[](size_t i) const { return m[i]; }
-
-		union {
-			struct {
-				float _11, _12, _13, _14;
-				float _21, _22, _23, _24;
-				float _31, _32, _33, _34;
-				float _41, _42, _43, _44;
-			};
-			float m[4][4];
-		};
-	};
 
 	struct Screen {
 		IL2CPP_CLASS("Screen");

@@ -1,6 +1,6 @@
 #pragma once
 #include "AssemblyCSharp.hpp"
-
+#include "../../Features/Features/Features.hpp"
 
 namespace O::Projectile {
 	constexpr auto initialVelocity = 0x18;
@@ -138,6 +138,47 @@ public:
 		DWORD64 collider; // 0x40
 	};
 
+	void SimulateProjectile(Vector3 position, Vector3 velocity, float partialTime, float travelTime, Vector3 gravity, float drag,  Vector3 prevPosition,  Vector3 prevVelocity)
+	{
+		float num = 0.03125f;
+		prevPosition = position;
+		prevVelocity = velocity;
+		if (partialTime > 0)
+		{
+			float num2 = num - partialTime;
+			if (travelTime < num2)
+			{
+				prevPosition = position;
+				prevVelocity = velocity;
+				position += velocity * travelTime;
+				partialTime += travelTime;
+				return;
+			}
+			prevPosition = position;
+			prevVelocity = velocity;
+			position += velocity * num2;
+			velocity += gravity * num;
+			velocity -= velocity * (drag * num);
+			travelTime -= num2;
+		}
+		int num3 = int(travelTime / num);
+		for (int i = 0; i < num3; i++)
+		{
+			prevPosition = position;
+			prevVelocity = velocity;
+			position += velocity * num;
+			velocity += gravity * num;
+			velocity -= velocity * (drag * num);
+		}
+		partialTime = travelTime - num * (float)num3;
+		if (partialTime > 0)
+		{
+			prevPosition = position;
+			prevVelocity = velocity;
+			position += velocity * partialTime;
+		}
+	}
+
 	inline Vector3 SimulateProjectilezzzzz(Vector3& position, Vector3& velocity, float& partialTime, float travelTime, Vector3 gravity, float drag)
 	{
 		float num = 0.03125f;
@@ -197,8 +238,120 @@ public:
 		return origin;
 	}
 
+
+	AssemblyCSharp::HitInfo* CreateHitInfo(AssemblyCSharp::Projectile* projectile, ProtoBuf::PlayerProjectileAttack* playerProjectileAttack, AssemblyCSharp::HitTest* hTest, Vector3 HitPointWorld)
+	{
+		if (!InGame)
+			return {};
+
+		if (!IsAddressValid(projectile))
+			return false;
+
+		if (!IsAddressValid(hTest))
+			return false;
+
+		auto camera = UnityEngine::Camera::get_main();
+		if (!camera)
+			return {};
+
+
+		auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
+		if (!m_target.m_player)
+			return {};
+
+		
+		static uintptr_t PlayerAttackClass = 0; if (!PlayerAttackClass) PlayerAttackClass = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerAttack"));
+		if (ProtoBuf::PlayerAttack* playerAttack = reinterpret_cast<ProtoBuf::PlayerAttack*>(CIl2Cpp::il2cpp_object_new((void*)PlayerAttackClass)))
+		{
+			playerProjectileAttack->playerAttack() = playerAttack;
+			playerProjectileAttack->hitVelocity() = projectile->currentVelocity();
+			playerProjectileAttack->hitDistance() = projectile->traveledDistance();
+		}
+		
+		UnityEngine::Ray ray = UnityEngine::Ray(projectile->currentPosition(), (HitPointWorld - projectile->currentPosition()).Normalized());
+
+		playerProjectileAttack->playerAttack()->attack() = hTest->BuildAttackMessage(Features().LocalPlayer);
+		playerProjectileAttack->playerAttack()->projectileID() = projectile->projectileID();
+
+		static uintptr_t HitInfoClass = 0; if (!HitInfoClass) HitInfoClass = (uintptr_t)CIl2Cpp::FindClass(XS(""), XS("HitInfo"));
+		if (AssemblyCSharp::HitInfo* hitInfo = reinterpret_cast<AssemblyCSharp::HitInfo*>(CIl2Cpp::il2cpp_object_new((void*)HitInfoClass)))
+		{
+			hitInfo->LoadFromAttack(playerProjectileAttack->playerAttack()->attack(), false);
+			hitInfo->Initiator() = projectile->owner();
+			hitInfo->ProjectileID() = projectile->projectileID();
+			hitInfo->ProjectileDistance() = projectile->traveledDistance();
+			hitInfo->ProjectileVelocity() = projectile->currentVelocity();
+			hitInfo->ProjectilePrefab() = projectile->sourceProjectilePrefab();
+			hitInfo->IsPredicting() = true;
+			hitInfo->WeaponPrefab() = projectile->sourceWeaponPrefab();
+			hitInfo->DoDecals() = projectile->createDecals();
+
+			return hitInfo;
+		}
+		
+	}
+
+	class Line1 {
+	public:
+
+		float Clamp22(float value, float min, float max)
+		{
+			if (value < min)
+			{
+				value = min;
+			}
+			else if (value > max)
+			{
+				value = max;
+			}
+			return value;
+		}
+
+		float Dot(const Vector3& Vec1, const Vector3& Vec2)
+		{
+			return Vec1.x * Vec2.x + Vec1.y * Vec2.y + Vec1.z * Vec2.z;
+		}
+
+
+		Vector3 start;
+		Vector3 end;
+		Line1(Vector3 s, Vector3 e) {
+			start = s; end = e;
+		}
+		Line1() { }
+		Vector3 ClosestPoint(Vector3 pos)
+		{
+			Vector3 a = end - start;
+			float magnitude = a.Length();
+			if (magnitude == 0.f) return start;
+			Vector3 vector = a / magnitude;
+			return start + vector * Clamp22(Dot(pos - start, vector), 0.f, magnitude);
+		}
+
+		float Distance(Vector3 pos)
+		{
+			return (pos - ClosestPoint(pos)).UnityMagnitude();
+		}
+	};
+
+
 	bool BulletTP(AssemblyCSharp::Projectile* instance, Vector3 NextCurrentPosition, Vector3 CurrentPosition, Vector3 CurrentVelocity, float deltaTime)
 	{
+		if (!IsAddressValid(instance))
+			return false;
+
+		if (instance->projectileID() == 0)
+			return false;
+
+		if (instance->integrity() <= 0.f)
+			return false;
+
+	/*	auto projectile_fired_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+		if (projectile_fired_time < UnityEngine::Time::get_realtimeSinceStartup() - 8.f)
+		{
+			return false;
+		}*/
 
 		if (RPC_Counter.Calculate() > 100)
 		{
@@ -253,7 +406,7 @@ public:
 		}
 		else
 		{
-			if (Distance > 5.6f)
+			if (Distance > 3.5f)
 			{
 				return false;
 			}
@@ -286,8 +439,12 @@ public:
 			HitPointWorld = newPosition;
 		}
 
+		int num15 = 2162688;
+		num15 |= 8388608;
+		num15 |= 134217728;
 
 
+	
 		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, 10551296, 0.f) ||
 			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, 10551296, 0.f))
 		{
@@ -307,6 +464,19 @@ public:
 			playerProjectileUpdate->travelTime() = instance->traveledTime();
 			playerProjectileUpdate->curVelocity() = instance->currentVelocity();
 			playerProjectileUpdate->curPosition() = instance->currentPosition();
+
+			Vector3 position2 = instance->currentPosition();
+			Vector3 curPosition = playerProjectileUpdate->curPosition();
+			Vector3 b2 = (curPosition - position2).UnityNormalize() * 0.01f;
+
+			int num14 = 2162688;
+			num14 |= 8388608;
+			num14 |= 134217728;
+
+			if (!AssemblyCSharp::GamePhysics::LineOfSight(position2 - b2, curPosition + b2, num14, nullptr))
+			{
+				return false;
+			}
 
 			instance->owner()->SendProjectileUpdate(playerProjectileUpdate);
 			RPC_Counter.Increment();
@@ -329,6 +499,19 @@ public:
 			playerProjectileUpdate->curVelocity() = instance->currentVelocity();
 			playerProjectileUpdate->curPosition() = instance->currentPosition();
 
+			Vector3 position2 = instance->currentPosition();
+			Vector3 curPosition = playerProjectileUpdate->curPosition();
+			Vector3 b2 = (curPosition - position2).UnityNormalize() * 0.01f;
+
+			int num14 = 2162688;
+			num14 |= 8388608;
+			num14 |= 134217728;
+
+			if (!AssemblyCSharp::GamePhysics::LineOfSight(position2 - b2, curPosition + b2, num14, nullptr))
+			{
+				return false;
+			}
+
 			instance->owner()->SendProjectileUpdate(playerProjectileUpdate);
 			RPC_Counter.Increment();
 
@@ -337,7 +520,6 @@ public:
 				UnityEngine::DDraw().Arrow(instance->previousPosition(), instance->currentPosition(), 0.1f, Color(1.f, 0.f, 0.f, 1.f), 30.f);
 			}
 		}
-
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
 		if (!hTest)
 		{
@@ -362,6 +544,117 @@ public:
 		hTest->damageProperties() = instance->damageProperties();
 		hTest->HitMaterial() = CIl2Cpp::il2cpp_string_new(XS("Flesh"));
 
+
+		static uintptr_t PlayerProjectileAttack = 0; if (!PlayerProjectileAttack) PlayerProjectileAttack = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileAttack"));
+		if (ProtoBuf::PlayerProjectileAttack* playerProjectileAttack = reinterpret_cast<ProtoBuf::PlayerProjectileAttack*>(CIl2Cpp::il2cpp_object_new((void*)PlayerProjectileAttack)))
+		{
+			const auto HitInfo = CreateHitInfo(instance, playerProjectileAttack, hTest, HitPointWorld);
+			if (IsAddressValid(HitInfo))
+			{
+				Vector3 vector2 = HitInfo->PositionOnRay(HitPointWorld);
+
+				Vector3 position2 = instance->currentPosition();
+				const auto pointStart = HitInfo->PointStart();
+				Vector3 b2 = (pointStart - position2).UnityNormalize() * 0.01f;
+				Vector3 b3 = (vector2 - pointStart).UnityNormalize() * 0.01f;
+				Vector3 vector = HitInfo->HitPositionWorld();
+
+				bool flag10 = AssemblyCSharp::GamePhysics::LineOfSight(position2 - b2, pointStart + b2, num15, nullptr) &&
+					AssemblyCSharp::GamePhysics::LineOfSight(pointStart - b3, vector2, num15, nullptr) && AssemblyCSharp::GamePhysics::LineOfSight(vector2, vector, num15, nullptr);;
+				if (!flag10)
+					return false;
+
+				Vector3 hitPositionWorld = HitInfo->HitPositionWorld();
+
+
+				//LOS invalids fix?
+				// Features().LocalPlayer->eyes()->get_position() + Features().CachedManipPoint;
+
+				Vector3 position3 = HitPointWorld;
+				Vector3 vector4 = instance->owner()->WorldSpaceBounds().position;
+				float projectile_losforgiveness = 0.2f;
+				bool flag11 = AssemblyCSharp::IsVisible_2(hitPositionWorld, position3, num15, projectile_losforgiveness) && AssemblyCSharp::IsVisible_2(position3, hitPositionWorld, num15, projectile_losforgiveness);
+				if (!flag11)
+				{
+					flag11 = (AssemblyCSharp::IsVisible_2(hitPositionWorld, vector4, num15, projectile_losforgiveness) && AssemblyCSharp::IsVisible_2(vector4, hitPositionWorld, num15, projectile_losforgiveness));
+				}
+
+				if (!flag11)
+					return false;
+
+				/////////////////////////////////////
+
+				/*bool isUsingManip = m_settings::Manipulation && UnityEngine::Input::GetKey(m_settings::ManipKey);
+				Vector3 position3 = HitPointWorld;
+				Vector3 vector4 = Features().LocalPlayer->WorldSpaceBounds().position;
+				float projectile_losforgiveness = 0.2f;
+				bool flag11 = AssemblyCSharp::IsVisible_2(hitPositionWorld, position3, num15, projectile_losforgiveness) && AssemblyCSharp::IsVisible_2(position3, hitPositionWorld, num15, projectile_losforgiveness);
+				if (!flag11)
+				{
+					flag11 = (AssemblyCSharp::IsVisible_2(hitPositionWorld, vector4, num15, projectile_losforgiveness) && AssemblyCSharp::IsVisible_2(vector4, hitPositionWorld, num15, projectile_losforgiveness));
+				}
+
+				if (!flag11)
+					return false;*/
+
+				//other invalid checks
+				//player_distance
+				float num2 = 1.f + 0.5f;
+				float num3 = 1.f - 0.5f;
+				float projectile_clientframes = 2.f;
+				float projectile_serverframes = 2.f;
+
+				float num9 = projectile_clientframes / 60.f;
+				float num10 = projectile_serverframes * Max3(UnityEngine::Time::get_deltaTime(), UnityEngine::Time::get_smoothDeltaTime(), UnityEngine::Time::get_fixedDeltaTime());
+
+				float num12 = ((m_settings::last_tick_time + num9 + num10) * num2);
+				//float num16 = hTest->HitEntity()->MaxVelocity() + hTest->HitEntity()->GetParentVelocity().UnityMagnitude();
+				//float num17 = hTest->HitEntity()->BoundsPadding() + num12 * num16;
+				//float num18 = hTest->HitEntity()->Distance(HitInfo->HitPositionWorld());
+				//if (num18 > num17)
+				//{
+				//	return false;
+				//}
+				float travel = maxx(traveledTime() - closeFlybyDistance(), 0);
+				Vector3 gr = UnityEngine::Physics::get_gravity(); //static Vector3 get_gravity();
+
+
+				////trajectory_invalids
+				Vector3 a;
+				Vector3 b;
+				SimulateProjectile(instance->currentPosition(), instance->currentVelocity(), tumbleSpeed(), travel, gr * gravityModifier(), drag(), a, b);
+
+				Vector3 positionOffset = Features().LocalPlayer->eyes()->get_position() + Features().CachedManipPoint;
+
+				float num25 = 0.f;
+				if (hTest->HitEntity() != nullptr)
+				{
+					float num26 = hTest->HitEntity()->GetParentVelocity().UnityMagnitude();
+					/*if(hTest->HitEntity()->IsA(AssemblyCSharp::CargoShip::StaticClass())
+						|| hTest->HitEntity()->IsA(AssemblyCSharp::Tugboat::StaticClass()))
+					{
+						num26 += hTest->HitEntity()->MaxVelocity();
+					}*/
+					num25 = num12 * num26;
+				}
+
+				Line1 line_1 = Line1(a - b, currentPosition() + b);
+				float num27 = max(line_1.Distance(HitInfo->PointStart()) - positionOffset.UnityMagnitude() - num25, 0.f);
+				float num28 = max(line_1.Distance(HitInfo->HitPositionWorld()) - positionOffset.UnityMagnitude() - num25, 0.f);
+
+				if (num27 > 1.f)
+				{
+					return false;
+				}
+
+				if (num28 > 1.f)
+				{
+					return false;
+				}
+			}
+
+		}
+		
 		if (m_settings::Thickbullet_Arrows)
 		{
 			UnityEngine::DDraw().Arrow(instance->currentPosition(), HitPointWorld, 0.1f, Color(0.f, 0.f, 1.f, 1.f), 30.f);
@@ -489,7 +782,7 @@ public:
 	}
 
 	inline bool DoMovement(float deltaTime, Projectile_c* pr) {
-		if (!pr)
+		if (!IsAddressValid(pr))
 			return false;
 
 		if (!this)
@@ -497,19 +790,6 @@ public:
 
 		if (!pr->isAuthoritative())
 			return false;
-
-
-		if (pr->swimScale() != Vector3(0.f,0.f,0.f))
-		{
-			if (pr->swimRandom() == 0.f)
-			{
-				pr->swimRandom() = UnityEngine::Random::Range(0.f, 20.f);
-			}
-			float num = UnityEngine::Time::get_time() + pr->swimRandom();
-			Vector3 vector = Vector3(Math::sinf(num * pr->swimSpeed().x) * pr->swimScale().x, Math::cosf(num * pr->swimSpeed().y) * pr->swimScale().y, Math::cosf(num * pr->swimSpeed().z) * pr->swimScale().z);
-			vector = pr->get_transform()->InverseTransformDirection(vector);
-			pr->currentVelocity() += vector;
-		}
 
 		Vector3 a = currentVelocity() * deltaTime;
 		float magnitude = a.Length();
