@@ -25,7 +25,7 @@ inline UnityEngine::AssetBundle* ColorBundle;
 inline UnityEngine::Shader* ColorShader;
 inline UnityEngine::Material* ColorMaterial;
 
-inline UnityEngine::AssetBundle* TestBundle;
+inline UnityEngine::AssetBundle* IconBundle;
 inline UnityEngine::Shader* TestShader;
 inline UnityEngine::Material* TestMaterial;
 
@@ -71,6 +71,36 @@ inline UnityEngine::GameObject* GhostPrefab = nullptr;
 inline UnityEngine::GameObject* AmongusPrefab = nullptr;
 inline UnityEngine::GameObject* HerbertPrefab = nullptr;
 inline UnityEngine::GameObject* TestPrefab = nullptr;
+
+/* Icons */
+inline UnityEngine::Texture2D* AK47Icon = nullptr;
+inline UnityEngine::Texture2D* BoltyIcon = nullptr;
+inline UnityEngine::Texture2D* CompoundBowIcon = nullptr;
+inline UnityEngine::Texture2D* CrossbowIcon = nullptr;
+inline UnityEngine::Texture2D* CustomSMGIcon = nullptr;
+inline UnityEngine::Texture2D* DoubleBarrelIcon = nullptr;
+inline UnityEngine::Texture2D* EokaIcon = nullptr;
+inline UnityEngine::Texture2D* HMLmgIcon = nullptr;
+inline UnityEngine::Texture2D* HuntingBowIcon = nullptr;
+inline UnityEngine::Texture2D* LR300Icon = nullptr;
+inline UnityEngine::Texture2D* M39Icon = nullptr;
+inline UnityEngine::Texture2D* M92Icon = nullptr;
+inline UnityEngine::Texture2D* M249Icon = nullptr;
+inline UnityEngine::Texture2D* Mp4a4Icon = nullptr;
+inline UnityEngine::Texture2D* PistolIcon = nullptr;
+inline UnityEngine::Texture2D* PumpShotgunIcon = nullptr;
+inline UnityEngine::Texture2D* PythonIcon = nullptr;
+inline UnityEngine::Texture2D* RevolverIcon = nullptr;
+inline UnityEngine::Texture2D* SarIcon = nullptr;
+inline UnityEngine::Texture2D* Spas12Icon = nullptr;
+inline UnityEngine::Texture2D* ThompsonIcon = nullptr;
+
+
+inline Vector3 HeadBone;
+inline Vector3 NeckBone;
+inline Vector3 Spine;
+
+inline AssemblyCSharp::BasePlayer* EspBasePlayer;
 
 class PrefabList {
 public:

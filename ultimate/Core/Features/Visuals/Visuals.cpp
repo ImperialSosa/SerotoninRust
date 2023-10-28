@@ -10,6 +10,68 @@ inline std::array<int, 20> valid_bones = {
 		1, 2, 3, 5, 6, 14, 15, 17, 18, 21, 23, 24, 25, 26, 27, 48, 55, 56, 57, 76
 };
 
+//OOF FOV Function
+float normalize_angle(float angle) {
+	while (angle > 360.0f) {
+		angle -= 360.0f;
+	}
+	while (angle < 0.0f) {
+		angle += 360.0f;
+	}
+	return angle;
+}
+
+Vector3 normalize_angles(Vector3 angles) {
+	angles.x = normalize_angle(angles.x);
+	angles.y = normalize_angle(angles.y);
+	angles.z = normalize_angle(angles.z);
+	return angles;
+}
+
+Vector3 to_euler_angles(Vector4 q1) {
+	float num = q1.w * q1.w;
+	float num2 = q1.x * q1.x;
+	float num3 = q1.y * q1.y;
+	float num4 = q1.z * q1.z;
+	float num5 = num2 + num3 + num4 + num;
+	float num6 = q1.x * q1.w - q1.y * q1.z;
+	Vector3 vector = Vector3();
+	if (num6 > 0.4995f * num5) {
+		vector.y = 2.0f * Math::my_atan2(q1.y, q1.x);
+		vector.x = 1.57079637f;
+		vector.z = 0.0f;
+		return normalize_angles(vector * 57.2958f);
+	}
+	if (num6 < -0.4995f * num5) {
+		vector.y = -2.0f * Math::my_atan2(q1.y, q1.x);
+		vector.x = -1.57079637f;
+		vector.z = 0.0f;
+		return normalize_angles(vector * 57.2958f);
+	}
+	Vector4 quaternion = Vector4(q1.w, q1.z, q1.x, q1.y); 
+	vector.y = Math::my_atan2(2.0f * quaternion.x * quaternion.w + 2.0f * quaternion.y * quaternion.z, 1.0f - 2.0f * (quaternion.z * quaternion.z + quaternion.w * quaternion.w));
+	vector.x = Math::my_asin(2.0f * (quaternion.x * quaternion.z - quaternion.w * quaternion.y));
+	vector.z = Math::my_atan2(2.0f * quaternion.x * quaternion.y + 2.0f * quaternion.z * quaternion.w, 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
+	return normalize_angles(vector * 57.2958f);
+}
+
+Vector2 cos_tan_horizontal(float angle, float range, float x, float y, int length) {
+	float our_angle = (angle + 45.f);
+
+	float yaw = our_angle * (M_PI / 180.0);
+
+	float view_cosinus = Math::cosf(yaw);
+	float view_sinus = Math::sinf(yaw);
+
+	float x2 = range * (-view_cosinus) + range * view_sinus;
+	float y2 = range * (-view_cosinus) - range * view_sinus;
+
+	int screen_x = x + static_cast<int>(x2 / range * length);
+	int screen_y = y + static_cast<int>(y2 / range * length);
+
+	return Vector2(screen_x, screen_y);
+}
+
 //Radar Function
 Vector2 WorldToRadar(Vector3 origin, Vector2 position, INT size, FLOAT rotation)
 {
@@ -423,6 +485,42 @@ void Visuals::DrawPlayers()
 					}
 				}
 
+				if (m_settings::Skeleton)
+				{
+					auto HeadBone = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
+					Vector2 HeadLocation;
+					UnityEngine::WorldToScreen(HeadBone, HeadLocation);
+					auto eyes = BasePlayer->eyes()->HeadForward();
+					Vector2 Forwards;
+					UnityEngine::WorldToScreen(HeadBone + eyes / 2, Forwards);
+
+					if (!HeadLocation.IsZero() && !Forwards.IsZero())
+						UnityEngine::GL::Line(Vector2(HeadLocation.x, HeadLocation.y), Vector2(Forwards.x, Forwards.y), Color::White());
+				}
+
+				//{
+				//	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+				//	auto LocalPos = LocalPlayer->model()->get_positionz();
+				//	auto LocalEyes = LocalPlayer->eyes();
+
+				//	auto PlayerPos = BasePlayer->model()->get_positionz();
+
+				//	float center_x = (float)(UnityEngine::screen_size.x) / 2, center_y = (float)(UnityEngine::screen_size.y) / 2;
+
+				//	Vector3 euler_angles = to_euler_angles(LocalEyes->get_rotation());
+
+				//	const Vector2 position = Vector2(LocalPos.x - PlayerPos.x, LocalPos.z - PlayerPos.z).normalize();
+
+				//	float angle = Math::my_atan2( position.x, position.y ) * 57.29578f - 180.f - euler_angles.y;
+
+				//	Vector2 pos_0 = cos_tan_horizontal(angle, 10.f, center_x, center_y, 140);
+				//	Vector2 pos_1 = cos_tan_horizontal(angle + 2.f, 10.f, center_x, center_y, 130);
+				//	Vector2 pos_2 = cos_tan_horizontal(angle - 2.f, 10.f, center_x, center_y, 130);
+
+				//	UnityEngine::GL().Triangle(Vector2(pos_0.x + 1, pos_0.y + 1), Vector2(pos_1.x + 1, pos_1.y + 1), Vector2(pos_2.x + 1, pos_2.y + 1), Color(0, 0, 0, 150.f));
+				//	UnityEngine::GL().Triangle(Vector2(pos_0.x, pos_0.y), Vector2(pos_1.x, pos_1.y), Vector2(pos_2.x, pos_2.y), BoxColor);
+				//}
+
 				if (m_settings::SelectedHealthBar == 1)
 				{
 					float bar_health = 0;
@@ -587,6 +685,7 @@ void Visuals::DrawPlayers()
 							if (IsAddressValid(display_name))
 							{
 								auto held_item = utf16_to_utf8(display_name->c_str());
+								auto ItemID = info->itemid();
 
 								if (m_settings::TagsVisCheck)
 								{
@@ -597,6 +696,113 @@ void Visuals::DrawPlayers()
 								{
 									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
 									yoffset += 13;
+							
+									/*
+									if (ItemID == 1545779598 || ItemID == 4155929904 || ItemID == 2959469637) {
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (10 / 2)), Vector2(26, 10), AK47Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1588298435 || ItemID == 3516600001)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (8 / 2)), Vector2(26, 8), BoltyIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 884424049)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), CompoundBowIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1965232394)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (23 / 2), footPos.y + yoffset - (8 / 2)), Vector2(23, 8), CrossbowIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1796682209)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (12 / 2)), Vector2(21, 12), CustomSMGIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 3529783679)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (24 / 2), footPos.y + yoffset - (6 / 2)), Vector2(24, 6), DoubleBarrelIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 4219022635)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (14 / 2), footPos.y + yoffset - (8 / 2)), Vector2(14, 8), EokaIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 3080424799)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (22 / 2), footPos.y + yoffset - (8 / 2)), Vector2(22, 8), HMLmgIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1443579727)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (31 / 2), footPos.y + yoffset - (8 / 2)), Vector2(31, 8), HuntingBowIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 2482412119)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (10 / 2)), Vector2(21, 10), LR300Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 28201841)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), M39Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 3442404277)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), M92Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 2225388408)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), M249Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1318558775)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (9 / 2)), Vector2(21, 9), Mp4a4Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 818877484 || ItemID == 1914691295)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (15 / 2), footPos.y + yoffset - (12 / 2)), Vector2(15, 12), PistolIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 795371088 || ItemID == 2927685355)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (7 / 2)), Vector2(26, 7), PumpShotgunIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 1373971859)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (11 / 2)), Vector2(21, 11), PythonIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 649912614)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), RevolverIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 3390104151)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (9 / 2)), Vector2(26, 9), SarIcon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 4253526834)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (25 / 2), footPos.y + yoffset - (6 / 2)), Vector2(25, 6), Spas12Icon, Color::White());
+										yoffset += 13;
+									}
+									else if (ItemID == 2536594571)
+									{
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), ThompsonIcon, Color::White());
+										yoffset += 13;
+									}
+									*/
 								}
 							}
 						}
@@ -729,177 +935,179 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-			if (m_settings::PlayerChams)
-			{
-				auto playerModel = BasePlayer->playerModel();
-				if (IsAddressValid(playerModel))
+
+				if (m_settings::PlayerChams)
 				{
-					auto _multiMesh = playerModel->_multiMesh();
-					if (IsAddressValid(_multiMesh))
-					{
-						auto Renderers = _multiMesh->get_Renderers();
-						if (IsAddressValid(Renderers))
+
+						auto playerModel = BasePlayer->playerModel();
+						if (IsAddressValid(playerModel))
 						{
-							auto Renderers_Items = Renderers->_items;
-							if (Renderers_Items)
+							auto _multiMesh = playerModel->_multiMesh();
+							if (IsAddressValid(_multiMesh))
 							{
-								auto Renderers_Size = Renderers->_size;
-								if (Renderers_Size) {
-									for (int i = 0; i < Renderers_Size; i++) {
-										auto MainRenderer = Renderers_Items->m_Items[i];
+								auto Renderers = _multiMesh->get_Renderers();
+								if (IsAddressValid(Renderers))
+								{
+									auto Renderers_Items = Renderers->_items;
+									if (Renderers_Items)
+									{
+										auto Renderers_Size = Renderers->_size;
+										if (Renderers_Size) {
 
-										if (IsAddressValid(MainRenderer))
-										{
-											auto material = MainRenderer->material();
+											for (int i = 0; i < Renderers_Size; i++) {
+												auto MainRenderer = Renderers_Items->m_Items[i];
 
-											if (!IsAddressValid(material))
-												continue;
+												if (IsAddressValid(MainRenderer))
+												{
+													auto material = MainRenderer->material();
 
-											int selectedChams = m_settings::SelectedChams;
+													if (!IsAddressValid(material))
+														continue;
 
-											switch (selectedChams) {
-											case 1:
-												if (FireBundleA) {
-													if (!FireShaderA) //Blue Fire
-														FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+													int selectedChams = m_settings::SelectedChams;
 
-													if (!FireMaterialA)
-														FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+													switch (selectedChams) {
+													case 1:
+														if (FireBundleA) {
+															if (!FireShaderA) //Blue Fire
+																FireShaderA = FireBundleA->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-													if (material->shader() != FireShaderA)
-													{
-														MainRenderer->set_material(FireMaterialA);
-														FireMaterialA->set_shader(FireShaderA);
-													}
-												}
-												break;
-											case 2:
-												if (FireBundleB) {
-													if (!FireShaderB) //Red Fire
-														FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+															if (!FireMaterialA)
+																FireMaterialA = FireBundleA->LoadAsset<UnityEngine::Material>(XS("fire.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
 
-													if (!FireMaterialB)
-														FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != FireShaderB)
-													{
-														MainRenderer->set_material(FireMaterialB);
-														FireMaterialB->set_shader(FireShaderB);
-													}
-												}
-												break;
-											case 3:
-												if (LightningBundle) {
-													if (!LightningShader) //Lightning
-														LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!LightningMaterial)
-														LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != LightningShader)
-													{
-														MainRenderer->set_material(LightningMaterial);
-														LightningMaterial->set_shader(LightningShader);
-													}
-												}
-												break;
-											case 4:
-												if (GeometricBundle) {
-													if (!GeometricShader) //Geometric Disolve
-														GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!GeometricMaterial)
-														GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != GeometricShader)
-													{
-														MainRenderer->set_material(GeometricMaterial);
-														GeometricMaterial->set_shader(GeometricShader);
-													}
-												}
-												break;
-											case 5:
-												if (GalaxyBundle) {
-													if (!GalaxyShader) //Galaxy
-														GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!GalaxyMaterial)
-														GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != GalaxyShader)
-													{
-														MainRenderer->set_material(GalaxyMaterial);
-														GalaxyMaterial->set_shader(GalaxyShader);
-													}
-												}
-												break;
-											case 6:
-												if (WireFrameBundle) {
-													if (!WireFrameShader) //Galaxy
-														WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (!WireFrameMaterial)
-														WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != WireFrameShader)
-													{
-														MainRenderer->set_material(WireFrameMaterial);
-														WireFrameMaterial->set_shader(WireFrameShader);
-														//WireFrameMaterial->SetColor("_Color", Color::Red());
-													}
-												}
-												break;
-											case 7:
-												if (ColorBundle) {
-													auto VisibleChams_Color = Color{ ColorSettings::VisibleChams_Color.r, ColorSettings::VisibleChams_Color.g, ColorSettings::VisibleChams_Color.b, ColorSettings::VisibleChams_Color.a };
-													auto InvisibleChams_Color = Color{ ColorSettings::InvisibleChams_Color.r, ColorSettings::InvisibleChams_Color.g, ColorSettings::InvisibleChams_Color.b, ColorSettings::InvisibleChams_Color.a };
-													auto ScientistChams_Color = Color{ ColorSettings::ScientistChams_Color.r, ColorSettings::ScientistChams_Color.g, ColorSettings::ScientistChams_Color.b, ColorSettings::ScientistChams_Color.a };
-
-													if (!ColorShader) //Galaxy
-														ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
-
-													if (material->shader() != ColorShader)
-													{
-														material->set_shader(ColorShader);
-														material->SetColor(XS("_ColorVisible"), VisibleChams_Color);
-														material->SetColor(XS("_ColorBehind"), InvisibleChams_Color);
-
-														if (npc)
-														{
-															material->SetColor(XS("_ColorVisible"), ScientistChams_Color);
-															material->SetColor(XS("_ColorBehind"), ScientistChams_Color);
+															if (material->shader() != FireShaderA)
+															{
+																MainRenderer->set_material(FireMaterialA);
+																FireMaterialA->set_shader(FireShaderA);
+															}
 														}
+														break;
+													case 2:
+														if (FireBundleB) {
+															if (!FireShaderB) //Red Fire
+																FireShaderB = FireBundleB->LoadAsset<UnityEngine::Shader>(XS("new amplifyshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!FireMaterialB)
+																FireMaterialB = FireBundleB->LoadAsset<UnityEngine::Material>(XS("fire2.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != FireShaderB)
+															{
+																MainRenderer->set_material(FireMaterialB);
+																FireMaterialB->set_shader(FireShaderB);
+															}
+														}
+														break;
+													case 3:
+														if (LightningBundle) {
+															if (!LightningShader) //Lightning
+																LightningShader = LightningBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!LightningMaterial)
+																LightningMaterial = LightningBundle->LoadAsset<UnityEngine::Material>(XS("lightning.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != LightningShader)
+															{
+																MainRenderer->set_material(LightningMaterial);
+																LightningMaterial->set_shader(LightningShader);
+															}
+														}
+														break;
+													case 4:
+														if (GeometricBundle) {
+															if (!GeometricShader) //Geometric Disolve
+																GeometricShader = GeometricBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro geometric dissolve.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!GeometricMaterial)
+																GeometricMaterial = GeometricBundle->LoadAsset<UnityEngine::Material>(XS("galaxy.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != GeometricShader)
+															{
+																MainRenderer->set_material(GeometricMaterial);
+																GeometricMaterial->set_shader(GeometricShader);
+															}
+														}
+														break;
+													case 5:
+														if (GalaxyBundle) {
+															if (!GalaxyShader) //Galaxy
+																GalaxyShader = GalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!GalaxyMaterial)
+																GalaxyMaterial = GalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_12.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != GalaxyShader)
+															{
+																MainRenderer->set_material(GalaxyMaterial);
+																GalaxyMaterial->set_shader(GalaxyShader);
+															}
+														}
+														break;
+													case 6:
+														if (WireFrameBundle) {
+															if (!WireFrameShader) //Galaxy
+																WireFrameShader = WireFrameBundle->LoadAsset<UnityEngine::Shader>(XS("poiyomi pro wireframe.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!WireFrameMaterial)
+																WireFrameMaterial = WireFrameBundle->LoadAsset<UnityEngine::Material>(XS("wireframe.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != WireFrameShader)
+															{
+																MainRenderer->set_material(WireFrameMaterial);
+																WireFrameMaterial->set_shader(WireFrameShader);
+																//WireFrameMaterial->SetColor("_Color", Color::Red());
+															}
+														}
+														break;
+													case 7:
+														if (ColorBundle) {
+															auto VisibleChams_Color = Color{ ColorSettings::VisibleChams_Color.r, ColorSettings::VisibleChams_Color.g, ColorSettings::VisibleChams_Color.b, ColorSettings::VisibleChams_Color.a };
+															auto InvisibleChams_Color = Color{ ColorSettings::InvisibleChams_Color.r, ColorSettings::InvisibleChams_Color.g, ColorSettings::InvisibleChams_Color.b, ColorSettings::InvisibleChams_Color.a };
+															auto ScientistChams_Color = Color{ ColorSettings::ScientistChams_Color.r, ColorSettings::ScientistChams_Color.g, ColorSettings::ScientistChams_Color.b, ColorSettings::ScientistChams_Color.a };
+
+															if (!ColorShader) //Galaxy
+																ColorShader = ColorBundle->LoadAsset<UnityEngine::Shader>(XS("chams.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (material->shader() != ColorShader)
+															{
+																material->set_shader(ColorShader);
+																material->SetColor(XS("_ColorVisible"), VisibleChams_Color);
+																material->SetColor(XS("_ColorBehind"), InvisibleChams_Color);
+
+																if (npc)
+																{
+																	material->SetColor(XS("_ColorVisible"), ScientistChams_Color);
+																	material->SetColor(XS("_ColorBehind"), ScientistChams_Color);
+																}
+															}
+														}
+														break;
+													case 8:
+														if (RPBGalaxyBundle) {
+															if (!RPBGalaxyShader) //Galaxy
+																RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+															if (!RPBGalaxyMaterial)
+																RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+															if (material->shader() != RPBGalaxyShader)
+															{
+																MainRenderer->set_material(RPBGalaxyMaterial);
+																RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
+															}
+														}
+														break;
 													}
 												}
-												break;
-											case 8:
-												if (RPBGalaxyBundle) {
-													if (!RPBGalaxyShader) //Galaxy
-														RPBGalaxyShader = RPBGalaxyBundle->LoadAsset<UnityEngine::Shader>(XS("galaxymaterial.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-													if (!RPBGalaxyMaterial)
-														RPBGalaxyMaterial = RPBGalaxyBundle->LoadAsset<UnityEngine::Material>(XS("galaxymaterial_03.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
-
-													if (material->shader() != RPBGalaxyShader)
-													{
-														MainRenderer->set_material(RPBGalaxyMaterial);
-														RPBGalaxyMaterial->set_shader(RPBGalaxyShader);
-													}
-												}
-												break;
 											}
 										}
 									}
-
-								}
 								}
 							}
-						}
 					}
 				}
 			}
-		}
-		
+		}	
 	}
 }
 
@@ -1510,9 +1718,9 @@ void Visuals::RenderEntities()
 									}
 
 
-									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
-									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffsethealth + 4.f), bar_color);
-									UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffsethealth + 4.f), Color::Black());
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 4.f), bar_color);
+									UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
 									yoffset += 8.f;
 								}
 
@@ -1838,6 +2046,7 @@ void Visuals::RenderEntities()
 								UnityEngine::GL().TextCenter(Vector2(screen), player_name.c_str(), StoneColor, Color::Black(ColorSettings::StoneOre_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								if (m_settings::OreIcons)
 								{
+									
 									UnityEngine::Texture2D* texture = nullptr;
 									if (!texture)
 									{
@@ -2517,6 +2726,46 @@ void Visuals::RenderEntities()
 								player_name = player_name + " " + str;
 								UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), Bradley_Color, Color::Black(ColorSettings::Bradley_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 								yoffset += 12.f;
+
+								//if (m_settings::BradleyhealthBar)
+								//{
+								//	float bar_health = 0;
+								//	auto health = base_heli->_health();
+								//	//auto max_health = base_player->_maxHealth();
+								//	float max_health = 100.f;
+								//	float draw_health = health;
+
+								//	if (health > max_health)
+								//	{
+								//		draw_health = max_health;
+								//	}
+
+								//	const auto bar_width = 30;
+								//	bar_health = (bar_width / max_health) * draw_health;
+
+								//	auto bar_color = Color::Green();
+								//	if (health > 50.f)
+								//	{
+								//		bar_color = Color::Green();
+								//	}
+								//	else if (health > 20.f && health < 40.f)
+								//	{
+								//		bar_color = Color::Orange();
+								//	}
+								//	else if (health < 20.f)
+								//	{
+								//		bar_color = Color::Red();
+								//	}
+
+								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+								//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
+								//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+
+								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
+								//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
+								//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+								//	yoffset += 13;
+								//}
 							}
 
 						}
@@ -2544,6 +2793,46 @@ void Visuals::RenderEntities()
 									player_name = player_name + " " + str;
 									UnityEngine::GL().TextCenter(Vector2(screen.x, screen.y + yoffset), player_name.c_str(), PatrolHeli_Color, Color::Black(ColorSettings::PatrolHeli_Color.a), m_settings::WorldFontSize, m_settings::WorldOutlinedText, m_settings::WorldShadedText);
 									yoffset += 12.f;
+
+									//if (m_settings::healthBar)
+									//{
+									//	float bar_health = 0;
+									//	auto health = base_heli->_health();
+									//	//auto max_health = base_player->_maxHealth();
+									//	float max_health = 100.f;
+									//	float draw_health = health;
+
+									//	if (health > max_health)
+									//	{
+									//		draw_health = max_health;
+									//	}
+
+									//	const auto bar_width = 30;
+									//	bar_health = (bar_width / max_health) * draw_health;
+
+									//	auto bar_color = Color::Green();
+									//	if (health > 50.f)
+									//	{
+									//		bar_color = Color::Green();
+									//	}
+									//	else if (health > 20.f && health < 40.f)
+									//	{
+									//		bar_color = Color::Orange();
+									//	}
+									//	else if (health < 20.f)
+									//	{
+									//		bar_color = Color::Red();
+									//	}
+
+									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+									//	//UnityEngine::GL::GlFillRectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_health, 4.f }, bar_color);
+									//	//UnityEngine::GL::Rectangle(Vector2{ footPos.x - (bar_width / 2), bo.bottom + yoffset }, Vector2{ bar_width, 4.f }, Color::Black());
+
+									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 3.f), Color::Black());
+									//	UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 3.f), bar_color);
+									//	UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+									//	yoffset += 13;
+									//}
 								}
 							}
 						}
@@ -2553,6 +2842,7 @@ void Visuals::RenderEntities()
 		}
 	}
 }
+
 
 void Visuals::CacheEntities()
 {
@@ -2576,6 +2866,8 @@ void Visuals::CacheEntities()
 
 							if (!BaseEntity->net())
 								continue;
+
+							auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
 
 							const auto EntityID = BaseEntity->prefabID();
 							const auto StashID = 2568831788;
@@ -2648,36 +2940,54 @@ void Visuals::CacheEntities()
 							const auto t1workbench = 2561955800;
 							const auto t2workbench = 601265145;
 							const auto t3workbench = 2764275075;
+							//const auto Minicopter = 2278499844;
 
-							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat)
+							//const auto timedexplosive = 1915331115;
+							//const auto timedexplosive_deployed = 3898309212;
+
+							//if (EntityID == timedexplosive || EntityID == timedexplosive_deployed)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//}
+
+							///*if (EntityID == horse && m_settings::horseEsp)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//}
+
+							//else if (EntityID == oil_barrel && m_settings::OilBarrel)
+							//{
+							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
+							//*/}
+							if (BaseEntity->IsA(AssemblyCSharp::Tugboat::StaticClass()) && m_settings::TugBoat && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t1workbench && m_settings::T1Workbench)
+							else if (EntityID == t1workbench && m_settings::T1Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t2workbench && m_settings::T2Workbench)
+							else if (EntityID == t2workbench && m_settings::T2Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == t3workbench && m_settings::T3Workbench)
+							else if (EntityID == t3workbench && m_settings::T3Workbench && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == Minicopter && m_settings::Minicopter)
+							else if (EntityID == Minicopter && m_settings::Minicopter && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == ScrapHeli && m_settings::ScrapHeli)
+							else if (EntityID == ScrapHeli && m_settings::ScrapHeli && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == RHIB && m_settings::Rhib)
+							else if (EntityID == RHIB && m_settings::Rhib && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == Rowboat && m_settings::Rowboat)
+							else if (EntityID == Rowboat && m_settings::Rowboat && distance <= m_settings::MaxVehicleDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2685,51 +2995,51 @@ void Visuals::CacheEntities()
 							//{
 							//	PrefabListTemp.push_back(PrefabList(BaseEntity));
 							//}
-							else if (EntityID == BearTrap && m_settings::BearTrap)
+							else if (EntityID == BearTrap && m_settings::BearTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == GunTrap && m_settings::ShotgunTrap)
+							else if (EntityID == GunTrap && m_settings::ShotgunTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == FlameTurret && m_settings::FlameTurret)
+							else if (EntityID == FlameTurret && m_settings::FlameTurret && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == FloorSpikes && m_settings::SpikesTrap)
+							else if (EntityID == FloorSpikes && m_settings::SpikesTrap && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == LandMine && m_settings::LandMine)
+							else if (EntityID == LandMine && m_settings::LandMine && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == SamSite && m_settings::SamSite)
+							else if (EntityID == SamSite && m_settings::SamSite && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_basic && m_settings::BasicCrate)
+							else if (EntityID == crate_basic && m_settings::BasicCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate)
+							else if (EntityID == crate_normal_2 || EntityID == crate_normal_2_medical || EntityID == crate_normal_2_food && m_settings::NormalCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							else if (EntityID == crate_normal && m_settings::MilitaryCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_elite && m_settings::EliteCrate)
+							else if (EntityID == crate_elite && m_settings::EliteCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == supply_drop && m_settings::SupplyDrop)
+							else if (EntityID == supply_drop && m_settings::SupplyDrop && distance <= m_settings::MaxSupplyDropDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == crate_normal && m_settings::NormalCrate)
+							else if (EntityID == crate_normal && m_settings::NormalCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
@@ -2737,113 +3047,112 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}*/
-							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter)
+							else if (BaseEntity->IsA(AssemblyCSharp::PatrolHelicopter::StaticClass()) && m_settings::PatrolHelicopter && distance <= m_settings::MaxAPCDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == heli_crate && m_settings::HeliCrate)
+							else if (EntityID == heli_crate && m_settings::HeliCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == bradley_apc && m_settings::BradleyAPC)
+							else if (EntityID == bradley_apc && m_settings::BradleyAPC && distance <= m_settings::MaxAPCDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == bradley_crate && m_settings::BradleyCrate)
-							{
-								PrefabListTemp.push_back(PrefabList(BaseEntity));
-							}
-
-							else if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate)
+							else if (EntityID == bradley_crate && m_settings::BradleyCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == autoturret_deployed && m_settings::AutoTurret)
+							else if (BaseEntity->IsA(AssemblyCSharp::HackableLockedCrate::StaticClass()) && m_settings::HackableCrate && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == player_corpse && m_settings::Corpse)
+							else if (EntityID == autoturret_deployed && m_settings::AutoTurret && distance <= m_settings::MaxTrapsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == player_backpack && m_settings::BackPack)
+							else if (EntityID == player_corpse && m_settings::Corpse && distance <= m_settings::MaxPlayerDropsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre)
+							else if (EntityID == player_backpack && m_settings::BackPack && distance <= m_settings::MaxPlayerDropsDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre)
+							else if (EntityID == StoneOre || EntityID == StoneOre2 || EntityID == StoneOre3 || EntityID == OreStone && m_settings::StoneOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre)
+							else if (EntityID == MetalOre || EntityID == MetalOre2 || EntityID == MetalOre3 || EntityID == OreMetal && m_settings::MetalOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StoneCollectable && m_settings::StoneCollectable)
+							else if (EntityID == SulfurOre || EntityID == SulfurOre2 || EntityID == SulfurOre3 || EntityID == OreSulfur && m_settings::SulfurOre && distance <= m_settings::MaxOreDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == MetalCollectable && m_settings::MetalCollectable)
+							else if (EntityID == StoneCollectable && m_settings::StoneCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == SulfurCollectable && m_settings::SulfurCollectable)
+							else if (EntityID == MetalCollectable && m_settings::MetalCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == dieselCollectable && m_settings::DieselBarrel)
+							else if (EntityID == SulfurCollectable && m_settings::SulfurCollectable && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == HempCollectable && m_settings::Hemp)
+							else if (EntityID == dieselCollectable && m_settings::DieselBarrel && distance <= m_settings::MaxCrateDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == StashID && m_settings::Stash)
+							else if (EntityID == HempCollectable && m_settings::Hemp && distance <= m_settings::MaxCollectableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom)
+							else if (EntityID == StashID && m_settings::Stash && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == PumpkinID && m_settings::Pumpkin)
+							else if (EntityID == mushRoomID1 || EntityID == mushRoomID2 && m_settings::Mushroom && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == PotatoID && m_settings::Potato)
+							else if (EntityID == PumpkinID && m_settings::Pumpkin && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (EntityID == CornID && m_settings::Corn)
+							else if (EntityID == PotatoID && m_settings::Potato && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
 
-							else if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems)
+							else if (EntityID == CornID && m_settings::Corn && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-							else if (EntityID == cupboard_deployed && m_settings::cupboard)
+							else if (BaseEntity->IsA(AssemblyCSharp::WorldItem::StaticClass()) && m_settings::DroppedItems && distance <= m_settings::MaxDroppedDistance)
+							{
+								PrefabListTemp.push_back(PrefabList(BaseEntity));
+							}
+							else if (EntityID == cupboard_deployed && m_settings::cupboard && distance <= m_settings::MaxDeployableDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}

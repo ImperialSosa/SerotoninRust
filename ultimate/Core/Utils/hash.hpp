@@ -52,7 +52,6 @@ constexpr std::size_t GetLength(const Type* const data)
 }
 
 
-
 template <typename Type>
 constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, std::size_t size, bool ignore_case)
 {
@@ -63,10 +62,6 @@ constexpr std::uint64_t HashCompute(std::uint64_t hash, const Type* const data, 
 	}
 	return finalHash;
 }
-
-
-
-
 
 template< typename Type >
 constexpr std::uint64_t Hash(const Type* const data, std::size_t size, bool ignore_case)

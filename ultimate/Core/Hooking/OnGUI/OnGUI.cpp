@@ -154,7 +154,7 @@ void ConnectorClient()
 				{
 					connector::cheat_message msg;
 					msg.msg = connector::messages::GET_FILE;
-					msg.value = "SeroIcon"; //Value has to be identical to the uploaded name
+					msg.value = "IconBundlez"; //Value has to be identical to the uploaded name
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent = true;
@@ -239,7 +239,7 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							SerotoninIconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							IconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile3 = true;
 							ReceivedFile2 = false;
@@ -1642,6 +1642,114 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 	}
 }
 
+void SetupTextures()
+{
+	if (!AK47Icon)
+	{
+		AK47Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("ak47.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!BoltyIcon)
+	{
+		BoltyIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("bolt-action-rifle.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!CompoundBowIcon)
+	{
+		CompoundBowIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("compound-bow.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!CrossbowIcon)
+	{
+		CrossbowIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("crossbow.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!CustomSMGIcon)
+	{
+		CustomSMGIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("custom-smg.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!DoubleBarrelIcon)
+	{
+		DoubleBarrelIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("double-barrel.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!EokaIcon)
+	{
+		EokaIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("eoka.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!HMLmgIcon)
+	{
+		HMLmgIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("hmlmg.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!HuntingBowIcon)
+	{
+		HuntingBowIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("hunting-bow.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!LR300Icon)
+	{
+		LR300Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("lr300.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!M39Icon)
+	{
+		M39Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("m39.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!M92Icon)
+	{
+		M92Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("m92.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!M249Icon)
+	{
+		M249Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("m249.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!Mp4a4Icon)
+	{
+		Mp4a4Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("mp5.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!PistolIcon)
+	{
+		PistolIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("p250.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!PumpShotgunIcon)
+	{
+		PumpShotgunIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("pump-shotgun.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!PythonIcon)
+	{
+		PythonIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("python.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!RevolverIcon)
+	{
+		RevolverIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("revolver.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!SarIcon)
+	{
+		SarIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("sar.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+
+	if (!Spas12Icon)
+	{
+		Spas12Icon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("spas-12.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}	
+
+	if (!ThompsonIcon)
+	{
+		ThompsonIcon = IconBundle->LoadAsset<UnityEngine::Texture2D>(XS("thompson.png"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Texture"))));
+	}
+}
+
 static inline bool HasTriggered = false;
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
@@ -1683,8 +1791,11 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		SetupStyles();
 
 		GUI().SetupGUI();
-		//if (!TestBundle)
-		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/H_Original.unity3d", 0, 0);
+
+		//if (!IconBundle)
+		//	IconBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/icons.unity3d", 0, 0);
+
+		SetupTextures();
 
 		//if (is_menu_open) {
 		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
@@ -1817,18 +1928,19 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 
-					//static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-					//float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-					//if (current_time - send_time > 10.f)
-					//{
+					static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+					if (current_time - send_time > 5.f)
+					{
 						//LOG(XS("[DEBUG] Speed"));
 
 						Visuals().CacheEntities();
 
-					//	send_time = current_time;
-					//}
+						send_time = current_time;
+					}
 		
-					Visuals().RenderEntities();
+					if (!PrefabVectorList.empty())
+						Visuals().RenderEntities();
 				}	
 			}
 
@@ -1986,6 +2098,12 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			{
 				font_bundle2->Unload(true);
 				font_bundle2 = nullptr;
+			}
+
+			if (IconBundle)
+			{
+				IconBundle->Unload(true);
+				IconBundle = nullptr;
 			}
 		}
 

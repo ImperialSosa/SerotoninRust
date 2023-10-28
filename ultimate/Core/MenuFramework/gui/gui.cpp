@@ -324,6 +324,8 @@ void GUI::SetupGUI()
 
    // game::drawing::draw_texture_with_color_and_rounding({ 10, 10, 50, 50 }, white_texture, 0, true, 0.f, { 1.f, 0.f, 0.f, 1.f }, 0.f, 4.f);
 
+   // game::drawing::draw_texture_multi_colored({ 10, 10, 200, 200 }, white_texture, 0, true, 0.f, { 1.f, 0.f, 0.f, 0.5f }, { 0.f, 1.f, 0.f, 0.5f }, { 0.f, 0.f, 1.f, 0.5f }, { 1.f, 1.f, 0.f, 0.5f }, game::vec4(0, 0, 0, 0), game::vec4(0, 0, 0, 0.f), false);
+
     // you may want to change this to use the Unity VK Keys instead, etc... unity mouse buttons its all up to your preferences...
     calliope::util::get_key_states();
 
@@ -462,9 +464,11 @@ void RageTab()
 
 
         calliope::menu.components.checkbox(XS("Manipulation"), m_settings::Manipulation);
+        calliope::menu.components.keybind(XS("Manipulation Key"), (int&)m_settings::ManipKey, true);
+
         calliope::menu.components.checkbox(XS("Manip-Indicator"), m_settings::ManipFlags);
-        calliope::menu.components.checkbox(XS("Manip-Angle"), m_settings::DrawManipPoints);
-        calliope::menu.components.slider<float>(XS("Manip-Angles"), XS(""), m_settings::ManipPoints, 0, 50);
+        calliope::menu.components.checkbox(XS("Manip-Point"), m_settings::DrawManipPoints);
+        calliope::menu.components.slider<float>(XS("Manip-Scanning-Speed"), XS(""), m_settings::ManipPoints, 0, 50);
         calliope::menu.components.dropdown(XS("Manip-Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
 
         calliope::menu.components.end_groupbox();
@@ -482,7 +486,7 @@ void RageTab()
         else
             m_settings::AdvancedChecks = false;
         
-        calliope::menu.components.checkbox(XS("Simulated-Indicator"), m_settings::ShowCachedLOS);
+       // calliope::menu.components.checkbox(XS("Simulated-Indicator"), m_settings::ShowCachedLOS);
         calliope::menu.components.checkbox(XS("Simulated-Point"), m_settings::ShowCachedPoint);
         calliope::menu.components.slider<float>(XS("Simulated-Points"), XS(""), m_settings::LOSCheckAmount, 0, 2000);
 
@@ -1277,7 +1281,7 @@ void WeaponsTab()
         if (m_settings::ChangeRecoil)
             calliope::menu.components.slider<float>(XS("Recoil"), XS(""), m_settings::recoilPercent, 0, 100);
         if (m_settings::NormalThickBullet)
-            calliope::menu.components.slider<float>(XS("Thickness"), XS(""), m_settings::NormalThickBulletThickness, 0, 4.5);
+            calliope::menu.components.slider<float>(XS("Thickness"), XS(""), m_settings::NormalThickBulletThickness, 0, 4.44);
 
         calliope::menu.components.slider<float>(XS("Spread-Amount"), XS(""), m_settings::SilentSpread, 0, 100);
 
@@ -1391,7 +1395,7 @@ void ColorsTab()
 void GUI::DrawMenu()
 {
     if (calliope::menu.components.window(XS("Serotonin"), calliope::vec2_t(250, 250), calliope::vec2_t(600, 400), calliope::menu_t::window_flags_none)) {
-        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("World-2"), XS("World-3"), XS("Player"), XS("Misc"), XS("Weather"), XS("Weapon"), XS("Colors")})) {
+        switch (auto selected_tab = calliope::menu.components.tabs({ XS("Aimbot"), XS("Rage"), XS("Visuals"), XS("Chams"), XS("World"), XS("World-2"), XS("World-3"), XS("Player"), XS("Misc"), XS("Weather"), XS("Weapon"), XS("Settings")})) {
         case 0: {
             AimbotTab();
             break;

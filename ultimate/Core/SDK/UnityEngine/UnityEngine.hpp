@@ -54,6 +54,21 @@ namespace UnityEngine {
 		float distance_2d(Vector2 input) {
 			return Math::sqrtf(Math::powf(x - input.x, 2) + Math::powf(y - input.y, 2));
 		}
+		inline Vector2 normalize()
+		{
+			if (x > 89.f)
+				x -= 180.f;
+			else if (x < -89.f)
+				x += 180.f;
+
+			while (y < -180.0f)
+				y += 360.0f;
+
+			while (y > 180.0f)
+				y -= 360.0f;
+
+			return *this;
+		}
 
 	public:
 		Vector2 Normalized();
@@ -3181,6 +3196,17 @@ namespace UnityEngine {
 				const Vector2& point = lines[i];
 				Vertex3(point.x - 0.5f, FlipVertical(point.y - 0.5), 0);
 			}
+
+			End();
+		}
+
+		static void Triangle(const Vector2& Pos, const Vector2& Pos1, const Vector2& Pos2, const Color& col)
+		{
+			Begin(RustStructs::GlMode::Trangles);
+
+			Vertex3(Pos.x, Pos.y, 0);
+			Vertex3(Pos1.x, Pos1.y, 0);
+			Vertex3(Pos2.x, Pos2.y, 0);
 
 			End();
 		}
