@@ -243,11 +243,17 @@ public:
 		if (!InGame)
 			return {};
 
+		if (!IsAddressValid(playerProjectileAttack))
+			return {};
+
 		if (!IsAddressValid(projectile))
-			return false;
+			return {};
 
 		if (!IsAddressValid(hTest))
-			return false;
+			return {};
+
+		if (!IsAddressValid(Features().LocalPlayer))
+			return {};
 
 		auto camera = UnityEngine::Camera::get_main();
 		if (!camera)
