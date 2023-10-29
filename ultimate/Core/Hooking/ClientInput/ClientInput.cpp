@@ -1364,14 +1364,25 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		else {
 			m_settings::Thickbullet_AutoShoot = false;
 			m_settings::Thickbullet_Indicator = false;
+<<<<<<< HEAD
+			m_settings::Manipulation_Indicator = false;
 			StartShooting = false;
 		}
+
+=======
+			StartShooting = false;
+		}
+>>>>>>> f08f3544f7f54813c9a398d63a2b28ac9961efa5
 	}
 	else {
 		m_settings::Thickbullet_AutoShoot = false;
 		m_settings::Thickbullet_Indicator = false;
+		m_settings::Manipulation_Indicator = false;
 		StartShooting = false;
 	}
+
+
+	//AssemblyCSharp::UIWounded::recoveryChance() = 100.f;
 
 	/*if (CalledLaunchFromHook)
 	{
