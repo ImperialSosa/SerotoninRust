@@ -4257,6 +4257,13 @@ namespace AssemblyCSharp {
 		}
 	};
 
+	struct UIWounded : Il2CppObject {
+		IL2CPP_CLASS("UIWounded");
+
+		IL2CPP_STATIC_FIELD(float , recoveryChance)
+	};
+
+
 	struct UINexusMap : Il2CppObject {
 		IL2CPP_CLASS("UINexusMap");
 
@@ -4439,6 +4446,9 @@ namespace ConVar {
 
 		IL2CPP_STATIC_FIELD(FPSystem::String*, ip);
 		IL2CPP_STATIC_FIELD(int, seed);
+		IL2CPP_STATIC_FIELD(int, max_sleeping_bags);
+		IL2CPP_STATIC_FIELD(int, bag_quota_item_amount);
+
 	};
 
 	struct Culling : AssemblyCSharp::ConsoleSystem {

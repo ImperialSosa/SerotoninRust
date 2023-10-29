@@ -671,9 +671,9 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-				if (m_settings::HeldItemType == 1 || m_settings::HeldItemType == 3)
-				{
 
+				if (m_settings::helditem)
+				{
 					const auto item = BasePlayer->ActiveItem();
 					if (IsAddressValid(item))
 					{
@@ -687,17 +687,38 @@ void Visuals::DrawPlayers()
 								auto held_item = utf16_to_utf8(display_name->c_str());
 								auto ItemID = info->itemid();
 
-								if (m_settings::TagsVisCheck)
+
+								switch (m_settings::HeldItemType)
 								{
-									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-									yoffset += 13;
+								case 0: //name
+								{
+									if (m_settings::TagsVisCheck)
+									{
+										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+										yoffset += 13;
+									}
+									else
+									{
+										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+										yoffset += 13;
+									}
 								}
-								else
+									break;
+								case 1://unity icon
 								{
-									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-									yoffset += 13;
-							
-									/*
+									auto IconSprite = info->FindIconSprite(info->itemid());
+
+									if (IconSprite) {
+										auto IconTexture = IconSprite->get_texture();
+
+										yoffset += 4;
+										UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
+										yoffset += 24;
+									}
+								}
+								break;
+								case 2:// custom icon
+								{
 									if (ItemID == 1545779598 || ItemID == 4155929904 || ItemID == 2959469637) {
 										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (10 / 2)), Vector2(26, 10), AK47Icon, Color::White());
 										yoffset += 13;
@@ -802,8 +823,10 @@ void Visuals::DrawPlayers()
 										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), ThompsonIcon, Color::White());
 										yoffset += 13;
 									}
-									*/
 								}
+									break;
+								}
+								
 							}
 						}
 					}
@@ -912,28 +935,6 @@ void Visuals::DrawPlayers()
 					}
 				}
 
-				if (m_settings::HeldItemType == 2 || m_settings::HeldItemType == 3)
-				{
-
-					const auto item = BasePlayer->ActiveItem();
-					if (IsAddressValid(item))
-					{
-						auto info = item->info();
-
-						if (IsAddressValid(info))
-						{
-							auto IconSprite = info->FindIconSprite(info->itemid());
-
-							if (IconSprite) {
-								auto IconTexture = IconSprite->get_texture();
-
-								yoffset += 4;
-								UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
-								yoffset += 24;
-							}
-						}
-					}
-				}
 
 
 				if (m_settings::PlayerChams)

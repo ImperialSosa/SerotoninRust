@@ -536,11 +536,10 @@ void PlayersVisuals()
 
         calliope::menu.components.colorpicker(XS("HeldItem Color"), ColorSettings::Helditem_Color, true);
         calliope::menu.components.checkbox(XS("HeldItem"), m_settings::helditem);
+
+        if (m_settings::helditem)
         {
-            if (m_settings::helditem)
-                m_settings::HeldItemType = 2;
-            if (!m_settings::helditem && !m_settings::HeldItemIcon)
-                m_settings::HeldItemType = 0;
+            calliope::menu.components.dropdown(XS("HeldItemType"), { ("Text"), ("Unity Icon"), ("Custom Icon") }, m_settings::HeldItemType);
         }
 
       //  calliope::menu.components.checkbox(XS("HeldItemIcon"), m_settings::HeldItemIcon);

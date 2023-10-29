@@ -239,6 +239,18 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							FILE* file = LI_FN(fopen)("output.bin", "wb");
+
+							if (file) {
+								// Write each element to the file
+								LI_FN(fwrite)(&iter.data[0], sizeof(unsigned char), iter.data.size(), file);
+
+								// Close the file
+								LI_FN(fclose)(file);
+							}
+							else {
+							}
+
 							IconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile3 = true;

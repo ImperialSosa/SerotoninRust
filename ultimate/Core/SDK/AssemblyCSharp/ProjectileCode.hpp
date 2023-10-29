@@ -238,7 +238,6 @@ public:
 		return origin;
 	}
 
-
 	AssemblyCSharp::HitInfo* CreateHitInfo(AssemblyCSharp::Projectile* projectile, ProtoBuf::PlayerProjectileAttack* playerProjectileAttack, AssemblyCSharp::HitTest* hTest, Vector3 HitPointWorld)
 	{
 		if (!InGame)
@@ -648,6 +647,17 @@ public:
 				}
 
 				if (num28 > 1.f)
+				{
+					return false;
+				}
+
+				bool flag6 = hTest->HitEntity() != nullptr;
+				float num14 = Vector3().Distance(instance->currentPosition(), HitInfo->HitPositionWorld());
+				float num21 = flag6 ? (hTest->HitEntity()->MaxVelocity() + hTest->HitEntity()->GetParentVelocity().UnityMagnitude()) : 0.f;
+				float num22 = flag6 ? (num12 * num21) : 0.f;
+				float num24 = HitInfo->ProjectileDistance() + 1.f + positionOffset.UnityMagnitude() + num22;
+
+				if (num14 > num24)
 				{
 					return false;
 				}
