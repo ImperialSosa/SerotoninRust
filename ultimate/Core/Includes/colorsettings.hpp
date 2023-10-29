@@ -90,4 +90,19 @@ namespace ColorSettings {
 
 	inline calliope::color_t Ambient_Color(204, 204, 204, 255);
 	inline calliope::color_t SkyBox_Color(74, 232, 161, 120);
+
+	inline calliope::color_t GChams_GlitterColor(0, 255, 255, 255);
+
+	inline calliope::color_t GChams_DamascusColor1(255, 0, 0, 255);
+	inline calliope::color_t GChams_DamascusColor2(0, 255, 255, 255);
+	inline calliope::color_t GChams_DamascusGradient1(33, 0, 191, 255);
+	inline calliope::color_t GChams_DamascusPattern1(0, 255, 255, 255);
+
+	inline calliope::color_t GChams_BlueFlameColor1(0, 0, 255, 255);
+	inline calliope::color_t GChams_BlueFlameColor2(0, 255, 255, 255);
+
+	inline calliope::color_t GChams_RedFlameColor1(255, 0, 0, 255);
+	inline calliope::color_t GChams_RedFlameColor2(255, 206, 0, 255);
+
+	inline calliope::color_t GChams_LightningColor(255, 255, 255, 255);
 };

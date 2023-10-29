@@ -632,6 +632,88 @@ void SetupBundles()
 			}
 		}
 	}
+	if (m_settings::LoadGlitterChams) {
+		if (!GlitterBundle)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/glitter.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						GlitterBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+						LOG(XS("[DEBUG] Glitter Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Glitter!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+						send_time2 = current_time2;
+					}
+				}
+				send_time = current_time;
+			}
+		}
+	}
+	if (m_settings::LoadDamascusChams) {
+		if (!DamascusBundle)
+		{
+			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+			if (current_time - send_time > 5)
+			{
+				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
+
+				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
+				{
+
+					webclient->_cctor();
+
+					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/damascus.php"));
+					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
+
+					auto resp = webclient->DownloadString(request_msg_str.c_str());
+					std::string decoded = base64_decode(resp->string_safe().c_str());
+
+
+					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
+
+					if (current_time2 - send_time2 > 5)
+					{
+						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
+						DamascusBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
+						LOG(XS("[DEBUG] Damascus Bundle Loaded"));
+
+						const auto string = std::wstring(XS(L"[Serotonin] Loaded Damascus!"));
+						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
+
+						send_time2 = current_time2;
+					}
+				}
+				send_time = current_time;
+			}
+		}
+	}
 	if (m_settings::LoadHerbertAsset) {
 		if (!HerbetAsset)
 		{
@@ -1804,8 +1886,10 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 		GUI().SetupGUI();
 
-		//if (!IconBundle)
-		//	IconBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/icons.unity3d", 0, 0);
+		//if (!TestBundle) {
+		//	TestBundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/Damascus.unity3d", 0, 0);
+		//	LOG(XS("[DEBUG] Loaded TestBundle"));
+		//}
 
 		SetupTextures();
 
@@ -2100,6 +2184,14 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				LightningMaterial = nullptr;
 			}
 
+			if (DamascusBundle)
+			{
+				DamascusBundle->Unload(true);
+				DamascusBundle = nullptr;
+				DamascusShader = nullptr;
+				DamascusMaterial = nullptr;
+			}
+
 			if (font_bundle)
 			{
 				font_bundle->Unload(true);
@@ -2116,6 +2208,22 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 			{
 				IconBundle->Unload(true);
 				IconBundle = nullptr;
+			}
+
+			if (TestBundle)
+			{
+				TestBundle->Unload(true);
+				TestBundle = nullptr;
+				TestShader = nullptr;
+				TestMaterial = nullptr;
+			}
+
+			if (GlitterBundle)
+			{
+				GlitterBundle->Unload(true);
+				GlitterBundle = nullptr;
+				GlitterShader = nullptr;
+				GlitterMaterial = nullptr;
 			}
 		}
 

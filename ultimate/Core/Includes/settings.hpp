@@ -175,6 +175,8 @@ namespace m_settings {
 	inline bool NoSway = false;
 	inline bool OnHalfDesync = false;
 	inline bool FastBullets = false;
+	inline bool LoadGlitterChams = false;
+	inline bool LoadDamascusChams = false;
 	inline float BulletsSpeeds = 100;
 	inline bool SilentMelee = false;
 	inline RustStructs::KeyCode ManipKey = RustStructs::KeyCode::F;
@@ -243,6 +245,8 @@ namespace m_settings {
 	inline bool LoadAmongusAsset = false;
 	inline bool LoadHerbertAsset = false;
 
+	inline float DGradientPos = 0.f;
+	inline float DGradientSpread = 0.5f;
 	inline bool Stash = false;
 	inline bool Hemp = false;
 	inline bool CollectablesIcon = false;

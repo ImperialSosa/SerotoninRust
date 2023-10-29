@@ -4,6 +4,7 @@
 #include "../WriteToStream/Prediction.hpp"
 #include "../../Features/Visuals/Visuals.hpp"
 #include "../../Features/EyeHack/EyeHack.hpp"
+#include "../../Includes/colorsettings.hpp"
 
 float flyhackDistanceVertical = 0.f;
 float flyhackDistanceHorizontal = 0.f;
@@ -1807,8 +1808,16 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 							if (material->shader() != FireShaderA)
 							{
+								auto GChams_BlueFlameColor1 = Color{ ColorSettings::GChams_BlueFlameColor1.r, ColorSettings::GChams_BlueFlameColor1.g, ColorSettings::GChams_BlueFlameColor1.b, ColorSettings::GChams_BlueFlameColor1.a };
+								auto GChams_BlueFlameColor2 = Color{ ColorSettings::GChams_BlueFlameColor2.r, ColorSettings::GChams_BlueFlameColor2.g, ColorSettings::GChams_BlueFlameColor2.b, ColorSettings::GChams_BlueFlameColor2.a };
+
+
 								MainRenderer->set_material(FireMaterialA);
 								FireMaterialA->set_shader(FireShaderA);
+
+								FireMaterialA->SetColor("_FlameColor", GChams_BlueFlameColor2);
+								FireMaterialA->SetColor("_Flamecolor2", GChams_BlueFlameColor1);
+
 							}
 						}
 						break;
@@ -1822,8 +1831,15 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 							if (material->shader() != FireShaderB)
 							{
+								auto GChams_RedFlameColor1 = Color{ ColorSettings::GChams_RedFlameColor1.r, ColorSettings::GChams_RedFlameColor1.g, ColorSettings::GChams_RedFlameColor1.b, ColorSettings::GChams_RedFlameColor1.a };
+								auto GChams_RedFlameColor2 = Color{ ColorSettings::GChams_RedFlameColor2.r, ColorSettings::GChams_RedFlameColor2.g, ColorSettings::GChams_RedFlameColor2.b, ColorSettings::GChams_RedFlameColor2.a };
+
 								MainRenderer->set_material(FireMaterialB);
 								FireMaterialB->set_shader(FireShaderB);
+
+								FireMaterialB->SetColor("_FlameColor", GChams_RedFlameColor2);
+								FireMaterialB->SetColor("_Flamecolor2", GChams_RedFlameColor1);
+
 							}
 						}
 						break;
@@ -1837,8 +1853,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 							if (material->shader() != LightningShader)
 							{
+
 								MainRenderer->set_material(LightningMaterial);
 								LightningMaterial->set_shader(LightningShader);
+
 							}
 						}
 						break;
@@ -1852,8 +1870,10 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 							if (material->shader() != GeometricShader)
 							{
+
 								MainRenderer->set_material(GeometricMaterial);
 								GeometricMaterial->set_shader(GeometricShader);
+
 							}
 						}
 						break;
@@ -1903,21 +1923,52 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 							}
 						}
 						break;
-					//case 7:
-					//	if (IconBundle) {
-					//		if (!TestShader) //Galaxy
-					//			TestShader = IconBundle->LoadAsset<UnityEngine::Shader>(XS("el_designshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+					case 7:
+						if (GlitterBundle) {
+							auto GChams_GlitterColor = Color{ ColorSettings::GChams_GlitterColor.r, ColorSettings::GChams_GlitterColor.g, ColorSettings::GChams_GlitterColor.b, ColorSettings::GChams_GlitterColor.a };
+							
+							if (!GlitterShader) //Glitter
+								GlitterShader = GlitterBundle->LoadAsset<UnityEngine::Shader>(XS("el_glitter.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
 
-					//		if (!TestMaterial)
-					//			TestMaterial = IconBundle->LoadAsset<UnityEngine::Material>(XS("h_original.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+							if (!GlitterMaterial)
+								GlitterMaterial = GlitterBundle->LoadAsset<UnityEngine::Material>(XS("el_glitter.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
 
-					//		if (material->shader() != TestShader)
-					//		{
-					//			MainRenderer->set_material(TestMaterial);
-					//			TestMaterial->set_shader(TestShader);
-					//		}
-					//	}
-					//	break;
+							if (material->shader() != GlitterShader)
+							{
+								MainRenderer->set_material(GlitterMaterial);
+								GlitterMaterial->set_shader(GlitterShader);
+								GlitterMaterial->SetColor("_FresnelColor", GChams_GlitterColor);
+								GlitterMaterial->SetColor("_GlitterColor", GChams_GlitterColor);
+								GlitterMaterial->SetColor("_ExteriorDesignColor", GChams_GlitterColor);
+							}
+						}
+						break;
+					case 8:
+						if (DamascusBundle) {
+							auto GChams_DamascusColor1 = Color{ ColorSettings::GChams_DamascusColor1.r, ColorSettings::GChams_DamascusColor1.g, ColorSettings::GChams_DamascusColor1.b, ColorSettings::GChams_DamascusColor1.a };
+							auto GChams_DamascusColor2 = Color{ ColorSettings::GChams_DamascusColor2.r, ColorSettings::GChams_DamascusColor2.g, ColorSettings::GChams_DamascusColor2.b, ColorSettings::GChams_DamascusColor2.a };
+							auto GChams_DamascusGradient1 = Color{ ColorSettings::GChams_DamascusGradient1.r, ColorSettings::GChams_DamascusGradient1.g, ColorSettings::GChams_DamascusGradient1.b, ColorSettings::GChams_DamascusGradient1.a };
+							auto GChams_DamascusPattern1 = Color{ ColorSettings::GChams_DamascusPattern1.r, ColorSettings::GChams_DamascusPattern1.g, ColorSettings::GChams_DamascusPattern1.b, ColorSettings::GChams_DamascusPattern1.a };
+
+							if (!DamascusShader) //Glitter
+								DamascusShader = DamascusBundle->LoadAsset<UnityEngine::Shader>(XS("el_designshader.shader"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Shader"))));
+
+							if (!DamascusMaterial)
+								DamascusMaterial = DamascusBundle->LoadAsset<UnityEngine::Material>(XS("el_designeffect.mat"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("Material"))));
+
+							if (material->shader() != DamascusShader)
+							{
+								MainRenderer->set_material(DamascusMaterial);
+								DamascusMaterial->set_shader(DamascusShader);
+								DamascusMaterial->SetColor("_FresnelColor", GChams_DamascusGradient1);
+								DamascusMaterial->SetColor("_InteriorColor", GChams_DamascusPattern1);
+								DamascusMaterial->SetColor("_ExteriorTopColor", GChams_DamascusColor2);
+								DamascusMaterial->SetColor("_ExteriorBottomColor", GChams_DamascusColor1);
+								DamascusMaterial->SetFloat("_ExteriorGradientPos", m_settings::DGradientPos);
+								DamascusMaterial->SetFloat("_ExterioirGredientSpread", m_settings::DGradientSpread);
+							}
+						}
+						break;
 					}
 				}
 			}
