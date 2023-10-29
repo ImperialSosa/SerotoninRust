@@ -138,6 +138,24 @@ void ConnectionManager::ResetPlayerCache()
 			ColorShader = nullptr;
 			ColorMaterial = nullptr;
 		}
+
+		if (TestBundle)
+		{
+			TestShader = nullptr;
+			TestMaterial = nullptr;
+		}
+
+		if (GlitterBundle)
+		{
+			GlitterShader = nullptr;
+			GlitterMaterial = nullptr;
+		}
+
+		if (DamascusBundle)
+		{
+			DamascusShader = nullptr;
+			DamascusMaterial = nullptr;
+		}
 	}
 }
 

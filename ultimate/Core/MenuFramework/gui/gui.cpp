@@ -696,7 +696,9 @@ void ChamsTab()
         calliope::menu.components.checkbox(XS("Load-Galaxy"), m_settings::LoadGalaxy);
         calliope::menu.components.checkbox(XS("Load-WireFrame"), m_settings::LoadWireFrame);
         calliope::menu.components.checkbox(XS("Load-RPBGalaxy"), m_settings::LoadRBP);
-
+        calliope::menu.components.checkbox(XS("Load-Glitter"), m_settings::LoadGlitterChams);
+        calliope::menu.components.checkbox(XS("Load-Damascus"), m_settings::LoadDamascusChams);
+        
         calliope::menu.components.end_groupbox();
     }
 
@@ -707,9 +709,9 @@ void ChamsTab()
 
         if (m_settings::SelectedChams == 7)
         {
-            calliope::menu.components.colorpicker(XS("CVisible Color"), ColorSettings::VisibleChams_Color, false);
-            calliope::menu.components.colorpicker(XS("CInvisible Color"), ColorSettings::InvisibleChams_Color, false);
-            calliope::menu.components.colorpicker(XS("CScientist Color"), ColorSettings::ScientistChams_Color, false);
+            calliope::menu.components.colorpicker(XS("CVisible-Color"), ColorSettings::VisibleChams_Color, false);
+            calliope::menu.components.colorpicker(XS("CInvisible-Color"), ColorSettings::InvisibleChams_Color, false);
+            calliope::menu.components.colorpicker(XS("CScientist-Color"), ColorSettings::ScientistChams_Color, false);
         }
         calliope::menu.components.end_groupbox();
     }
@@ -717,7 +719,36 @@ void ChamsTab()
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weapon Chams"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y - 10))) {
         calliope::menu.components.checkbox(XS("Weapon-Chams"), m_settings::WeaponChams);
         calliope::menu.components.checkbox(XS("Ignore-Arms"), m_settings::IgnoreArms);
-        calliope::menu.components.dropdown(XS("WChams-Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy") }, m_settings::WeaponSelectedChams);
+        calliope::menu.components.dropdown(XS("WChams-Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy"), ("Glitter"), ("Damascus") }, m_settings::WeaponSelectedChams);
+
+        if (m_settings::WeaponSelectedChams == 0)
+        {
+            calliope::menu.components.colorpicker(XS("BFlame1-Color"), ColorSettings::GChams_BlueFlameColor1, false);
+            calliope::menu.components.colorpicker(XS("BFlame2-Color"), ColorSettings::GChams_BlueFlameColor2, false);
+        }
+        if (m_settings::WeaponSelectedChams == 1)
+        {
+            calliope::menu.components.colorpicker(XS("RFlame1-Color"), ColorSettings::GChams_RedFlameColor1, false);
+            calliope::menu.components.colorpicker(XS("RFlame2-Color"), ColorSettings::GChams_RedFlameColor2, false);
+        }
+        //if (m_settings::WeaponSelectedChams == 3)
+        //{
+        //    calliope::menu.components.colorpicker(XS("Lightning-Color"), ColorSettings::GChams_LightningColor, false);
+        //}
+        if (m_settings::WeaponSelectedChams == 7)
+        {
+            calliope::menu.components.colorpicker(XS("Glitter-Color"), ColorSettings::GChams_GlitterColor, false);         
+        }
+
+        if (m_settings::WeaponSelectedChams == 8)
+        {
+            calliope::menu.components.colorpicker(XS("DTop-Color"), ColorSettings::GChams_DamascusColor2, false);
+            calliope::menu.components.colorpicker(XS("DBottom-Color"), ColorSettings::GChams_DamascusColor1, false);
+            calliope::menu.components.colorpicker(XS("DGradient-Color"), ColorSettings::GChams_DamascusGradient1, false);
+            calliope::menu.components.colorpicker(XS("Pattern-Color"), ColorSettings::GChams_DamascusPattern1, false);
+            calliope::menu.components.slider<float>(XS("DGradient-Pos"), XS(""), m_settings::DGradientPos, -1, 1);
+            calliope::menu.components.slider<float>(XS("DGradient-Strength"), XS(""), m_settings::DGradientSpread, 0, 1);
+        }
 
         calliope::menu.components.end_groupbox();
     }

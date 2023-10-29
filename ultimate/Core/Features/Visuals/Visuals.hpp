@@ -26,6 +26,7 @@ inline UnityEngine::Shader* ColorShader;
 inline UnityEngine::Material* ColorMaterial;
 
 inline UnityEngine::AssetBundle* IconBundle;
+inline UnityEngine::AssetBundle* TestBundle;
 inline UnityEngine::Shader* TestShader;
 inline UnityEngine::Material* TestMaterial;
 
@@ -44,6 +45,14 @@ inline UnityEngine::Material* LightningMaterial;
 inline UnityEngine::AssetBundle* WireFrameBundle;
 inline UnityEngine::Shader* WireFrameShader;
 inline UnityEngine::Material* WireFrameMaterial;
+
+inline UnityEngine::AssetBundle* GlitterBundle;
+inline UnityEngine::Shader* GlitterShader;
+inline UnityEngine::Material* GlitterMaterial;
+
+inline UnityEngine::AssetBundle* DamascusBundle;
+inline UnityEngine::Shader* DamascusShader;
+inline UnityEngine::Material* DamascusMaterial;
 
 static UnityEngine::AssetBundle* AmongUsAsset = nullptr;
 static UnityEngine::AssetBundle* HerbetAsset = nullptr;
