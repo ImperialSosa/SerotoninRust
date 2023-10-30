@@ -200,29 +200,6 @@ inline void DoOreAttack(Vector3 pos, AssemblyCSharp::BaseEntity* p, AssemblyCSha
 	return w->ProcessAttack((AssemblyCSharp::HitTest*)g_hit_test);
 }
 
-void VelocityChecks(Vector3 LocalPos, Vector3 AimbotTarget) {
-	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
-	if (IsAddressValid(LocalPlayer)) {
-		auto ActiveItem = LocalPlayer->ActiveItem();
-		auto HeldItem = ActiveItem->GetHeldEntity();
-		auto PrefabID = HeldItem->prefabID();
-		if (IsAddressValid(ActiveItem)) {
-			if (PrefabID == 2836331625 || PrefabID == 4279856314 || PrefabID == 2545523575 || PrefabID == 3759841439) //bow  Nailgun mp4a5 custom-smg
-			{
-				if (!AssemblyCSharp::IsVisible(LocalPos, AimbotTarget)) {
-					m_settings::ValidVelocity = false;
-				}
-				else
-					m_settings::ValidVelocity = true;
-			}
-			else
-				m_settings::ValidVelocity = true;
-		}
-		else
-			m_settings::ValidVelocity = true;
-	}
-}
-
 inline bool FirstInit = false;
 
 void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int baseNumPoints) {
@@ -261,89 +238,6 @@ void GenerateAndCachePoints(float radiusX, float radiusY, float radiusZ, int bas
 			Features().cachedPoints.push_back(Vector3(x, y, z));
 		}
 	}
-}
-
-class GrenadePath {
-public:
-	AssemblyCSharp::BasePlayer* ply;
-	AssemblyCSharp::ThrownWeapon* weapon;
-	std::vector<Vector3> positions;
-	Vector3 endposition;
-
-	GrenadePath() : ply(nullptr), weapon(nullptr), positions({}), endposition({}) { ; }
-
-	GrenadePath(BasePlayer* p, AssemblyCSharp::ThrownWeapon* t) : ply(p), weapon(t) {
-			auto eyepos = p->eyes()->get_position();
-		auto dir = p->eyes()->BodyForward().normalizeeee();
-		auto d = 1.f;
-		auto velocity = t->GetInheritedVelocity(p, dir) + dir * t->maxThrowVelocity() * d + p->GetWorldVelocity() * .5f;
-		Vector3 pos = eyepos;
-		Vector3 lp = pos;
-		Vector3 vel = velocity;
-		for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
-		{
-			pos += vel * 0.03125f;
-			if (!AssemblyCSharp::IsVisible(pos, lp, 0))
-				break;
-			vel.y -= 9.81f * 1.f * 0.03125f;
-			vel -= vel * 0.1f * 0.03125f;
-			lp = pos;
-			positions.push_back(pos);
-		}
-		endposition = pos;
-		return;
-	}
-};
-
-template<typename T1, typename T2>
-bool map_contains_key(T1 map, T2 key) {
-	return map.count(key) > 0;
-}
-
-std::map<int32_t, GrenadePath*> grenade_map = {};
-
-static bool SetForward(bool b) {
-
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
-	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
-	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x8);
-	typedef void(*A)(uintptr_t, bool);
-	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
-	return 1;
-}
-static bool SetRight(bool b) {
-	//auto kl = mem::read<uintptr_t>(mem::game_assembly_base + oButtons_TypeInfo);
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
-	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
-	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x20);
-	typedef void(*A)(uintptr_t, bool);
-	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
-	return 1;
-}
-static bool SetLeft(bool b) {
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
-	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
-	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x18);
-	typedef void(*A)(uintptr_t, bool);
-	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
-	return 1;
-}
-static bool SetBackwards(bool b) {
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53523728); //  "Name": "Buttons_TypeInfo",
-	auto fieldz = *reinterpret_cast<uintptr_t*>(kl + 0xB8);
-	auto p = *reinterpret_cast<uintptr_t*>(fieldz + 0x10);
-	typedef void(*A)(uintptr_t, bool);
-	((A)(m_game_assembly + 0x3ADD60))(p, b); //public void set_IsDown(bool value) { }
-	return 1;
-}
-
-void SetSelectedSlot(int slot) {
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53484448); //  "Name": "PlayerBelt_TypeInfo",
-	*reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(kl + 0xB8)) = slot;
-}
-int GetSelectedSlot() {
-	auto kl = *reinterpret_cast<uintptr_t*>(m_game_assembly + 53484448); //  "Name": "PlayerBelt_TypeInfo",
-	return *reinterpret_cast<int*>(*reinterpret_cast<uintptr_t*>(kl + 0xB8));
 }
 
 void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputState* a2)
@@ -461,73 +355,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			}
 		}
 	}
-	//if (m_settings::GrenadePrediction)
-	//{
-	//	auto Held = a1->ActiveItem();
-
-	//	if (IsAddressValid(Held))
-	//	{
-	//		auto HeldEntity = Held->heldEntity();
-	//		if (HeldEntity)
-	//		{
-	//			auto w = ((AssemblyCSharp::ThrownWeapon*)Held);
-	//			auto eyepos = a1->eyes()->get_position();
-	//			auto normalized = a1->eyes()->BodyForward().normalizeeee();
-	//			auto d = 1.f;
-	//			auto velocity = w->GetInheritedVelocity(a1, normalized) + normalized * w->maxThrowVelocity() * d + a1->GetWorldVelocity() * 0.5f;
-
-	//			Vector3 p = eyepos;
-	//			Vector3 lp = p;
-	//			Vector3 vel = velocity;
-
-	//			for (float travelTime = 0.f; travelTime < 8.f; travelTime += 0.03125f)
-	//			{
-	//				p += vel * 0.03125f;
-	//				if (!AssemblyCSharp::IsVisible(p, lp, 0))
-	//				{
-	//					break;
-	//					//bounce?
-	//				}
-	//				UnityEngine::DDraw::Line(p, lp, Color{ 1, 0, 0, 1.f }, 0.01f, false, false);
-	//				vel.y -= 9.81f * 1.f * 0.03125f;
-	//				vel -= vel * 0.1f * 0.03125f;
-	//				lp = p;
-	//			}
-
-	//			auto points = 36;
-	//			float step = M_PI_2 / points;
-	//			float x, z, c = 0;
-	//			lp = { 0, 0, 0 };
-	//			UnityEngine::DDraw::Sphere(p, 0.5f, Color{ 0, 0, 1, 1.f }, 0.01f, false);
-	//		}
-	//	}
-	//}
-
-	if (m_settings::AutoMed)
-	{
-		auto BaseProjectile = a1->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-		if (BaseProjectile) {
-			auto hpleft = 100 - a1->_health();
-			if (hpleft > 20) {
-				auto s = a1->FindFromHotbar(a1, (L"Med"));
-				if (s < 0)
-					s = a1->FindFromHotbar(a1, (L"Bandage"));
-				if (s >= 0)
-				{
-					auto cs = GetSelectedSlot();
-					if (s != cs) {
-						LOG(XS("[DEBUG] CurSlot: %d"), cs);
-						LOG(XS("[DEBUG] MedSlot: %d"), s);
-						SetSelectedSlot(s);
-						a1->Belt()->ChangeSelect(s, false);
-					}
-					if (BaseProjectile->timeSinceDeploy() > BaseProjectile->deployDelay() && BaseProjectile->nextAttackTime() < UnityEngine::Time::get_fixedTime()) {
-						BaseProjectile->ServerRPC(XS("UseSelf"));
-					}
-				}
-			}
-		}
-	}
 
 	if (m_settings::GestureSpam)
 	{
@@ -576,133 +403,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		}
 	}
 
-	if (m_settings::AutoMini)
-	{
-		auto MountedVehicle = a1->GetMountedVehicle();
-		if (MountedVehicle)
-		{
-			auto maxspeed = m_settings::MaxMiniSpeed;
-			auto height = m_settings::HoverHeight;
-			//LOG(XS("[DEBUG] ClassName: %s"), MountedVehicle->class_name());
-			if (!strcmp(MountedVehicle->class_name(), ("Minicopter")))
-			{
-				auto Mini = (AssemblyCSharp::MiniCopter*)MountedVehicle;
-
-
-				//LOG("[DEBUG] get_rotation.x: %.2f\n", a1->get_transform()->get_rotation().x);
-				//LOG("[DEBUG] get_rotation.y: %.2f\n", a1->get_transform()->get_rotation().y);
-				//LOG("[DEBUG] get_rotation.z: %.2f\n", a1->get_transform()->get_rotation().z);
-				//LOG("[DEBUG] get_rotation.w: %.2f\n", a1->get_transform()->get_rotation().w);
-
-				auto cmd = a2->current()->mouseDelta();
-
-				auto levelout = [&]() {
-
-					auto current_pitch = a1->get_transform()->get_rotation().z;
-					auto current_yaw = a1->get_transform()->get_rotation().y;
-					auto current_roll = a1->get_transform()->get_rotation().x;
-
-					//if (current_yaw > 0.2) {
-					//	SetLeft(false);
-					//	SetRight(true);
-					//}
-					//else if (current_yaw < -0.2) {
-					//	SetLeft(true);
-					//	SetRight(false);
-					//}
-					//else {
-					//	SetLeft(false);
-					//	SetRight(false);
-					//}
-
-
-
-					if (current_pitch > 0) //tilt backwards
-						a2->current()->mouseDelta() = Vector3(cmd.x, cmd.y - .3f, cmd.z);
-					else if (current_pitch < 0) //tilt forwards
-						a2->current()->mouseDelta() = Vector3(cmd.x, cmd.y + .3f, cmd.z);
-					else a2->current()->mouseDelta() = Vector3(0, 0, 0);
-
-					if (current_roll > 0) //tilt right
-						a2->current()->mouseDelta() = Vector3(cmd.x - .3f, cmd.y, cmd.z);
-					else if (current_roll < 0) //tilt left
-						a2->current()->mouseDelta() = Vector3(cmd.x + .3f, cmd.y, cmd.z);
-					else a2->current()->mouseDelta() = Vector3(0, 0, 0);
-					
-				};
-
-				if (m_settings::HoverMini)
-				{
-					auto mode = 0;
-					switch (mode) {
-					case 0:
-					{
-						if (Mini->get_transform())
-						{
-							auto mpos = Mini->get_transform()->get_position();
-							auto targetpos = Vector3(mpos.x, m_settings::HoverHeight, mpos.z);
-
-							if (mpos.y < targetpos.y) {
-								SetBackwards(false);
-								SetForward(true);
-							}
-							else {
-								SetForward(false);
-								SetBackwards(true);
-							}
-
-							if (mpos.Distance(targetpos) < 1.f) {
-								SetBackwards(false);
-								SetForward(false);
-							}
-
-							UnityEngine::DDraw::Line(mpos, targetpos, Color{ 1.f, 0.f, 0.f, 1.f }, 0.01f, true, true);
-
-							levelout();
-							break;
-						}
-
-					}
-					}
-				}
-			}
-		}
-	}
-
-	//if (m_settings::ShowPrediction)
-	//{
-	//	auto BaseProjectile = Features().LocalPlayer->GetHeldEntityCast<AssemblyCSharp::BaseProjectile>();
-	//	if (IsAddressValid(BaseProjectile) && BaseProjectile->IsA(AssemblyCSharp::BaseProjectile::StaticClass()) && !BaseProjectile->IsA(AssemblyCSharp::BaseMelee::StaticClass()))
-	//	{
-
-	//		auto PrimaryMagazine = BaseProjectile->primaryMagazine();
-	//		if (IsAddressValid(PrimaryMagazine))
-	//		{
-	//			auto AmmoType = PrimaryMagazine->ammoType();
-	//			if (IsAddressValid(AmmoType))
-	//			{
-	//				AssemblyCSharp::ItemModProjectile* itemModProjectile = AmmoType->GetComponent<AssemblyCSharp::ItemModProjectile>((FPSystem::Type*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS(""), XS("ItemModProjectile"))));
-	//				if (IsAddressValid(itemModProjectile))
-	//				{
-	//					itemModProjectile->projectileSpread() = m_settings::SilentSpread / 100;
-	//					itemModProjectile->projectileVelocitySpread() = m_settings::SilentSpread / 100;
-
-	//					Vector3 Local = a1->get_bone_transform(RustStructs::bones::head)->get_position();
-
-	//					auto lookingatPoint = a1->lookingAtPoint();
-
-	//					auto point = Vector3(lookingatPoint.x * 2, lookingatPoint.y, lookingatPoint.z * 2);
-
-	//					Vector3 aim_angle = GetAimDirectionToTarget(a1, BaseProjectile, point, Vector3(0, 0, 0), itemModProjectile, Local);
-
-	//					UnityEngine::DDraw::Sphere(aim_angle, 1.f, Color::Black(), 0.05, 0);
-	//				}
-	//			}
-	//		}
-	//		
-	//	}
-	//}
-
 	float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().Instance()->LocalPlayer->lastSentTickTime());
 	float last_tick_time = maxx(0.f, minm(timeSinceLastTick, 1.f));
 	m_settings::last_tick_time = last_tick_time;
@@ -717,11 +417,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	float num5 = Features().Instance()->LocalPlayer->MaxEyeVelocity() + Features().Instance()->LocalPlayer->GetParentVelocity().Magnitude();
 	float num6 = Features().Instance()->LocalPlayer->BoundsPadding() + num4 * num5;
 
-
-
-
 	m_settings::max_spoofed_eye_distance = num6;
-
 
 	if (m_settings::WaitForInstantHit)
 	{
@@ -748,13 +444,14 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		Features().Instance()->LocalPlayer->clientTickInterval() = 0.05f;
 	}
 
+	auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
+	auto EyePos = LocalPlayer->eyes()->get_position();
 	auto camera = UnityEngine::Camera::get_main();
 	if (IsAddressValid(camera))
 	{
 		auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
 		if (IsAddressValid(AimbotTarget.m_player))
 		{
-			auto LocalPlayer = AssemblyCSharp::LocalPlayer::get_Entity();
 			auto LocalPos = LocalPlayer->get_bone_transform(47)->get_position();
 			auto TargetBone = AimbotTarget.m_player->get_bone_transform(AimbotTarget.m_bone)->get_position();
 
@@ -848,7 +545,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 			}
 
-			auto EyePos = LocalPlayer->eyes()->get_position();
 			{				
 				Features().TargetID = AimbotTarget.m_player->userID();
 
@@ -1298,7 +994,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 			if (m_settings::InstantRevive && UnityEngine::Input::GetKey(m_settings::InstantReviveKey))
 			{
-				AimbotTarget.m_player->ServerRPC(XS("RPC_Assist"));								
+				if (AimbotTarget.m_player->HasFlag(RustStructs::PlayerFlags::Wounded))
+					AimbotTarget.m_player->ServerRPC(XS("RPC_Assist"));								
 			}
 
 			if (m_settings::HammerSpam && UnityEngine::Input::GetKey(m_settings::HammerSpamKey))
@@ -1348,7 +1045,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 			if (m_settings::KeepTargetAlive && UnityEngine::Input::GetKey(m_settings::KeepAliveKey))
 			{
-				AimbotTarget.m_player->ServerRPC(XS("RPC_KeepAlive"));							
+				if (AimbotTarget.m_player->HasFlag(RustStructs::PlayerFlags::Wounded))
+					AimbotTarget.m_player->ServerRPC(XS("RPC_KeepAlive"));							
 			}
 
 			if (m_settings::LootBodyThruWall && UnityEngine::Input::GetKey(m_settings::LootBodyThruWallKey))
@@ -1535,9 +1233,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				m_settings::time_since_last_shot = 0;
 			}
 
-			//Features().AutoReload(Features().BaseProjectile);
-
-
 			if (m_settings::RemoveAttackAnimations)
 			{
 				auto ActiveModel = AssemblyCSharp::BaseViewModel::get_ActiveModel();
@@ -1570,9 +1265,6 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 				if (IsAddressValid(ActiveModel))
 				{
-					
-
-
 					if (IsAddressValid(ActiveModel->bob()))
 					{
 						ActiveModel->bob()->bobAmountRun() = { 0.f, 0.f, 0.f, 0.f };
@@ -1705,16 +1397,26 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 				if (m_settings::ForceAutomatic)
 				{
-					Features().BaseProjectile->automatic() = true;
+					if (Features().BaseProjectile->automatic() != true)
+						Features().BaseProjectile->automatic() = true;
 				}
 
 				if (m_settings::NoSpread)
 				{
-					Features().BaseProjectile->stancePenalty() = 0.f;
-					Features().BaseProjectile->aimconePenalty() = 0.f;
-					Features().BaseProjectile->aimCone() = 0.f;
-					Features().BaseProjectile->hipAimCone() = 0.f;
-					Features().BaseProjectile->aimconePenaltyPerShot() = 0.f;
+					if (Features().BaseProjectile->stancePenalty() != 0.f)
+						Features().BaseProjectile->stancePenalty() = 0.f;
+
+					if (Features().BaseProjectile->aimconePenalty() != 0.f)
+						Features().BaseProjectile->aimconePenalty() = 0.f;
+
+					if (Features().BaseProjectile->aimCone() != 0.f)
+						Features().BaseProjectile->aimCone() = 0.f;
+
+					if (Features().BaseProjectile->hipAimCone() != 0.f)
+						Features().BaseProjectile->hipAimCone() = 0.f;
+
+					if (Features().BaseProjectile->aimconePenaltyPerShot() != 0.f)
+						Features().BaseProjectile->aimconePenaltyPerShot() = 0.f;
 				}
 
 				static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
@@ -2031,7 +1733,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::NoMovementRestrictions)
 	{
-		AssemblyCSharp::LocalPlayer::get_Entity()->clothingBlocksAiming() = false;
+		if (AssemblyCSharp::LocalPlayer::get_Entity()->clothingBlocksAiming() != false)
+			AssemblyCSharp::LocalPlayer::get_Entity()->clothingBlocksAiming() = false;
 	}
 
 	if (m_settings::InstantHeal)
@@ -2044,7 +1747,7 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		if (IsAddressValid(Held))
 		{
 			auto HeldEntity = Held->heldEntity();
-			if (HeldEntity)
+			if (IsAddressValid(HeldEntity))
 			{
 				if (!strcmp(HeldEntity->class_name(), XS("MedicalTool"))) {
 					//auto medical = reinterpret_cast<AssemblyCSharp::MedicalTool*>(m_base_projectile);
@@ -2064,11 +1767,14 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::NoSway)
 	{
-		AssemblyCSharp::LocalPlayer::get_Entity()->clothingAccuracyBonus() = 1.f;
+		if (AssemblyCSharp::LocalPlayer::get_Entity()->clothingAccuracyBonus() != 1.f)
+			AssemblyCSharp::LocalPlayer::get_Entity()->clothingAccuracyBonus() = 1.f;
 	}
 
-	if (m_settings::PlayerChams)
-		ConVar::Culling::entityMinCullDist() = m_settings::PlayerESPDistance;
+	if (m_settings::PlayerChams) {
+		if (ConVar::Culling::entityMinCullDist() != m_settings::PlayerESPDistance)
+			ConVar::Culling::entityMinCullDist() = m_settings::PlayerESPDistance;
+	}
 
 	static bool ResetGameTime = false;
 	if (m_settings::TimeChanger || m_settings::RemoveUnderwaterEffects || ResetGameTime)
@@ -2077,7 +1783,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		auto instance = uint64_t(admin_c->static_fields);
 
 		if (m_settings::TimeChanger) {
-			*(float*)(instance + 0x0) = m_settings::GameTime;
+			if (*(float*)(instance + 0x0) != m_settings::GameTime)
+				*(float*)(instance + 0x0) = m_settings::GameTime;
 			ResetGameTime = true;
 		}
 		if (!m_settings::TimeChanger && ResetGameTime) {
@@ -2193,7 +1900,8 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		//Shooting whilst mounted
 		if (const auto Mounted = a1->mounted())
 		{
-			Mounted->canWieldItems() = true;
+			if (Mounted->canWieldItems() != true)
+				Mounted->canWieldItems() = true;
 		}
 
 		//CanAttack
@@ -2245,8 +1953,11 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 	{
 		if (m_settings::SpiderMan)
 		{
-			LocalMovement->groundAngle() = 0.f;
-			LocalMovement->groundAngleNew() = 0.f;
+			if (LocalMovement->groundAngle() != 0.f)
+				LocalMovement->groundAngle() = 0.f;
+
+			if (LocalMovement->groundAngleNew() != 0.f)
+				LocalMovement->groundAngleNew() = 0.f;
 		}
 
 		if (m_settings::SmallerLocalRadius)
@@ -2256,14 +1967,20 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 		if (m_settings::InfiniteJump)
 		{
-			LocalMovement->landTime() = 0.f;
-			LocalMovement->jumpTime() = 0.f;
-			LocalMovement->groundTime() = 100000.f;
+			if (LocalMovement->landTime() != 0.f)
+				LocalMovement->landTime() = 0.f;
+
+			if (LocalMovement->jumpTime() != 0.f)
+				LocalMovement->jumpTime() = 0.f;
+
+			if (LocalMovement->groundTime() != 100000.f)
+				LocalMovement->groundTime() = 100000.f;
 		}
 
 		if (m_settings::AlwaysSprint)
 		{
-			LocalMovement->sprintForced() = true;
+			if (LocalMovement->sprintForced() != true)
+				LocalMovement->sprintForced() = true;
 		}
 	}
 
@@ -2297,9 +2014,14 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 	if (m_settings::AdjustNoClipSpeed)
 	{
-		ConVar::Player::noclipspeed() = 5.f;
-		ConVar::Player::noclipspeedfast() = 10.f;
-		ConVar::Player::noclipspeedslow() = 2.f;
+		if (ConVar::Player::noclipspeed() != 5.f)
+			ConVar::Player::noclipspeed() = 5.f;
+
+		if (ConVar::Player::noclipspeedfast() != 10.f)
+			ConVar::Player::noclipspeedfast() = 10.f;
+
+		if (ConVar::Player::noclipspeedslow() != 2.f)
+			ConVar::Player::noclipspeedslow() = 2.f;
 	}
 
 	if (ConVar::Effects::_antialiasing() != 0)

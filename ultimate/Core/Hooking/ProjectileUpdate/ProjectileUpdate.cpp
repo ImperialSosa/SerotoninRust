@@ -36,8 +36,10 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 
 
 	float Thickness = m_settings::NormalThickBulletThickness;
-	if (m_settings::NormalThickBullet)
-		_This->thickness() = Thickness;
+	if (m_settings::NormalThickBullet) {
+		if (_This->thickness() != Thickness)
+			_This->thickness() = Thickness;
+	}
 	else
 		_This->thickness() = 0.1f;
 

@@ -315,7 +315,7 @@ void Hooks::PlayerWalkMovement(AssemblyCSharp::PlayerWalkMovement* _This, Assemb
 		SilentWalking = false;
 
 	auto g_local_player = AssemblyCSharp::LocalPlayer::get_Entity();
-	if (g_local_player)
+	if (IsAddressValid(g_local_player))
 	{
 		static float LastTeleportTime = 0;
 		if (m_settings::Teleport && UnityEngine::Input::GetKey(m_settings::TeleportKey))

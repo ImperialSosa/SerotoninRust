@@ -364,17 +364,16 @@ public:
 		}
 
 		auto camera = UnityEngine::Camera::get_main();
-		if (!camera)
+		if (!IsAddressValid(camera))
 			return false;
 
 
 		auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-		if (!m_target.m_player)
+		if (!IsAddressValid(m_target.m_player))
 			return false;
 
 		if (m_target.m_heli)
 			return false;
-
 
 		auto Line = NextCurrentPosition - CurrentPosition;
 		auto LineLength = Line.Magnitude();
@@ -451,7 +450,7 @@ public:
 			return false;
 		}
 
-		static uintptr_t PlayerProjectileUpdateClass = 0; if (!PlayerProjectileUpdateClass) PlayerProjectileUpdateClass = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileUpdate"));
+		static uintptr_t PlayerProjectileUpdateClass = 0; if (!IsAddressValid(PlayerProjectileUpdateClass)) PlayerProjectileUpdateClass = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileUpdate"));
 
 		instance->previousPosition() = instance->currentPosition();
 		instance->currentPosition() = OriginalClosestPointOnLine;
@@ -521,7 +520,7 @@ public:
 			}
 		}
 		AssemblyCSharp::HitTest* hTest = instance->hitTest();
-		if (!hTest)
+		if (!IsAddressValid(hTest))
 		{
 			auto g_hit_test_class = AssemblyCSharp::HitTest::StaticClass();
 			hTest = (AssemblyCSharp::HitTest*)CIl2Cpp::il2cpp_object_new((void*)g_hit_test_class);
@@ -545,7 +544,7 @@ public:
 		hTest->HitMaterial() = CIl2Cpp::il2cpp_string_new(XS("Flesh"));
 
 
-		static uintptr_t PlayerProjectileAttack = 0; if (!PlayerProjectileAttack) PlayerProjectileAttack = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileAttack"));
+		static uintptr_t PlayerProjectileAttack = 0; if (!IsAddressValid(PlayerProjectileAttack)) PlayerProjectileAttack = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileAttack"));
 		if (ProtoBuf::PlayerProjectileAttack* playerProjectileAttack = reinterpret_cast<ProtoBuf::PlayerProjectileAttack*>(CIl2Cpp::il2cpp_object_new((void*)PlayerProjectileAttack)))
 		{
 			const auto HitInfo = CreateHitInfo(instance, playerProjectileAttack, hTest, HitPointWorld);
@@ -695,6 +694,7 @@ public:
 			}
 
 			auto ht = hitTest();
+
 			safe_write(ht + 0x66, true, bool); //DidHit
 			safe_write(ht + 0x88, (DWORD64)target.m_player, DWORD64); //HitEntity
 			UnityEngine::Transform* Transform;
@@ -707,7 +707,7 @@ public:
 				Transform = target.m_player->get_bone_transform(19);
 			}
 
-			if (!Transform)
+			if (!IsAddressValid(Transform))
 				return false;
 
 			safe_write(ht + 0xB0, (uintptr_t)Transform, DWORD64);
@@ -780,7 +780,7 @@ public:
 
 		if (canIgnore && String::wcscmp(material, XS(L"Flesh"))) {
 			DWORD64 Tra = safe_read(ht + 0xB0, DWORD64);
-			if (Tra) {
+			if (IsAddressValid(Tra)) {
 				auto st = XS("head");
 				reinterpret_cast<UnityEngine::Transform*>(Tra)->set_name(st);
 			}
@@ -844,19 +844,19 @@ public:
 	OFFSET:
 		typedef DWORD64(__stdcall* Unknown)(DWORD64);
 		DWORD64 st = safe_read(m_game_assembly + 53648920, DWORD64); //Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() address
-		if (!st)
+		if (!IsAddressValid(st))
 		{
 			goto OFFSET;
 		}
 
 		Unknown get_list = (Unknown)(m_game_assembly + 18734016);//Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() MethodAddress
-		if (!get_list)
+		if (!IsAddressValid(get_list))
 		{
 			goto OFFSET;
 		}
 
 		DWORD64 rs = get_list(st);
-		if (!rs)
+		if (!IsAddressValid(rs))
 		{
 			goto OFFSET;
 		}
@@ -890,11 +890,11 @@ public:
 		DWORD64 lst = safe_read(rs + 0x10, DWORD64);
 
 		auto camera = UnityEngine::Camera::get_main();
-		if (!camera)
+		if (!IsAddressValid(camera))
 			return false;
 
 		auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-		if (!m_target.m_player)
+		if (!IsAddressValid(m_target.m_player))
 			return false;
 
 		float real_travel_time = this->traveledTime();

@@ -755,7 +755,6 @@ auto Features::FindManipulationAngles(float MaxDesyncValue) -> void
 	if (!IsAddressValid(LocalPlayer))
 		return;
 
-
 	if (!LocalPlayer->IsAlive())
 		return;
 

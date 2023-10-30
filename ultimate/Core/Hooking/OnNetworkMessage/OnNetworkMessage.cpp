@@ -30,13 +30,13 @@ void Hooks::OnNetworkMessage(AssemblyCSharp::Client* _This, Network::Message* me
 
 
 			auto effect = *reinterpret_cast<AssemblyCSharp::Effect**>((uintptr_t)EffectNetworkClass + 0xB8);
-			if (!effect)
+			if (!IsAddressValid(effect))
 			{
 				return Hooks::OnNetworkMessagehk.get_original< decltype(&OnNetworkMessage)>()(_This, message);
 			}
 
 			effect = *reinterpret_cast<AssemblyCSharp::Effect**>(effect);
-			if (!effect)
+			if (!IsAddressValid(effect))
 			{
 				return Hooks::OnNetworkMessagehk.get_original< decltype(&OnNetworkMessage)>()(_This, message);
 			}

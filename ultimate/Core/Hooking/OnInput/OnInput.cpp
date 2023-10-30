@@ -105,8 +105,11 @@ void Hooks::OnInput(AssemblyCSharp::BaseMelee* _This)
 		auto inputState = playerInput->state();
 
 		if (IsAddressValid(component)) {
-			component->projectileSpread() = 0.f;
-			component->projectileVelocitySpread() = 0.f;
+			if (component->projectileSpread() != 0.f)
+				component->projectileSpread() = 0.f;
+
+			if (component->projectileVelocitySpread() != 0.f)
+				component->projectileVelocitySpread() = 0.f;
 		}
 		
 		if (IsAddressValid(inputState)) {

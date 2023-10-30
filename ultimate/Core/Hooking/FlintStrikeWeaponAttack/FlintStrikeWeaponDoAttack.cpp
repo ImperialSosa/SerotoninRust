@@ -25,7 +25,8 @@ void Hooks::FlintStrikeWeaponDoAttack(AssemblyCSharp::FlintStrikeWeapon* _This)
 	if (m_settings::InstantEoka)
 	{
 		if (IsAddressValid(LocalPlayer)) {
-			_This->_didSparkThisFrame() = true;	
+			if (_This->_didSparkThisFrame() != true)
+				_This->_didSparkThisFrame() = true;	
 		}
 	}
 
@@ -77,7 +78,9 @@ void Hooks::FlintStrikeWeaponDoAttack(AssemblyCSharp::FlintStrikeWeapon* _This)
 
 				if (StartEokaShot && Features().PointVisible)
 				{
-					_This->_isStriking() = false;
+					if (_This->_isStriking() != false)
+						_This->_isStriking() = false;
+
 					if (_This->primaryMagazine()->contents() <= 0)
 					{
 					//	_This->TryReload();

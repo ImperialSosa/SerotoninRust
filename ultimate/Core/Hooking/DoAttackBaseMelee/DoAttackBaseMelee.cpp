@@ -20,8 +20,11 @@ void Hooks::DoAttackMelee(AssemblyCSharp::BaseMelee* _This)
 
 	if (m_settings::LongMelee)
 	{
-		_This->maxDistance() = 3.f;
-		_This->attackRadius() = 3.f;
+		if (_This->maxDistance() != 3.f)
+			_This->maxDistance() = 3.f;
+
+		if (_This->attackRadius() != 3.f)
+			_This->attackRadius() = 3.f;
 	}
 
 	Hooks::DoAttackMeleehk.get_original< decltype(&DoAttackMelee)>()(_This);
