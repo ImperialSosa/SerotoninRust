@@ -3154,7 +3154,7 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
-
+							
 							else if (EntityID == CornID && m_settings::Corn && distance <= m_settings::MaxFoodDistance)
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
