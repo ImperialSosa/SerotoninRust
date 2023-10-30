@@ -250,12 +250,12 @@ public:
 			return false;
 
 		auto camera = UnityEngine::Camera::get_main();
-		if (!camera)
+		if (!IsAddressValid(camera))
 			return {};
 
 
 		auto m_target = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-		if (!m_target.m_player)
+		if (!IsAddressValid(m_target.m_player))
 			return {};
 
 		
@@ -411,9 +411,6 @@ public:
 			}
 		}
 
-
-
-
 		if (Distance > 1.2f)
 		{
 			auto endPositionTrajectoryUsage = Distance - 1.2f + 0.01f;
@@ -442,8 +439,6 @@ public:
 		num15 |= 8388608;
 		num15 |= 134217728;
 
-
-	
 		if (!AssemblyCSharp::IsVisible_2(ClosestPointOnLine, HitPointWorld, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CurrentPosition, OriginalClosestPointOnLine, 10551296, 0.f) ||
 			!AssemblyCSharp::IsVisible_2(OriginalClosestPointOnLine, ClosestPointOnLine, 10551296, 0.f) || !AssemblyCSharp::IsVisible_2(CenterPosition, HitPointWorld, 10551296, 0.f))
 		{

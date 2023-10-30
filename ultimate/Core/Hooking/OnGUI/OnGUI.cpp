@@ -1967,10 +1967,10 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 				{
 					drawMisc();
 
-					if (m_settings::RaidESP)
-					{
-						drawRaidESP();
-					}
+					//if (m_settings::RaidESP)
+					//{
+					//	drawRaidESP();
+					//}
 
 					float x = screen_center.x;
 					float YPos = (UnityEngine::screen_size.y / 8);
@@ -2024,18 +2024,18 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 					Visuals().CachePlayers();
 					Visuals().DrawPlayers();
 
-					static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-					if (current_time - send_time > 5.f)
-					{
+					//static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+					//float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+					//if (current_time - send_time > 5.f)
+					//{
 						//LOG(XS("[DEBUG] Speed"));
 
 						Visuals().CacheEntities();
 
-						send_time = current_time;
-					}
+					//	send_time = current_time;
+					//}
 		
-					if (!PrefabVectorList.empty())
+					//if (!PrefabVectorList.empty())
 						Visuals().RenderEntities();
 				}	
 			}

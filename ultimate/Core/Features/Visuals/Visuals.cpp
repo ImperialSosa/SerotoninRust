@@ -687,145 +687,155 @@ void Visuals::DrawPlayers()
 								auto held_item = utf16_to_utf8(display_name->c_str());
 								auto ItemID = info->itemid();
 
+								if (m_settings::TagsVisCheck)
+								{
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+									yoffset += 13;
+								}
+								else
+								{
+									UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+									yoffset += 13;
+								}
 
-								switch (m_settings::HeldItemType)
-								{
-								case 0: //name
-								{
-									if (m_settings::TagsVisCheck)
-									{
-										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-										yoffset += 13;
-									}
-									else
-									{
-										UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
-										yoffset += 13;
-									}
-								}
-									break;
-								case 1://unity icon
-								{
-									auto IconSprite = info->FindIconSprite(info->itemid());
+								//switch (m_settings::HeldItemType)
+								//{
+								//case 0: //name
+								//{
+								//	if (m_settings::TagsVisCheck)
+								//	{
+								//		UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), BoxColor, Color::Black(ColorSettings::BoxEsp_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+								//		yoffset += 13;
+								//	}
+								//	else
+								//	{
+								//		UnityEngine::GL().TextCenter(Vector2(footPos.x, footPos.y + yoffset), held_item.c_str(), HeldItem_Color, Color::Black(ColorSettings::Helditem_Color.a), m_settings::fontsize, m_settings::OutlinedText, m_settings::ShadedText);
+								//		yoffset += 13;
+								//	}
+								//}
+								//	break;
+								//case 1://unity icon
+								//{
+								//	auto IconSprite = info->FindIconSprite(info->itemid());
 
-									if (IconSprite) {
-										auto IconTexture = IconSprite->get_texture();
+								//	if (IconSprite) {
+								//		auto IconTexture = IconSprite->get_texture();
 
-										yoffset += 4;
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
-										yoffset += 24;
-									}
-								}
-								break;
-								case 2:// custom icon
-								{
-									if (ItemID == 1545779598 || ItemID == 4155929904 || ItemID == 2959469637) {
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (10 / 2)), Vector2(26, 10), AK47Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1588298435 || ItemID == 3516600001)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (8 / 2)), Vector2(26, 8), BoltyIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 884424049)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), CompoundBowIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1965232394)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (23 / 2), footPos.y + yoffset - (8 / 2)), Vector2(23, 8), CrossbowIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1796682209)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (12 / 2)), Vector2(21, 12), CustomSMGIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 3529783679)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (24 / 2), footPos.y + yoffset - (6 / 2)), Vector2(24, 6), DoubleBarrelIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 4219022635)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (14 / 2), footPos.y + yoffset - (8 / 2)), Vector2(14, 8), EokaIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 3080424799)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (22 / 2), footPos.y + yoffset - (8 / 2)), Vector2(22, 8), HMLmgIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1443579727)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (31 / 2), footPos.y + yoffset - (8 / 2)), Vector2(31, 8), HuntingBowIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 2482412119)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (10 / 2)), Vector2(21, 10), LR300Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 28201841)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), M39Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 3442404277)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), M92Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 2225388408)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), M249Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1318558775)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (9 / 2)), Vector2(21, 9), Mp4a4Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 818877484 || ItemID == 1914691295)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (15 / 2), footPos.y + yoffset - (12 / 2)), Vector2(15, 12), PistolIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 795371088 || ItemID == 2927685355)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (7 / 2)), Vector2(26, 7), PumpShotgunIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 1373971859)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (11 / 2)), Vector2(21, 11), PythonIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 649912614)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), RevolverIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 3390104151)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (9 / 2)), Vector2(26, 9), SarIcon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 4253526834)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (25 / 2), footPos.y + yoffset - (6 / 2)), Vector2(25, 6), Spas12Icon, Color::White());
-										yoffset += 13;
-									}
-									else if (ItemID == 2536594571)
-									{
-										UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), ThompsonIcon, Color::White());
-										yoffset += 13;
-									}
-								}
-									break;
-								}
+								//		yoffset += 4;
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - 12, footPos.y + yoffset - 12), Vector2(24, 24), IconTexture, Color::White());
+								//		yoffset += 24;
+								//	}
+								//}
+								//break;
+								//case 2:// custom icon
+								//{
+								//	if (ItemID == 1545779598 || ItemID == 4155929904 || ItemID == 2959469637) {
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (10 / 2)), Vector2(26, 10), AK47Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1588298435 || ItemID == 3516600001)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (8 / 2)), Vector2(26, 8), BoltyIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 884424049)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), CompoundBowIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1965232394)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (23 / 2), footPos.y + yoffset - (8 / 2)), Vector2(23, 8), CrossbowIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1796682209)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (12 / 2)), Vector2(21, 12), CustomSMGIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 3529783679)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (24 / 2), footPos.y + yoffset - (6 / 2)), Vector2(24, 6), DoubleBarrelIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 4219022635)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (14 / 2), footPos.y + yoffset - (8 / 2)), Vector2(14, 8), EokaIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 3080424799)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (22 / 2), footPos.y + yoffset - (8 / 2)), Vector2(22, 8), HMLmgIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1443579727)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (31 / 2), footPos.y + yoffset - (8 / 2)), Vector2(31, 8), HuntingBowIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 2482412119)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (10 / 2)), Vector2(21, 10), LR300Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 28201841)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), M39Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 3442404277)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), M92Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 2225388408)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (32 / 2), footPos.y + yoffset - (10 / 2)), Vector2(32, 10), M249Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1318558775)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (9 / 2)), Vector2(21, 9), Mp4a4Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 818877484 || ItemID == 1914691295)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (15 / 2), footPos.y + yoffset - (12 / 2)), Vector2(15, 12), PistolIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 795371088 || ItemID == 2927685355)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (7 / 2)), Vector2(26, 7), PumpShotgunIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 1373971859)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (21 / 2), footPos.y + yoffset - (11 / 2)), Vector2(21, 11), PythonIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 649912614)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (18 / 2), footPos.y + yoffset - (12 / 2)), Vector2(18, 12), RevolverIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 3390104151)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (26 / 2), footPos.y + yoffset - (9 / 2)), Vector2(26, 9), SarIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 4253526834)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (25 / 2), footPos.y + yoffset - (6 / 2)), Vector2(25, 6), Spas12Icon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//	else if (ItemID == 2536594571)
+								//	{
+								//		UnityEngine::GL().DrawIcon(Vector2(footPos.x - (28 / 2), footPos.y + yoffset - (10 / 2)), Vector2(28, 10), ThompsonIcon, Color::White());
+								//		yoffset += 13;
+								//	}
+								//}
+								//	break;
+								//}
 								
 							}
 						}
@@ -1719,9 +1729,9 @@ void Visuals::RenderEntities()
 									}
 
 
-									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
-									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 4.f), bar_color);
-									UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 4.f), Color::Black());
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset - 2.f), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 2.f), Color::Black());
+									UnityEngine::GL::RectangleFilled(Vector2(screen.x - (bar_width / 2), screen.y + yoffset - 2.f), Vector2((screen.x - (bar_width / 2)) + bar_health, screen.y + yoffset + 2.f), bar_color);
+									UnityEngine::GL::Rectangle(Vector2(screen.x - (bar_width / 2), screen.y + yoffset - 2.f), Vector2(screen.x + (bar_width / 2), screen.y + yoffset + 2.f), Color::Black());
 									yoffset += 8.f;
 								}
 
