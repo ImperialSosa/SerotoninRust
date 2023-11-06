@@ -1,181 +1,4 @@
 ﻿cl : command line  warning D9002: ignoring unknown option '/arch:IA32'
-  crt.cpp
-  Configs.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  ConnectionManager.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  Core.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  EyeHack.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  Features.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  BlockSprint.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  IsAiming.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  ClientInput.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
-          with
-          [
-              _Elem=char
-          ]
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2584,17): message : see reference to function template instantiation 'void std::basic_string<char,std::char_traits<char>,std::allocator<char>>::_Construct_from_iter<wchar_t*,wchar_t*,_Size_type>(_Iter,const _Sent,_Size)' being compiled
-          with
-          [
-              _Size_type=unsigned __int64,
-              _Iter=wchar_t *,
-              _Sent=wchar_t *,
-              _Size=unsigned __int64
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
-          with
-          [
-              _Elem=wchar_t,
-              _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
-              _Alloc=std::allocator<char>
-          ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   DoAttackBaseMelee.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -190,14 +13,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   DoAttack.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -212,14 +35,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   DoBowAttack.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -234,14 +57,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   FlintStrikeWeaponDoAttack.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -256,14 +79,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   Hooks.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -278,14 +101,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   LateUpdate.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -300,14 +123,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   OnAttacked.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -322,14 +145,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   OnGUI.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -344,14 +167,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   OnInput.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -366,14 +189,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   OnNetworkMessage.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -388,14 +211,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   PlayerProjectileAttack.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -410,16 +233,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
-  Generating Code...
-  Compiling...
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   PlayerWalkMovement.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -434,14 +255,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   ProjectileUpdate.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -456,14 +277,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   SkyUpdate.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -478,14 +299,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   SteamPlatform.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -500,14 +321,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   TryToMove.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -522,14 +343,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   UpdateOnGUI.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -544,14 +365,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   WriteToStream.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -566,16 +387,18 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   CIl2Cpp.cpp
   il2cpp-api.cpp
+  Generating Code...
+  Compiling...
   ConfigManager.cpp
   data.cpp
   net.cpp
@@ -595,14 +418,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   ProtoBuf.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -617,14 +440,14 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   UnityEngine.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\include\xstring(2728,53): warning C4244: 'argument': conversion from 'wchar_t' to 'const _Elem', possible loss of data
           with
@@ -639,16 +462,16 @@ C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.3282
               _Sent=wchar_t *,
               _Size=unsigned __int64
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,22): message : see reference to function template instantiation 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string<std::_String_iterator<std::_String_val<std::_Simple_types<_Elem>>>,0>(_Iter,_Iter,const _Alloc &)' being compiled
           with
           [
               _Elem=wchar_t,
               _Iter=std::_String_iterator<std::_String_val<std::_Simple_types<wchar_t>>>,
               _Alloc=std::allocator<char>
           ]
-C:\Users\Shadow\Desktop\sero-rust-internal\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
+C:\Users\dropc\Desktop\Serotonin\ultimate\Core\SDK\System\System.hpp(222,4): message : see the first reference to 'std::basic_string<char,std::char_traits<char>,std::allocator<char>>::basic_string' in 'FPSystem::String::string_safe'
   main.cpp
   Generating Code...
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
-  ultimate.vcxproj -> C:\Users\Shadow\Desktop\sero-rust-internal\x64\Release\cheat.dll
+  ultimate.vcxproj -> C:\Users\dropc\Desktop\Serotonin\x64\Release\cheat.dll

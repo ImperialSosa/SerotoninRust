@@ -128,6 +128,7 @@ inline uintptr_t m_game_assembly;
 inline uintptr_t m_steam_api;
 inline uintptr_t m_steam_client;
 
+inline static bool SteamConnectorError = false;
 inline bool InGame = false;
 inline bool ToBeCalled = false;
 inline static bool HasSetAmbient = false;

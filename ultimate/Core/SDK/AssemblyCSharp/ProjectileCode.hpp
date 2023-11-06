@@ -844,7 +844,7 @@ public:
 	OFFSET:
 		typedef DWORD64(__stdcall* Unknown)(DWORD64);
 		DWORD64 st = safe_read(m_game_assembly + 53917920, DWORD64); //Method$Facepunch.Pool.GetList\u003CTraceInfo\u003E() address
-		if (!IsAddressValid(st))
+		if (!IsAddressValid(st)) 
 		{
 			goto OFFSET;
 		}

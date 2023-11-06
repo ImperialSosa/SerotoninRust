@@ -229,6 +229,7 @@
     <ClInclude Include="Core\Features\Visuals\Visuals.hpp" />
     <ClInclude Include="Core\Hooking\Hooker.hpp" />
     <ClInclude Include="Core\Hooking\Hooks.hpp" />
+    <ClInclude Include="Core\Hooking\OnGUI\Font.hpp" />
     <ClInclude Include="Core\Hooking\WriteToStream\Prediction.hpp" />
     <ClInclude Include="Core\Hooks\HasPermission\HasPermission.h" />
     <ClInclude Include="Core\Il2Cpp\CIl2Cpp.hpp" />

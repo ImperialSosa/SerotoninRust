@@ -44,20 +44,28 @@ Net::~Net() {
 #ifndef HAS_CRT
 bool Net::run()
 {
-	if (!steam_networking)
+	if (!steam_networking) {
+		SteamConnectorError = true;
 		return false;
+	}
 
 	//check if we want to run our networking
-	if (exit_flag_.load())
+	if (exit_flag_.load()) {
+		SteamConnectorError = true;
 		return false;
+	}
 
 	//check if networking is ready
-	if (!networking_steam)
+	if (!networking_steam) {
+		SteamConnectorError = true;
 		return false;
+	}
 
 	//check if we're connected
-	if (!networking_steam->isConnected())
+	if (!networking_steam->isConnected()) {
+		SteamConnectorError = true;
 		return false;
+	}
 
 	//lets send token if we haven't already
 	networking_steam->sendToken();
@@ -73,7 +81,7 @@ bool Net::run()
 
 	if (networking_steam->failed.load())
 	{
-		//do something if steam networking fails!
+		SteamConnectorError = true;
 		return false;
 	}
 	return true;

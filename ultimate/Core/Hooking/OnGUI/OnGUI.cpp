@@ -10,6 +10,7 @@
 #include "../../MenuFramework/gui/gui.hpp"
 
 #include "../../Includes/colorsettings.hpp"
+#include "Font.hpp"
 
 inline UnityEngine::GUISkin* gui_skin = nullptr;
 
@@ -226,7 +227,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							font_bundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!font_bundle)
+								font_bundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile2 = true;
 							ReceivedFile1 = true;
@@ -239,19 +241,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							FILE* file = LI_FN(fopen)("output.bin", "wb");
-
-							if (file) {
-								// Write each element to the file
-								LI_FN(fwrite)(&iter.data[0], sizeof(unsigned char), iter.data.size(), file);
-
-								// Close the file
-								LI_FN(fclose)(file);
-							}
-							else {
-							}
-
-							IconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!IconBundle)
+								IconBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile3 = true;
 							ReceivedFile2 = false;
@@ -264,7 +255,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							MenuIconBundles = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!MenuIconBundles)
+								MenuIconBundles = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile4 = true;
 							ReceivedFile3 = false;
@@ -277,7 +269,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							FireBundleA = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!FireBundleA)
+								FireBundleA = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile5 = true;
 							ReceivedFile4 = false;
@@ -290,7 +283,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							FireBundleB = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!FireBundleB)
+								FireBundleB = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile6 = true;
 							ReceivedFile5 = false;
@@ -303,7 +297,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							ColorBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!ColorBundle)
+								ColorBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile7 = true;
 							ReceivedFile6 = false;
@@ -316,7 +311,8 @@ void ConnectorClient()
 							// Load bundle from memory
 							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
 							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
-							font_bundle2 = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							if (!font_bundle2)
+								font_bundle2 = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
 							ReceivedFile7 = false;
 						}
@@ -349,6 +345,9 @@ void ConnectorClient()
 				//}
 			}
 		}
+		else
+			SteamConnectorError = true;
+
 		send_time = current_time;
 	}
 }
@@ -963,15 +962,15 @@ void drawMisc()
 		m_settings::RadarPosY = ypos;
 
 		/* MainWindow */
-		UnityEngine::GL().RectangleFilled(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color(0, 0, 0, 255.f).GetUnityColor());
+		UnityEngine::GL().RectangleFilled(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
 
 		/* ViewBox */
-		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + sizex, ypos), Color::White());
-		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + 1, ypos + 1), Color::White());
-		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + middle, ypos + middle + sizey / 2), Color::White());
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + sizex, ypos), Color::Black());
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + 1, ypos + 1), Color::Black());
+		UnityEngine::GL().Line(Vector2(xpos + middle, ypos + middle), Vector2(xpos + middle, ypos + middle + sizey / 2), Color::Black());
 
 		/* Outline */
-		UnityEngine::GL().Rectangle(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color::White());
+		UnityEngine::GL().Rectangle(Vector2(xpos, ypos), Vector2(xpos + sizex, ypos + sizey), Color::Black());
 
 		/* LocalPos */
 		UnityEngine::GL().CircleFilled(Vector2(xpos + middle, ypos + middle - 1), 3, Color::White(), 25);
@@ -1670,7 +1669,7 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 									Vector2 Size = Vector2(60, 60);
 
 									for (int i = 0; i < 7; i++) {
-										UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos.x - (((Size.x + 5) * 7) / 2) + TestPos, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * 7) / 2) + TestPos + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+										UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * 7) / 2) + TestPos, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * 7) / 2) + TestPos + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
 										TestPos += 65;
 									}
 
@@ -1708,14 +1707,14 @@ inline void DrawPlayerClothing(UnityEngine::Event* event, const Vector2& pos, co
 													//sprintf(str, XS("[%d] %s"), (int)amount, name->string_safe().c_str());
 													//ItemName = str;
 													//
-													if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
-														if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
-															UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
-													}
-													else
-														UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
+													//if (item->heldEntity() && m_target.m_player && m_target.m_player->ActiveItem()) {
+													//	if (item->heldEntity()->prefabID() == m_target.m_player->ActiveItem()->heldEntity()->prefabID())
+													//		UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(0.f, 24.f, 143.f, 120.f).GetUnityColor());
+													//}
+													//else
+													//	UnityEngine::GL::RectangleFilled(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons + Size.x, hotbar_pos_c.y + 20.f + Size.y), Color(34.f, 34.f, 34.f, 120.f).GetUnityColor());
 
-													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos_c.x - (((Size.x + 5) * ItemList->_size) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Size, texture, Color::White());
+													UnityEngine::GL().DrawIcon(Vector2(hotbar_pos_c.x - (((Size.x + 5) * 7) / 2) + info_y_icons, hotbar_pos_c.y + 20.f), Size, texture, Color::White());
 												}
 											}
 										}
@@ -1844,11 +1843,82 @@ void SetupTextures()
 	}
 }
 
+void LoadFontBundle()
+{
+	static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
+	float current_time = UnityEngine::Time::get_realtimeSinceStartup();
+
+	if (current_time - send_time > 1.f)
+	{
+		if (!font_bundle)
+		{
+			constexpr size_t bundleSize = sizeof(FontBundle);
+			auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), sizeof(FontBundle));
+			std::memcpy(bundleArray->items, FontBundle, bundleSize);
+			font_bundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+
+			LOG(XS("[DEBUG] Loaded Font Bundle"));
+		}
+		send_time = current_time;
+	}
+
+	//static float send_time_fontload = UnityEngine::Time::get_realtimeSinceStartup();
+	//float current_time_fontload = UnityEngine::Time::get_realtimeSinceStartup();
+	//static bool HasLoadedFontForChinese = false;
+
+	//if (!HasLoadedFontForChinese) {
+	//	if (current_time_fontload - send_time_fontload > 5.f)
+	//	{
+	//		if (!font_bundle) {
+	//			LOG(XS("[DEBUG] Manually Loading Bundles.."));
+
+	//			//FILE* file = LI_FN(fopen)("C:\\FontBundle.unity3d", "r");
+
+	//			const char* filePath = "C:\\FontBundle.unity3d";
+	//			if (GetFileAttributesA(filePath) != INVALID_FILE_ATTRIBUTES) {
+	//				if (!font_bundle) {
+	//					LOG(XS("[DEBUG] Loading Font"));
+	//					font_bundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/FontBundle.unity3d", 0, 0);
+	//					HasLoadedFontForChinese = true;
+	//				}
+	//			}
+	//			else
+	//				LOG(XS("[DEBUG] File does not exist"));
+	//		}
+
+	//		send_time_fontload = current_time_fontload;
+	//	}
+	//}
+
+	//static bool HasAttemptedManualLoad = false;
+	//if (!HasAttemptedManualLoad) {
+	//	if (!font_bundle) {
+	//		LOG(XS("[DEBUG] Manually Loading Font"));
+	//		font_bundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:/FontBundle.unity3d", 0, 0);
+	//	}
+	//	HasAttemptedManualLoad = true;
+	//}
+	
+}
+
+
 static inline bool HasTriggered = false;
 void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 {
 	screen_center = { UnityEngine::Screen::get_width() / 2.f, UnityEngine::Screen::get_height() / 2.f };
 	UnityEngine::screen_size = { (float)UnityEngine::Screen::get_width(), (float)UnityEngine::Screen::get_height() };
+
+	//static bool HasAttemptedManualLoad = false;
+	//if (!HasAttemptedManualLoad) {
+	//	if (!font_bundle) {
+	//		LOG(XS("[DEBUG] Manually Loading Font"));
+	//		font_bundle = UnityEngine::AssetBundle::LoadFromFile_Internal("C:\\FontBundle.unity3d", 0, 0);
+	//	}
+	//	HasAttemptedManualLoad = true;
+	//}
+
+	if (!font_bundle)
+		LoadFontBundle();
 
 	ConnectorClient();
 
@@ -1872,7 +1942,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		Hooks::OnAttackedhk.VirtualFunctionHook(XS("BasePlayer"), HASH("OnAttacked"), &Hooks::OnAttacked, XS(""), 1);
 	}
 
-
 	/*if (!Hooks::SkyUpdatehk.IsHooked())
 	{
 		Hooks::SkyUpdatehk.PointerSwapHook(XS("TOD_Camera"), HASH("Update"), &Hooks::SkyUpdate, XS(""), 0);
@@ -1880,7 +1949,10 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 
 	SetupBundles();
 
-	if (MenuIconBundles)
+	//if (!font_bundle)
+	//	LoadFontBundle();
+
+	if (font_bundle)
 	{
 		SetupStyles();
 
@@ -1891,27 +1963,8 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		//	LOG(XS("[DEBUG] Loaded TestBundle"));
 		//}
 
-		SetupTextures();
-
-		//if (is_menu_open) {
-		//	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-		//		auto z = UnityEngine::rect_t{ hotbar_pos.x - 20, hotbar_pos.y - 10, hotbar_pos.x + 20, hotbar_pos.y + 10 };
-
-		////		if (z.contains(mouse_pos))
-		////		{
-		////			hotbar_pos = (hotbar_pos + (mouse_pos - hotbar_pos) - Vector2(0, 0));
-		////		}
-		////	}
-
-		////	if (UnityEngine::Input::GetKey(RustStructs::Mouse0)) {
-		////		auto z = UnityEngine::rect_t{ hotbar_pos_c.x - 20, hotbar_pos_c.y - 10, hotbar_pos_c.x + 20, hotbar_pos_c.y + 10 };
-
-		////		if (z.contains(mouse_pos))
-		////		{
-		////			hotbar_pos_c = (hotbar_pos_c + (mouse_pos - hotbar_pos_c) - Vector2(0, 0));
-		////		}
-		////	}
-		////}
+		//if (IconBundle)
+		//	SetupTextures();
 
 		GUI().DrawMenu();
 
@@ -1919,13 +1972,6 @@ void Hooks::OnGUI(AssemblyCSharp::ExplosionsFPS* _This)
 		if (IsAddressValid(m_Event))
 		{
 			TextDrawBegin();
-
-			/*if (!m_settings::SelectedOption)
-				MenuDraw().RenderOptions();
-			else if (m_settings::LoadLegit)
-				MenuDraw().RenderLegitMenu();
-			else if (m_settings::LoadRage)
-				MenuDraw().RenderMenu();*/
 
 			if (m_Event->Type() == RustStructs::EventType::Repaint)
 			{

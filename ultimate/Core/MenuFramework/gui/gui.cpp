@@ -463,12 +463,12 @@ void RageTab()
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Manipulation"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_rage_tab2_y))) {
 
 
-        calliope::menu.components.checkbox(XS("Manipulation"), m_settings::Manipulation);
+        calliope::menu.components.checkbox(XS("Manipulation"), m_settings::Manipulation, { ("To save FPS, enable Simulate-Angles") });
         calliope::menu.components.keybind(XS("Manipulation Key"), (int&)m_settings::ManipKey, true);
 
         calliope::menu.components.checkbox(XS("Manip-Indicator"), m_settings::ManipFlags);
         calliope::menu.components.checkbox(XS("Manip-Point"), m_settings::DrawManipPoints);
-        calliope::menu.components.slider<float>(XS("Manip-Scanning-Speed"), XS(""), m_settings::ManipPoints, 0, 50);
+        calliope::menu.components.slider<float>(XS("Manip-Scanning-Speed"), XS(""), m_settings::ManipPoints, 0, 50, { ("Please keep this low unless you have a god-pc, this will use FPS") });
         calliope::menu.components.dropdown(XS("Manip-Mode"), { ("Static Points"), ("Dynamic Points"), ("Enhanced Points") }, m_settings::ManipMode);
 
         calliope::menu.components.end_groupbox();
@@ -495,7 +495,7 @@ void RageTab()
 
     if (auto groupbox_three = calliope::menu.components.groupbox(XS("BulletTP"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, small_rage_tab_y))) {
 
-        calliope::menu.components.checkbox(XS("BulletTP"), m_settings::BulletTP);
+        calliope::menu.components.checkbox(XS("BulletTP"), m_settings::BulletTP, { ("To save FPS, enable Simulate-Angles") });
         calliope::menu.components.checkbox(XS("BulletTP-Indicator"), m_settings::BulletTPFlags);
         calliope::menu.components.checkbox(XS("BulletTP-Arrows"), m_settings::Thickbullet_Arrows);
         calliope::menu.components.checkbox(XS("BulletTP-Angle"), m_settings::ShowBulletTPAngle);

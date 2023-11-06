@@ -120,10 +120,10 @@ namespace connector {
 		auto result = m_pSteamNetworkingSockets->SendMessageToConnection(socket_, (void*)data, size, flags, nullptr);
 		if (result != k_EResultOK) {
 			LOG(XS("[DEBUG] write_packet: Failed to send message EResult: %d"), result);
+			SteamConnectorError = true;
 			failed.store(true);
 			return;
 		}
-
 	}
 
 	template<class T>
