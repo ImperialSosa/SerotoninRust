@@ -147,5 +147,6 @@
     <ClInclude Include="Core\Includes\colorsettings.hpp" />
     <ClInclude Include="Core\Utils\crc32.hpp" />
     <ClInclude Include="Core\Hooking\OnGUI\Font.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\translation.h" />
   </ItemGroup>
 </Project>

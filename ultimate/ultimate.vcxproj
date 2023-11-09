@@ -251,6 +251,7 @@
     <ClInclude Include="Core\MenuFramework\Drawing\Drawing.hpp" />
     <ClInclude Include="Core\MenuFramework\gui\framework\calliope.hpp" />
     <ClInclude Include="Core\MenuFramework\gui\gui.hpp" />
+    <ClInclude Include="Core\MenuFramework\gui\translation.h" />
     <ClInclude Include="Core\MenuFramework\Menu\Menu.hpp" />
     <ClInclude Include="Core\Net\3rd_party\steam\ISteamApps.h" />
     <ClInclude Include="Core\Net\3rd_party\steam\ISteamClient.h" />

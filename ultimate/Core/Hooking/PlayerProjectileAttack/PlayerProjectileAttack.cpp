@@ -26,17 +26,15 @@ void Hooks::PPA_WriteToStream(ProtoBuf::PlayerProjectileAttack* _This, ProtoBuf:
 	auto PlayerAttack = _This->playerAttack();
 
 	if (IsAddressValid(PlayerAttack)) {
-
 		auto attack = PlayerAttack->attack();
 
 		if (IsAddressValid(attack))
 		{
-
 			auto camera = UnityEngine::Camera::get_main();
 			if (IsAddressValid(camera)) {
 
 				auto AimbotTarget = AssemblyCSharp::BasePlayer::GetAimbotTarget(camera->get_positionz(), 500.f);
-				if (AimbotTarget.m_player) {
+				if (IsAddressValid(AimbotTarget.m_player)) {
 					if (!AimbotTarget.m_heli)
 					{
 

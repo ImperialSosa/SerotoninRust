@@ -609,67 +609,76 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 				}
 
 				//Features().ConstantLOSCheck = false;
-
-				if (Features().LOSTargetID != AimbotTarget.m_player->userID() || !AimbotTarget.m_player) {
-					Features().LOSPoint = Vector3::Zero;
-					Features().ConstantLOSCheck = false;
-					Features().VerifiedLOSPoint = false;
-				}
-
-				if (m_settings::AdvancedChecks) {
-					auto distance = AimbotTarget.m_player->get_transform()->get_position().Distance(Features().LOSPoint);
-					if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint) &&
-						AssemblyCSharp::IsVisible(Features().LOSPoint, AimbotTarget.m_position) &&
-						distance < 2.2) {
-						Features().VerifiedLOSPoint = true;
-						Features().CachedBulletTPPosition = Features().LOSPoint;
-					}
-					else {
+				 
+				if (IsAddressValid(AimbotTarget.m_player)) {
+					if (Features().LOSTargetID != AimbotTarget.m_player->userID() || !AimbotTarget.m_player) {
 						Features().LOSPoint = Vector3::Zero;
-						Features().VerifiedLOSPoint = false;
 						Features().ConstantLOSCheck = false;
-					}
-				}
-				else {
-					if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint)) {
-						Features().VerifiedLOSPoint = true;
-					}
-					else {
-						Features().LOSPoint = Vector3::Zero;
 						Features().VerifiedLOSPoint = false;
-						Features().ConstantLOSCheck = false;
 					}
-				}
 
-				if (!Features().VerifiedLOSPoint) {
-					for (const Vector3& point : Features().cachedPoints) {
-						//UnityEngine::DDraw().Sphere(AimbotTarget.m_position + point, 0.05f, Color::Red(), 0.05f, 0);
-						if (m_settings::AdvancedChecks) {
-							if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point) &&
-								AssemblyCSharp::IsVisible(AimbotTarget.m_position + point, AimbotTarget.m_position)) {
-								Features().ConstantLOSCheck = true;
-								Features().VerifiedLOSPoint = true;
-								Features().LOSPoint = AimbotTarget.m_position + point;
-								Features().LOSTargetID = AimbotTarget.m_player->userID();
-								break;
-							}
+					if (m_settings::AdvancedChecks) {
+						auto distance = AimbotTarget.m_player->get_transform()->get_position().Distance(Features().LOSPoint);
+						if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint) &&
+							AssemblyCSharp::IsVisible(Features().LOSPoint, AimbotTarget.m_position) &&
+							distance < 2.2) {
+							Features().VerifiedLOSPoint = true;
+							Features().CachedBulletTPPosition = Features().LOSPoint;
 						}
 						else {
-							if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point)) {
-								Features().VerifiedLOSPoint = true;
-								Features().ConstantLOSCheck = true;
-								Features().LOSPoint = AimbotTarget.m_position + point;
-								break;
+							Features().LOSPoint = Vector3::Zero;
+							Features().VerifiedLOSPoint = false;
+							Features().ConstantLOSCheck = false;
+						}
+					}
+					else {
+						if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, Features().LOSPoint)) {
+							Features().VerifiedLOSPoint = true;
+						}
+						else {
+							Features().LOSPoint = Vector3::Zero;
+							Features().VerifiedLOSPoint = false;
+							Features().ConstantLOSCheck = false;
+						}
+					}
+
+					if (!Features().VerifiedLOSPoint) {
+						for (const Vector3& point : Features().cachedPoints) {
+							//UnityEngine::DDraw().Sphere(AimbotTarget.m_position + point, 0.05f, Color::Red(), 0.05f, 0);
+							if (m_settings::AdvancedChecks) {
+								if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point) &&
+									AssemblyCSharp::IsVisible(AimbotTarget.m_position + point, AimbotTarget.m_position)) {
+									Features().ConstantLOSCheck = true;
+									Features().VerifiedLOSPoint = true;
+									Features().LOSPoint = AimbotTarget.m_position + point;
+									Features().LOSTargetID = AimbotTarget.m_player->userID();
+									break;
+								}
+							}
+							else {
+								if (AssemblyCSharp::IsVisible(Features().CachedManipPoint, AimbotTarget.m_position + point)) {
+									Features().VerifiedLOSPoint = true;
+									Features().ConstantLOSCheck = true;
+									Features().LOSPoint = AimbotTarget.m_position + point;
+									break;
+								}
 							}
 						}
 					}
+
+					//if (Features().VerifiedLOSPoint)
+					//	Features().CachedBulletTPPosition = Features().LOSPoint;
+
+					if (m_settings::ShowCachedPoint) {
+						UnityEngine::DDraw().Sphere(Features().LOSPoint, 0.05f, Color::Green(), 0.05f, 0);
+					}
 				}
-
-				//if (Features().VerifiedLOSPoint)
-				//	Features().CachedBulletTPPosition = Features().LOSPoint;
-
-				if (m_settings::ShowCachedPoint) {
-					UnityEngine::DDraw().Sphere(Features().LOSPoint, 0.05f, Color::Green(), 0.05f, 0);
+				else
+				{
+					Features().VerifiedLOSPoint = false;
+					Features().ConstantLOSCheck = false;
+					Features().CachedBulletTPPosition = Vector3::Zero;
+					Features().LOSPoint = Vector3::Zero;
 				}
 			}
 			
@@ -681,40 +690,47 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 
 			if (m_settings::BulletTP)
 			{
-				if (m_settings::CacheBulletTP) {
-					if (Features().ConstantLOSCheck) {
-						Features().Instance()->FindBulletTPAngles(num6);
+				if (IsAddressValid(AimbotTarget.m_player)) {
+					if (m_settings::CacheBulletTP) {
+						if (Features().ConstantLOSCheck) {
+							Features().Instance()->FindBulletTPAngles(num6);
+						}
+						else
+						{
+
+							Features().CachedBulletTPPosition = AimbotTarget.m_position;
+							Features().BulletTPAngle = Vector3::Zero;
+
+							Features().BulletTPPointVisible = false;
+							m_settings::Thickbullet_Indicator = false;
+							m_settings::Thickbullet_AutoShoot = false;
+						}
 					}
 					else
-					{
-						Features().CachedBulletTPPosition = AimbotTarget.m_position;
-						Features().BulletTPAngle = Vector3(0, 0, 0);
-
-						Features().BulletTPPointVisible = false;
-						m_settings::Thickbullet_Indicator = false;
-						m_settings::Thickbullet_AutoShoot = false;
-					}
+						Features().Instance()->FindBulletTPAngles(num6);
 				}
-				else
-					Features().Instance()->FindBulletTPAngles(num6);
 			}
 			else if (!Features().BulletTPAngle.IsZero()) {
-				Features().CachedBulletTPPosition = AimbotTarget.m_position;
+				if (IsAddressValid(AimbotTarget.m_player)) 
+					Features().CachedBulletTPPosition = AimbotTarget.m_position;
 				Features().BulletTPAngle = Vector3(0, 0, 0);
 				Features().BulletTPPointVisible = false;
 				m_settings::Thickbullet_Indicator = false;
 				m_settings::Thickbullet_AutoShoot = false;
 			}
 			else {
-				Features().CachedBulletTPPosition = AimbotTarget.m_position;
+				if (IsAddressValid(AimbotTarget.m_player)) 
+					Features().CachedBulletTPPosition = AimbotTarget.m_position;
 			}
 			
 			if (m_settings::BulletTP)
 			{
-				if (AimbotTarget.m_player->IsConnected())
-				{
-					AimbotTarget.m_player->get_transform()->set_rotation(Vector4(0.f, 0.f, 0.f, 1.f)); //Fix all player rotations for bullet tp to not have invalids.
-				}						
+				if (IsAddressValid(AimbotTarget.m_player)) {
+					if (AimbotTarget.m_player->IsConnected())
+					{
+						AimbotTarget.m_player->get_transform()->set_rotation(Vector4(0.f, 0.f, 0.f, 1.f)); //Fix all player rotations for bullet tp to not have invalids.
+					}
+				}
 			}
 
 			if (m_settings::Autoshoot && UnityEngine::Input::GetKey(m_settings::AutoshootKey)) {
@@ -1064,6 +1080,15 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 			m_settings::Thickbullet_Indicator = false;
 			m_settings::Manipulation_Indicator = false;
 			StartShooting = false;
+			Features().VerifiedLOSPoint = false;
+			Features().ConstantLOSCheck = false;
+			Features().CachedBulletTPPosition = Vector3::Zero;
+			Features().LOSPoint = Vector3::Zero;
+			Features().CachedManipPoint = EyePos;
+			Features().ManipulationAngle = EyePos;
+			Features().PointVisible = false;
+			Features().BulletTPPointVisible = false;
+			Features().BulletTPAngle = Vector3::Zero;
 		}
 	}
 	else {
@@ -1071,6 +1096,15 @@ void Hooks::ClientInput(AssemblyCSharp::BasePlayer* a1, AssemblyCSharp::InputSta
 		m_settings::Thickbullet_Indicator = false;
 		m_settings::Manipulation_Indicator = false;
 		StartShooting = false;
+		Features().VerifiedLOSPoint = false;
+		Features().ConstantLOSCheck = false;
+		Features().CachedBulletTPPosition = Vector3::Zero;
+		Features().LOSPoint = Vector3::Zero;
+		Features().CachedManipPoint = EyePos;
+		Features().ManipulationAngle = EyePos;
+		Features().PointVisible = false;
+		Features().BulletTPPointVisible = false;
+		Features().BulletTPAngle = Vector3::Zero;
 	}
 
 

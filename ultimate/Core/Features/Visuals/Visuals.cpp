@@ -552,6 +552,7 @@ void Visuals::DrawPlayers()
 					}
 
 					UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 3.f), Color::Black());
+
 					UnityEngine::GL::RectangleFilled(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2((footPos.x - (bar_width / 2)) + bar_health, bo.bottom + yoffset + 3.f), bar_color);
 					UnityEngine::GL::Rectangle(Vector2(footPos.x - (bar_width / 2), bo.bottom + yoffset), Vector2(footPos.x + (bar_width / 2), bo.bottom + yoffset + 4.f), Color::Black());
 					yoffset += 13;
@@ -3314,7 +3315,7 @@ AssemblyCSharp::BasePlayer::Target Visuals::GetAimbotTargetSafe(Vector3 Source, 
 			bone = RustStructs::bones::spine1;
 			break;
 		case 3: // Random bone selection
-			switch (my_rand() % 9) {
+			switch (LI_FN(rand)() % 9) {
 			case 0: // Head
 				pos = BasePlayer->get_bone_transform(RustStructs::bones::head)->get_position();
 				bone = RustStructs::bones::head;

@@ -43,9 +43,8 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 	else
 		_This->thickness() = 0.1f;
 
-	if (!m_settings::BulletTP || !m_settings::ValidVelocity)
+	if (!m_settings::BulletTP)
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
-
 
 	float delta_time = 0.03125f;
 	auto camera = UnityEngine::Camera::get_main();
@@ -58,7 +57,6 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 
 	if (_This->owner() != AssemblyCSharp::LocalPlayer::get_Entity())
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
-
 
 	if (_This->projectileID() == 0 || !_This->owner())
 		return Hooks::ProjectileUpdatehk.get_original< decltype(&ProjectileUpdate)>()(_This);
@@ -87,9 +85,7 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 		if (_This->traveledTime() == 0.f)
 			_This->sentPosition() = _This->previousPosition() = _This->currentPosition();
 
-
 		delta_time *= UnityEngine::Time::get_timeScale();
-
 
 		if (m_settings::BulletTracers)
 		{
@@ -103,7 +99,6 @@ void Hooks::ProjectileUpdate(AssemblyCSharp::Projectile* _This)
 
 			UnityEngine::DDraw().Line(_This->currentPosition(), vec3, Color::Red(), 5.f, false, false);
 		}
-
 
 		auto project_ = (Projectile_c*)_This;
 		bool res = project_->DoMovement(delta_time, project_);
