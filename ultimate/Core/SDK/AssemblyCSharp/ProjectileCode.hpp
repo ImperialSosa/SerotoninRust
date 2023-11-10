@@ -342,7 +342,13 @@ public:
 
 	bool BulletTP(AssemblyCSharp::Projectile* instance, Vector3 NextCurrentPosition, Vector3 CurrentPosition, Vector3 CurrentVelocity, float deltaTime)
 	{
+		if (!InGame)
+			return false;
+
 		if (!IsAddressValid(instance))
+			return false;
+
+		if (!IsAddressValid(Features().LocalPlayer))
 			return false;
 
 		if (instance->projectileID() == 0)
@@ -543,7 +549,6 @@ public:
 		hTest->damageProperties() = instance->damageProperties();
 		hTest->HitMaterial() = CIl2Cpp::il2cpp_string_new(XS("Flesh"));
 
-
 		static uintptr_t PlayerProjectileAttack = 0; if (!IsAddressValid(PlayerProjectileAttack)) PlayerProjectileAttack = (uintptr_t)CIl2Cpp::FindClass(XS("ProtoBuf"), XS("PlayerProjectileAttack"));
 		if (ProtoBuf::PlayerProjectileAttack* playerProjectileAttack = reinterpret_cast<ProtoBuf::PlayerProjectileAttack*>(CIl2Cpp::il2cpp_object_new((void*)PlayerProjectileAttack)))
 		{
@@ -598,15 +603,20 @@ public:
 
 				//other invalid checks
 				//player_distance
-				float num2 = 1.f + 0.5f;
-				float num3 = 1.f - 0.5f;
-				float projectile_clientframes = 2.f;
-				float projectile_serverframes = 2.f;
+				
+				float timeSinceLastTick = (UnityEngine::Time::get_realtimeSinceStartup() - Features().LocalPlayer->lastSentTickTime());
+				float last_tick_time = maxx(0.f, minm(timeSinceLastTick, 1.f));
 
-				float num9 = projectile_clientframes / 60.f;
-				float num10 = projectile_serverframes * Max3(UnityEngine::Time::get_deltaTime(), UnityEngine::Time::get_smoothDeltaTime(), UnityEngine::Time::get_fixedDeltaTime());
+				float num = 1.5f;
+				float eye_clientframes = 2.0f;
+				float eye_serverframes = 2.0f;
+				float num2 = eye_clientframes / 60.f;
+				float num3 = eye_serverframes * Max3(UnityEngine::Time::get_deltaTime(), UnityEngine::Time::get_smoothDeltaTime(), UnityEngine::Time::get_fixedDeltaTime());
+				float num4 = (last_tick_time + num2 + num3) * num;
 
-				float num12 = ((m_settings::last_tick_time + num9 + num10) * num2);
+				float num5 = Features().LocalPlayer->MaxEyeVelocity() + Features().LocalPlayer->GetParentVelocity().Magnitude();
+				float num6 = Features().LocalPlayer->BoundsPadding() + num4 * num5;
+
 				//float num16 = hTest->HitEntity()->MaxVelocity() + hTest->HitEntity()->GetParentVelocity().UnityMagnitude();
 				//float num17 = hTest->HitEntity()->BoundsPadding() + num12 * num16;
 				//float num18 = hTest->HitEntity()->Distance(HitInfo->HitPositionWorld());
@@ -623,18 +633,16 @@ public:
 				Vector3 b;
 				SimulateProjectile(instance->currentPosition(), instance->currentVelocity(), tumbleSpeed(), travel, gr * gravityModifier(), drag(), a, b);
 
-				Vector3 positionOffset = Features().LocalPlayer->eyes()->get_position() + Features().CachedManipPoint;
-
+				Vector3 positionOffset = Vector3();
 				float num25 = 0.f;
 				if (hTest->HitEntity() != nullptr)
 				{
 					float num26 = hTest->HitEntity()->GetParentVelocity().UnityMagnitude();
-					/*if(hTest->HitEntity()->IsA(AssemblyCSharp::CargoShip::StaticClass())
-						|| hTest->HitEntity()->IsA(AssemblyCSharp::Tugboat::StaticClass()))
+					if (hTest->HitEntity()->class_name() == XS("TugBoat"))
 					{
 						num26 += hTest->HitEntity()->MaxVelocity();
-					}*/
-					num25 = num12 * num26;
+					}
+					num25 = num6 * num26;
 				}
 
 				Line1 line_1 = Line1(a - b, currentPosition() + b);
@@ -654,7 +662,7 @@ public:
 				bool flag6 = hTest->HitEntity() != nullptr;
 				float num14 = Vector3().Distance(instance->currentPosition(), HitInfo->HitPositionWorld());
 				float num21 = flag6 ? (hTest->HitEntity()->MaxVelocity() + hTest->HitEntity()->GetParentVelocity().UnityMagnitude()) : 0.f;
-				float num22 = flag6 ? (num12 * num21) : 0.f;
+				float num22 = flag6 ? (num6 * num21) : 0.f;
 				float num24 = HitInfo->ProjectileDistance() + 1.f + positionOffset.UnityMagnitude() + num22;
 
 				if (num14 > num24)
@@ -917,11 +925,11 @@ public:
 		{
 			if (BulletTP(this, vec3, currentPosition(), currentVelocity(), deltaTime))
 			{
-				RPC_Counter.Reset();
-				integrity() = (0);
-				flag = true;
-				//this->Retire();
-				return false;
+				//RPC_Counter.Reset();
+				//integrity() = (0);
+				//flag = true;
+				////this->Retire();
+				//return false;
 			}
 		}
 
@@ -933,7 +941,6 @@ public:
 				Vector3 vec4 = reinterpret_cast<AssemblyCSharp::HitTest*>(ht)->HitPointWorld(); //Vector3 HitPointWorld();
 				Vector3 normal = reinterpret_cast<AssemblyCSharp::HitTest*>(ht)->HitNormalWorld(); //Vector3 HitNormalWorld();
 
-
 				float magnitude2 = (vec4 - currentPosition()).Length();
 				float num5 = magnitude2 * num2 * deltaTime;
 
@@ -942,9 +949,8 @@ public:
 				currentPosition() = (vec4);
 
 				bool exit = false;
-				if (this->DoHit2(pr, ToAddress(ht), vec4, normal, Trace, exit)) {
+				if (this->DoHit(ht, vec4, normal))
 					flag = true;
-				}
 
 				if (exit) {
 					return true;

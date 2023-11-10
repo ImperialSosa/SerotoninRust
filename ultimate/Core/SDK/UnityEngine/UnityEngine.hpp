@@ -1774,6 +1774,44 @@ namespace UnityEngine {
 		}
 
 		FPSystem::Array<Renderer*>* GetComponentsInChildren(FPSystem::Type* type);
+
+
+		bool IsEntity()
+		{
+			if (!this)
+				return false;
+
+			return !strcmp(this->class_name(), XS("BuildingBlock"))
+				|| !strcmp(this->class_name(), XS("StabilityEntity"))
+				|| !strcmp(this->class_name(), XS("SimpleBuildingBlock"))
+				|| !strcmp(this->class_name(), XS("Door"))
+				|| !strcmp(this->class_name(), XS("ShopFront"))
+				|| !strcmp(this->class_name(), XS("VehicleSpawner"))
+				|| !strcmp(this->class_name(), XS("AnimatedBuildingBlock"))
+				|| !strcmp(this->class_name(), XS("ProceduralLift"))
+				|| !strcmp(this->class_name(), XS("TreeEntity"))
+				|| !strcmp(this->class_name(), XS("Signage"))
+				|| !strcmp(this->class_name(), XS("ElectricSwitch"))
+				|| !strcmp(this->class_name(), XS("BaseOven"))
+				|| !strcmp(this->class_name(), XS("Splitter"))
+				|| !strcmp(this->class_name(), XS("Signage"))
+				|| !strcmp(this->class_name(), XS("Signage"));
+		}
+
+		bool IsPlayer() {
+			if (!this) return false;
+
+			return !strcmp(this->class_name(), XS("BasePlayer")) ||
+				!strcmp(this->class_name(), XS("NPCPlayerApex")) ||
+				!strcmp(this->class_name(), XS("NPCMurderer")) ||
+				!strcmp(this->class_name(), XS("NPCPlayer")) ||
+				!strcmp(this->class_name(), XS("HumanNPC")) ||
+				!strcmp(this->class_name(), XS("Scientist")) ||
+				!strcmp(this->class_name(), XS("TunnelDweller")) ||
+				!strcmp(this->class_name(), XS("HTNPlayer")) ||
+				!strcmp(this->class_name(), XS("ScientistNPC")) ||
+				!strcmp(this->class_name(), XS("NPCShopKeeper"));
+		}
 	};
 
 

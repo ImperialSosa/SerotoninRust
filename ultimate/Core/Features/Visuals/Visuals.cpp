@@ -2879,7 +2879,16 @@ void Visuals::CacheEntities()
 							if (!BaseEntity->net())
 								continue;
 
+							if (BaseEntity->IsPlayer())
+								continue;
+
+							if (BaseEntity->IsEntity())
+								continue;
+
 							auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
+
+							if (distance >= 300)
+								continue;
 
 							const auto EntityID = BaseEntity->prefabID();
 							const auto StashID = 2568831788;
@@ -3168,62 +3177,54 @@ void Visuals::CacheEntities()
 							{
 								PrefabListTemp.push_back(PrefabList(BaseEntity));
 							}
+							else if (BaseEntity->IsA(AssemblyCSharp::Door::StaticClass()) && m_settings::DoorSpammer)
+							{
+								auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
+
+								auto ent = reinterpret_cast<AssemblyCSharp::Door*>(BaseEntity);
+
+								if (IsAddressValid(ent) && distance <= 3.f)
+								{
+									if (RPC_Counter.Calculate() <= 5)
+									{
+										ent->KnockDoor(Features().LocalPlayer);
+										RPC_Counter.Increment();
+									}
+								}
+							}
+							else if (BaseEntity->IsA(AssemblyCSharp::BuildingBlock::StaticClass()) && m_settings::AutoUpgrade)
+							{
+								auto block = reinterpret_cast<AssemblyCSharp::BuildingBlock*>(BaseEntity);
+
+								if (block)
+								{
+									auto entity_pos = block->get_positionz();
+
+									if (RPC_Counter.Calculate() >= 5)
+									{
+										continue;
+									}
+
+
+									Vector3 local = Features().LocalPlayer->ClosestPoint(entity_pos);
+									if (local.get_3d_dist(entity_pos) <= 5.5f)
+									{
+										float LastGrade = 0.f;
+										auto BuildingGrade = m_settings::BuildingGrade + 1;
+										if (Features().LocalPlayer->lastSentTickTime() > LastGrade + 0.35f
+											&& block->CanAffordUpgrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
+											&& block->CanChangeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
+											&& !block->IsUpgradeBlocked()) {
+											block->UpgradeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer);
+											RPC_Counter.Increment();
+											LastGrade = Features().LocalPlayer->lastSentTickTime();
+										}
+									}
+
+								}
+							}
 							else
 							{
-								if (m_settings::DoorSpammer)
-								{
-									if (BaseEntity->IsA(AssemblyCSharp::Door::StaticClass()))
-									{
-										auto distance = Features().LocalPlayer->get_transform()->get_position().Distance(BaseEntity->get_transform()->get_position());
-
-										auto ent = reinterpret_cast<AssemblyCSharp::Door*>(BaseEntity);
-
-										if (IsAddressValid(ent) && distance <= 3.f)
-										{
-											if (RPC_Counter.Calculate() <= 5)
-											{
-												ent->KnockDoor(Features().LocalPlayer);
-												RPC_Counter.Increment();
-											}
-										}
-
-									}
-								}
-
-								if (m_settings::AutoUpgrade)
-								{
-									if (BaseEntity->IsA(AssemblyCSharp::BuildingBlock::StaticClass()))
-									{
-										auto block = reinterpret_cast<AssemblyCSharp::BuildingBlock*>(BaseEntity);
-
-										if (block)
-										{
-											auto entity_pos = block->get_positionz();
-
-											if (RPC_Counter.Calculate() >= 5)
-											{
-												continue;
-											}
-
-
-											Vector3 local = Features().LocalPlayer->ClosestPoint(entity_pos);
-											if (local.get_3d_dist(entity_pos) <= 5.5f)
-											{
-												float LastGrade = 0.f;
-												auto BuildingGrade = m_settings::BuildingGrade + 1;
-												if (Features().LocalPlayer->lastSentTickTime() > LastGrade + 0.35f
-													&& block->CanAffordUpgrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
-													&& block->CanChangeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer)
-													&& !block->IsUpgradeBlocked()) {
-													block->UpgradeToGrade((RustStructs::BuildingGrade)BuildingGrade, 0, Features().LocalPlayer);
-													RPC_Counter.Increment();
-													LastGrade = Features().LocalPlayer->lastSentTickTime();
-												}
-											}
-
-										}
-									}
-								}
 								continue;
 							}
 						}
@@ -3245,7 +3246,16 @@ void Visuals::CacheEntities()
 AssemblyCSharp::BasePlayer::Target Visuals::GetAimbotTargetSafe(Vector3 Source, float MaxDist)
 {
 	if (!InGame)
+	{
+		free(VisiblePlayerList);	
+		auto Vals = VisiblePlayerList->vals;
+		auto buffer = Vals->buffer;
+		free(Vals);
+		free(buffer);
+
 		return {};
+	}
+		
 
 	if (!VisiblePlayerList)
 		VisiblePlayerList = AssemblyCSharp::BasePlayer::visiblePlayerList();
@@ -3376,5 +3386,14 @@ AssemblyCSharp::BasePlayer::Target Visuals::GetAimbotTargetSafe(Vector3 Source, 
 		if (target < best_target)
 			best_target = target;
 	}
+	
+	if (!InGame)
+	{
+		free(best_target.m_player);
+		free(VisiblePlayerList);
+		return {};
+	}
+
+
 	return best_target;
 }

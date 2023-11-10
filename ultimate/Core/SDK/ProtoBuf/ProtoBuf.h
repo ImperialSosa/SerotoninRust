@@ -148,6 +148,8 @@ namespace ProtoBuf
 		}
 	};
 
+
+
 	struct PlayerProjectileAttack : Il2CppObject
 	{
 		IL2CPP_CLASS("PlayerProjectileAttack");
@@ -194,6 +196,12 @@ namespace ProtoBuf
 	};
 
 
+	struct BuildingPrivilege : Il2CppObject {
+		IL2CPP_CLASS("BuildingPrivilege");
+
+		IL2CPP_FIELD(FPSystem::List<ProtoBuf::PlayerNameID*>*, users);
+
+	};
 	struct NetworkableId {
 		uint64_t Value; // 0x0
 	};

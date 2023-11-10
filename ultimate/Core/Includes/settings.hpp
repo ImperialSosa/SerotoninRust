@@ -24,6 +24,7 @@ namespace m_settings {
 	inline bool NoRain = false;
 	inline bool ViewDirection = false;
 	inline bool NoThunder = false;
+	inline bool TeamCheck = false;
 	inline bool NoWind = false;
 	inline float AimbotSmoothness = 5.f;
 	inline bool ShowPrediction = false;
