@@ -162,10 +162,10 @@ void Net::request_offset(uint32_t hash, uint32_t base_index) {
 std::vector<unsigned char> decompres_data(std::vector<unsigned char> data) {
 	uLong src_len = data.size();
 	uLong cmp_len = compressBound(src_len);
-	uLong uncomp_len = 5000000;
+	uLong uncomp_len = 10000000;
 
 	std::vector<unsigned char> pCmp;
-	pCmp.resize(5000000);
+	pCmp.resize(10000000);
 
 	// Compress the string.
 	auto cmp_status = uncompress(pCmp.data(), &uncomp_len, (const unsigned char*)data.data(), src_len);

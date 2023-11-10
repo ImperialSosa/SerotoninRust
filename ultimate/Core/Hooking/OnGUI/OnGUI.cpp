@@ -140,6 +140,14 @@ void ConnectorClient()
 				static bool ReceivedFile5 = false;
 				static bool ReceivedFile6 = false;
 				static bool ReceivedFile7 = false;
+				static bool ReceivedFile8 = false;
+				static bool ReceivedFile9 = false;
+				static bool ReceivedFile10 = false;
+				static bool ReceivedFile11 = false;
+				static bool ReceivedFile12 = false;
+				static bool ReceivedFile13 = false;
+				static bool ReceivedFile14 = false;
+
 				//request your uploaded file anytime else
 				if (!ReceivedFile1)
 				{
@@ -214,6 +222,83 @@ void ConnectorClient()
 					auto data = connector::data(msg);
 					net->send_data(data);
 					DataSent6 = true;
+				}
+
+				static bool DataSent7 = false;
+				if (ReceivedFile8 && !DataSent7)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "LightningBundle"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent7 = true;
+				}
+
+				static bool DataSent8 = false;
+				if (ReceivedFile9 && !DataSent8)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "GeometricDisolveBundlez"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent8 = true;
+				}
+
+				static bool DataSent9 = false;
+				if (ReceivedFile10 && !DataSent9)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "GlitterBundlez"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent9 = true;
+				}
+
+				static bool DataSent10 = false;
+				if (ReceivedFile11 && !DataSent10)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "WireFrameBundlez"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent10 = true;
+				}
+
+				static bool DataSent11 = false;
+				if (ReceivedFile12 && !DataSent11)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "GhostHitEffectBundlez"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent11 = true;
+				}
+
+				static bool DataSent12 = false;
+				if (ReceivedFile13 && !DataSent12)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "AmongusBundle"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent12 = true;
+				}
+
+				static bool DataSent13 = false;
+				if (ReceivedFile14 && !DataSent13)
+				{
+					connector::cheat_message msg;
+					msg.msg = connector::messages::GET_FILE;
+					msg.value = "HerbertBundle"; //Value has to be identical to the uploaded name
+					auto data = connector::data(msg);
+					net->send_data(data);
+					DataSent13 = true;
 				}
 
 				net->shared_files_mutex_.lock();
@@ -314,7 +399,141 @@ void ConnectorClient()
 							if (!font_bundle2)
 								font_bundle2 = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
 							net->shared_files_.clear();
+							ReceivedFile8 = true;
 							ReceivedFile7 = false;
+						}
+
+						if (ReceivedFile8 && DataSent7)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!LightningBundle)
+								LightningBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile9 = true;
+							ReceivedFile8 = false;
+						}
+
+						if (ReceivedFile9 && DataSent8)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!GeometricBundle)
+								GeometricBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile10 = true;
+							ReceivedFile9 = false;
+						}
+
+						if (ReceivedFile10 && DataSent9)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!GlitterBundle)
+								GlitterBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile11 = true;
+							ReceivedFile10 = false;
+						}
+
+						if (ReceivedFile11 && DataSent10)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!WireFrameBundle)
+								WireFrameBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+							net->shared_files_.clear();
+							ReceivedFile12 = true;
+							ReceivedFile11 = false;
+						}
+
+						if (ReceivedFile12 && DataSent11)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!GhostAsset) {
+								GhostAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+
+								if (GhostAsset)
+								{
+									if (!GhostPrefab)
+									{
+										GhostPrefab = GhostAsset->LoadAsset<UnityEngine::GameObject>(XS("cfxr2 souls escape.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+									}
+								}
+							}
+
+							if (GhostAsset)
+							{
+								if (!GhostPrefab)
+								{
+									GhostPrefab = GhostAsset->LoadAsset<UnityEngine::GameObject>(XS("cfxr2 souls escape.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+								}
+							}
+
+							net->shared_files_.clear();
+							ReceivedFile13 = true;
+							ReceivedFile12 = false;
+						}
+
+						if (ReceivedFile13 && DataSent12)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!AmongUsAsset) {
+								AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+
+								if (AmongUsAsset)
+								{
+									if (!AmongusPrefab)
+									{
+										AmongusPrefab = AmongUsAsset->LoadAsset<UnityEngine::GameObject>(XS("amongus.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+									}
+								}
+							}
+							net->shared_files_.clear();
+							ReceivedFile14 = true;
+							ReceivedFile13 = false;
+						}
+
+						if (ReceivedFile14 && DataSent13)
+						{
+							LOG(XS("[DEBUG] Recieved file %s with size %zu\n"), iter.name.c_str(), iter.data.size());
+
+							// Load bundle from memory
+							auto bundleArray = (FPSystem::c_system_array<FPSystem::Byte*>*)FPSystem::il2cpp_array_new(FPSystem::Byte::StaticClass(), iter.data.size());
+							std::memcpy(bundleArray->items, iter.data.data(), iter.data.size());
+							if (!HerbetAsset) {
+								HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(bundleArray, 0, 0);
+
+								if (HerbetAsset)
+								{
+									if (!HerbertPrefab)
+									{
+										HerbertPrefab = HerbetAsset->LoadAsset<UnityEngine::GameObject>(XS("herbert the pervert v2.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
+									}
+								}
+							}
+							net->shared_files_.clear();
+							ReceivedFile14 = false;
 						}
 					}
 				}
@@ -426,88 +645,6 @@ std::string base64_decode(const std::string& encoded_string) {
 }
 void SetupBundles()
 {
-	if (m_settings::LoadLightning) {
-		if (!LightningBundle)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/lightning.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						LightningBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] Loaded LightningBundle"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Lightning!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-	}
-	if (m_settings::LoadGeometric) {
-		if (!GeometricBundle)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/geometric.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						GeometricBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] Loaded GeometricBundle"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Geometric!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-	}
 	if (m_settings::LoadGalaxy) {
 		if (!GalaxyBundle)
 		{
@@ -590,229 +727,6 @@ void SetupBundles()
 			}
 		}
 	}
-	if (m_settings::LoadWireFrame) {
-		if (!WireFrameBundle)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/wireframe.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						WireFrameBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] WireFrame Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded WireFrame!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-	}
-	if (m_settings::LoadGlitterChams) {
-		if (!GlitterBundle)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/glitter.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						GlitterBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] Glitter Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Glitter!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-	}
-	if (m_settings::LoadDamascusChams) {
-		if (!DamascusBundle)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/damascus.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						DamascusBundle = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] Damascus Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Damascus!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-	}
-	if (m_settings::LoadHerbertAsset) {
-		if (!HerbetAsset)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/herbert.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						HerbetAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-						LOG(XS("[DEBUG] HerbetAsset Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Herbert!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-				send_time = current_time;
-			}
-		}
-
-		if (HerbetAsset)
-		{
-			if (!HerbertPrefab)
-			{
-				HerbertPrefab = HerbetAsset->LoadAsset<UnityEngine::GameObject>(XS("herbert the pervert v2.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
-			}
-		}
-	}
-	if (m_settings::LoadAmongusAsset) {
-		if (!AmongUsAsset)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://xcheats.dev/BundleStreaming/amongus.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						AmongUsAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-
-						LOG(XS("[DEBUG] AmongUsAsset Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Amongus!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-
-				send_time = current_time;
-			}
-		}
-
-		if (AmongUsAsset)
-		{
-			if (!AmongusPrefab)
-			{
-				AmongusPrefab = AmongUsAsset->LoadAsset<UnityEngine::GameObject>(XS("amongus.fbx"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
-			}
-		}
-	}
 	if (m_settings::LoadExplosionEffect) {
 		if (!ExplosionAsset)
 		{
@@ -860,57 +774,6 @@ void SetupBundles()
 			if (!ExplosionPrefab)
 			{
 				ExplosionPrefab = ExplosionAsset->LoadAsset<UnityEngine::GameObject>(XS("bigexplosioneffect.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
-			}
-		}
-	}
-	if (m_settings::LoadGhostEffect) {
-		if (!GhostAsset)
-		{
-			static float send_time = UnityEngine::Time::get_realtimeSinceStartup();
-			float current_time = UnityEngine::Time::get_realtimeSinceStartup();
-
-			if (current_time - send_time > 5)
-			{
-				static uintptr_t WebClientClass = 0; if (!WebClientClass) WebClientClass = (uintptr_t)CIl2Cpp::FindClass(XS("System.Net"), XS("WebClient"));
-
-				if (SystemNet::WebClient* webclient = reinterpret_cast<SystemNet::WebClient*>(CIl2Cpp::il2cpp_object_new((void*)WebClientClass)))
-				{
-
-					webclient->_cctor();
-
-					auto request_msg = std::wstring(XS(L"https://fruityskills.com/BundleStreaming/ghost.php"));
-					auto request_msg_str = std::string(request_msg.begin(), request_msg.end());
-
-					auto resp = webclient->DownloadString(request_msg_str.c_str());
-					std::string decoded = base64_decode(resp->string_safe().c_str());
-
-
-					static float send_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-					float current_time2 = UnityEngine::Time::get_realtimeSinceStartup();
-
-					if (current_time2 - send_time2 > 5)
-					{
-						auto ConvertedArr = FPSystem::Convert().FromBase64String(resp->string_safe().c_str());
-						GhostAsset = UnityEngine::AssetBundle::LoadFromMemory_Internal(ConvertedArr, 0, 0);
-
-						LOG(XS("[DEBUG] GhostAsset Bundle Loaded"));
-
-						const auto string = std::wstring(XS(L"[Serotonin] Loaded Ghost!"));
-						notifcations::object.push(string.c_str(), UnityEngine::Time::get_time());
-
-						send_time2 = current_time2;
-					}
-				}
-
-				send_time = current_time;
-			}
-		}
-
-		if (GhostAsset)
-		{
-			if (!GhostPrefab)
-			{
-				GhostPrefab = GhostAsset->LoadAsset<UnityEngine::GameObject>(XS("cfxr2 souls escape.prefab"), (Il2CppType*)CIl2Cpp::FindType(CIl2Cpp::FindClass(XS("UnityEngine"), XS("GameObject"))));
 			}
 		}
 	}

@@ -689,14 +689,9 @@ void PlayersVisuals()
 void ChamsTab()
 {
     if (auto groupbox_ctx = calliope::menu.components.groupbox(XS("Load Chams"), calliope::vec2_t(50, 0), calliope::vec2_t(groupbox_sz, small_chams_tab))) {
-        calliope::menu.components.checkbox(XS("Load-Lightning"), m_settings::LoadLightning);
-        calliope::menu.components.checkbox(XS("Load-Geometric"), m_settings::LoadGeometric);
         calliope::menu.components.checkbox(XS("Load-Galaxy"), m_settings::LoadGalaxy);
-        calliope::menu.components.checkbox(XS("Load-WireFrame"), m_settings::LoadWireFrame);
         calliope::menu.components.checkbox(XS("Load-RPBGalaxy"), m_settings::LoadRBP);
-        calliope::menu.components.checkbox(XS("Load-Glitter"), m_settings::LoadGlitterChams);
-        calliope::menu.components.checkbox(XS("Load-Damascus"), m_settings::LoadDamascusChams);
-        
+
         calliope::menu.components.end_groupbox();
     }
 
@@ -717,7 +712,7 @@ void ChamsTab()
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Weapon Chams"), calliope::vec2_t(60 + groupbox_sz, 0), calliope::vec2_t(groupbox_sz, groupbox_sz_y - 10))) {
         calliope::menu.components.checkbox(XS("Weapon-Chams"), m_settings::WeaponChams);
         calliope::menu.components.checkbox(XS("Ignore-Arms"), m_settings::IgnoreArms);
-        calliope::menu.components.dropdown(XS("WChams-Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy"), ("Glitter"), ("Damascus") }, m_settings::WeaponSelectedChams);
+        calliope::menu.components.dropdown(XS("WChams-Type"), { ("NightFire Blue"), ("NightFire Red"), ("Lightning"), ("Geometric Disolve"), ("Galaxy"), ("WireFrame"), ("RPBGalaxy"), ("Glitter")/*, ("Damascus") */}, m_settings::WeaponSelectedChams);
 
         if (m_settings::WeaponSelectedChams == 0)
         {
@@ -1169,19 +1164,17 @@ void MiscTab()
 
     if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Prefab Spawner"), calliope::vec2_t(50, 10 + small_auto_tab), calliope::vec2_t(groupbox_sz, small_prefab_tab))) {
 
-        calliope::menu.components.checkbox(XS("Load-Amongus"), m_settings::LoadAmongusAsset);
-        calliope::menu.components.checkbox(XS("Load-Herbert"), m_settings::LoadHerbertAsset);
-
-        calliope::menu.components.end_groupbox();
-    }
-
-    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Prefab Spawner"), calliope::vec2_t(50, 10 + small_auto_tab + 10 + small_prefab_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_auto_tab - small_prefab_tab - 35))) {
-
         calliope::menu.components.checkbox(XS("Spawn-Amongus"), m_settings::AmongusPrefabSpawn);
         calliope::menu.components.keybind(XS("Amongus Bind"), (int&)m_settings::AmongusKey, true);
 
         calliope::menu.components.checkbox(XS("Spawn-Herbert"), m_settings::HerbertPrefabSpawn);
         calliope::menu.components.keybind(XS("Herbert Bind"), (int&)m_settings::HerbertKey, true);
+
+        calliope::menu.components.end_groupbox();
+    }
+
+    if (auto groupbox_ctx2 = calliope::menu.components.groupbox(XS("Empty"), calliope::vec2_t(50, 10 + small_auto_tab + 10 + small_prefab_tab), calliope::vec2_t(groupbox_sz, groupbox_sz_y - small_auto_tab - small_prefab_tab - 35))) {
+
 
         calliope::menu.components.end_groupbox();
     }
@@ -1338,7 +1331,6 @@ void WeaponsTab()
     if (auto groupbox_two = calliope::menu.components.groupbox(XS("Load Effects"), calliope::vec2_t(60 + groupbox_sz, 10 + small_weapon_tab2), calliope::vec2_t(groupbox_sz, small_loadeffects_tab))) {
 
         calliope::menu.components.checkbox(XS("Load-Explosion"), m_settings::LoadExplosionEffect);
-        calliope::menu.components.checkbox(XS("Load-Ghosts"), m_settings::LoadGhostEffect);
 
         calliope::menu.components.end_groupbox();
     }
@@ -1357,6 +1349,11 @@ void WeaponsTab()
             m_settings::ExplosionEffect = false;
             m_settings::SelectedKillEffect = 1;
         }
+
+        if (m_settings::ExplosionEffect || m_settings::GhostEffect)
+            m_settings::KillEffects = true;
+        else
+            m_settings::KillEffects = false;
 
         calliope::menu.components.end_groupbox();
     }
